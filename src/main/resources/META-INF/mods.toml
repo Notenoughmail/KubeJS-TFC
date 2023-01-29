@@ -1,0 +1,42 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT"
+#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+
+[[mods]]
+    modId="kubejs_tfc"
+    version="${file.jarVersion}"
+    displayName="KubeJS TFC"
+    #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
+    #logoFile="examplemod.png"
+    #credits="Thanks for this example mod goes to Java"
+    authors="Not Enough Mail"
+    description='''KubeJS Integration for TFC'''
+
+[[dependencies.kubejs_tfc]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.kubejs_tfc]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.kubejs_tfc]]
+    modId = "tfc"
+    mandatory = true
+    versionRange = "[2.1.14,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[dependencies.kubejs_tfc]]
+    modId = "kubejs"
+    mandatory = false
+    versionRange = "[1802.5.4-build.521,)"
+    ordering = "AFTER"
+    side = "BOTH"
