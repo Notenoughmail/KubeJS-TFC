@@ -1,6 +1,9 @@
 package com.notenoughmail.kubejs_tfc;
 
+import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
+import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import net.minecraft.world.item.Tier;
 
 // Mild Javadoc abuse
 
@@ -68,6 +71,17 @@ import dev.latvian.mods.kubejs.KubeJSPlugin;
  *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping}
  *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern}
  *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding}
+ *  - Misc.
+ *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
+ *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers}
+ *      - Metallum compat?
+ *    - {@link net.dries007.tfc.common.TFCArmorMaterials Armor Tiers}
+ *      - See above
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
+
+    @Override
+    public void init() {
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
+    }
 }
