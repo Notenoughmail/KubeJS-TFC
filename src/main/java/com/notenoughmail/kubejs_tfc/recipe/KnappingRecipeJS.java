@@ -10,7 +10,7 @@ public class KnappingRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 1) {
+        if (listJS.size() < 2) {
             throw new RecipeExceptionJS("Requires 2 arguments - result and pattern");
         }
 
