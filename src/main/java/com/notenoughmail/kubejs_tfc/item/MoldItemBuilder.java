@@ -39,6 +39,6 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public Item createObject() {
-        return new MoldItem(() -> this.capacity, this.acceptableFluids, createItemProperties());
+        return new MoldItem(() -> this.capacity, this.acceptableFluids, createItemProperties().stacksTo(1));
     }
 }

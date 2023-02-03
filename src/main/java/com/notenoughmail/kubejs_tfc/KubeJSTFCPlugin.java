@@ -1,8 +1,12 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
+import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
+import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.minecraft.world.item.Tier;
 
 // Mild Javadoc abuse
@@ -14,6 +18,7 @@ import net.minecraft.world.item.Tier;
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin}
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace}
  *   - {@link net.dries007.tfc.common.items.MoldItem Mold}
+ *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick}
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe}
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod}
@@ -77,11 +82,20 @@ import net.minecraft.world.item.Tier;
  *      - Metallum compat?
  *    - {@link net.dries007.tfc.common.TFCArmorMaterials Armor Tiers}
  *      - See above
+ *    - Copy heat functionality as a recipe method?
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
         RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
+    }
+
+    @Override
+    public void addRecipes(RegisterRecipeHandlersEvent event) {
+        event.register(TFCRecipeSerializers.CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
+        event.register(TFCRecipeSerializers.FIRE_CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
+        event.register(TFCRecipeSerializers.LEATHER_KNAPPING.getId(), KnappingRecipeJS::new);
+        event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
     }
 }

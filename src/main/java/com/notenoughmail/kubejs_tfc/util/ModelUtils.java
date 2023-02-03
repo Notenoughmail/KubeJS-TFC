@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import net.minecraft.resources.ResourceLocation;
 
-public class ModelUtils extends ModelGenerator {
+public class ModelUtils {
 
     public static void moldItemModelJson(ModelGenerator m, ResourceLocation id) {
         m.parent("kubejs:item/generated_mold");
