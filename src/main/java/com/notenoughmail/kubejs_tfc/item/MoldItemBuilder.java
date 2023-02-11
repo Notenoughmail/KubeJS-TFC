@@ -34,7 +34,7 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        generator.itemModel(id, m -> ModelUtils.moldItemModelJson(m, id));
+        generator.itemModel(id, m -> ModelUtils.ITEMS.moldItemModelJson(m, id));
     }
 
     @Override

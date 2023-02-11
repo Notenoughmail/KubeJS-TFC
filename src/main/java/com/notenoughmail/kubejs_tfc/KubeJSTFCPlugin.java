@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc;
 
+import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
 import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
@@ -43,7 +44,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.blocks.soil.MudBlock Mud?}
  *    - {@link net.dries007.tfc.common.blocks.soil.PathBlock Path}
  *  - Rock? No block entities. Gen a whole 'suite' of TFC-like blocks?
- *    - {@link net.dries007.tfc.common.blocks.rock.AqueductBlock Aqueduct}
+ *    - {@link net.dries007.tfc.common.blocks.rock.AqueductBlock Aqueduct} [Y]
  *    - {@link net.dries007.tfc.common.blocks.rock.RockSpikeBlock Rock Spike?}
  *  - {@link net.dries007.tfc.common.blocks.crop.CropBlock Crops?}
  *    - Would need:
@@ -100,6 +101,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             addArmorMaterial(material);
         }
         RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
     }
 
     @Override
