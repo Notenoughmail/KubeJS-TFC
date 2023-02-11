@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
 import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
@@ -92,28 +93,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
-        addToolTier(TFCTiers.IGNEOUS_EXTRUSIVE);
-        addToolTier(TFCTiers.IGNEOUS_INTRUSIVE);
-        addToolTier(TFCTiers.METAMORPHIC);
-        addToolTier(TFCTiers.SEDIMENTARY);
-        addToolTier(TFCTiers.COPPER);
-        addToolTier(TFCTiers.BRONZE);
-        addToolTier(TFCTiers.BLACK_BRONZE);
-        addToolTier(TFCTiers.BISMUTH_BRONZE);
-        addToolTier(TFCTiers.WROUGHT_IRON);
-        addToolTier(TFCTiers.STEEL);
-        addToolTier(TFCTiers.BLACK_STEEL);
-        addToolTier(TFCTiers.BLUE_STEEL);
-        addToolTier(TFCTiers.RED_STEEL);
-        addArmorMaterial(TFCArmorMaterials.COPPER);
-        addArmorMaterial(TFCArmorMaterials.BRONZE);
-        addArmorMaterial(TFCArmorMaterials.BLACK_BRONZE);
-        addArmorMaterial(TFCArmorMaterials.BISMUTH_BRONZE);
-        addArmorMaterial(TFCArmorMaterials.WROUGHT_IRON);
-        addArmorMaterial(TFCArmorMaterials.STEEL);
-        addArmorMaterial(TFCArmorMaterials.BLACK_STEEL);
-        addArmorMaterial(TFCArmorMaterials.BLUE_STEEL);
-        addArmorMaterial(TFCArmorMaterials.RED_STEEL);
+        for (var tier : TFCTiersJS.values()) {
+            addToolTier(tier.getTier());
+        }
+        for (var material : TFCArmorMaterials.values()) {
+            addArmorMaterial(material);
+        }
         RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
     }
 
