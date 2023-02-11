@@ -19,15 +19,15 @@ public class MoldItemBuilder extends ItemBuilder {
     public MoldItemBuilder(ResourceLocation i) {
         super(i);
         this.capacity = 100;
-        this.acceptableFluids = TFCTags.Fluids.USABLE_IN_TOOL_HEAD_MOLD;
+        this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
     }
 
-    public ItemBuilder capacity(int capacity) {
+    public MoldItemBuilder capacity(int capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    public ItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
+    public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
         this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, fluidTag);
         return this;
     }

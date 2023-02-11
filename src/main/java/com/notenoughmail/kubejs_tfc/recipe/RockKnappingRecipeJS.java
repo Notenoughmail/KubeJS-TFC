@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class RockKnappingRecipeJS extends KnappingRecipeJS{
+public class RockKnappingRecipeJS extends KnappingRecipeJS {
 
     public void create(ListJS listJS) {
         if (listJS.size() < 3) {

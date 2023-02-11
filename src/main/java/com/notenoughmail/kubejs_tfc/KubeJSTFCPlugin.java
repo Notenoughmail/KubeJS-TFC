@@ -5,8 +5,12 @@ import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import net.dries007.tfc.common.TFCArmorMaterials;
+import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
 
 // Mild Javadoc abuse
@@ -88,6 +92,28 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
+        addToolTier(TFCTiers.IGNEOUS_EXTRUSIVE);
+        addToolTier(TFCTiers.IGNEOUS_INTRUSIVE);
+        addToolTier(TFCTiers.METAMORPHIC);
+        addToolTier(TFCTiers.SEDIMENTARY);
+        addToolTier(TFCTiers.COPPER);
+        addToolTier(TFCTiers.BRONZE);
+        addToolTier(TFCTiers.BLACK_BRONZE);
+        addToolTier(TFCTiers.BISMUTH_BRONZE);
+        addToolTier(TFCTiers.WROUGHT_IRON);
+        addToolTier(TFCTiers.STEEL);
+        addToolTier(TFCTiers.BLACK_STEEL);
+        addToolTier(TFCTiers.BLUE_STEEL);
+        addToolTier(TFCTiers.RED_STEEL);
+        addArmorMaterial(TFCArmorMaterials.COPPER);
+        addArmorMaterial(TFCArmorMaterials.BRONZE);
+        addArmorMaterial(TFCArmorMaterials.BLACK_BRONZE);
+        addArmorMaterial(TFCArmorMaterials.BISMUTH_BRONZE);
+        addArmorMaterial(TFCArmorMaterials.WROUGHT_IRON);
+        addArmorMaterial(TFCArmorMaterials.STEEL);
+        addArmorMaterial(TFCArmorMaterials.BLACK_STEEL);
+        addArmorMaterial(TFCArmorMaterials.BLUE_STEEL);
+        addArmorMaterial(TFCArmorMaterials.RED_STEEL);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
     }
 
@@ -97,5 +123,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.FIRE_CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.LEATHER_KNAPPING.getId(), KnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
+    }
+
+    private void addToolTier(Tier tier) {
+        ItemBuilder.TOOL_TIERS.put(tier.toString().toLowerCase(), tier);
+    }
+
+    private void addArmorMaterial(ArmorMaterial armorMaterial) {
+        ItemBuilder.ARMOR_TIERS.put(armorMaterial.toString().toLowerCase(), armorMaterial);
     }
 }
