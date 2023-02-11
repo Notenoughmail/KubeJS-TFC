@@ -4,12 +4,12 @@ import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
 import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
+import com.notenoughmail.kubejs_tfc.recipe.WeldingRecipeJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import net.dries007.tfc.common.TFCArmorMaterials;
-import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.Tier;
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel}
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin}
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace}
- *   - {@link net.dries007.tfc.common.items.MoldItem Mold}
+ *   - {@link net.dries007.tfc.common.items.MoldItem Mold} [Y]
  *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick}
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe}
@@ -71,21 +71,21 @@ import net.minecraft.world.item.Tier;
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating}
  *      - Maybe also a way to give items item heats through JS?
- *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping}
- *      - Specify type (rock, leather, clay)
- *      - Depending on how specification is done, custom types?
+ *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
+ *      - Specify type (rock, leather, clay) [N]
+ *      - Depending on how specification is done, custom types? [N]
  *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide}
  *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
  *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot}
  *      - Should soup pot be an added recipe?
  *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping}
  *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern}
- *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding}
+ *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding} [Y]
  *  - Misc.
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
- *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers}
+ *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers} [Y]
  *      - Metallum compat?
- *    - {@link net.dries007.tfc.common.TFCArmorMaterials Armor Tiers}
+ *    - {@link net.dries007.tfc.common.TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - Copy heat functionality as a recipe method?
  */
@@ -108,6 +108,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.FIRE_CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.LEATHER_KNAPPING.getId(), KnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
+        event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {
