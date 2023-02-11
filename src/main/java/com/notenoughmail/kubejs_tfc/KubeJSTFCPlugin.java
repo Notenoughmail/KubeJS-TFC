@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
+import com.notenoughmail.kubejs_tfc.recipe.AlloyRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.WeldingRecipeJS;
@@ -47,6 +48,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.blocks.rock.AqueductBlock Aqueduct} [Y]
  *    - {@link net.dries007.tfc.common.blocks.rock.RockSpikeBlock Rock Spike?}
  *  - {@link net.dries007.tfc.common.blocks.crop.CropBlock Crops?}
+ *    - These are block entities
  *    - Would need:
  *      - Nutrient, growing time, temperature, hydration, etc. methods
  *      - Dead, wild, flooded, double tall versions
@@ -111,6 +113,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.LEATHER_KNAPPING.getId(), KnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
+        event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {
