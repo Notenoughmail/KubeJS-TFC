@@ -50,5 +50,4 @@ public class KnappingRecipeJS extends TFCRecipeJS {
         save();
         return this;
     }
-
 }

@@ -3,10 +3,7 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
-import com.notenoughmail.kubejs_tfc.recipe.AlloyRecipeJS;
-import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
-import com.notenoughmail.kubejs_tfc.recipe.RockKnappingRecipeJS;
-import com.notenoughmail.kubejs_tfc.recipe.WeldingRecipeJS;
+import com.notenoughmail.kubejs_tfc.recipe.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -55,7 +52,7 @@ import net.minecraft.world.item.Tier;
  *  - Recipes
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?}
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?}
- *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy}
+ *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy} [Y]
  *    - {@link net.dries007.tfc.common.recipes.AnvilRecipe Anvil}
  *    - {@link net.dries007.tfc.common.recipes.BarrelRecipe Barrel}
  *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant}
@@ -63,7 +60,7 @@ import net.minecraft.world.item.Tier;
  *      - {@link net.dries007.tfc.common.recipes.SealedBarrelRecipe Sealed}
  *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace}
  *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery}
- *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting}
+ *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting} [Y]
  *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel}
  *      - Extra outputs method
  *      - Type specify method
@@ -114,6 +111,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
         event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
         event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
+        event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {
