@@ -79,8 +79,8 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
  *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot}
  *      - Should soup pot be an added recipe?
- *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping}
- *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern}
+ *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping} [Y]
+ *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern} [Y]
  *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding} [Y]
  *  - Misc.
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
@@ -114,6 +114,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
         event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
+        event.register(TFCRecipeSerializers.QUERN.getId(), QuernRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

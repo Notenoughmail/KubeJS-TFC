@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class ScrapingRecipeJS extends TFCRecipeJS {
+public class QuernRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
