@@ -67,6 +67,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse}
  *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs}
  *      - Try to make a method that can be put on any crafting recipe, like .id()
+ *      - Kube has this as a native method apparently, but it's weirdly annoying to use and only applies to a single item each time
  *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products}
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating}
@@ -112,6 +113,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
         event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
+        event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

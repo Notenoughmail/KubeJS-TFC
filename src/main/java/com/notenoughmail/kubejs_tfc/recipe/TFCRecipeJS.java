@@ -13,5 +13,4 @@ public abstract class TFCRecipeJS extends RecipeJS {
         json.addProperty("amount", amount);
         return json;
     }
-
 }
