@@ -75,8 +75,9 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
  *      - Depending on how specification is done, custom types? [N]
- *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide}
+ *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide} [Y]
  *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
+ *      - This turns out to be very difficult to build b/c the input count is separate from the ingredient
  *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot}
  *      - Should soup pot be an added recipe?
  *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping} [Y]
@@ -115,6 +116,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
         event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
         event.register(TFCRecipeSerializers.QUERN.getId(), QuernRecipeJS::new);
+        event.register(TFCRecipeSerializers.LANDSLIDE.getId(), LandSlideRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

@@ -13,4 +13,12 @@ public abstract class TFCRecipeJS extends RecipeJS {
         json.addProperty("amount", amount);
         return json;
     }
+
+    public boolean getOptionalBoolMember(JsonObject json, String member, boolean fallback) {
+        if (json.get(member).isJsonNull()) {
+            return fallback;
+        } else {
+            return json.get(member).getAsBoolean();
+        }
+    }
 }
