@@ -21,4 +21,12 @@ public abstract class TFCRecipeJS extends RecipeJS {
             return json.get(member).getAsBoolean();
         }
     }
+
+    public int getOptionalIntMemeber(JsonObject json, String member, int fallback) {
+        if (json.get(member).isJsonNull()) {
+            return fallback;
+        } else {
+            return json.get(member).getAsInt();
+        }
+    }
 }

@@ -53,7 +53,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?}
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?}
  *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy} [Y]
- *    - {@link net.dries007.tfc.common.recipes.AnvilRecipe Anvil}
+ *    - {@link net.dries007.tfc.common.recipes.AnvilRecipe Anvil} [Y]
  *    - {@link net.dries007.tfc.common.recipes.BarrelRecipe Barrel}
  *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant}
  *      - {@link net.dries007.tfc.common.recipes.InstantFluidBarrelRecipe Instant Fluid}
@@ -64,7 +64,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel}
  *      - Extra outputs method
  *      - Type specify method
- *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse}
+ *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse} [Y]
  *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs}
  *      - Try to make a method that can be put on any crafting recipe, like .id()
  *      - Kube has this as a native method apparently, but it's weirdly annoying to use and only applies to a single item each time
@@ -118,6 +118,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.QUERN.getId(), QuernRecipeJS::new);
         event.register(TFCRecipeSerializers.LANDSLIDE.getId(), FallingBlockRecipeJS::new);
         event.register(TFCRecipeSerializers.COLLAPSE.getId(), FallingBlockRecipeJS::new);
+        event.register(TFCRecipeSerializers.ANVIL.getId(), AnvilRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {
