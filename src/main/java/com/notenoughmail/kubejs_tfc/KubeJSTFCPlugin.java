@@ -116,7 +116,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
         event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
         event.register(TFCRecipeSerializers.QUERN.getId(), QuernRecipeJS::new);
-        event.register(TFCRecipeSerializers.LANDSLIDE.getId(), LandSlideRecipeJS::new);
+        event.register(TFCRecipeSerializers.LANDSLIDE.getId(), FallingBlockRecipeJS::new);
+        event.register(TFCRecipeSerializers.COLLAPSE.getId(), FallingBlockRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

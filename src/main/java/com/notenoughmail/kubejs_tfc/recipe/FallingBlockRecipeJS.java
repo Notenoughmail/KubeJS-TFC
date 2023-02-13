@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class LandSlideRecipeJS extends TFCRecipeJS {
+public class FallingBlockRecipeJS extends TFCRecipeJS {
 
     private String result;
     private String ingredient;
