@@ -5,8 +5,12 @@ import dev.latvian.mods.kubejs.recipe.RecipeJS;
 
 public abstract class TFCRecipeJS extends RecipeJS {
 
+    public String result;
+    public String ingredient;
     public JsonObject fluidIngredient = new JsonObject();
 
+    // TODO: Redo this to actually be a TFC-compatible fluid ingredient builder
+    // FluidStackJS .getFluidStack(), .getFluid(), & .getAmount()
     public JsonObject buildFluidIngredient(String fluid, int amount) {
         var json = new JsonObject();
         json.addProperty("ingredient", fluid);

@@ -17,6 +17,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
         json.add("mold", inputItems.get(0).toJson());
 
         // A tad awful
+        // TODO: Redo this to actually work using TFC's fluid ingredient system
         fluidIngredient = buildFluidIngredient(listJS.get(2).toString(), ListJS.orSelf(listJS.get(3)).toJson().getAsInt());
         json.add("fluid", fluidIngredient);
 

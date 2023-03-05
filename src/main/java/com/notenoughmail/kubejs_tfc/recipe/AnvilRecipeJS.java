@@ -41,8 +41,6 @@ public class AnvilRecipeJS extends TFCRecipeJS {
 
         json.addProperty("apply_forging_bonus", bonus);
         json.addProperty("tier", tier);
-
-        System.out.println(json);
     }
 
     @Override
@@ -66,7 +64,5 @@ public class AnvilRecipeJS extends TFCRecipeJS {
             json.addProperty("tier", tier);
             json.addProperty("apply_forging_bonus", bonus);
         }
-
-        System.out.println(json);
     }
 }

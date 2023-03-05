@@ -5,8 +5,6 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class FallingBlockRecipeJS extends TFCRecipeJS {
 
-    private String result;
-    private String ingredient;
     private boolean copy;
 
     @Override
@@ -17,6 +15,12 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
 
         result = listJS.get(0).toString();
 
+        /*
+         * This makes it so the copy_input member is true when
+         * only the result is provided, in addition to setting
+         * the ingredient to be the input but stripped of
+         * block properties.
+         */
         if (listJS.size() < 2) {
             copy = !result.matches(".+\\[.+\\]");
             ingredient = result.replaceAll("\\[.+\\]", "");
