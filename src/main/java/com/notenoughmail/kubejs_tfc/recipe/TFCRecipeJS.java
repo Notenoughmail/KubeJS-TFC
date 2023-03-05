@@ -1,20 +1,32 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.util.ListJS;
 
 public abstract class TFCRecipeJS extends RecipeJS {
 
     public String result;
     public String ingredient;
-    public JsonObject fluidIngredient = new JsonObject();
+    public JsonObject fluidStackIngredient = new JsonObject();
 
-    // TODO: Redo this to actually be a TFC-compatible fluid ingredient builder
-    // FluidStackJS .getFluidStack(), .getFluid(), & .getAmount()
-    public JsonObject buildFluidIngredient(String fluid, int amount) {
+    public JsonObject buildFluidStackIngredient(ListJS listJS) {
+        var ingredient = new JsonArray();
+        var ingredients = ListJS.orSelf(listJS.get(0));
+        for (Object o : ingredients) {
+            var fluid = o.toString().replaceAll("\\\"", ""); // Quick and dirty way to make it work
+            if (fluid.matches("#.+")) {
+                var object = new JsonObject();
+                object.addProperty("tag", fluid.replaceFirst("#", ""));
+                ingredient.add(object);
+            } else {
+                ingredient.add(fluid);
+            }
+        }
         var json = new JsonObject();
-        json.addProperty("ingredient", fluid);
-        json.addProperty("amount", amount);
+        json.add("ingredient", ingredient);
+        json.addProperty("amount", ListJS.orSelf(listJS.get(1)).toJson().getAsInt());
         return json;
     }
 
@@ -26,7 +38,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
         }
     }
 
-    public int getOptionalIntMemeber(JsonObject json, String member, int fallback) {
+    public int getOptionalIntMember(JsonObject json, String member, int fallback) {
         if (json.get(member).isJsonNull()) {
             return fallback;
         } else {

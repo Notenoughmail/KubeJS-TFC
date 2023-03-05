@@ -9,21 +9,19 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 5) {
-            throw new RecipeExceptionJS("Requires five arguments - result, mold, fluid, amount, and break chance");
+        if (listJS.size() < 4) {
+            throw new RecipeExceptionJS("Requires five arguments - result, mold, fluid ingredient, and break chance");
         }
 
-        inputItems.addAll(parseIngredientItemList(listJS.get(1)));
+        inputItems.add(parseIngredientItem(listJS.get(1)));
         json.add("mold", inputItems.get(0).toJson());
 
-        // A tad awful
-        // TODO: Redo this to actually work using TFC's fluid ingredient system
-        fluidIngredient = buildFluidIngredient(listJS.get(2).toString(), ListJS.orSelf(listJS.get(3)).toJson().getAsInt());
-        json.add("fluid", fluidIngredient);
+        fluidStackIngredient = buildFluidStackIngredient(ListJS.of(listJS.get(2)));
+        json.add("fluid", fluidStackIngredient);
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
-        breakChance = ListJS.orSelf(listJS.get(4)).toJson().getAsFloat();
+        breakChance = ListJS.orSelf(listJS.get(3)).toJson().getAsFloat();
         json.addProperty("break_chance", breakChance);
     }
 
@@ -31,7 +29,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         outputItems.add(parseResultItem(json.get("result")));
         inputItems.add(parseIngredientItem(json.get("mold")));
-        fluidIngredient = json.get("fluid").getAsJsonObject();
+        fluidStackIngredient = json.get("fluid").getAsJsonObject();
         breakChance = json.get("break_chance").getAsFloat();
     }
 
@@ -43,7 +41,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("mold", inputItems.get(0).toJson());
-            json.add("fluid", fluidIngredient);
+            json.add("fluid", fluidStackIngredient);
             json.addProperty("break_chance", breakChance);
         }
     }

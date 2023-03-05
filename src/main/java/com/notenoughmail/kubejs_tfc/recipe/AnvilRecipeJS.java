@@ -48,7 +48,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         outputItems.add(parseResultItem(json.get("result")));
         input = json.get("input").getAsJsonObject();
         rules = json.get("rules").getAsJsonArray();
-        tier = getOptionalIntMemeber(json, "tier", -1);
+        tier = getOptionalIntMember(json, "tier", -1);
         bonus = getOptionalBoolMember(json, "apply_forging_bonus", false);
     }
 
