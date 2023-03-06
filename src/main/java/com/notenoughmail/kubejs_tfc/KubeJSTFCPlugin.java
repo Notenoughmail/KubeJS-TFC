@@ -1,8 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
-import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
-import com.notenoughmail.kubejs_tfc.item.TFCTiersJS;
+import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
@@ -18,15 +17,15 @@ import net.minecraft.world.item.Tier;
 /**
  * TODO:
  *  - Items
- *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel}
+ *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin}
- *   - {@link net.dries007.tfc.common.items.MaceItem Mace}
+ *   - {@link net.dries007.tfc.common.items.MaceItem Mace} [Y]
  *   - {@link net.dries007.tfc.common.items.MoldItem Mold} [Y]
  *     - TFC Casting w/ Channels integration?
- *   - {@link net.dries007.tfc.common.items.PropickItem Propick}
- *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe}
+ *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
+ *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod}
- *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe}
+ *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield}
  *  - Blocks
  *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover}
@@ -61,9 +60,9 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace}
  *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery}
  *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting} [Y]
- *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel}
- *      - Extra outputs method
- *      - Type specify method
+ *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel} [Y]
+ *      - Extra outputs method [N]
+ *      - Type specify method [N]
  *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse} [Y]
  *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs}
  *      - Try to make a method that can be put on any crafting recipe, like .id()
@@ -102,6 +101,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             addArmorMaterial(material);
         }
         RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_mace", MaceItemBuilder.class, MaceItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_propick", PropickItemBuilder.class, PropickItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
     }
 
