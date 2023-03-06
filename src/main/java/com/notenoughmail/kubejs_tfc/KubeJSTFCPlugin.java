@@ -18,15 +18,18 @@ import net.minecraft.world.item.Tier;
  * TODO:
  *  - Items
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
- *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin}
+ *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [?]
+ *     - Requires mixing into ModelGenerator to automake proper jsons
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace} [Y]
  *   - {@link net.dries007.tfc.common.items.MoldItem Mold} [Y]
  *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
- *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod}
+ *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [?]
+ *     - Requires mixing into ModelGenerator to automake proper jsons
+ *     - Uncertain how the connection between rod and hook is made
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
- *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield}
+ *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
  *  - Blocks
  *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover}
  *   - {@link net.dries007.tfc.common.blocks.ThinSpikeBlock Ice/Calcite}
@@ -86,9 +89,10 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
  *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers} [Y]
  *      - Metallum compat?
- *    - {@link net.dries007.tfc.common.TFCArmorMaterials Armor Tiers} [Y]
+ *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - Copy heat functionality as a recipe method?
+ *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/ingredients/">TFC's custom ingredient types</a>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

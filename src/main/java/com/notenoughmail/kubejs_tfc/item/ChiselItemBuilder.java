@@ -13,6 +13,6 @@ public class ChiselItemBuilder extends HandheldItemBuilder {
 
     @Override
     public Item createObject() {
-        return new ChiselItem(toolTier, (int) attackDamageBaseline, speedBaseline, createItemProperties());
+        return new ChiselItem(toolTier, attackDamageBaseline, speedBaseline, createItemProperties());
     }
 }

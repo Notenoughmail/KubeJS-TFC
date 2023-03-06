@@ -20,6 +20,7 @@ public class MoldItemBuilder extends ItemBuilder {
         super(i);
         this.capacity = 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
+        unstackable();
     }
 
     public MoldItemBuilder capacity(int capacity) {
@@ -39,6 +40,6 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public Item createObject() {
-        return new MoldItem(() -> this.capacity, this.acceptableFluids, createItemProperties().stacksTo(1));
+        return new MoldItem(() -> this.capacity, this.acceptableFluids, createItemProperties());
     }
 }
