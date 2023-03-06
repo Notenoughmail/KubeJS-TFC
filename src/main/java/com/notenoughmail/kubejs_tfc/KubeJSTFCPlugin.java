@@ -128,6 +128,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.ANVIL.getId(), AnvilRecipeJS::new);
         event.register(TFCRecipeSerializers.CHISEL.getId(), ChiselRecipeJS::new);
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
+        event.register(TFCRecipeSerializers.BLOOMERY.getId(), BloomeryRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {
