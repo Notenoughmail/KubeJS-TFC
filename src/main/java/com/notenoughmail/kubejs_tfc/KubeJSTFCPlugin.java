@@ -60,8 +60,8 @@ import net.minecraft.world.item.Tier;
  *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant}
  *      - {@link net.dries007.tfc.common.recipes.InstantFluidBarrelRecipe Instant Fluid}
  *      - {@link net.dries007.tfc.common.recipes.SealedBarrelRecipe Sealed}
- *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace}
- *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery}
+ *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace} [Y]
+ *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery} [Y]
  *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting} [Y]
  *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel} [Y]
  *      - Extra outputs method [N]
@@ -129,6 +129,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.CHISEL.getId(), ChiselRecipeJS::new);
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
         event.register(TFCRecipeSerializers.BLOOMERY.getId(), BloomeryRecipeJS::new);
+        event.register(TFCRecipeSerializers.BLAST_FURNACE.getId(), BlastFurnaceRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

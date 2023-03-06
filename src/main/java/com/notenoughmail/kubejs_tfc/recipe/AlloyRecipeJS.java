@@ -16,15 +16,12 @@ public class AlloyRecipeJS extends TFCRecipeJS {
         }
 
         resultMetal = listJS.get(0).toString();
-        json.addProperty("result", resultMetal);
 
         contents = ListJS.of(listJS.get(1)).toJson().getAsJsonArray();
 
         if (contents.size() < 2) {
             throw new RecipeExceptionJS("Contents must have at least two members");
         }
-
-        json.add("contents", contents);
     }
 
 

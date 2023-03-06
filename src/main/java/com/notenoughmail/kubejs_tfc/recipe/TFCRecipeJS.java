@@ -9,6 +9,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
 
     public String result;
     public String ingredient;
+    public JsonObject fluidResult;
     public JsonObject fluidStackIngredient = new JsonObject();
 
     public JsonObject buildFluidStackIngredient(ListJS listJS) {
@@ -26,6 +27,13 @@ public abstract class TFCRecipeJS extends RecipeJS {
         }
         var json = new JsonObject();
         json.add("ingredient", ingredient);
+        json.addProperty("amount", ListJS.orSelf(listJS.get(1)).toJson().getAsInt());
+        return json;
+    }
+
+    public JsonObject buildFluidStack(ListJS listJS) {
+        var json = new JsonObject();
+        json.addProperty("fluid", listJS.get(0).toString());
         json.addProperty("amount", ListJS.orSelf(listJS.get(1)).toJson().getAsInt());
         return json;
     }

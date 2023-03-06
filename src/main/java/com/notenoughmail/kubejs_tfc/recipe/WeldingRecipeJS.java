@@ -17,10 +17,6 @@ public class WeldingRecipeJS extends TFCRecipeJS {
         }
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));
-        json.add("first_input", inputItems.get(0).toJson());
-        json.add("second_input", inputItems.get(1).toJson());
-
-        json.addProperty("tier", weldingTier);
 
         outputItems.add(parseResultItem(listJS.get(0)));
     }

@@ -14,15 +14,10 @@ public class KnappingRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires 2 arguments - result and pattern");
         }
 
-        json.addProperty("outside_slot_required", true);
-
         knapPattern = ListJS.orSelf(listJS.get(1)).toJson().getAsJsonArray();
-
         if (knapPattern.isEmpty()) {
             throw new RecipeExceptionJS("Pattern is empty!");
         }
-
-        json.add("pattern", knapPattern);
 
         outputItems.add(parseResultItem(listJS.get(0)));
     }

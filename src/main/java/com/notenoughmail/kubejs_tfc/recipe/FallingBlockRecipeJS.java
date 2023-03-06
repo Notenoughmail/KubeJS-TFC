@@ -28,10 +28,6 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
             copy = false;
             ingredient = listJS.get(1).toString();
         }
-
-        json.addProperty("ingredient", ingredient);
-        json.addProperty("copy_input", copy);
-        json.addProperty("result", result);
     }
 
     @Override

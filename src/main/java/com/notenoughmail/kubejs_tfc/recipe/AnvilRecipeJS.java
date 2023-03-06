@@ -22,10 +22,8 @@ public class AnvilRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
         input = inputItems.get(0).toJson().getAsJsonObject();
-        json.add("input", input);
 
         rules = ListJS.orSelf(listJS.get(2)).toJson().getAsJsonArray();
-        json.add("rules", rules);
 
         if (listJS.size() > 3) {
             bonus = ListJS.orSelf(listJS.get(3)).toJson().getAsBoolean();
@@ -38,9 +36,6 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         } else {
             tier = -1;
         }
-
-        json.addProperty("apply_forging_bonus", bonus);
-        json.addProperty("tier", tier);
     }
 
     @Override

@@ -14,15 +14,12 @@ public class CastingRecipeJS extends TFCRecipeJS {
         }
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
-        json.add("mold", inputItems.get(0).toJson());
 
         fluidStackIngredient = buildFluidStackIngredient(ListJS.of(listJS.get(2)));
-        json.add("fluid", fluidStackIngredient);
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
         breakChance = ListJS.orSelf(listJS.get(3)).toJson().getAsFloat();
-        json.addProperty("break_chance", breakChance);
     }
 
     @Override

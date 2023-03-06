@@ -16,17 +16,14 @@ public class ChiselRecipeJS extends TFCRecipeJS {
         }
 
         result = listJS.get(0).toString();
-        json.addProperty("result", result);
 
         ingredient = listJS.get(1).toString();
-        json.addProperty("ingredient", ingredient);
 
         if (listJS.size() > 2) {
             mode = listJS.get(2).toString();
         } else {
             mode = "smooth";
         }
-        json.addProperty("mode", mode);
 
         if (listJS.size() > 3) {
             outputItems.add(parseResultItem(listJS.get(3)));
