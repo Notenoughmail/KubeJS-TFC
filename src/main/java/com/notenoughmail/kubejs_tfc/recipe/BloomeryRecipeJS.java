@@ -15,7 +15,7 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
-        fluidStackIngredient = buildFluidStackIngredient(ListJS.of(listJS.get(1)));
+        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
 

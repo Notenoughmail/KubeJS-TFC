@@ -57,7 +57,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy} [Y]
  *    - {@link net.dries007.tfc.common.recipes.AnvilRecipe Anvil} [Y]
  *    - {@link net.dries007.tfc.common.recipes.BarrelRecipe Barrel}
- *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant}
+ *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant} [Y]
  *      - {@link net.dries007.tfc.common.recipes.InstantFluidBarrelRecipe Instant Fluid}
  *      - {@link net.dries007.tfc.common.recipes.SealedBarrelRecipe Sealed}
  *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace} [Y]
@@ -130,6 +130,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
         event.register(TFCRecipeSerializers.BLOOMERY.getId(), BloomeryRecipeJS::new);
         event.register(TFCRecipeSerializers.BLAST_FURNACE.getId(), BlastFurnaceRecipeJS::new);
+        event.register(TFCRecipeSerializers.INSTANT_BARREL.getId(), InstantBarrelRecipeJS::new);
     }
 
     private void addToolTier(Tier tier) {

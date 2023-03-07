@@ -15,7 +15,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
-        fluidStackIngredient = buildFluidStackIngredient(ListJS.of(listJS.get(2)));
+        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(2)));
 
         outputItems.add(parseResultItem(listJS.get(0)));
 

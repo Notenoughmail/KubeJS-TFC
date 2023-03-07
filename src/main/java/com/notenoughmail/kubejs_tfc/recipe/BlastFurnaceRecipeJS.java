@@ -11,9 +11,9 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires three arguments - result, fluid ingredient, and catalyst");
         }
 
-        fluidResult = buildFluidStack(ListJS.of(listJS.get(0)));
+        fluidResult = parseFluidStack(ListJS.of(listJS.get(0)));
 
-        fluidStackIngredient = buildFluidStackIngredient(ListJS.of(listJS.get(1)));
+        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
     }
@@ -35,7 +35,5 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             json.add("catalyst", inputItems.get(0).toJson());
             json.add("fluid", fluidStackIngredient);
         }
-
-        System.out.println(json);
     }
 }
