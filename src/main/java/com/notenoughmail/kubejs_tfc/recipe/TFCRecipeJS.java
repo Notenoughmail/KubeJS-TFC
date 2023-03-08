@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.hell.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -16,6 +17,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
     public JsonObject fluidResult;
     public List<FluidStackJS> outputFluids = new ArrayList<>();
     public JsonObject fluidStackIngredient = new JsonObject();
+    public List<FluidStackIngredientJS> inputFluids = new ArrayList<>();
     public String sound = "minecraft:block.brewing_stand.brew";
 
     public JsonObject parseFluidStackIngredient(ListJS listJS) {
