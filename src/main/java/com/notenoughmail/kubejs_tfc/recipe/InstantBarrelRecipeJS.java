@@ -20,8 +20,17 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             }
         }
 
-        inputItems.add(parseIngredientItem(listJS.get(2)));
-        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(3)));
+        inputItems.add(parseIngredientItem(listJS.get(1)));
+        boolean other = true;
+        for (var ingredientFluid : ListJS.orSelf(listJS.get(2))) {
+            if (ingredientFluid instanceof FluidStackJS fluid) {
+                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
+                other = false;
+            }
+        }
+        if (other) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
+        }
 
         if (listJS.size() > 3) {
             sound = listJS.get(3).toString();
@@ -34,7 +43,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             inputItems.add(parseIngredientItem(json.get("input_item")));
         }
         if (json.has("input_fluid")) {
-            fluidStackIngredient = json.get("input_fluid").getAsJsonObject();
+            inputFluids.add(json.get("input_fluid").getAsJsonObject());
         }
         if (json.has("output_item")) {
             outputItems.add(parseResultItem(json.get("output_item")));
@@ -63,8 +72,8 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             if (!inputItems.isEmpty()) {
                 json.add("input_item", inputItems.get(0).toJson());
             }
-            if (fluidStackIngredient != null) {
-                json.add("input_fluid", fluidStackIngredient);
+            if (!inputFluids.isEmpty()) {
+                json.add("input_fluid", inputFluids.get(0));
             }
         }
     }

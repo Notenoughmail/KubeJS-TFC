@@ -3,16 +3,12 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
-import com.notenoughmail.kubejs_tfc.util.hell.FluidIngredientWrapper;
-import com.notenoughmail.kubejs_tfc.util.hell.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
-import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
-import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.minecraft.world.item.ArmorMaterial;
@@ -144,16 +140,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void addClasses(ScriptType type, ClassFilter filter) {
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny(KubeJSTFCPlugin.class);
-    }
-
-    @Override
-    public void addBindings(BindingsEvent event) {
-        event.add("FluidIngredient", FluidIngredientWrapper.class);
-    }
-
-    @Override
-    public void addTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
-        typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
     }
 
     private void addToolTier(Tier tier) {

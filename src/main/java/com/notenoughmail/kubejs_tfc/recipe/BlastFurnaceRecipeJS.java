@@ -21,7 +21,16 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             }
         }
 
-        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
+        boolean other = true;
+        for (var ingredientFluid : ListJS.orSelf(listJS.get(1))) {
+            if (ingredientFluid instanceof FluidStackJS fluid) {
+                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
+                other = false;
+            }
+        }
+        if (other) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
+        }
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
     }
@@ -29,7 +38,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         inputItems.add(parseIngredientItem(json.get("catalyst")));
-        fluidStackIngredient = json.get("fluid").getAsJsonObject();
+        inputFluids.add(json.get("fluid").getAsJsonObject());
         outputFluids.add(FluidStackJS.fromJson(json.get("result").getAsJsonObject()));
     }
 
@@ -41,7 +50,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("catalyst", inputItems.get(0).toJson());
-            json.add("fluid", fluidStackIngredient);
+            json.add("fluid", inputFluids.get(0));
         }
     }
 }

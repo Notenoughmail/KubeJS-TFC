@@ -1,11 +1,12 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
 public class CastingRecipeJS extends TFCRecipeJS {
 
-    private float breakChance;
+    private float breakChance = 1f;
 
     @Override
     public void create(ListJS listJS) {
@@ -15,7 +16,16 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
-        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(2)));
+        boolean other = true;
+        for (var ingredientFluid : ListJS.orSelf(listJS.get(2))) {
+            if (ingredientFluid instanceof FluidStackJS fluid) {
+                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
+                other = false;
+            }
+        }
+        if (other) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
+        }
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
@@ -26,8 +36,11 @@ public class CastingRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         outputItems.add(parseResultItem(json.get("result")));
         inputItems.add(parseIngredientItem(json.get("mold")));
-        fluidStackIngredient = json.get("fluid").getAsJsonObject();
-        breakChance = json.get("break_chance").getAsFloat();
+        inputFluids.add(json.get("fluid").getAsJsonObject());
+        if (json.has("break_chance")) {
+            breakChance = json.get("break_chance").getAsFloat();
+        }
+
     }
 
     @Override
@@ -38,7 +51,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("mold", inputItems.get(0).toJson());
-            json.add("fluid", fluidStackIngredient);
+            json.add("fluid", inputFluids.get(0));
             json.addProperty("break_chance", breakChance);
         }
     }

@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -15,7 +16,18 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
-        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
+        boolean other = true;
+        for (var ingredientFluid : ListJS.orSelf(listJS.get(1))) {
+            if (ingredientFluid instanceof FluidStackJS fluid) {
+                inputFluids.add(fluid.toJson());
+                other = false;
+            }
+        }
+        if (other) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
+        }
+
+        // fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
 
@@ -26,7 +38,8 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         outputItems.add(parseResultItem(json.get("result")));
         inputItems.add(parseIngredientItem(json.get("catalyst")));
-        fluidStackIngredient = json.get("fluid").getAsJsonObject();
+        // fluidStackIngredient = json.get("fluid").getAsJsonObject();
+        inputFluids.add(json.get("fluid").getAsJsonObject());
         duration = json.get("duration").getAsInt();
     }
 
@@ -38,7 +51,8 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("catalyst", inputItems.get(0).toJson());
-            json.add("fluid", fluidStackIngredient);
+            // json.add("fluid", fluidStackIngredient);
+            json.add("fluid", inputFluids.get(0));
             json.addProperty("duration", duration);
         }
     }

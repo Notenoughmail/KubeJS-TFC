@@ -11,8 +11,8 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires three arguments - result fluid, and ingredient fluids");
+        if (listJS.size() < 3) {
+            throw new RecipeExceptionJS("Requires three arguments - result fluid, primary fluid, and added fluid");
         }
 
         // Dumb way to get IDEA to stop yelling at me about inconvertible types
@@ -24,8 +24,28 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
             }
         }
 
-        fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
-        addedFluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(2)));
+        // Fragile and dumb, but I have a choice between a proper implementation of a FluidStackIngredientJS and this
+        boolean primarybool = true;
+        for (var primary : ListJS.orSelf(listJS.get(1))) {
+            if (primary instanceof FluidStackJS fluid) {
+                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
+                primarybool = false;
+            }
+        }
+        if (primarybool) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
+        }
+
+        boolean addedbool = true;
+        for (var added : ListJS.orSelf(listJS.get(2))) {
+            if (added instanceof FluidStackJS fluid) {
+                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
+                addedbool = false;
+            }
+        }
+        if (addedbool) {
+            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
+        }
 
         if (listJS.size() > 3) {
             sound = listJS.get(3).toString();
@@ -35,8 +55,8 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         outputFluids.add(FluidStackJS.fromJson(json.get("output_fluid").getAsJsonObject()));
-        fluidStackIngredient = json.get("primary_fluid").getAsJsonObject();
-        addedFluidStackIngredient = json.get("added_fluid").getAsJsonObject();
+        inputFluids.add(json.get("primary_fluid").getAsJsonObject());
+        inputFluids.add(json.get("added_fluid").getAsJsonObject());
         if (json.has("sound")) {
             sound = json.get("sound").getAsString();
         }
@@ -50,8 +70,8 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.add("primary_fluid", fluidStackIngredient);
-            json.add("added_fluid", addedFluidStackIngredient);
+            json.add("primary_fluid", inputFluids.get(0));
+            json.add("added_fluid", inputFluids.get(1));
         }
     }
 }
