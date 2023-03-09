@@ -5,7 +5,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class FallingBlockRecipeJS extends TFCRecipeJS {
 
-    private boolean copy;
+    private boolean copy = false;
 
     @Override
     public void create(ListJS listJS) {
@@ -25,7 +25,6 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
             copy = !result.matches(".+\\[.+\\]");
             ingredient = result.replaceAll("\\[.+\\]", "");
         } else {
-            copy = false;
             ingredient = listJS.get(1).toString();
         }
     }
@@ -34,7 +33,9 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         ingredient = json.get("ingredient").getAsString();
         result = json.get("result").getAsString();
-        copy = getOptionalBoolMember(json, "copy_input", false);
+        if (json.has("copy_input")) {
+            copy = json.get("copy_input").getAsBoolean();
+        }
     }
 
     @Override
@@ -45,6 +46,7 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.addProperty("ingredient", ingredient);
+            json.addProperty("copy_input", copy);
         }
     }
 }

@@ -17,7 +17,8 @@ public class AlloyRecipeJS extends TFCRecipeJS {
 
         resultMetal = listJS.get(0).toString();
 
-        contents = ListJS.of(listJS.get(1)).toJson().getAsJsonArray();
+        var metals = ListJS.of(listJS.get(1));
+        contents = buildMetals(metals);
 
         if (contents.size() < 2) {
             throw new RecipeExceptionJS("Contents must have at least two members");

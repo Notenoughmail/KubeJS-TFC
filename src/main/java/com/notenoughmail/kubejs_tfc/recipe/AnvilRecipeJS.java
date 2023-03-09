@@ -9,8 +9,8 @@ public class AnvilRecipeJS extends TFCRecipeJS {
 
     private JsonArray rules;
     private JsonObject input;
-    private int tier;
-    private boolean bonus;
+    private int tier = -1;
+    private boolean bonus = false;
 
     @Override
     public void create(ListJS listJS) {
@@ -27,14 +27,10 @@ public class AnvilRecipeJS extends TFCRecipeJS {
 
         if (listJS.size() > 3) {
             bonus = ListJS.orSelf(listJS.get(3)).toJson().getAsBoolean();
-        } else {
-            bonus = false;
         }
 
         if (listJS.size() > 4) {
             tier = ListJS.orSelf(listJS.get(4)).toJson().getAsInt();
-        } else {
-            tier = -1;
         }
     }
 
@@ -43,8 +39,12 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         outputItems.add(parseResultItem(json.get("result")));
         input = json.get("input").getAsJsonObject();
         rules = json.get("rules").getAsJsonArray();
-        tier = getOptionalIntMember(json, "tier", -1);
-        bonus = getOptionalBoolMember(json, "apply_forging_bonus", false);
+        if (json.has("tier")) {
+            tier = json.get("tier").getAsInt();
+        }
+        if (json.has("apply_forging_bonus")) {
+            bonus = json.get("apply_forging_bonus").getAsBoolean();
+        }
     }
 
     @Override

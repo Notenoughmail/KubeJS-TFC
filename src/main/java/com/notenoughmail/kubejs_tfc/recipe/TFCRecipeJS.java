@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.architectury.fluid.FluidStack;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -56,19 +57,19 @@ public abstract class TFCRecipeJS extends RecipeJS {
         return json1;
     }
 
-    public boolean getOptionalBoolMember(JsonObject json, String member, boolean fallback) {
-        if (json.get(member).isJsonNull()) {
-            return fallback;
-        } else {
-            return json.get(member).getAsBoolean();
+    public JsonArray buildMetals(ListJS listJS) {
+        var metals = new JsonArray();
+        for (var metal : listJS) {
+            var met = ListJS.of(metal);
+            if (met == null || met.size() < 3) {
+                throw new RecipeExceptionJS("Metal object must contain a metal, a minimum, and a maximum");
+            }
+            var me = new JsonObject();
+            me.addProperty("metal", met.get(0).toString());
+            me.addProperty("min", ListJS.orSelf(met.get(1)).toJson().getAsFloat());
+            me.addProperty("max", ListJS.orSelf(met.get(2)).toJson().getAsFloat());
+            metals.add(me);
         }
-    }
-
-    public int getOptionalIntMember(JsonObject json, String member, int fallback) {
-        if (json.get(member).isJsonNull()) {
-            return fallback;
-        } else {
-            return json.get(member).getAsInt();
-        }
+        return metals;
     }
 }

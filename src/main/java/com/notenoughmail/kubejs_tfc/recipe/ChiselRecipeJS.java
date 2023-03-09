@@ -36,13 +36,13 @@ public class ChiselRecipeJS extends TFCRecipeJS {
 
     @Override
     public void deserialize() {
-        if (!json.get("extra_drop").isJsonNull()) {
+        if (json.has("extra_drop")) {
             outputItems.add(parseResultItem(json.get("extra_drop")));
         }
         result = json.get("result").getAsString();
         ingredient = json.get("ingredient").getAsString();
         mode = json.get("mode").getAsString();
-        if (!json.get("item_ingredient").isJsonNull()) {
+        if (json.has("item_ingredient")) {
             var list = json.get("item_ingredient").getAsJsonArray();
             for (int i = 0 ; i < list.size() ; i++) {
                 inputItems.add(parseIngredientItem(list.get(i)));
@@ -67,7 +67,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
                 for (IngredientJS inputItem : inputItems) {
                     var item = inputItem.toJson().getAsJsonObject();
                     item.remove("nbt");
-                    item.remove("type");
+                    item.remove("type"); // Bad; this is an ingredient which means it should be able to have type as an option, this is only here b/c Kube likes to add a damage condition by default
                     array.add(item); // Strip the ingredient of Kube's dumb stuff
                 }
                 json.add("item_ingredient", array);

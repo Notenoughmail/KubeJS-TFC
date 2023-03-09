@@ -2,8 +2,6 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
-import dev.latvian.mods.kubejs.item.ItemStackJS;
-import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -30,7 +28,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
         for (var ingredient : ListJS.orSelf(listJS.get(1))) {
             if (ingredient instanceof FluidStackJS fluid) {
                 inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-            } else if (ingredient.toString().matches("\\[.+\\]")) {
+            } else if (ingredient.toString().matches("\\[\\[.+\\]")) {
                 inputFluids.add(parseFluidStackIngredient(ListJS.of(ingredient)));
             } else {
                 inputItems.add(parseIngredientItem(ingredient));
