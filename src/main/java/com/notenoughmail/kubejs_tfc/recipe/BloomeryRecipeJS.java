@@ -27,8 +27,6 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
             inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
         }
 
-        // fluidStackIngredient = parseFluidStackIngredient(ListJS.of(listJS.get(1)));
-
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
 
         duration = ListJS.orSelf(listJS.get(3)).toJson().getAsInt();
@@ -38,7 +36,6 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         outputItems.add(parseResultItem(json.get("result")));
         inputItems.add(parseIngredientItem(json.get("catalyst")));
-        // fluidStackIngredient = json.get("fluid").getAsJsonObject();
         inputFluids.add(json.get("fluid").getAsJsonObject());
         duration = json.get("duration").getAsInt();
     }
@@ -51,7 +48,6 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("catalyst", inputItems.get(0).toJson());
-            // json.add("fluid", fluidStackIngredient);
             json.add("fluid", inputFluids.get(0));
             json.addProperty("duration", duration);
         }

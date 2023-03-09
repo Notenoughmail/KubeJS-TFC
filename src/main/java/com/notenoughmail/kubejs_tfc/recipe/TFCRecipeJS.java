@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import dev.architectury.fluid.FluidStack;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -13,9 +14,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
 
     public String result;
     public String ingredient;
-    public JsonObject fluidResult;
     public List<FluidStackJS> outputFluids = new ArrayList<>();
-    public JsonObject fluidStackIngredient = new JsonObject();
     public List<JsonObject> inputFluids = new ArrayList<>();
     public String sound = "minecraft:block.brewing_stand.brew";
 
@@ -38,19 +37,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
         }
         var json = new JsonObject();
         json.add("ingredient", ingredient);
-        json.addProperty("amount", ListJS.orSelf(listJS.get(1)).toJson().getAsInt());
-        return json;
-    }
-
-    public JsonObject parseFluidStack(ListJS listJS) {
-        var json = new JsonObject();
-        json.addProperty("fluid", listJS.get(0).toString());
-        json.addProperty("amount", ListJS.orSelf(listJS.get(1)).toJson().getAsInt());
-        return json;
-    }
-
-    public JsonObject parseItemStackProvider(ListJS listJS) {
-        var json = new JsonObject();
+        json.addProperty("amount", listJS.size() > 1 ? ListJS.orSelf(listJS.get(1)).toJson().getAsInt() : FluidStack.bucketAmount());
         return json;
     }
 

@@ -1,15 +1,22 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class InstantBarrelRecipeJS extends TFCRecipeJS {
+public class SealedBarrelRecipeJS extends TFCRecipeJS {
+
+    private int duration;
+    // private JsonObject onSealISP = new JsonObject();
+    // private JsonObject onUnsealISP = new JsonObject();
 
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 3) {
-            throw new RecipeExceptionJS("Requires three arguments - result(s), ingredient item, and ingredient fluid");
+            throw new RecipeExceptionJS("Requires three arguments - result(s), ingredient(s), and duration");
         }
 
         for (var result : ListJS.orSelf(listJS.get(0))) {
@@ -20,21 +27,25 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             }
         }
 
-        inputItems.add(parseIngredientItem(listJS.get(1)));
-        boolean other = true;
-        for (var ingredientFluid : ListJS.orSelf(listJS.get(2))) {
-            if (ingredientFluid instanceof FluidStackJS fluid) {
+        for (var ingredient : ListJS.orSelf(listJS.get(1))) {
+            if (ingredient instanceof FluidStackJS fluid) {
                 inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                other = false;
+            } else if (ingredient.toString().matches("\\[.+\\]")) {
+                inputFluids.add(parseFluidStackIngredient(ListJS.of(ingredient)));
+            } else {
+                inputItems.add(parseIngredientItem(ingredient));
             }
         }
-        if (other) {
-            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
-        }
+
+        duration = ListJS.orSelf(listJS.get(2)).toJson().getAsInt();
 
         if (listJS.size() > 3) {
             sound = listJS.get(3).toString();
         }
+
+        // if (duration < 1) {
+        //     // TODO: ISPs - separate methods if I can get that to work
+        // }
     }
 
     @Override
@@ -54,6 +65,13 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
         if (json.has("sound")) {
             sound = json.get("sound").getAsString();
         }
+        duration = json.get("duration").getAsInt();
+        // if (json.has("on_seal")) {
+        //     onSealISP = json.get("on_seal").getAsJsonObject();
+        // }
+        // if (json.has("on_unseal")) {
+        //     onUnsealISP = json.get("on_unseal").getAsJsonObject();
+        // }
     }
 
     @Override
@@ -75,6 +93,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             if (!inputFluids.isEmpty()) {
                 json.add("input_fluid", inputFluids.get(0));
             }
+            json.addProperty("duration", duration);
         }
     }
 }

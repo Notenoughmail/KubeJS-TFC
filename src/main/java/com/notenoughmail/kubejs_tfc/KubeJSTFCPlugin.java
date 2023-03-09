@@ -61,7 +61,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.BarrelRecipe Barrel}
  *      - {@link net.dries007.tfc.common.recipes.InstantBarrelRecipe Instant} [Y]
  *      - {@link net.dries007.tfc.common.recipes.InstantFluidBarrelRecipe Instant Fluid} [Y]
- *      - {@link net.dries007.tfc.common.recipes.SealedBarrelRecipe Sealed}
+ *      - {@link net.dries007.tfc.common.recipes.SealedBarrelRecipe Sealed} [Y]
  *    - {@link net.dries007.tfc.common.recipes.BlastFurnaceRecipe Blast Furnace} [Y]
  *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery} [Y]
  *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting} [Y]
@@ -134,6 +134,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.BLAST_FURNACE.getId(), BlastFurnaceRecipeJS::new);
         event.register(TFCRecipeSerializers.INSTANT_BARREL.getId(), InstantBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId(), InstantFluidBarrelRecipeJS::new);
+        event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
     }
 
     @Override
