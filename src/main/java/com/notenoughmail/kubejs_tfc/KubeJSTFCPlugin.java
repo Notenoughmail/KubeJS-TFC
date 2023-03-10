@@ -7,8 +7,6 @@ import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
-import dev.latvian.mods.kubejs.script.ScriptType;
-import dev.latvian.mods.kubejs.util.ClassFilter;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.minecraft.world.item.ArmorMaterial;
@@ -26,8 +24,7 @@ import net.minecraft.world.item.Tier;
  *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
- *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [?]
- *     - Uncertain how the connection between rod and hook is made
+ *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [Y-]
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
  *  - Blocks
@@ -76,7 +73,7 @@ import net.minecraft.world.item.Tier;
  *      - Maybe also a way to give items item heats through JS?
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
- *      - Depending on how specification is done, custom types? [N]
+ *      - Depending on how specification is done, custom types? [?]
  *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide} [Y]
  *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
  *      - This turns out to be very difficult to build b/c the input count is separate from the ingredient
@@ -111,6 +108,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
     }
 
