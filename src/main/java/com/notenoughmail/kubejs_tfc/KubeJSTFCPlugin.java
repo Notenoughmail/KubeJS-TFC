@@ -20,15 +20,13 @@ import net.minecraft.world.item.Tier;
  * TODO:
  *  - Items
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
- *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [?]
- *     - Requires mixing into ModelGenerator to automake proper jsons
+ *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace} [Y]
  *   - {@link net.dries007.tfc.common.items.MoldItem Mold} [Y]
  *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [?]
- *     - Requires mixing into ModelGenerator to automake proper jsons
  *     - Uncertain how the connection between rod and hook is made
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
@@ -112,6 +110,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.ITEM.addType("tfc_propick", PropickItemBuilder.class, PropickItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
     }
 
@@ -135,12 +134,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.INSTANT_BARREL.getId(), InstantBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId(), InstantFluidBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
-    }
-
-    @Override
-    public void addClasses(ScriptType type, ClassFilter filter) {
-        filter.allow("com.notenoughmail.kubejs_tfc");
-        filter.deny(KubeJSTFCPlugin.class);
     }
 
     private void addToolTier(Tier tier) {
