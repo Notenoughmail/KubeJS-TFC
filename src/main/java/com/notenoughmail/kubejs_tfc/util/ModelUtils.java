@@ -9,7 +9,7 @@ public class ModelUtils {
 
     public static class ITEMS {
         public static void moldItemModelJson(ModelGenerator m, ResourceLocation id) {
-            m.parent("kubejs:item/generated_mold");
+            m.parent("kubejs_tfc:item/generated_mold");
             m.textures(moldTextures(id));
         }
 
@@ -57,31 +57,6 @@ public class ModelUtils {
             javelin.add("perspectives", perspectives);
 
             return javelin;
-        }
-
-        public static JsonObject fishingRodModelJson(ResourceLocation id, boolean diff) {
-            var rod = new JsonObject();
-            rod.addProperty("parent", "minecraft:item/handheld_rod");
-
-            var texture = newItemID(id).toString();
-            var textures = new JsonObject();
-            textures.addProperty("layer0", texture);
-            rod.add("textures", textures);
-
-            var overrides = new JsonArray();
-            var predicates = new JsonObject();
-            var predicate = new JsonObject();
-            var predTexture = new JsonObject();
-            predicate.addProperty("tfc:cast", 1);
-            predicates.add("predicate", predicate);
-            predicates.addProperty("model", "kubejs:item/generated_fishing_rod"); // This currently doesn't do anything because who-knows-why
-            predTexture.addProperty("tex", diff ? texture + "_cast" : "item/fishing_rod_cast"); // TODO: Fix this
-            predicates.add("textures", predTexture);
-            overrides.add(predicates);
-            rod.add("overrides", overrides);
-
-            System.out.println(rod);
-            return rod;
         }
 
         private static ResourceLocation newItemID(ResourceLocation id) {

@@ -15,8 +15,8 @@ public abstract class TFCRecipeJS extends RecipeJS {
 
     public String result;
     public String ingredient;
-    public List<FluidStackJS> outputFluids = new ArrayList<>();
-    public List<JsonObject> inputFluids = new ArrayList<>();
+    public final List<FluidStackJS> outputFluids = new ArrayList<>();
+    public final List<JsonObject> inputFluids = new ArrayList<>();
     public String sound = "minecraft:block.brewing_stand.brew";
 
     public JsonObject parseFluidStackIngredient(ListJS listJS) {

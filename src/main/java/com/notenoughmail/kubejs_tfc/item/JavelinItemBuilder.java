@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
-import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import net.dries007.tfc.common.items.JavelinItem;
@@ -12,11 +11,12 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     public JavelinItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
+        unstackable();
     }
 
     @Override
     public Item createObject() {
-        return new JavelinItem(toolTier, attackDamageBaseline, speedBaseline, createItemProperties(), new ResourceLocation(KubeJS.MOD_ID, "textures/entity/projectiles/" + id.getPath() + "_javelin.png"));
+        return new JavelinItem(toolTier, attackDamageBaseline, speedBaseline, createItemProperties(), new ResourceLocation(id.getNamespace(), "textures/entity/projectiles/" + id.getPath() + "_javelin.png"));
     }
 
     @Override

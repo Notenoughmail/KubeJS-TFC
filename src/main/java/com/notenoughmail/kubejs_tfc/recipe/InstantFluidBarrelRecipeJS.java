@@ -7,8 +7,6 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
 
-    private JsonObject addedFluidStackIngredient = new JsonObject();
-
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 3) {
@@ -25,25 +23,25 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         }
 
         // Fragile and dumb, but I have a choice between a proper implementation of a FluidStackIngredientJS and this
-        boolean primarybool = true;
+        boolean primaryBool = true;
         for (var primary : ListJS.orSelf(listJS.get(1))) {
             if (primary instanceof FluidStackJS fluid) {
                 inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                primarybool = false;
+                primaryBool = false;
             }
         }
-        if (primarybool) {
+        if (primaryBool) {
             inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
         }
 
-        boolean addedbool = true;
+        boolean addedBool = true;
         for (var added : ListJS.orSelf(listJS.get(2))) {
             if (added instanceof FluidStackJS fluid) {
                 inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                addedbool = false;
+                addedBool = false;
             }
         }
-        if (addedbool) {
+        if (addedBool) {
             inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
         }
 

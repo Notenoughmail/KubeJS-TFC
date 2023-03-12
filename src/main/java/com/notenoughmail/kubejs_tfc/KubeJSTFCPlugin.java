@@ -24,7 +24,8 @@ import net.minecraft.world.item.Tier;
  *     - TFC Casting w/ Channels integration?
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
- *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [Y-]
+ *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [N]
+ *     - Creating a vanilla rod is extremely broken ,it's a miracle TFC's ever worked enough to get me invested
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
  *  - Blocks
@@ -108,7 +109,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
     }
 
