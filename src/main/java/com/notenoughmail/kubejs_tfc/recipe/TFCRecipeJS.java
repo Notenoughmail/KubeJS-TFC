@@ -18,6 +18,7 @@ public abstract class TFCRecipeJS extends RecipeJS {
     public final List<FluidStackJS> outputFluids = new ArrayList<>();
     public final List<JsonObject> inputFluids = new ArrayList<>();
     public String sound = "minecraft:block.brewing_stand.brew";
+    public JsonObject itemStackProvider;
 
     public JsonObject parseFluidStackIngredient(ListJS listJS) {
         var ingredient = new JsonArray();
@@ -71,5 +72,24 @@ public abstract class TFCRecipeJS extends RecipeJS {
             metals.add(me);
         }
         return metals;
+    }
+
+    public JsonObject parseItemStackProvider(ListJS listJS) {
+        var ISP = new JsonObject();
+        var stack = parseResultItem(listJS.get(0)).toResultJson().getAsJsonObject();
+        ISP.add("stack", stack);
+
+        var modifiers = ListJS.orSelf(listJS.get(1)).toJson().getAsJsonArray();
+        if (!modifiers.isEmpty()) {
+            ISP.add("modifiers", modifiers);
+        }
+
+        return ISP;
+    }
+
+    public JsonObject itemStackToISProvider(JsonObject json) {
+        var ISP = new JsonObject();
+        ISP.add("stack", json);
+        return ISP;
     }
 }

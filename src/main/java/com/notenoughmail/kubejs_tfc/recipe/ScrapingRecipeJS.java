@@ -17,14 +17,6 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
         outputItems.add(parseResultItem(listJS.get(0)));
-
-        if (listJS.size() > 2) {
-            tex_out = listJS.get(2).toString();
-        }
-
-        if (listJS.size() > 3) {
-            tex_in = listJS.get(3).toString();
-        }
     }
 
     @Override
@@ -33,6 +25,20 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
         inputItems.add(parseIngredientItem(json.get("ingredient")));
         tex_out = json.get("output_texture").getAsString();
         tex_in = json.get("input_texture").getAsString();
+    }
+
+    public ScrapingRecipeJS inputTexture(Object o) {
+        var tex = ListJS.orSelf(o);
+        tex_in = tex.get(0).toString();
+        save();
+        return this;
+    }
+
+    public ScrapingRecipeJS outputTexture(Object o) {
+        var tex = ListJS.orSelf(o);
+        tex_out = tex.get(0).toString();
+        save();
+        return this;
     }
 
     @Override

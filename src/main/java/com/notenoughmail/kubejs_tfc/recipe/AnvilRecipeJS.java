@@ -18,25 +18,22 @@ public class AnvilRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires at least 3 arguments - result, ingredient, and rules");
         }
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        var result = ListJS.orSelf(listJS.get(0));
+        if (result.size() < 2) {
+            itemStackProvider = itemStackToISProvider(parseResultItem(result.get(0)).toResultJson().getAsJsonObject());
+        } else {
+            itemStackProvider = parseItemStackProvider(result);
+        }
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
         input = inputItems.get(0).toJson().getAsJsonObject();
 
         rules = ListJS.orSelf(listJS.get(2)).toJson().getAsJsonArray();
-
-        if (listJS.size() > 3) {
-            bonus = ListJS.orSelf(listJS.get(3)).toJson().getAsBoolean();
-        }
-
-        if (listJS.size() > 4) {
-            tier = ListJS.orSelf(listJS.get(4)).toJson().getAsInt();
-        }
     }
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemStackProvider = json.get("result").getAsJsonObject();
         input = json.get("input").getAsJsonObject();
         rules = json.get("rules").getAsJsonArray();
         if (json.has("tier")) {
@@ -47,10 +44,22 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         }
     }
 
+    public AnvilRecipeJS tier(int i) {
+        tier = i;
+        save();
+        return this;
+    }
+
+    public AnvilRecipeJS applyBonus() {
+        bonus = true;
+        save();
+        return this;
+    }
+
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemStackProvider);
         }
 
         if (serializeInputs) {

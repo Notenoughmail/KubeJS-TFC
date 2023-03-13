@@ -12,27 +12,35 @@ public class WeldingRecipeJS extends TFCRecipeJS {
         if (listJS.size() < 2 ) {
             throw new RecipeExceptionJS("Requires at least two arguments - result and inputs");
         }
-        if (listJS.size() > 2) {
-            weldingTier = ListJS.orSelf(listJS.get(2)).toJson().getAsInt();
-        }
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        var result = ListJS.orSelf(listJS.get(0));
+        if (result.size() < 2) {
+            itemStackProvider = itemStackToISProvider(parseResultItem(result.get(0)).toResultJson().getAsJsonObject());
+        } else {
+            itemStackProvider = parseItemStackProvider(result);
+        }
     }
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemStackProvider = json.get("result").getAsJsonObject();
         inputItems.add(parseIngredientItem(json.get("first_input")));
         inputItems.add(parseIngredientItem(json.get("second_input")));
         weldingTier = json.get("tier").getAsInt();
     }
 
+    public WeldingRecipeJS tier(int i) {
+        weldingTier = i;
+        save();
+        return this;
+    }
+
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemStackProvider);
         }
 
         if (serializeInputs) {

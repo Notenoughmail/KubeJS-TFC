@@ -44,10 +44,6 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         if (addedBool) {
             inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
         }
-
-        if (listJS.size() > 3) {
-            sound = listJS.get(3).toString();
-        }
     }
 
     @Override
@@ -58,6 +54,13 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         if (json.has("sound")) {
             sound = json.get("sound").getAsString();
         }
+    }
+
+    public InstantFluidBarrelRecipeJS sound(Object o) {
+        var sound = ListJS.orSelf(o);
+        this.sound = sound.get(0).toString();
+        save();
+        return this;
     }
 
     @Override

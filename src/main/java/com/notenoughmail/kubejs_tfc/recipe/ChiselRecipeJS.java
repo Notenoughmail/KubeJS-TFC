@@ -7,7 +7,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class ChiselRecipeJS extends TFCRecipeJS {
 
-    private String mode;
+    private String mode = "smooth";
 
     @Override
     public void create(ListJS listJS) {
@@ -21,23 +21,13 @@ public class ChiselRecipeJS extends TFCRecipeJS {
 
         if (listJS.size() > 2) {
             mode = listJS.get(2).toString();
-        } else {
-            mode = "smooth";
-        }
-
-        if (listJS.size() > 3) {
-            outputItems.add(parseResultItem(listJS.get(3)));
-        }
-
-        if (listJS.size() > 4) {
-            inputItems.addAll(parseIngredientItemList(listJS.get(4)));
         }
     }
 
     @Override
     public void deserialize() {
         if (json.has("extra_drop")) {
-            outputItems.add(parseResultItem(json.get("extra_drop")));
+            itemStackProvider = json.get("extra_drop").getAsJsonObject();
         }
         result = json.get("result").getAsString();
         ingredient = json.get("ingredient").getAsString();
@@ -50,13 +40,29 @@ public class ChiselRecipeJS extends TFCRecipeJS {
         }
     }
 
+    public ChiselRecipeJS extraDrop(Object o) {
+        var drop = ListJS.orSelf(o);
+        if (drop.size() < 2) {
+            itemStackProvider = itemStackToISProvider(parseResultItem(drop.get(0)).toResultJson().getAsJsonObject());
+        } else {
+            itemStackProvider = parseItemStackProvider(drop);
+        }
+        json.add("extra_drop", itemStackProvider);
+        save();
+        return this;
+    }
+
+    public ChiselRecipeJS itemIngredients(Object... o) {
+        var list = ListJS.ofArray(o);
+        inputItems.addAll(parseIngredientItemList(list));
+        save();
+        return this;
+    }
+
     @Override
     public void serialize() {
         if (serializeOutputs) {
             json.addProperty("result", result);
-            if (!outputItems.isEmpty()) {
-                json.add("extra_drop", outputItems.get(0).toResultJson());
-            }
         }
 
         if (serializeInputs) {

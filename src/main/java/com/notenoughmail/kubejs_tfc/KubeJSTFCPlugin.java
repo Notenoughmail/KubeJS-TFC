@@ -16,6 +16,7 @@ import net.minecraft.world.item.Tier;
 
 /**
  * TODO:
+ *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube
  *  - Items
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]
@@ -25,7 +26,7 @@ import net.minecraft.world.item.Tier;
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [N]
- *     - Creating a vanilla rod is extremely broken ,it's a miracle TFC's ever worked enough to get me invested
+ *     - Creating a vanilla rod is extremely broken, it's a miracle TFC's ever worked enough to get me invested
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
  *  - Blocks
@@ -62,7 +63,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.BloomeryRecipe Bloomery} [Y]
  *    - {@link net.dries007.tfc.common.recipes.CastingRecipe Casting} [Y]
  *    - {@link net.dries007.tfc.common.recipes.ChiselRecipe Chisel} [Y]
- *      - Extra outputs method [N]
+ *      - Extra outputs method [Y]
  *      - Type specify method [N]
  *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse} [Y]
  *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs}
@@ -91,6 +92,7 @@ import net.minecraft.world.item.Tier;
  *      - See above
  *    - Copy heat functionality as a recipe method?
  *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/ingredients/">TFC's custom ingredient types</a>
+ *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/common-types/#item-stack-providers"> TFC's ISPs</a>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

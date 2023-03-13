@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 public class KubeJSTFC {
 
     public static final String MOD_NAME = "KubeJS TFC";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
 
     public KubeJSTFC() {
