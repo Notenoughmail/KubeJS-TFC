@@ -13,8 +13,8 @@ import java.util.List;
 
 public abstract class TFCRecipeJS extends RecipeJS {
 
-    public String result;
-    public String ingredient;
+    public String result = "minecraft:air";
+    public JsonArray blockIngredient;
     public final List<FluidStackJS> outputFluids = new ArrayList<>();
     public final List<JsonObject> inputFluids = new ArrayList<>();
     public String sound = "minecraft:block.brewing_stand.brew";
@@ -67,8 +67,8 @@ public abstract class TFCRecipeJS extends RecipeJS {
             }
             var me = new JsonObject();
             me.addProperty("metal", met.get(0).toString());
-            me.addProperty("min", ListJS.orSelf(met.get(1)).toJson().getAsFloat());
-            me.addProperty("max", ListJS.orSelf(met.get(2)).toJson().getAsFloat());
+            me.addProperty("min", ListJS.orSelf(met.get(1)).toJson().getAsDouble());
+            me.addProperty("max", ListJS.orSelf(met.get(2)).toJson().getAsDouble());
             metals.add(me);
         }
         return metals;

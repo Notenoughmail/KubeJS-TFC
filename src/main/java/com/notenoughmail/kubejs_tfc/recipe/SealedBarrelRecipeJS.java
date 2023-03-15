@@ -90,7 +90,6 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
                 onSealISP = parseItemStackProvider(isp);
             }
         }
-        json.add("on_seal", onSealISP);
         save();
         return this;
     }
@@ -107,7 +106,6 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
                 onUnsealISP = parseItemStackProvider(isp);
             }
         }
-        json.add("on_unseal", onUnsealISP);
         save();
         return this;
     }
@@ -132,6 +130,12 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
                 json.add("input_fluid", inputFluids.get(0));
             }
             json.addProperty("duration", duration);
+            if (!onUnsealISP.isJsonNull()) {
+                json.add("on_unseal", onUnsealISP);
+            }
+            if (!onSealISP.isJsonNull()) {
+                json.add("on_seal", onSealISP);
+            }
         }
     }
 }

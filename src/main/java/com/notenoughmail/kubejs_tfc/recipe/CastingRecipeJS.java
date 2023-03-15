@@ -11,7 +11,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 4) {
-            throw new RecipeExceptionJS("Requires five arguments - result, mold, fluid ingredient, and break chance");
+            throw new RecipeExceptionJS("Requires four arguments - result, mold, fluid ingredient, and break chance");
         }
 
         inputItems.add(parseIngredientItem(listJS.get(1)));

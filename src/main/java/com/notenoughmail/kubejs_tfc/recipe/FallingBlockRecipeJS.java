@@ -1,38 +1,54 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
 public class FallingBlockRecipeJS extends TFCRecipeJS {
 
-    private boolean copy = false;
+    private boolean copy = true; // TFC's default is false, but this makes more sense for this implementation
 
+    // The cardinal sin, not putting the result first
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 1) {
-            throw new RecipeExceptionJS("Requires at least 1 argument - result");
+            throw new RecipeExceptionJS("Requires at least 1 argument - ingredient");
         }
 
-        result = listJS.get(0).toString();
-
-        /*
-         * This makes it so the copy_input member is true when
-         * only the result is provided, in addition to setting
-         * the ingredient to be the input but stripped of
-         * block properties.
-         */
-        if (listJS.size() < 2) {
-            copy = !result.matches(".+\\[.+\\]");
-            ingredient = result.replaceAll("\\[.+\\]", "");
+        // Block ingredient implementation, should probably be a wrapper
+        var ingredients = ListJS.of(listJS.get(0));
+        if (ingredients.size() < 2) {
+            blockIngredient.add(ingredients.get(0).toString());
         } else {
-            ingredient = listJS.get(1).toString();
+            for (var ingred : ingredients) {
+                if (ingred instanceof JsonObject json) {
+                    blockIngredient.add(json);
+                } else if (ingred.toString().matches("#.+")) {
+                    var tag = new JsonObject();
+                    tag.addProperty("tag", ingred.toString().replaceFirst("#", ""));
+                    blockIngredient.add(tag);
+                } else {
+                    blockIngredient.add(ingred.toString());
+                }
+            }
+        }
+
+        if (listJS.size() > 1) {
+            if (listJS.get(1) instanceof Boolean bool) {
+                copy = bool;
+            } else {
+                result = listJS.get(1).toString();
+                copy = false;
+            }
         }
     }
 
     @Override
     public void deserialize() {
-        ingredient = json.get("ingredient").getAsString();
-        result = json.get("result").getAsString();
+        blockIngredient = json.get("ingredient").getAsJsonArray();
+        if (json.has("result")) {
+            result = json.get("result").getAsString();
+        }
         if (json.has("copy_input")) {
             copy = json.get("copy_input").getAsBoolean();
         }
@@ -45,8 +61,10 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.addProperty("ingredient", ingredient);
+            json.add("ingredient", blockIngredient);
             json.addProperty("copy_input", copy);
         }
+
+        System.out.println(json);
     }
 }

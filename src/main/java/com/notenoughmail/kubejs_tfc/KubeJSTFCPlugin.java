@@ -93,6 +93,7 @@ import net.minecraft.world.item.Tier;
  *    - Copy heat functionality as a recipe method?
  *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/ingredients/">TFC's custom ingredient types</a>
  *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/common-types/#item-stack-providers"> TFC's ISPs</a>
+ *    - TFC Worldgen features?
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

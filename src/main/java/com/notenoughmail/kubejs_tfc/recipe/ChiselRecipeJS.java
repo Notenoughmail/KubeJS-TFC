@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -17,7 +18,23 @@ public class ChiselRecipeJS extends TFCRecipeJS {
 
         result = listJS.get(0).toString();
 
-        ingredient = listJS.get(1).toString();
+        // Block ingredient implementation, should probably also have a wrapper
+        var ingredients = ListJS.of(listJS.get(1));
+        if (ingredients.size() < 2) {
+            blockIngredient.add(ingredients.get(0).toString());
+        } else {
+            for (var ingred : ingredients) {
+                if (ingred instanceof JsonObject json) {
+                    blockIngredient.add(json);
+                } else if (ingred.toString().matches("#.+")) {
+                    var tag = new JsonObject();
+                    tag.addProperty("tag", ingred.toString().replaceFirst("#", ""));
+                    blockIngredient.add(tag);
+                } else {
+                    blockIngredient.add(ingred.toString());
+                }
+            }
+        }
 
         if (listJS.size() > 2) {
             mode = listJS.get(2).toString();
@@ -30,7 +47,11 @@ public class ChiselRecipeJS extends TFCRecipeJS {
             itemStackProvider = json.get("extra_drop").getAsJsonObject();
         }
         result = json.get("result").getAsString();
-        ingredient = json.get("ingredient").getAsString();
+        if (json.get("ingredient").isJsonArray()) {
+            blockIngredient = json.get("ingredient").getAsJsonArray();
+        } else {
+            blockIngredient.add(json.get("ingredient"));
+        }
         mode = json.get("mode").getAsString();
         if (json.has("item_ingredient")) {
             var list = json.get("item_ingredient").getAsJsonArray();
@@ -66,7 +87,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.addProperty("ingredient", ingredient);
+            json.add("ingredient", blockIngredient);
             json.addProperty("mode", mode);
             if (!inputItems.isEmpty()) {
                 JsonArray array = new JsonArray();
@@ -79,5 +100,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
                 json.add("item_ingredient", array);
             }
         }
+
+        System.out.println(json);
     }
 }
