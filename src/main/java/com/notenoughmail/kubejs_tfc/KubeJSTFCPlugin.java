@@ -3,10 +3,12 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
+import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import dev.latvian.mods.kubejs.script.BindingsEvent;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.minecraft.world.item.ArmorMaterial;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.Tier;
 /**
  * TODO:
  *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube
+ *  - [B] URGENT: All recipes (querns at least) which use Item Ingredients are broken
  *  - Items
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]
@@ -84,6 +87,10 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping} [Y]
  *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern} [Y]
  *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding} [Y]
+ *    - Block Ingredient implementation [Y]
+ *    - Fluid Stack Ingredient implementation
+ *    - Item Stack Ingredient implementation
+ *    - Item Stack Provider implementation
  *  - Misc.
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
  *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers} [Y]
@@ -135,6 +142,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.INSTANT_BARREL.getId(), InstantBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId(), InstantFluidBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
+    }
+
+    @Override
+    public void addBindings(BindingsEvent event) {
+        event.add("BlockIngredient", BlockIngredientWrapper.class);
+        event.add("BlockIng", BlockIngredientWrapper.class);
     }
 
     private void addToolTier(Tier tier) {

@@ -68,7 +68,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            if (!itemStackProvider.isJsonNull()) {
+            if (itemStackProvider != null) {
                 json.add("output_item", itemStackProvider);
             }
             if (!outputFluids.isEmpty()) {

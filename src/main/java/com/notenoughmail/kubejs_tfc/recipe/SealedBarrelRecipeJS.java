@@ -130,10 +130,10 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
                 json.add("input_fluid", inputFluids.get(0));
             }
             json.addProperty("duration", duration);
-            if (!onUnsealISP.isJsonNull()) {
+            if (onUnsealISP != null) {
                 json.add("on_unseal", onUnsealISP);
             }
-            if (!onSealISP.isJsonNull()) {
+            if (onSealISP != null) {
                 json.add("on_seal", onSealISP);
             }
         }
