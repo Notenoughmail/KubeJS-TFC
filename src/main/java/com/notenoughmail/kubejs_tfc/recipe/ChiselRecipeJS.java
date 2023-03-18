@@ -18,7 +18,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
 
         result = listJS.get(0).toString();
 
-        blockIngredient = BlockIngredientJS.of(ListJS.orSelf(listJS.get(1)));
+        blockIngredient = BlockIngredientJS.of(listJS.get(1));
 
         if (listJS.size() > 2) {
             mode = listJS.get(2).toString();

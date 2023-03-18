@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -21,16 +22,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             }
         }
 
-        boolean other = true;
-        for (var ingredientFluid : ListJS.orSelf(listJS.get(1))) {
-            if (ingredientFluid instanceof FluidStackJS fluid) {
-                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                other = false;
-            }
-        }
-        if (other) {
-            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
-        }
+        inputFluids.add(FluidStackIngredientJS.of(listJS.get(1)));
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
     }
@@ -38,7 +30,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         inputItems.add(parseIngredientItem(json.get("catalyst")));
-        inputFluids.add(json.get("fluid").getAsJsonObject());
+        inputFluids.add(FluidStackIngredientJS.fromJson(json.get("fluid")));
         outputFluids.add(FluidStackJS.fromJson(json.get("result").getAsJsonObject()));
     }
 
@@ -50,7 +42,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("catalyst", inputItems.get(0).toJson());
-            json.add("fluid", inputFluids.get(0));
+            json.add("fluid", inputFluids.get(0).toJson());
         }
     }
 }

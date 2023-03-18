@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -27,16 +28,8 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
         }
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
-        boolean other = true;
-        for (var ingredientFluid : ListJS.orSelf(listJS.get(2))) {
-            if (ingredientFluid instanceof FluidStackJS fluid) {
-                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                other = false;
-            }
-        }
-        if (other) {
-            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
-        }
+
+        inputFluids.add(FluidStackIngredientJS.of(listJS.get(2)));
     }
 
     @Override
@@ -45,7 +38,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             inputItems.add(parseIngredientItem(json.get("input_item")));
         }
         if (json.has("input_fluid")) {
-            inputFluids.add(json.get("input_fluid").getAsJsonObject());
+            inputFluids.add(FluidStackIngredientJS.fromJson(json.get("input_fluid")));
         }
         if (json.has("output_item")) {
             itemStackProvider = json.get("output_item").getAsJsonObject();
@@ -82,7 +75,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
                 json.add("input_item", inputItems.get(0).toJson());
             }
             if (!inputFluids.isEmpty()) {
-                json.add("input_fluid", inputFluids.get(0));
+                json.add("input_fluid", inputFluids.get(0).toJson());
             }
         }
     }

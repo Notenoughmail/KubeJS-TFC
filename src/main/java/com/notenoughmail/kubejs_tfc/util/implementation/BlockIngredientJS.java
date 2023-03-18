@@ -102,7 +102,7 @@ public class BlockIngredientJS {
         } else if (json.has("item")) {
             return json.get("item").getAsString();
         } else {
-            throw new RecipeExceptionJS("KubejsTFC does not currently support the block ingredient type specified, please open an issue on GitHub");
+            throw new RecipeExceptionJS("KubeJS TFC does not currently support the block ingredient type specified, please open an issue on GitHub");
         }
     }
 
@@ -124,8 +124,8 @@ public class BlockIngredientJS {
 
         var json = new JsonArray();
         for (var ingred : blocks) {
-            var obj = new JsonObject();
             if (ingred.matches("#.+")) {
+                var obj = new JsonObject();
                 obj.addProperty("tag", ingred.replaceFirst("#", ""));
                 json.add(obj); // Currently breaks stuff, see above
             } else {

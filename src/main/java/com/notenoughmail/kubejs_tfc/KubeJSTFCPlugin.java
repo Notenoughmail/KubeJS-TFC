@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidIngredientWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -148,6 +149,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void addBindings(BindingsEvent event) {
         event.add("BlockIngredient", BlockIngredientWrapper.class);
         event.add("BlockIng", BlockIngredientWrapper.class);
+        event.add("FluidStackIngredient", FluidIngredientWrapper.class);
+        event.add("FSIngredient", FluidIngredientWrapper.class);
+        event.add("FluidStackIng", FluidIngredientWrapper.class);
+        event.add("FluidIngredient", FluidIngredientWrapper.class);
     }
 
     private void addToolTier(Tier tier) {

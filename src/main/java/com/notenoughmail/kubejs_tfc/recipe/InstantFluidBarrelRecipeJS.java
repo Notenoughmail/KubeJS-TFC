@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
-import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -22,35 +22,15 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
             }
         }
 
-        // Fragile and dumb, but I have a choice between a proper implementation of a FluidStackIngredientJS and this
-        boolean primaryBool = true;
-        for (var primary : ListJS.orSelf(listJS.get(1))) {
-            if (primary instanceof FluidStackJS fluid) {
-                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                primaryBool = false;
-            }
-        }
-        if (primaryBool) {
-            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(1))));
-        }
-
-        boolean addedBool = true;
-        for (var added : ListJS.orSelf(listJS.get(2))) {
-            if (added instanceof FluidStackJS fluid) {
-                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-                addedBool = false;
-            }
-        }
-        if (addedBool) {
-            inputFluids.add(parseFluidStackIngredient(ListJS.of(listJS.get(2))));
-        }
+        inputFluids.add(FluidStackIngredientJS.of(listJS.get(1)));
+        inputFluids.add(FluidStackIngredientJS.of(listJS.get(2)));
     }
 
     @Override
     public void deserialize() {
         outputFluids.add(FluidStackJS.fromJson(json.get("output_fluid").getAsJsonObject()));
-        inputFluids.add(json.get("primary_fluid").getAsJsonObject());
-        inputFluids.add(json.get("added_fluid").getAsJsonObject());
+        inputFluids.add(FluidStackIngredientJS.fromJson(json.get("primary_fluid")));
+        inputFluids.add(FluidStackIngredientJS.fromJson(json.get("added_fluid")));
         if (json.has("sound")) {
             sound = json.get("sound").getAsString();
         }
@@ -71,8 +51,8 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.add("primary_fluid", inputFluids.get(0));
-            json.add("added_fluid", inputFluids.get(1));
+            json.add("primary_fluid", inputFluids.get(0).toJson());
+            json.add("added_fluid", inputFluids.get(1).toJson());
         }
     }
 }

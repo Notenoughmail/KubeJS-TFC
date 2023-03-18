@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -34,9 +35,9 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
 
         for (var ingredient : ListJS.orSelf(listJS.get(1))) {
             if (ingredient instanceof FluidStackJS fluid) {
-                inputFluids.add(fluidStackToFSIngredient(fluid.toJson()));
-            } else if (ingredient.toString().matches("\\[\\[.+\\]")) {
-                inputFluids.add(parseFluidStackIngredient(ListJS.of(ingredient)));
+                inputFluids.add(FluidStackIngredientJS.of(fluid));
+            } else if (ingredient instanceof FluidStackIngredientJS fluid) {
+                inputFluids.add(FluidStackIngredientJS.of(fluid));
             } else {
                 inputItems.add(parseIngredientItem(ingredient));
             }
@@ -51,7 +52,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             inputItems.add(parseIngredientItem(json.get("input_item")));
         }
         if (json.has("input_fluid")) {
-            inputFluids.add(json.get("input_fluid").getAsJsonObject());
+            inputFluids.add(FluidStackIngredientJS.fromJson(json.get("input_fluid")));
         }
         if (json.has("output_item")) {
             itemStackProvider = json.get("output_item").getAsJsonObject();
@@ -127,7 +128,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
                 json.add("input_item", inputItems.get(0).toJson());
             }
             if (!inputFluids.isEmpty()) {
-                json.add("input_fluid", inputFluids.get(0));
+                json.add("input_fluid", inputFluids.get(0).toJson());
             }
             json.addProperty("duration", duration);
             if (onUnsealISP != null) {
