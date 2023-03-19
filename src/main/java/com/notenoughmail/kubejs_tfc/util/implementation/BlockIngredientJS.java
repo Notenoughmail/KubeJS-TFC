@@ -107,9 +107,9 @@ public class BlockIngredientJS {
     }
 
     /**
-     * Due to the way TFC currently implements its json parsing, arrays of non-strings do not work.
-     * See: {@link net.dries007.tfc.common.recipes.ingredients.BlockIngredients#fromJsonArray(JsonArray)}
-     * This means only BlockIngredient.of(<block|tag>), BlockIng.of([<block>...]), <block|tag>, and [<block>...] work
+     * Due to the way TFC currently implements its json parsing, arrays of non-strings do not work. <br>
+     * See: {@link net.dries007.tfc.common.recipes.ingredients.BlockIngredients#fromJsonArray(JsonArray)} <br>
+     * This means only BlockIngredient.of('block|tag'), BlockIng.of(['block'...]), 'block|tag', and ['block'...] work
      */
     public JsonElement toJson() {
         if (blocks.size() == 1) {
@@ -133,5 +133,22 @@ public class BlockIngredientJS {
             }
         }
         return json;
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append("BlockIngredient.of(['");
+        builder.append(blocks.get(0));
+        builder.append("'");
+        if (blocks.size() > 1) {
+            for (int i = 1 ; i < blocks.size() ; i++) {
+                builder.append(", '");
+                builder.append(blocks.get(i));
+                builder.append("'");
+            }
+        }
+        builder.append("])");
+        return builder.toString();
     }
 }

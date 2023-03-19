@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -18,12 +19,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires at least 3 arguments - result, ingredient, and rules");
         }
 
-        var result = ListJS.orSelf(listJS.get(0));
-        if (result.size() < 2) {
-            itemStackProvider = itemStackToISProvider(parseResultItem(result.get(0)).toResultJson().getAsJsonObject());
-        } else {
-            itemStackProvider = parseItemStackProvider(result);
-        }
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
         input = inputItems.get(0).toJson().getAsJsonObject();
@@ -33,7 +29,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
 
     @Override
     public void deserialize() {
-        itemStackProvider = json.get("result").getAsJsonObject();
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         input = json.get("input").getAsJsonObject();
         rules = json.get("rules").getAsJsonArray();
         if (json.has("tier")) {
@@ -59,7 +55,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", itemStackProvider);
+            json.add("result", itemProviderResult.toJson());
         }
 
         if (serializeInputs) {

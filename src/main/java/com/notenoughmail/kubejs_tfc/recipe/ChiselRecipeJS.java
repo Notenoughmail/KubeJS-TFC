@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -28,7 +29,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         if (json.has("extra_drop")) {
-            itemStackProvider = json.get("extra_drop").getAsJsonObject();
+            itemProviderResult = ItemStackProviderJS.fromJson(json.get("extra_drop").getAsJsonObject());
         }
         result = json.get("result").getAsString();
         blockIngredient = BlockIngredientJS.fromJson(json.get("ingredient"));
@@ -42,13 +43,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     }
 
     public ChiselRecipeJS extraDrop(Object o) {
-        var drop = ListJS.orSelf(o);
-        if (drop.size() < 2) {
-            itemStackProvider = itemStackToISProvider(parseResultItem(drop.get(0)).toResultJson().getAsJsonObject());
-        } else {
-            itemStackProvider = parseItemStackProvider(drop);
-        }
-        json.add("extra_drop", itemStackProvider);
+        itemProviderResult = ItemStackProviderJS.of(o);
         save();
         return this;
     }
@@ -64,6 +59,9 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     public void serialize() {
         if (serializeOutputs) {
             json.addProperty("result", result);
+            if (itemProviderResult != null) {
+                json.add("extra_drop", itemProviderResult.toJson());
+            }
         }
 
         if (serializeInputs) {

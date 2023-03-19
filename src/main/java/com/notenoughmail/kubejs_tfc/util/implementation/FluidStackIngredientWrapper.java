@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
-public class FluidIngredientWrapper {
+public class FluidStackIngredientWrapper {
 
     public static FluidStackIngredientJS of(Object o) {
         return FluidStackIngredientJS.of(o);

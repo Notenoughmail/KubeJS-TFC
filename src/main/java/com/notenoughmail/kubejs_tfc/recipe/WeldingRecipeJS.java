@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -15,17 +16,12 @@ public class WeldingRecipeJS extends TFCRecipeJS {
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));
 
-        var result = ListJS.orSelf(listJS.get(0));
-        if (result.size() < 2) {
-            itemStackProvider = itemStackToISProvider(parseResultItem(result.get(0)).toResultJson().getAsJsonObject());
-        } else {
-            itemStackProvider = parseItemStackProvider(result);
-        }
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
     }
 
     @Override
     public void deserialize() {
-        itemStackProvider = json.get("result").getAsJsonObject();
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.add(parseIngredientItem(json.get("first_input")));
         inputItems.add(parseIngredientItem(json.get("second_input")));
         weldingTier = json.get("tier").getAsInt();
@@ -40,7 +36,7 @@ public class WeldingRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", itemStackProvider);
+            json.add("result", itemProviderResult.toJson());
         }
 
         if (serializeInputs) {

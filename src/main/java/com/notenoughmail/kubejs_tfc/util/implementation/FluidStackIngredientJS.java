@@ -20,7 +20,7 @@ public class FluidStackIngredientJS {
 
     public static final FluidStackIngredientJS EMPTY = new FluidStackIngredientJS(0, "empty");
 
-    public static FluidStackIngredientJS of (@Nullable Object o) {
+    public static FluidStackIngredientJS of(@Nullable Object o) {
         if (o instanceof Wrapper w) {
             o = w.unwrap();
         }
@@ -60,7 +60,7 @@ public class FluidStackIngredientJS {
         return EMPTY;
     }
 
-    public static FluidStackIngredientJS of (@Nullable Object o, int i) {
+    public static FluidStackIngredientJS of(@Nullable Object o, int i) {
         var ingredient = of(o);
         ingredient.withAmount(i);
         return ingredient;
@@ -157,5 +157,24 @@ public class FluidStackIngredientJS {
             json.add(obj);
         }
         return json;
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append("FluidStackIngredient.of(['");
+        builder.append(fluids.get(0));
+        builder.append("'");
+        if (fluids.size() > 1) {
+            for (int i = 1 ; i < fluids.size() ; i++) {
+                builder.append(", '");
+                builder.append(fluids.get(i));
+                builder.append("'");
+            }
+        }
+        builder.append("], ");
+        builder.append(amount);
+        builder.append(")");
+        return builder.toString();
     }
 }

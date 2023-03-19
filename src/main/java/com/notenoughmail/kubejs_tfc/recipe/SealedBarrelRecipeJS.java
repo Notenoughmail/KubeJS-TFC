@@ -1,8 +1,8 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -10,8 +10,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 public class SealedBarrelRecipeJS extends TFCRecipeJS {
 
     private int duration;
-    private JsonObject onSealISP;
-    private JsonObject onUnsealISP;
+    private ItemStackProviderJS onSealISP;
+    private ItemStackProviderJS onUnsealISP;
 
     @Override
     public void create(ListJS listJS) {
@@ -19,17 +19,11 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires three arguments - result(s), ingredient(s), and duration");
         }
 
-        // If the user wishes to output only a ISP it will have to be wrapped in [] (i.e. [['6x whatever', []]]; I really should make a wrapper for ISPs and FSIs but that stuff makes my brain hurt
         for (var result : ListJS.orSelf(listJS.get(0))) {
             if (result instanceof FluidStackJS fluid) {
                 outputFluids.add(fluid);
             } else {
-                var item = ListJS.orSelf(result);
-                if (item.size() < 2) {
-                    itemStackProvider = itemStackToISProvider(parseResultItem(item.get(0)).toResultJson().getAsJsonObject());
-                } else {
-                    itemStackProvider = parseItemStackProvider(item);
-                }
+                itemProviderResult = ItemStackProviderJS.of(result);
             }
         }
 
@@ -55,7 +49,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             inputFluids.add(FluidStackIngredientJS.fromJson(json.get("input_fluid")));
         }
         if (json.has("output_item")) {
-            itemStackProvider = json.get("output_item").getAsJsonObject();
+            itemProviderResult = ItemStackProviderJS.fromJson(json.get("output_item").getAsJsonObject());
         }
         if (json.has("output_fluid")) {
             outputFluids.add(FluidStackJS.fromJson(json.get("output_fluid").getAsJsonObject()));
@@ -65,10 +59,10 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
         }
         duration = json.get("duration").getAsInt();
         if (json.has("on_seal")) {
-            onSealISP = json.get("on_seal").getAsJsonObject();
+            onSealISP = ItemStackProviderJS.fromJson(json.get("on_seal").getAsJsonObject());
         }
         if (json.has("on_unseal")) {
-            onUnsealISP = json.get("on_unseal").getAsJsonObject();
+            onUnsealISP = ItemStackProviderJS.fromJson(json.get("on_unseal").getAsJsonObject());
         }
     }
 
@@ -81,15 +75,9 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
 
     public SealedBarrelRecipeJS onSeal(Object o) {
         if (o instanceof JsonObject json) {
-            onSealISP = json;
+            onSealISP = ItemStackProviderJS.fromJson(json);
         } else {
-            var isp = ListJS.orSelf(o);
-            if (isp.size() < 2) {
-                onSealISP = itemStackToISProvider(parseResultItem(isp.get(0)).toResultJson().getAsJsonObject());
-                KubeJSTFC.LOGGER.warn("The recipe {} of type {} does not specify any sealing modifiers", currentRecipe.getId(), currentRecipe.getType());
-            } else {
-                onSealISP = parseItemStackProvider(isp);
-            }
+            onSealISP = ItemStackProviderJS.of(o);
         }
         save();
         return this;
@@ -97,15 +85,9 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
 
     public SealedBarrelRecipeJS onUnseal(Object o) {
         if (o instanceof JsonObject json) {
-            onUnsealISP = json;
+            onUnsealISP = ItemStackProviderJS.fromJson(json);
         } else {
-            var isp = ListJS.orSelf(o);
-            if (isp.size() < 2) {
-                onUnsealISP = itemStackToISProvider(parseResultItem(isp.get(0)).toResultJson().getAsJsonObject());
-                KubeJSTFC.LOGGER.warn("The recipe {} of type {} does not specify any unsealing modifiers", currentRecipe.getId(), currentRecipe.getType());
-            } else {
-                onUnsealISP = parseItemStackProvider(isp);
-            }
+            onUnsealISP = ItemStackProviderJS.of(o);
         }
         save();
         return this;
@@ -114,8 +96,8 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            if (!itemStackProvider.isJsonNull()) {
-                json.add("output_item", itemStackProvider);
+            if (itemProviderResult != null) {
+                json.add("ouput_item", itemProviderResult.toJson());
             }
             if (!outputFluids.isEmpty()) {
                 json.add("output_fluid", outputFluids.get(0).toJson());
@@ -132,10 +114,10 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             }
             json.addProperty("duration", duration);
             if (onUnsealISP != null) {
-                json.add("on_unseal", onUnsealISP);
+                json.add("on_unseal", onUnsealISP.toJson());
             }
             if (onSealISP != null) {
-                json.add("on_seal", onSealISP);
+                json.add("on_seal", onSealISP.toJson());
             }
         }
     }

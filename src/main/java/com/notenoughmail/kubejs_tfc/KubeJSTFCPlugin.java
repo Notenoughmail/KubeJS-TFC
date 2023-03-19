@@ -4,7 +4,8 @@ import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.FluidIngredientWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -18,10 +19,10 @@ import net.minecraft.world.item.Tier;
 // Mild Javadoc abuse
 
 /**
- * TODO:
- *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube
- *  - [B] URGENT: All recipes (querns at least) which use Item Ingredients are broken
- *  - Items
+ * TODO: <br> <br>
+ *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube <br>
+ *  - [B] URGENT: All recipes (querns at least) which use Item Ingredients are broken <br> <br>
+ *  - Items <br>
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace} [Y]
@@ -32,8 +33,8 @@ import net.minecraft.world.item.Tier;
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [N]
  *     - Creating a vanilla rod is extremely broken, it's a miracle TFC's ever worked enough to get me invested
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
- *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N]
- *  - Blocks
+ *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N] <br>
+ *  - Blocks <br>
  *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover}
  *   - {@link net.dries007.tfc.common.blocks.ThinSpikeBlock Ice/Calcite}
  *   - Supports?
@@ -53,8 +54,8 @@ import net.minecraft.world.item.Tier;
  *    - These are block entities
  *    - Would need:
  *      - Nutrient, growing time, temperature, hydration, etc. methods
- *      - Dead, wild, flooded, double tall versions
- *  - Recipes
+ *      - Dead, wild, flooded, double tall versions <br> <br>
+ *  - Recipes <br>
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?}
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?}
  *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy} [Y]
@@ -89,10 +90,11 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern} [Y]
  *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding} [Y]
  *    - Block Ingredient implementation [Y]
- *    - Fluid Stack Ingredient implementation
+ *    - Fluid Stack Ingredient implementation [Y]
  *    - Item Stack Ingredient implementation
- *    - Item Stack Provider implementation
- *  - Misc.
+ *      - If Kube is reasonable, this should theoretically already be implemented 🙃
+ *    - Item Stack Provider implementation [Y] <br> <br>
+ *  - Misc. <br>
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
  *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers} [Y]
  *      - Metallum compat?
@@ -102,6 +104,7 @@ import net.minecraft.world.item.Tier;
  *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/ingredients/">TFC's custom ingredient types</a>
  *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/common-types/#item-stack-providers"> TFC's ISPs</a>
  *    - TFC Worldgen features?
+ *    - Firmalife compat? (recipes etc.)
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
@@ -149,10 +152,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void addBindings(BindingsEvent event) {
         event.add("BlockIngredient", BlockIngredientWrapper.class);
         event.add("BlockIng", BlockIngredientWrapper.class);
-        event.add("FluidStackIngredient", FluidIngredientWrapper.class);
-        event.add("FSIngredient", FluidIngredientWrapper.class);
-        event.add("FluidStackIng", FluidIngredientWrapper.class);
-        event.add("FluidIngredient", FluidIngredientWrapper.class);
+        event.add("FluidStackIngredient", FluidStackIngredientWrapper.class);
+        event.add("FluidIngredient", FluidStackIngredientWrapper.class);
+        event.add("ItemStackProvider", ItemStackProviderWrapper.class);
+        event.add("ItemProvider", ItemStackProviderWrapper.class);
     }
 
     private void addToolTier(Tier tier) {
