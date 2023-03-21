@@ -45,4 +45,12 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
             json.addProperty("copy_input", copy);
         }
     }
+
+    @Override
+    public String toString() {
+        if (copy) {
+            return blockIngredient + " -> itself";
+        }
+        return blockIngredient + " -> " + result;
+    }
 }

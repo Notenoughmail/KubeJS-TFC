@@ -20,48 +20,48 @@ public class ItemStackProviderWrapper {
     }
 
     public static ItemStackProviderJS addTrait(ItemStackProviderJS js, String s) {
-        return js.trait(true, s);
+        return js.addTrait(s);
     }
 
     public static ItemStackProviderJS removeTrait(ItemStackProviderJS js, String s) {
-        return js.trait(false, s);
+        return js.removeTrait(s);
     }
-    
+
     public static ItemStackProviderJS simpleModifier(ItemStackProviderJS js, String s) {
-        return js.simpleProperty(s);
+        return js.simpleModifier(s);
     }
 
     public static ItemStackProviderJS copyFood(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:copy_food");
+        return js.copyFood();
     }
 
     public static ItemStackProviderJS copyForgingBonus(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:copy_forging_bonus");
+        return js.copyForgingBonus();
     }
 
     public static ItemStackProviderJS copyHeat(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:copy_heat");
+        return js.copyHeat();
     }
 
     public static ItemStackProviderJS copyInput(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:copy_input");
+        return js.copyInput();
     }
 
     public static ItemStackProviderJS emptyBowl(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:empty_bowl");
+        return js.emptyBowl();
     }
 
     public static ItemStackProviderJS resetFood(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:reset_food");
+        return js.resetFood();
     }
 
     // These modifiers are only usable in crafting recipes which support item stack providers
 
     public static ItemStackProviderJS addBait(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:add_bait_to_rod");
+        return js.addBait();
     }
 
     public static ItemStackProviderJS sandwich(ItemStackProviderJS js) {
-        return js.simpleProperty("tfc:sandwich");
+        return js.sandwich();
     }
 }

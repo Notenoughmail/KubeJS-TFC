@@ -42,4 +42,30 @@ public class AlloyRecipeJS extends TFCRecipeJS {
             json.add("contents", contents);
         }
     }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append("[['");
+        builder.append(contents.get(0).getAsJsonObject().get("metal").getAsString());
+        builder.append("', ");
+        builder.append(contents.get(0).getAsJsonObject().get("min").getAsDouble());
+        builder.append(", ");
+        builder.append(contents.get(0).getAsJsonObject().get("max").getAsDouble());
+        builder.append("]");
+        for (int i = 1 ; i < contents.size() ; i++) {
+            builder.append(", ['");
+            var member = contents.get(i).getAsJsonObject();
+            builder.append(member.get("metal").getAsString());
+            builder.append("', ");
+            builder.append(member.get("min").getAsDouble());
+            builder.append(", ");
+            builder.append(member.get("max").getAsDouble());
+            builder.append("]");
+        }
+        builder.append("] -> [");
+        builder.append(resultMetal);
+        builder.append("]");
+        return builder.toString();
+    }
 }

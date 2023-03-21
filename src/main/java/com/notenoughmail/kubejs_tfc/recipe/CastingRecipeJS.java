@@ -46,4 +46,9 @@ public class CastingRecipeJS extends TFCRecipeJS {
             json.addProperty("break_chance", breakChance);
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " + " + inputFluids + " -> " + outputItems;
+    }
 }

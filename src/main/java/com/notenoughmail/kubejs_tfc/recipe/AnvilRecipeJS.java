@@ -65,4 +65,9 @@ public class AnvilRecipeJS extends TFCRecipeJS {
             json.addProperty("apply_forging_bonus", bonus);
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " -> " + itemProviderResult;
+    }
 }

@@ -45,4 +45,9 @@ public class WeldingRecipeJS extends TFCRecipeJS {
             json.addProperty("tier", weldingTier);
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " -> " + itemProviderResult;
+    }
 }

@@ -55,4 +55,9 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
             json.add("added_fluid", inputFluids.get(1).toJson());
         }
     }
+
+    @Override
+    public String toString() {
+        return inputFluids + " -> " + outputFluids;
+    }
 }

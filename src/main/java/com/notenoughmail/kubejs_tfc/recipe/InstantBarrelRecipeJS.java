@@ -74,4 +74,19 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append(inputItems);
+        builder.append(" + ");
+        builder.append(inputFluids);
+        builder.append(" -> ");
+        if (itemProviderResult != null) {
+            builder.append(itemProviderResult);
+            builder.append(" + ");
+        }
+        builder.append(outputFluids);
+        return builder.toString();
+    }
 }

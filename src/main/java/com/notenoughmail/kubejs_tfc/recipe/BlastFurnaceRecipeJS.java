@@ -45,4 +45,9 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             json.add("fluid", inputFluids.get(0).toJson());
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " + " + inputFluids + " -> " + outputFluids;
+    }
 }

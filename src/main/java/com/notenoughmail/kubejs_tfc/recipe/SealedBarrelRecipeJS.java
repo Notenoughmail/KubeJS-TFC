@@ -121,4 +121,34 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append(inputItems);
+        builder.append(" + ");
+        builder.append(inputFluids);
+        builder.append(" -> ");
+        if (onSealISP != null && onUnsealISP != null) {
+            builder.append(onSealISP);
+            builder.append(" + ");
+            builder.append(onUnsealISP);
+            builder.append(" -> ");
+        } else if (onSealISP != null && onUnsealISP == null) {
+            builder.append(onSealISP);
+            builder.append(" + [] -> ");
+        } else if (onSealISP == null && onUnsealISP != null) {
+            builder.append(" [] + ");
+            builder.append(onUnsealISP);
+            builder.append(" -> ");
+        } else {
+            builder.append(" [] -> ");
+        }
+        if (itemProviderResult != null) {
+            builder.append(itemProviderResult);
+            builder.append(" + ");
+        }
+        builder.append(outputFluids );
+        return builder.toString();
+    }
 }

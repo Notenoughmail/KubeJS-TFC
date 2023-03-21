@@ -43,4 +43,9 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
             json.addProperty("duration", duration);
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " + " + inputFluids + " -> " + outputItems;
+    }
 }

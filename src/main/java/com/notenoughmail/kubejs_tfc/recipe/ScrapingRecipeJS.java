@@ -28,15 +28,13 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
     }
 
     public ScrapingRecipeJS inputTexture(Object o) {
-        var tex = ListJS.orSelf(o);
-        tex_in = tex.get(0).toString();
+        tex_in = o.toString();
         save();
         return this;
     }
 
     public ScrapingRecipeJS outputTexture(Object o) {
-        var tex = ListJS.orSelf(o);
-        tex_out = tex.get(0).toString();
+        tex_out = o.toString();
         save();
         return this;
     }

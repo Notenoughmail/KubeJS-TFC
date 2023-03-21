@@ -79,4 +79,19 @@ public class ChiselRecipeJS extends TFCRecipeJS {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+       builder.append(inputItems);
+       builder.append(" + ");
+       builder.append(blockIngredient);
+       builder.append(" -> ");
+       builder.append(result);
+       if (itemProviderResult != null) {
+           builder.append(" + ");
+           builder.append(itemProviderResult);
+       }
+       return builder.toString();
+    }
 }

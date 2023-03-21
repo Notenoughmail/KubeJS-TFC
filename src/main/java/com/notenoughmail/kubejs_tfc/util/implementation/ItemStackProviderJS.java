@@ -75,7 +75,7 @@ public class ItemStackProviderJS {
         return this;
     }
 
-    public ItemStackProviderJS simpleProperty(String s) {
+    public ItemStackProviderJS simpleModifier(String s) {
         var obj = new JsonObject();
         obj.addProperty("type", s);
         modifiers.add(obj);
@@ -131,12 +131,48 @@ public class ItemStackProviderJS {
 
     @Override
     public String toString() {
-        var builder = new StringBuilder();
-        builder.append("ItemStackProvider.of(");
-        builder.append(getStack());
-        builder.append(", ");
-        builder.append(getModifiers());
-        builder.append(")");
-        return builder.toString();
+        return "ItemStackProvider.of(" + getStack() + ", " + getModifiers() + ")";
+    }
+
+    // static methods wooooo 🙃
+
+    public ItemStackProviderJS addTrait(String s) {
+        return this.trait(true, s);
+    }
+
+    public ItemStackProviderJS removeTrait(String s) {
+        return this.trait(false, s);
+    }
+
+    public ItemStackProviderJS copyFood() {
+        return this.simpleModifier("tfc:copy_food");
+    }
+
+    public ItemStackProviderJS copyForgingBonus() {
+        return this.simpleModifier("tfc:copy_forging_bonus");
+    }
+
+    public ItemStackProviderJS copyHeat() {
+        return this.simpleModifier("tfc:copy_heat");
+    }
+
+    public ItemStackProviderJS copyInput() {
+        return this.simpleModifier("tfc:copy_input");
+    }
+
+    public ItemStackProviderJS emptyBowl() {
+        return this.simpleModifier("tfc:empty_bowl");
+    }
+
+    public ItemStackProviderJS resetFood() {
+        return this.simpleModifier("tfc:reset_food");
+    }
+
+    public ItemStackProviderJS addBait() {
+        return this.simpleModifier("tfc:add_bait_to_rod");
+    }
+
+    public ItemStackProviderJS sandwich() {
+        return this.simpleModifier("tfc:sandwich");
     }
 }
