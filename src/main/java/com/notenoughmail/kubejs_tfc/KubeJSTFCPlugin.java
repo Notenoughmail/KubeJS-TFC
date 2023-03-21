@@ -78,6 +78,7 @@ import net.minecraft.world.item.Tier;
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating}
  *      - Maybe also a way to give items item heats through JS?
+ *      - Output is optional, requires something dumb or result to not be first
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
  *      - Depending on how specification is done, custom types? [?]
@@ -100,9 +101,6 @@ import net.minecraft.world.item.Tier;
  *      - Metallum compat?
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
- *    - Copy heat functionality as a recipe method?
- *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/ingredients/">TFC's custom ingredient types</a>
- *    - <a href="https://terrafirmacraft.github.io/Documentation/1.18.x/data/common-types/#item-stack-providers"> TFC's ISPs</a>
  *    - TFC Worldgen features?
  *    - Firmalife compat? (recipes etc.)
  */

@@ -41,10 +41,8 @@ public class ItemStackProviderJS {
         return EMPTY;
     }
 
-    // Even item providers with a single modifier will have to be wrapped in square brackets
-    // TODO: See if wrapping b in ListJS.orSelf would fix this
     public static ItemStackProviderJS of(@Nullable Object o, @Nullable Object b) {
-        return new ItemStackProviderJS(of(o).getStack(), of(b).getModifiers());
+        return new ItemStackProviderJS(of(o).getStack(), of(b instanceof List<?> ? b : ListJS.orSelf(b)).getModifiers());
     }
 
     private static JsonArray parseModifierList(List<?> list) {
@@ -69,8 +67,35 @@ public class ItemStackProviderJS {
         this.modifiers = modifiers;
     }
 
+    public ItemStackProviderJS addHeat(int temperature) {
+        var obj = new JsonObject();
+        obj.addProperty("type", "tfc:add_heat");
+        obj.addProperty("temperature", temperature);
+        modifiers.add(obj);
+        return this;
+    }
+
+    public ItemStackProviderJS simpleProperty(String s) {
+        var obj = new JsonObject();
+        obj.addProperty("type", s);
+        modifiers.add(obj);
+        return this;
+    }
+
+    public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
+        var obj = new JsonObject();
+        if (isAddingTrait) {
+            obj.addProperty("type", "tfc:add_trait");
+        } else {
+            obj.addProperty("type", "tfc:remove_trait");
+        }
+        obj.addProperty("trait", foodTrait);
+        modifiers.add(obj);
+        return this;
+    }
+
     public JsonObject getStack() {
-        return this.stack;
+        return stack;
     }
 
     public JsonArray getModifiers() {
