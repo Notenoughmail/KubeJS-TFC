@@ -21,7 +21,8 @@ import net.minecraft.world.item.Tier;
 /**
  * TODO: <br> <br>
  *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube <br>
- *  - [B] URGENT: All recipes (querns at least) which use Item Ingredients are broken <br> <br>
+ *  - [F?] URGENT: All recipes (querns at least) which use Item Ingredients are broken
+ *    - The only indication of this I had was patchouli complaining about missing quern recipes, but it appears that updating TFC or actually using an ISP has fixed it <br> <br>
  *  - Items <br>
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]

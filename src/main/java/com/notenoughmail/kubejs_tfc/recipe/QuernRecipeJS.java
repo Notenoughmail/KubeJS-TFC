@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -13,19 +14,19 @@ public class QuernRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
     }
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.add(parseIngredientItem(json.get("ingredient")));
     }
 
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemProviderResult.toJson());
         }
 
         if (serializeInputs) {

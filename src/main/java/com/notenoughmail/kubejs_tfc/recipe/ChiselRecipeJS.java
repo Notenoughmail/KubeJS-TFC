@@ -68,14 +68,15 @@ public class ChiselRecipeJS extends TFCRecipeJS {
             json.add("ingredient", blockIngredient.toJson());
             json.addProperty("mode", mode);
             if (!inputItems.isEmpty()) {
-                JsonArray array = new JsonArray();
-                for (IngredientJS inputItem : inputItems) {
-                    var item = inputItem.toJson().getAsJsonObject();
-                    item.remove("nbt");
-                    item.remove("type"); // Bad; this is an ingredient which means it should be able to have type as an option, this is only here b/c Kube likes to add a damage condition by default
-                    array.add(item); // Strip the ingredient of Kube's dumb stuff
+                if (inputItems.size() == 1) {
+                    json.add("item_ingredient", inputItems.get(0).toJson().getAsJsonObject());
+                } else {
+                    JsonArray array = new JsonArray();
+                    for (IngredientJS ingredient : inputItems) {
+                        array.add(ingredient.toJson().getAsJsonObject());
+                    }
+                    json.add("item_ingredient", array);
                 }
-                json.add("item_ingredient", array);
             }
         }
     }
@@ -83,15 +84,15 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     @Override
     public String toString() {
         var builder = new StringBuilder();
-       builder.append(inputItems);
-       builder.append(" + ");
-       builder.append(blockIngredient);
-       builder.append(" -> ");
-       builder.append(result);
-       if (itemProviderResult != null) {
-           builder.append(" + ");
-           builder.append(itemProviderResult);
-       }
-       return builder.toString();
+        builder.append(inputItems);
+        builder.append(" + ");
+        builder.append(blockIngredient);
+        builder.append(" -> ");
+        builder.append(result);
+        if (itemProviderResult != null) {
+            builder.append(" + ");
+            builder.append(itemProviderResult);
+        }
+        return builder.toString();
     }
 }
