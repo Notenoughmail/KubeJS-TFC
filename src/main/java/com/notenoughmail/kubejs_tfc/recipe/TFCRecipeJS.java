@@ -31,8 +31,8 @@ public abstract class TFCRecipeJS extends RecipeJS {
             }
             var me = new JsonObject();
             me.addProperty("metal", met.get(0).toString());
-            me.addProperty("min", ListJS.orSelf(met.get(1)).toJson().getAsDouble());
-            me.addProperty("max", ListJS.orSelf(met.get(2)).toJson().getAsDouble());
+            me.addProperty("min", Double.parseDouble(met.get(1).toString()));
+            me.addProperty("max", Double.parseDouble(met.get(2).toString()));
             metals.add(me);
         }
         return metals;

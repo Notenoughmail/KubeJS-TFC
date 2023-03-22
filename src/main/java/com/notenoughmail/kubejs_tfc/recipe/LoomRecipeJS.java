@@ -25,7 +25,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
 
         steps = count;
         if (listJS.size() > 2) {
-            steps = ListJS.orSelf(listJS.get(2)).toJson().getAsInt();
+            steps = Integer.parseInt(listJS.get(2).toString());
         }
     }
 

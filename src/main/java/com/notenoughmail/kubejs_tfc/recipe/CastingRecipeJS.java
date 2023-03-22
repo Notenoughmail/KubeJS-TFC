@@ -20,7 +20,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         outputItems.add(parseResultItem(listJS.get(0)));
 
-        breakChance = ListJS.orSelf(listJS.get(3)).toJson().getAsFloat();
+        breakChance = Float.parseFloat(listJS.get(3).toString());
     }
 
     @Override

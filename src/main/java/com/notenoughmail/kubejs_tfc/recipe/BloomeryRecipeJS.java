@@ -20,7 +20,8 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(2)).asIngredientStack().ingredient);
 
-        duration = ListJS.orSelf(listJS.get(3)).toJson().getAsInt();
+        // Blame js, toString does not return an int here
+        duration = (int) Float.parseFloat(listJS.get(3).toString());
     }
 
     @Override

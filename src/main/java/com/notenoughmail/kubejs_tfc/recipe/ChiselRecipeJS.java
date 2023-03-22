@@ -49,8 +49,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     }
 
     public ChiselRecipeJS itemIngredients(Object... o) {
-        var list = ListJS.ofArray(o);
-        inputItems.addAll(parseIngredientItemList(list));
+        inputItems.addAll(parseIngredientItemList(o));
         save();
         return this;
     }

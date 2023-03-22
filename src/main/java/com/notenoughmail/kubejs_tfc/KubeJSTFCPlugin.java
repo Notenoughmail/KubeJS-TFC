@@ -86,7 +86,7 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide} [Y]
  *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
  *      - This turns out to be very difficult to build b/c the input count is separate from the ingredient
- *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot}
+ *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot} [Y]
  *      - Should soup pot be an added recipe?
  *    - {@link net.dries007.tfc.common.recipes.ScrapingRecipe Scraping} [Y]
  *    - {@link net.dries007.tfc.common.recipes.QuernRecipe Quern} [Y]
@@ -146,6 +146,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId(), InstantFluidBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.LOOM.getId(), LoomRecipeJS::new);
+        event.register(TFCRecipeSerializers.POT_SIMPLE.getId(), SimplePotRecipeJS::new);
     }
 
     @Override
