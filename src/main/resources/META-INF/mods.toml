@@ -1,14 +1,14 @@
 modLoader="javafml"
 loaderVersion="[40,)"
 license="MIT"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+issueTrackerURL="https://github.com/Notenoughmail/KubeJS-TFC/issues"
 
 [[mods]]
     modId="kubejs_tfc"
     version="${file.jarVersion}"
     displayName="KubeJS TFC"
     #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
-    #logoFile="examplemod.png"
+    logoFile="kubejs_tfc_icon.png"
     #credits="Thanks for this example mod goes to Java"
     authors="Not Enough Mail"
     description='''KubeJS Integration for TFC'''
