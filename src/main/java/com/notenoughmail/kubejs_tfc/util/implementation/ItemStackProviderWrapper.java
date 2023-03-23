@@ -31,6 +31,10 @@ public class ItemStackProviderWrapper {
         return js.simpleModifier(s);
     }
 
+    public static ItemStackProviderJS jsonModifier(ItemStackProviderJS js, Object o) {
+        return js.jsonModifier(o);
+    }
+
     public static ItemStackProviderJS copyFood(ItemStackProviderJS js) {
         return js.copyFood();
     }

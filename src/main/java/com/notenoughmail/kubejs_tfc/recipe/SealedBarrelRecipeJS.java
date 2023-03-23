@@ -37,7 +37,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             }
         }
 
-        // Blame js, toString does not return an int here
+        // Blame js, toString does not return an int-parsable string here
         duration = (int) Float.parseFloat(listJS.get(2).toString());
     }
 

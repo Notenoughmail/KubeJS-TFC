@@ -1,10 +1,12 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
+import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import net.minecraft.resources.ResourceLocation;
@@ -79,6 +81,35 @@ public class ItemStackProviderJS {
         var obj = new JsonObject();
         obj.addProperty("type", s);
         modifiers.add(obj);
+        return this;
+    }
+
+    public ItemStackProviderJS jsonModifier(Object o) {
+        if (o instanceof JsonElement json) {
+            if (json.isJsonArray()) {
+                for (var element : json.getAsJsonArray()) {
+                    if (element.isJsonObject()) {
+                        modifiers.add(element.getAsJsonObject());
+                    } else if (element.isJsonPrimitive()) {
+                        var obj = new JsonObject();
+                        obj.addProperty("type", element.getAsString());
+                        modifiers.add(obj);
+                    } else {
+                        throw new RecipeExceptionJS("Provided element in json array should be a json object or json primitive!");
+                    }
+                }
+            } else if (json.isJsonObject()) {
+                modifiers.add(json.getAsJsonObject());
+            } else {
+                throw new RecipeExceptionJS("Provided json modifier must either be a json array or object!");
+            }
+        } else if (o instanceof NativeObject nativeObject) {
+            modifiers.add(ListJS.orSelf(nativeObject).toJson().getAsJsonObject());
+        } else if (o instanceof NativeArray nativeArray) {
+            modifiers.addAll(ListJS.orSelf(nativeArray).toJson().getAsJsonArray());
+        } else {
+            throw new RecipeExceptionJS("Provided json modifier failed to parse!");
+        }
         return this;
     }
 

@@ -13,13 +13,10 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires three arguments - result fluid, fluid ingredient, and catalyst");
         }
 
-        // Dumb way to get IDEA to stop yelling at me about inconvertible types
-        for (var result : ListJS.orSelf(listJS.get(0))) {
-            if (result instanceof FluidStackJS fluid) {
-                outputFluids.add(fluid);
-            } else {
-                throw new RecipeExceptionJS("First argument must be a fluid");
-            }
+        if (listJS.get(0) instanceof FluidStackJS fluid) {
+            outputFluids.add(fluid);
+        } else {
+            throw new RecipeExceptionJS("First argument must be a fluid");
         }
 
         inputFluids.add(FluidStackIngredientJS.of(listJS.get(1)));

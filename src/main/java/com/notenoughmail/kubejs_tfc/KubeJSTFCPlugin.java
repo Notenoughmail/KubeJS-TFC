@@ -77,14 +77,14 @@ import net.minecraft.world.item.Tier;
  *      - Kube has this as a native method apparently, but it's weirdly annoying to use and only applies to a single item each time
  *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products}
  *      - See above
- *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating}
+ *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating} [Y]
  *      - Maybe also a way to give items item heats through JS?
- *      - Output is optional, requires something dumb or result to not be first
+ *      - Output is optional, requires something dumb or result to not be first [Y]
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
  *      - Depending on how specification is done, custom types? [?]
  *    - {@link net.dries007.tfc.common.recipes.LandslideRecipe Land Slide} [Y]
- *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom}
+ *    - {@link net.dries007.tfc.common.recipes.LoomRecipe Loom} [Y]
  *      - This turns out to be very difficult to build b/c the input count is separate from the ingredient
  *    - {@link net.dries007.tfc.common.recipes.SimplePotRecipe Pot} [Y]
  *      - Should soup pot be an added recipe?
@@ -147,6 +147,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
         event.register(TFCRecipeSerializers.LOOM.getId(), LoomRecipeJS::new);
         event.register(TFCRecipeSerializers.POT_SIMPLE.getId(), SimplePotRecipeJS::new);
+        event.register(TFCRecipeSerializers.HEATING.getId(), HeatingRecipeJS::new);
     }
 
     @Override
