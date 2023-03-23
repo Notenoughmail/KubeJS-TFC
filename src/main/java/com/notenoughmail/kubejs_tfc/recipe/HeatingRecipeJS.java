@@ -72,8 +72,6 @@ public class HeatingRecipeJS extends TFCRecipeJS {
             json.addProperty("temperature", temperature);
             json.addProperty("use_durability", useDurability);
         }
-
-        System.out.println(json);
     }
 
     @Override
