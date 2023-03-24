@@ -5,16 +5,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
+import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ItemStackProviderJS {
 
@@ -145,18 +144,31 @@ public class ItemStackProviderJS {
     }
 
     public JsonObject toJson() {
-        if ((Objects.equals(stack, new JsonObject()) || stack == null)) {
-            throw new RecipeExceptionJS("KubeJS TFC tried to build an empty item stack provider!");
+        if (stack == null) {
+            if (modifiers == null || modifiers.isEmpty()) {
+                var obj = new JsonObject();
+                if (RecipeJS.itemErrors) {
+                    throw new RecipeExceptionJS("KubeJS TFC tried to build an empty item stack provider!");
+                }
+                return obj;
+            } else {
+                var obj = new JsonObject();
+                obj.add("modifiers", modifiers);
+                if (RecipeJS.itemErrors) {
+                    throw new RecipeExceptionJS("KubeJS TFC tried to build an item stack provider with modifiers but without an item stack! This is not officially supported behaviour!");
+                }
+                return obj;
+            }
+        } else {
+            if (modifiers == null || modifiers.isEmpty()) {
+                return stack;
+            } else {
+                var obj = new JsonObject();
+                obj.add("stack", stack);
+                obj.add("modifiers", modifiers);
+                return obj;
+            }
         }
-        if (!(Objects.equals(stack, new JsonObject()) || stack == null) && (modifiers == null || modifiers.isEmpty())) {
-            return stack;
-        }
-        var obj = new JsonObject();
-        obj.add("stack", stack);
-        if (!modifiers.isEmpty()) {
-            obj.add("modifiers", modifiers);
-        }
-        return obj;
     }
 
     @Override
