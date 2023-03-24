@@ -33,9 +33,8 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
         }
     }
 
-    public InstantFluidBarrelRecipeJS sound(Object o) {
-        var sound = ListJS.orSelf(o);
-        this.sound = sound.get(0).toString();
+    public InstantFluidBarrelRecipeJS sound(String s) {
+        sound = s;
         save();
         return this;
     }

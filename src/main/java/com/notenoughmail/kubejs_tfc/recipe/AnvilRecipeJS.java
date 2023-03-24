@@ -9,7 +9,6 @@ import dev.latvian.mods.kubejs.util.ListJS;
 public class AnvilRecipeJS extends TFCRecipeJS {
 
     private JsonArray rules;
-    private JsonObject input;
     private int tier = -1;
     private boolean bonus = false;
 
@@ -22,7 +21,6 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
-        input = inputItems.get(0).toJson().getAsJsonObject();
 
         rules = ListJS.orSelf(listJS.get(2)).toJson().getAsJsonArray();
     }
@@ -30,7 +28,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
-        input = json.get("input").getAsJsonObject();
+        inputItems.add(parseIngredientItem(json.get("input")));
         rules = json.get("rules").getAsJsonArray();
         if (json.has("tier")) {
             tier = json.get("tier").getAsInt();
@@ -59,7 +57,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.add("input", input);
+            json.add("input", inputItems.get(0).toJson());
             json.add("rules", rules);
             json.addProperty("tier", tier);
             json.addProperty("apply_forging_bonus", bonus);

@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -16,25 +17,25 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
     }
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.add(parseIngredientItem(json.get("ingredient")));
         tex_out = json.get("output_texture").getAsString();
         tex_in = json.get("input_texture").getAsString();
     }
 
-    public ScrapingRecipeJS inputTexture(Object o) {
-        tex_in = o.toString();
+    public ScrapingRecipeJS inputTexture(String s) {
+        tex_in = s;
         save();
         return this;
     }
 
-    public ScrapingRecipeJS outputTexture(Object o) {
-        tex_out = o.toString();
+    public ScrapingRecipeJS outputTexture(String s) {
+        tex_out = s;
         save();
         return this;
     }
@@ -42,7 +43,7 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemProviderResult.toJson());
             json.addProperty("output_texture", tex_out);
         }
 

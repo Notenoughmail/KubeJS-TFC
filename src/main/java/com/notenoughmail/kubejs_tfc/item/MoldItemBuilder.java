@@ -20,7 +20,7 @@ public class MoldItemBuilder extends ItemBuilder {
         super(i);
         this.capacity = 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
-        unstackable();
+        // unstackable(); - taking this out for now as TFC made a change which means can be stacked, we'll how it goes
     }
 
     public MoldItemBuilder capacity(int capacity) {
@@ -28,8 +28,8 @@ public class MoldItemBuilder extends ItemBuilder {
         return this;
     }
 
-    public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
-        this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, fluidTag);
+    public MoldItemBuilder fluidTagAccept(String fluidTag) {
+        this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(fluidTag));
         return this;
     }
 

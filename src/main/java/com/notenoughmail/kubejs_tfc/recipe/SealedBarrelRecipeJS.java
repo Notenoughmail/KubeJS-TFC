@@ -67,9 +67,8 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
         }
     }
 
-    public SealedBarrelRecipeJS sound(Object o) {
-        var sound = ListJS.orSelf(o);
-        this.sound = sound.get(0).toString();
+    public SealedBarrelRecipeJS sound(String s) {
+        sound = s;
         save();
         return this;
     }

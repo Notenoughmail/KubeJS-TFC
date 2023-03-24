@@ -18,6 +18,14 @@ public class FluidStackIngredientWrapper {
         return FluidStackIngredientJS.of("minecraft:water", i);
     }
 
+    public static FluidStackIngredientJS forgeWater() {
+        return FluidStackIngredientJS.of("#forge:water");
+    }
+
+    public static FluidStackIngredientJS forgeWater(int i) {
+        return FluidStackIngredientJS.of("#forge:water", i);
+    }
+
     public static FluidStackIngredientJS empty() {
         return FluidStackIngredientJS.EMPTY;
     }

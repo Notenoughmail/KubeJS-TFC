@@ -49,7 +49,7 @@ public class BlockIngredientJS {
         } else if (o instanceof List<?> list) {
             var members = new ArrayList<String>();
             for (var member : list) {
-                members.add(member.toString());
+                members.addAll(of(member).blocks);
             }
             String[] blocks = new String[members.size()];
             blocks = members.toArray(blocks);
@@ -77,7 +77,7 @@ public class BlockIngredientJS {
                     internalBlocks.add(member.getAsString());
                 } else if (member.isJsonArray()) { // technically possible
                     for (var memb : member.getAsJsonArray()) {
-                        internalBlocks.add(memb.getAsString());
+                        internalBlocks.addAll(fromJson(memb).blocks);
                     }
                 } else {
                     internalBlocks.add(getFromJsonObject(member.getAsJsonObject()));

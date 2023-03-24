@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -14,7 +15,7 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
             throw new RecipeExceptionJS("Requires four arguments - result, fluid ingredient, catalyst, and duration");
         }
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         inputFluids.add(FluidStackIngredientJS.of(listJS.get(1)));
 
@@ -26,7 +27,7 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.add(parseIngredientItem(json.get("catalyst")));
         inputFluids.add(FluidStackIngredientJS.fromJson(json.get("fluid")));
         duration = json.get("duration").getAsInt();
@@ -35,7 +36,7 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemProviderResult.toJson());
         }
 
         if (serializeInputs) {
@@ -47,6 +48,6 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
 
     @Override
     public String toString() {
-        return inputItems + " + " + inputFluids + " -> " + outputItems;
+        return inputItems + " + " + inputFluids + " -> " + itemProviderResult;
     }
 }

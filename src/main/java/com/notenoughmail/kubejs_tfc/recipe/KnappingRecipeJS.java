@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 public class KnappingRecipeJS extends TFCRecipeJS {
 
     private JsonArray knapPattern = new JsonArray();
+    private boolean outsideSlots = true;
 
     @Override
     public void create(ListJS listJS) {
@@ -26,6 +27,15 @@ public class KnappingRecipeJS extends TFCRecipeJS {
     public void deserialize() {
         outputItems.add(parseResultItem(json.get("result")));
         knapPattern = json.get("pattern").getAsJsonArray();
+        if (json.has("outside_slot_required")) {
+            outsideSlots = json.get("outside_slot_required").getAsBoolean();
+        }
+    }
+
+    public KnappingRecipeJS outsideSlotNotRequired() {
+        outsideSlots = false;
+        save();
+        return this;
     }
 
     @Override
@@ -34,15 +44,9 @@ public class KnappingRecipeJS extends TFCRecipeJS {
             json.add("result", outputItems.get(0).toResultJson());
         }
 
-        // I guess?
         if (serializeInputs) {
             json.add("pattern", knapPattern);
+            json.addProperty("outside_slot_required", outsideSlots);
         }
-    }
-
-    public KnappingRecipeJS outsideSlotNotRequired() {
-        json.addProperty("outside_slot_required", false);
-        save();
-        return this;
     }
 }

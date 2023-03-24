@@ -11,7 +11,6 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     public JavelinItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
-        unstackable();
     }
 
     @Override

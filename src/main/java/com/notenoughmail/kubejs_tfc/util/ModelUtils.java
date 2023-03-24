@@ -16,7 +16,7 @@ public class ModelUtils {
         private static JsonObject moldTextures(ResourceLocation id) {
             var json = new JsonObject();
             var nameSpace = newItemID(id).toString();
-            json.addProperty("base", nameSpace + "_empty");
+            json.addProperty("base", nameSpace);
             json.addProperty("fluid", nameSpace + "_overlay");
             return json;
         }

@@ -10,6 +10,7 @@ import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 public class ItemStackProviderJS {
 
-    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(new JsonObject(), new JsonArray());
+    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(null, new JsonArray());
 
     public static ItemStackProviderJS of(@Nullable Object o) {
         if (o instanceof Wrapper w) {
@@ -143,20 +144,18 @@ public class ItemStackProviderJS {
         return new ItemStackProviderJS(stack, modifiers);
     }
 
-    // Not wholly sure this is right
     public JsonObject toJson() {
-        if (stack == null && (modifiers == null || modifiers.isEmpty())) {
+        if ((Objects.equals(stack, new JsonObject()) || stack == null)) {
             throw new RecipeExceptionJS("KubeJS TFC tried to build an empty item stack provider!");
         }
-        if (!Objects.equals(stack, new JsonObject()) && (modifiers == null || modifiers.isEmpty())) {
+        if (!(Objects.equals(stack, new JsonObject()) || stack == null) && (modifiers == null || modifiers.isEmpty())) {
             return stack;
         }
         var obj = new JsonObject();
-        obj.add("modifiers", modifiers);
-        if (Objects.equals(stack, new JsonObject())) {
-            return obj;
-        }
         obj.add("stack", stack);
+        if (!modifiers.isEmpty()) {
+            obj.add("modifiers", modifiers);
+        }
         return obj;
     }
 

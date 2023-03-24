@@ -33,4 +33,9 @@ public class QuernRecipeJS extends TFCRecipeJS {
             json.add("ingredient", inputItems.get(0).toJson());
         }
     }
+
+    @Override
+    public String toString() {
+        return inputItems + " -> " + itemProviderResult;
+    }
 }

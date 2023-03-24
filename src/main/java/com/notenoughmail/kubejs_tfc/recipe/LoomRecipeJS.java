@@ -37,8 +37,8 @@ public class LoomRecipeJS extends TFCRecipeJS {
         steps = json.get("steps_required").getAsInt();
     }
 
-    public LoomRecipeJS inProgressTexture(Object o) {
-        tex = o.toString();
+    public LoomRecipeJS inProgressTexture(String s) {
+        tex = s;
         save();
         return this;
     }
