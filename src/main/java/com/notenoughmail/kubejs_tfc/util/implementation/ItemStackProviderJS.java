@@ -106,7 +106,7 @@ public class ItemStackProviderJS {
         } else if (o instanceof NativeObject nativeObject) {
             modifiers.add(ListJS.orSelf(nativeObject).toJson().getAsJsonObject());
         } else if (o instanceof NativeArray nativeArray) {
-            modifiers.addAll(ListJS.orSelf(nativeArray).toJson().getAsJsonArray());
+            modifiers.addAll(parseModifierList(nativeArray));
         } else {
             throw new RecipeExceptionJS("Provided json modifier failed to parse!");
         }
@@ -138,7 +138,7 @@ public class ItemStackProviderJS {
         if (!json.has("stack") && !json.has("modifiers")) {
             return new ItemStackProviderJS(json, new JsonArray());
         }
-        var stack = json.has("stack") ? json.get("stack").getAsJsonObject() : new JsonObject();
+        var stack = json.has("stack") ? json.get("stack").getAsJsonObject() : null;
         var modifiers = json.has("modifiers") ? json.get("modifiers").getAsJsonArray() : new JsonArray();
         return new ItemStackProviderJS(stack, modifiers);
     }
@@ -154,9 +154,6 @@ public class ItemStackProviderJS {
             } else {
                 var obj = new JsonObject();
                 obj.add("modifiers", modifiers);
-                if (RecipeJS.itemErrors) {
-                    throw new RecipeExceptionJS("KubeJS TFC tried to build an item stack provider with modifiers but without an item stack! This is not officially supported behaviour!");
-                }
                 return obj;
             }
         } else {

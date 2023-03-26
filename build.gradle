@@ -33,7 +33,7 @@ println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty '
 minecraft {
     mappings channel: 'parchment', version: '2022.11.06-1.18.2'
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -139,6 +139,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.73'
 
     implementation fg.deobf("curse.maven:terrafirmacraft-302973:${tfc_identifier}")
+    implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
 
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api"))
     implementation(fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}"))

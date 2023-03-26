@@ -20,7 +20,7 @@ public class MoldItemBuilder extends ItemBuilder {
         super(i);
         this.capacity = 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
-        // unstackable(); - taking this out for now as TFC made a change which means can be stacked, we'll how it goes
+        // unstackable(); - taking this out for now as TFC made a change making molds stackable, we'll see how it goes
     }
 
     public MoldItemBuilder capacity(int capacity) {
