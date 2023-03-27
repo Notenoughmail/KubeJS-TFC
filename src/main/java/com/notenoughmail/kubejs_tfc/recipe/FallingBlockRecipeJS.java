@@ -47,7 +47,7 @@ public class FallingBlockRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         if (copy) {
             return blockIngredient + " -> itself";
         }

@@ -4,7 +4,8 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
-import com.notenoughmail.kubejs_tfc.recipe.firmalife.FirmaLifeRecipes;
+import com.notenoughmail.kubejs_tfc.recipe.crafting.DamageInputsShapedJS;
+import com.notenoughmail.kubejs_tfc.recipe.crafting.ExtraProductsShapedJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
@@ -106,16 +107,6 @@ import net.minecraftforge.fml.ModList;
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - TFC Worldgen features?
- *    - FirmaLife compat
- *      - {@link com.eerussianguy.firmalife.common.recipes.DryingRecipe Drying}
- *      - {@link com.eerussianguy.firmalife.common.recipes.SmokingRecipe Smoking}
- *      - {@link com.eerussianguy.firmalife.common.recipes.MixingBowlRecipe Mixing Bowl}
- *      - Pumpkin Knapping [Y]
- *      - {@link com.eerussianguy.firmalife.common.recipes.OvenRecipe oven}
- *      - {@link com.eerussianguy.firmalife.common.recipes.data.FLItemStackModifiers ISP Modifiers}
- *      - {@link com.eerussianguy.firmalife.common.items.FLFoodTraits Food Traits}
- *      - {@link com.eerussianguy.firmalife.common.blocks.greenhouse.Greenhouse.BlockType Greenhouse Blocks?}
- *
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
@@ -160,10 +151,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.LOOM.getId(), LoomRecipeJS::new);
         event.register(TFCRecipeSerializers.POT_SIMPLE.getId(), SimplePotRecipeJS::new);
         event.register(TFCRecipeSerializers.HEATING.getId(), HeatingRecipeJS::new);
+        event.register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId(), DamageInputsShapedJS::new);
+        event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId(), ExtraProductsShapedJS::new);
 
         // Past experience says this doesn't cause issues for optional mods, will test later
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {
-            FirmaLifeRecipes.add(event);
+            FirmaLifePlugin.addRecipes(event);
         }
     }
 

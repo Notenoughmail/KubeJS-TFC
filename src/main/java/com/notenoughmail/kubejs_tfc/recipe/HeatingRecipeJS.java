@@ -75,7 +75,7 @@ public class HeatingRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         var builder = new StringBuilder();
         builder.append(inputItems);
         builder.append(" -> ");

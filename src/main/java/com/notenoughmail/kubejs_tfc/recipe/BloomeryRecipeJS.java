@@ -47,7 +47,7 @@ public class BloomeryRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         return inputItems + " + " + inputFluids + " -> " + itemProviderResult;
     }
 }

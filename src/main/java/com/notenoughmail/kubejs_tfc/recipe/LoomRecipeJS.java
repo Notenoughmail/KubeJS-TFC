@@ -58,7 +58,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         return inputItems + " -> " + itemProviderResult;
     }
 }

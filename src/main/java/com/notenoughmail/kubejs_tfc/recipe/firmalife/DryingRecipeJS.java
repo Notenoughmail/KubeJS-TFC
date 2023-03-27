@@ -1,20 +1,21 @@
-package com.notenoughmail.kubejs_tfc.recipe;
+package com.notenoughmail.kubejs_tfc.recipe.firmalife;
 
+import com.notenoughmail.kubejs_tfc.recipe.TFCRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class QuernRecipeJS extends TFCRecipeJS {
+public class DryingRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires 2 arguments - result and ingredient");
+            throw new RecipeExceptionJS("Requires tow arguments - item stack provider and ingredient");
         }
 
-        inputItems.add(parseIngredientItem(listJS.get(1)));
-
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
+
+        inputItems.add(parseIngredientItem(listJS.get(1)));
     }
 
     @Override

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
+// TODO: Check if fluid in/outputs are optional; wrap (de)serializers in if checks
 public class SimplePotRecipeJS extends TFCRecipeJS {
 
     private int duration;
@@ -85,7 +86,7 @@ public class SimplePotRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         return inputItems + " + " + inputFluids + " -> " + outputItems + " + " + outputFluids;
     }
 }

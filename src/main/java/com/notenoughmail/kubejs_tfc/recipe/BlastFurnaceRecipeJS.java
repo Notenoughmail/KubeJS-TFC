@@ -44,7 +44,7 @@ public class BlastFurnaceRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         return inputItems + " + " + inputFluids + " -> " + outputFluids;
     }
 }

@@ -53,7 +53,7 @@ public class InstantFluidBarrelRecipeJS extends TFCRecipeJS {
     }
 
     @Override
-    public String toString() {
+    public String getFromToString() {
         return inputFluids + " -> " + outputFluids;
     }
 }
