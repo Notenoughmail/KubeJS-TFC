@@ -137,7 +137,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
         event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
         event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
-        event.register(TFCRecipeSerializers.QUERN.getId(), QuernRecipeJS::new);
+        event.register(TFCRecipeSerializers.QUERN.getId(), SimpleRecipeJS::new);
         event.register(TFCRecipeSerializers.LANDSLIDE.getId(), FallingBlockRecipeJS::new);
         event.register(TFCRecipeSerializers.COLLAPSE.getId(), FallingBlockRecipeJS::new);
         event.register(TFCRecipeSerializers.ANVIL.getId(), AnvilRecipeJS::new);

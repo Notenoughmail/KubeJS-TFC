@@ -12,7 +12,7 @@ public class WeldingRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2 ) {
-            throw new RecipeExceptionJS("Requires at least two arguments - result and inputs");
+            throw new RecipeExceptionJS("Requires two arguments - result and inputs");
         }
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));

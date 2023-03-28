@@ -16,7 +16,7 @@ public class HeatingRecipeJS extends TFCRecipeJS {
         if (listJS.size() < 3) {
             index--;
             if (listJS.size() < 2) {
-                throw new RecipeExceptionJS("Requires two arguments - ingredient and temperature");
+                throw new RecipeExceptionJS("Requires three arguments - result, ingredient, and temperature");
             }
         }
 

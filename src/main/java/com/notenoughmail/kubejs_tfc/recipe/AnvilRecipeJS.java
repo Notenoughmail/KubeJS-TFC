@@ -15,7 +15,7 @@ public class AnvilRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 3) {
-            throw new RecipeExceptionJS("Requires at least 3 arguments - result, ingredient, and rules");
+            throw new RecipeExceptionJS("Requires arguments - result, ingredient, and rules");
         }
 
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));

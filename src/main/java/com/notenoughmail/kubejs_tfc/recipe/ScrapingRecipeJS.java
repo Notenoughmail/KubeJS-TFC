@@ -52,4 +52,9 @@ public class ScrapingRecipeJS extends TFCRecipeJS {
             json.addProperty("input_texture", tex_in);
         }
     }
+
+    @Override
+    public String getFromToString() {
+        return inputItems + " -> " + itemProviderResult;
+    }
 }

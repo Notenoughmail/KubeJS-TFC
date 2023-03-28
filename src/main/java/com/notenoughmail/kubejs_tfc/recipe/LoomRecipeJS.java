@@ -14,7 +14,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires at least two arguments - result and ingredient");
+            throw new RecipeExceptionJS("Requires two arguments - result and ingredient");
         }
 
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));

@@ -7,7 +7,7 @@ public class RockKnappingRecipeJS extends KnappingRecipeJS {
 
     public void create(ListJS listJS) {
         if (listJS.size() < 3) {
-            throw new RecipeExceptionJS("Requires 3 arguments - result, pattern, and ingredient");
+            throw new RecipeExceptionJS("Requires three arguments - result, pattern, and ingredient");
         }
         super.create(listJS);
 

@@ -14,7 +14,7 @@ public class ChiselRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires at least 2 arguments - result and block ingredient");
+            throw new RecipeExceptionJS("Requires two arguments - result and block ingredient");
         }
 
         result = listJS.get(0).toString();

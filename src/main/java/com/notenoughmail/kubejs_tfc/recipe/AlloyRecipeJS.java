@@ -12,7 +12,7 @@ public class AlloyRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires at least two arguments - result and contents");
+            throw new RecipeExceptionJS("Requires two arguments - result and contents");
         }
 
         resultMetal = listJS.get(0).toString();

@@ -12,7 +12,7 @@ public class KnappingRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires 2 arguments - result and pattern");
+            throw new RecipeExceptionJS("Requires two arguments - result and pattern");
         }
 
         knapPattern = ListJS.orSelf(listJS.get(1)).toJson().getAsJsonArray();
