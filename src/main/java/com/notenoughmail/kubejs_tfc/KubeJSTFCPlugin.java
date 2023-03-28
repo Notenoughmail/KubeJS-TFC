@@ -5,7 +5,9 @@ import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.DamageInputsShapedJS;
+import com.notenoughmail.kubejs_tfc.recipe.crafting.DamageInputsShapelessJS;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.ExtraProductsShapedJS;
+import com.notenoughmail.kubejs_tfc.recipe.crafting.ExtraProductsShapelessJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
@@ -152,7 +154,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.POT_SIMPLE.getId(), SimplePotRecipeJS::new);
         event.register(TFCRecipeSerializers.HEATING.getId(), HeatingRecipeJS::new);
         event.register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId(), DamageInputsShapedJS::new);
+        event.register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId(), DamageInputsShapelessJS::new);
         event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId(), ExtraProductsShapedJS::new);
+        event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId(), ExtraProductsShapelessJS::new);
 
         // Past experience says this doesn't cause issues for optional mods, will test later
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {

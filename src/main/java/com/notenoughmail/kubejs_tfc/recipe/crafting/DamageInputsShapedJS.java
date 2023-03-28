@@ -20,7 +20,7 @@ public class DamageInputsShapedJS extends ShapedRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 1) {
-            throw new RecipeExceptionJS("No arguments defined! Requires either a shaped recipe or an output, pattern, and key");
+            throw new RecipeExceptionJS("No arguments provided! Requires either a shaped recipe or an output, pattern, and key");
         }
 
         if (listJS.get(0) instanceof ShapedRecipeJS recipe) {
@@ -29,10 +29,8 @@ public class DamageInputsShapedJS extends ShapedRecipeJS {
             recipe.dontAdd();
 
             // Here purely so #getFromToString() works
-            outputItems.add(parseResultItem(recipeJson.get("result")));
-            for (var entry : recipeJson.get("key").getAsJsonObject().entrySet()) {
-                inputItems.add(parseIngredientItem(entry.getValue(), entry.getKey()));
-            }
+            outputItems.addAll(recipe.outputItems);
+            inputItems.addAll(recipe.inputItems);
         } else {
             /*
              * Purely so the user doesn't have to write something like
