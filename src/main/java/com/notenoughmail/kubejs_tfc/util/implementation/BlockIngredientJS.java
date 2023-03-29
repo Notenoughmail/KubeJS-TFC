@@ -67,7 +67,7 @@ public class BlockIngredientJS {
 
     public static BlockIngredientJS fromJson(JsonElement json) {
         if (json.isJsonPrimitive()) {
-            return new BlockIngredientJS(json.getAsJsonPrimitive().toString());
+            return new BlockIngredientJS(json.getAsJsonPrimitive().getAsString());
         }
 
         if (json.isJsonArray()) {

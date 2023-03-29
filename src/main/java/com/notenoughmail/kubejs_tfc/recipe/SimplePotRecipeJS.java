@@ -6,7 +6,9 @@ import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-// TODO: Check if fluid in/outputs are optional; wrap (de)serializers in if checks
+// Item and fluid outputs can be empty
+// event.recipes.tfc.pot([], ['minecraft:cooked_beef', Fluid.of('minecraft:water', 1)], 20, 20);
+// Is completely valid to TFC
 public class SimplePotRecipeJS extends TFCRecipeJS {
 
     private int duration;
@@ -50,7 +52,9 @@ public class SimplePotRecipeJS extends TFCRecipeJS {
         inputFluids.add(FluidStackIngredientJS.fromJson(json.get("fluid_ingredient")));
         duration = json.get("duration").getAsInt();
         temperature = json.get("temperature").getAsFloat();
-        outputFluids.add(FluidStackJS.fromJson(json.get("fluid_output")));
+        if (json.has("fluid_output")) {
+            outputFluids.add(FluidStackJS.fromJson(json.get("fluid_output")));
+        }
         if (json.has("item_output")) {
             for (var results : json.get("item_output").getAsJsonArray()) {
                 outputItems.add(parseResultItem(results.getAsJsonObject()));

@@ -99,7 +99,7 @@ public class FluidStackIngredientJS {
         ArrayList<String> list = new ArrayList<>();
 
         if (json.isJsonPrimitive()) {
-            list.add(json.getAsJsonPrimitive().toString());
+            list.add(json.getAsJsonPrimitive().getAsString());
         }
 
         if (json.isJsonObject()) {

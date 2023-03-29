@@ -48,6 +48,6 @@ public class OvenRecipeJS extends TFCRecipeJS {
 
     @Override
     public String getFromToString() {
-        return inputItems  + " -> " + itemProviderResult;
+        return inputItems + " -> " + itemProviderResult;
     }
 }

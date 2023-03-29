@@ -14,6 +14,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import net.dries007.tfc.common.TFCArmorMaterials;
@@ -100,7 +101,7 @@ import net.minecraftforge.fml.ModList;
  *    - Block Ingredient implementation [Y]
  *    - Fluid Stack Ingredient implementation [Y]
  *    - Item Stack Ingredient implementation
- *      - If Kube is reasonable, this should theoretically already be implemented 🙃
+ *      - If Kube is reasonable, this should theoretically already be implemented 🙃 [Hahahahahaha]
  *    - Item Stack Provider implementation [Y] <br> <br>
  *  - Misc. <br>
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
@@ -109,6 +110,7 @@ import net.minecraftforge.fml.ModList;
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - TFC Worldgen features?
+ *    - PR TFC or Mixin into {@link ItemStackJS#toJson() ItemStackJS#toJson()} and {@link dev.latvian.mods.kubejs.item.ingredient.IngredientStackJS#toJson() IngredientstackJS#toJson()} to fix ingredients without an ingredient
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

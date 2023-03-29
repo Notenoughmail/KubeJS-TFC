@@ -31,7 +31,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             if (ingredient instanceof FluidStackJS fluid) {
                 inputFluids.add(FluidStackIngredientJS.of(fluid));
             } else if (ingredient instanceof FluidStackIngredientJS fluid) {
-                inputFluids.add(FluidStackIngredientJS.of(fluid));
+                inputFluids.add(fluid);
             } else {
                 inputItems.add(parseIngredientItem(ingredient));
             }

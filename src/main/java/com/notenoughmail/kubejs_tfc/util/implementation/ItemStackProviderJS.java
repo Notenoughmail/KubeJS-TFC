@@ -17,6 +17,7 @@ import java.util.List;
 
 public class ItemStackProviderJS {
 
+    // Modifier list can't be null because then modifier methods would fail
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(null, new JsonArray());
 
     public static ItemStackProviderJS of(@Nullable Object o) {
@@ -31,13 +32,13 @@ public class ItemStackProviderJS {
         } else if (o instanceof ItemStackProviderJS js) {
             return js;
         } else if (o instanceof JsonArray json) {
-            return new ItemStackProviderJS(new JsonObject(), json);
+            return new ItemStackProviderJS(null, json);
         } else if (o instanceof JsonObject json) {
             return new ItemStackProviderJS(json, new JsonArray());
         } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
             return new ItemStackProviderJS(ItemStackJS.of(o).toResultJson().getAsJsonObject(), new JsonArray());
         } else if (o instanceof List<?> list) {
-            return new ItemStackProviderJS(new JsonObject(), parseModifierList(list));
+            return new ItemStackProviderJS(null, parseModifierList(list));
         }
 
         return EMPTY;
