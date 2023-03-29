@@ -59,6 +59,34 @@ public class ItemStackProviderWrapper {
         return js.resetFood();
     }
 
+    public static ItemStackProviderJS copyOldestFood(ItemStackProviderJS js) {
+        return js.copyOldestFood();
+    }
+
+    public static ItemStackProviderJS dyeLeather(ItemStackProviderJS js, String s) {
+        return js.dyeLeather(s);
+    }
+
+    public static ItemStackProviderJS burrito(ItemStackProviderJS js) {
+        return js.burrito();
+    }
+
+    public static ItemStackProviderJS pie(ItemStackProviderJS js) {
+        return js.pie();
+    }
+
+    public static ItemStackProviderJS pizza(ItemStackProviderJS js) {
+        return js.pizza();
+    }
+
+    public static ItemStackProviderJS copyDynamicFood(ItemStackProviderJS js) {
+        return js.copyDynamicFood();
+    }
+
+    public static ItemStackProviderJS emptyPan(ItemStackProviderJS js) {
+        return js.emptyPan();
+    }
+
     // These modifiers are only usable in crafting recipes which support item stack providers
 
     public static ItemStackProviderJS addBait(ItemStackProviderJS js) {

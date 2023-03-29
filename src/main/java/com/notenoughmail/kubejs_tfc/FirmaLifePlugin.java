@@ -16,8 +16,7 @@ import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
  *  - Pumpkin Knapping [Y]
  *  - {@link com.eerussianguy.firmalife.common.recipes.OvenRecipe Oven} [Y]
  *  - {@link com.eerussianguy.firmalife.common.recipes.VatRecipe Vat} [Y]
- *  - {@link com.eerussianguy.firmalife.common.recipes.data.FLItemStackModifiers ISP Modifiers}
- *  - {@link com.eerussianguy.firmalife.common.items.FLFoodTraits Food Traits}
+ *  - {@link com.eerussianguy.firmalife.common.recipes.data.FLItemStackModifiers ISP Modifiers} [Y]
  *  - {@link com.eerussianguy.firmalife.common.blocks.greenhouse.Greenhouse.BlockType Greenhouse Blocks?}
  */
 

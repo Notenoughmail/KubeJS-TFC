@@ -126,6 +126,14 @@ public class ItemStackProviderJS {
         return this;
     }
 
+    public ItemStackProviderJS dyeLeather(String color) {
+        var obj = new JsonObject();
+        obj.addProperty("type", "tfc:dye_leather");
+        obj.addProperty("color", color); // Guessing as to the structure based on code as I don't know where this is actually used, and it's not in the docs
+        modifiers.add(obj);
+        return this;
+    }
+
     public JsonObject getStack() {
         return stack;
     }
@@ -206,6 +214,30 @@ public class ItemStackProviderJS {
 
     public ItemStackProviderJS resetFood() {
         return this.simpleModifier("tfc:reset_food");
+    }
+
+    public ItemStackProviderJS copyOldestFood() {
+        return this.simpleModifier("tfc:copy_oldest_food");
+    }
+
+    public ItemStackProviderJS burrito() {
+        return this.simpleModifier("firmalife:burrito");
+    }
+
+    public ItemStackProviderJS pie() {
+        return this.simpleModifier("firmalife:pie");
+    }
+
+    public ItemStackProviderJS pizza() {
+        return this.simpleModifier("firmalife:pizza");
+    }
+
+    public ItemStackProviderJS copyDynamicFood() {
+        return this.simpleModifier("firmalife:copy_dynamic_food"); // Can't find usage, looking at code seems to be simple
+    }
+
+    public ItemStackProviderJS emptyPan(){
+        return this.simpleModifier("firmalife:empty_pan"); // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS addBait() {
