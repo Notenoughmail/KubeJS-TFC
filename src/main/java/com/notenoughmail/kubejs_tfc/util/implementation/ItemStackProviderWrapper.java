@@ -1,5 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import com.google.gson.JsonArray;
+
 public class ItemStackProviderWrapper {
 
     public static ItemStackProviderJS of(Object o) {
@@ -12,7 +14,7 @@ public class ItemStackProviderWrapper {
 
     // Needed/Recommended in order to use convenience methods
     public static ItemStackProviderJS empty() {
-        return ItemStackProviderJS.EMPTY;
+        return new ItemStackProviderJS(null, new JsonArray());
     }
 
     public static ItemStackProviderJS addHeat(ItemStackProviderJS js, int i) {

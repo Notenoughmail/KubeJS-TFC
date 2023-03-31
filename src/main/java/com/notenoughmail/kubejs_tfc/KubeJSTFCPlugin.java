@@ -4,10 +4,7 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
-import com.notenoughmail.kubejs_tfc.recipe.crafting.DamageInputsShapedJS;
-import com.notenoughmail.kubejs_tfc.recipe.crafting.DamageInputsShapelessJS;
-import com.notenoughmail.kubejs_tfc.recipe.crafting.ExtraProductsShapedJS;
-import com.notenoughmail.kubejs_tfc.recipe.crafting.ExtraProductsShapelessJS;
+import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
@@ -64,8 +61,8 @@ import net.minecraftforge.fml.ModList;
  *      - Nutrient, growing time, temperature, hydration, etc. methods
  *      - Dead, wild, flooded, double tall versions <br> <br>
  *  - Recipes <br>
- *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?}
- *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?}
+ *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?} [Y]
+ *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?} [Y]
  *    - {@link net.dries007.tfc.common.recipes.AlloyRecipe Alloy} [Y]
  *    - {@link net.dries007.tfc.common.recipes.AnvilRecipe Anvil} [Y]
  *    - {@link net.dries007.tfc.common.recipes.BarrelRecipe Barrel}
@@ -100,8 +97,10 @@ import net.minecraftforge.fml.ModList;
  *    - {@link net.dries007.tfc.common.recipes.WeldingRecipe Welding} [Y]
  *    - Block Ingredient implementation [Y]
  *    - Fluid Stack Ingredient implementation [Y]
+ *      - Allow FSI's to take nbt from kube's fluids?
  *    - Item Stack Ingredient implementation
  *      - If Kube is reasonable, this should theoretically already be implemented 🙃 [Hahahahahaha]
+ *      - Make a raw ingredient builder for this
  *    - Item Stack Provider implementation [Y] <br> <br>
  *  - Misc. <br>
  *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
@@ -110,7 +109,6 @@ import net.minecraftforge.fml.ModList;
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - TFC Worldgen features?
- *    - PR TFC or Mixin into {@link ItemStackJS#toJson() ItemStackJS#toJson()} and {@link dev.latvian.mods.kubejs.item.ingredient.IngredientStackJS#toJson() IngredientstackJS#toJson()} to fix ingredients without an ingredient
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
@@ -159,6 +157,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId(), DamageInputsShapelessJS::new);
         event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId(), ExtraProductsShapedJS::new);
         event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId(), ExtraProductsShapelessJS::new);
+        event.register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId(), AdvancedShapedRecipeJS::new);
+        event.register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId(), AdvancedShapelessRecipeJS::new);
 
         // Past experience says this doesn't cause issues for optional mods, will test later
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {

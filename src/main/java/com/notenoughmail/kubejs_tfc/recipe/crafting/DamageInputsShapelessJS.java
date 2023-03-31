@@ -12,7 +12,7 @@ public class DamageInputsShapelessJS extends ShapelessRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 1) {
+        if (listJS.isEmpty()) {
             throw new RecipeExceptionJS("No arguments provided! Requires either a shapeless recipe or an output and ingredients");
         }
 

@@ -19,7 +19,7 @@ public class DamageInputsShapedJS extends ShapedRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 1) {
+        if (listJS.isEmpty()) {
             throw new RecipeExceptionJS("No arguments provided! Requires either a shaped recipe or an output, pattern, and key");
         }
 
