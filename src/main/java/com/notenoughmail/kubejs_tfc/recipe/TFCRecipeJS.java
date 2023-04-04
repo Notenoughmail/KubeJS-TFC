@@ -1,11 +1,13 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -36,5 +38,21 @@ public abstract class TFCRecipeJS extends RecipeJS {
             metals.add(me);
         }
         return metals;
+    }
+
+    /**
+     * This, as the name implies, 'fixes' {@link IngredientJS#toJson()} which is incompatible iff its stack size is 1. <br>
+     * See: {@link net.dries007.tfc.common.recipes.ingredients.ItemStackIngredient#fromJson(JsonObject) ItemStackIgnredient#fromjson()}
+     * @param ingredientJS The KubeJS ingredient which needs to be parsed by ItemStackIngredient
+     * @return A jsonElement which is parse-able by ItemStackIngredient#fromJson()
+     */
+    public JsonElement fixBrokenKubeIngredientStack(IngredientJS ingredientJS) {
+        if (ingredientJS.getCount() == 1) {
+            var ingredientStack = new JsonObject();
+            ingredientStack.add("ingredient", ingredientJS.toJson());
+            return ingredientStack;
+        } else {
+            return ingredientJS.toJson();
+        }
     }
 }

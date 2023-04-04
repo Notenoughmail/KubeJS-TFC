@@ -66,7 +66,7 @@ public class InstantBarrelRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             if (!inputItems.isEmpty()) {
-                json.add("input_item", inputItems.get(0).toJson());
+                json.add("input_item", fixBrokenKubeIngredientStack(inputItems.get(0)));
             }
             if (!inputFluids.isEmpty()) {
                 json.add("input_fluid", inputFluids.get(0).toJson());

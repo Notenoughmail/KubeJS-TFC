@@ -25,7 +25,7 @@ public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
     public void deserialize() {
         itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.addAll(parseIngredientItemList(json.get("ingredients")));
-        
+
         var place = inputItems.indexOf(parseIngredientItem(json.get("primary_ingredient")));
         var primaryIngredient = inputItems.remove(place);
         inputItems.add(0, primaryIngredient); // Ensure the primary ingredient is first
