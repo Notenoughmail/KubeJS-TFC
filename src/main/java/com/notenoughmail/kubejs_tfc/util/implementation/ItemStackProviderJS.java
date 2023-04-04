@@ -17,8 +17,7 @@ import java.util.List;
 
 public class ItemStackProviderJS {
 
-    // Modifier list can't be null because then modifier methods would fail
-    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(null, new JsonArray());
+    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(null, null);
 
     public static ItemStackProviderJS of(@Nullable Object o) {
         if (o instanceof Wrapper w) {

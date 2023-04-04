@@ -11,7 +11,6 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import net.dries007.tfc.common.TFCArmorMaterials;
@@ -76,10 +75,10 @@ import net.minecraftforge.fml.ModList;
  *      - Extra outputs method [Y]
  *      - Type specify method [N]
  *    - {@link net.dries007.tfc.common.recipes.CollapseRecipe Collapse} [Y]
- *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs}
- *      - Try to make a method that can be put on any crafting recipe, like .id()
- *      - Kube has this as a native method apparently, but it's weirdly annoying to use and only applies to a single item each time
- *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products}
+ *    - {@link net.dries007.tfc.common.recipes.DamageInputsCraftingRecipe Damage Inputs} [Y]
+ *      - Try to make a method that can be put on any crafting recipe, like .id() [N]
+ *      - Kube has this as a native method apparently, but it's weirdly annoying to use and only applies to a single item each time [A&I]
+ *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products} [Y]
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating} [Y]
  *      - Maybe also a way to give items item heats through JS?
@@ -160,7 +159,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId(), AdvancedShapedRecipeJS::new);
         event.register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId(), AdvancedShapelessRecipeJS::new);
 
-        // Past experience says this doesn't cause issues for optional mods, will test later
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {
             FirmaLifePlugin.addRecipes(event);
         }
