@@ -73,7 +73,9 @@ public class MixingBowlRecipeJS extends TFCRecipeJS {
             if (!inputItems.isEmpty()) {
                 var array = new JsonArray();
                 for (var ingredient : inputItems) {
-                    array.add(ingredient.toJson().getAsJsonObject());
+                    for (var in : ingredient.unwrapStackIngredient()) {
+                        array.add(in.toJson());
+                    }
                 }
                 json.add("ingredients", array);
             }

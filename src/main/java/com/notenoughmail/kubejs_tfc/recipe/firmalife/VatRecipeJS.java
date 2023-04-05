@@ -70,7 +70,7 @@ public class VatRecipeJS extends TFCRecipeJS {
     public void serialize() {
         if (serializeOutputs) {
             if (!outputItems.isEmpty()) {
-                json.add("output_item", outputItems.get(0).toResultJson());
+                json.add("output_item", itemProviderResult.toJson());
             }
             if (!outputFluids.isEmpty()) {
                 json.add("output_fluid", outputFluids.get(0).toJson());
@@ -91,6 +91,6 @@ public class VatRecipeJS extends TFCRecipeJS {
 
     @Override
     public String getFromToString() {
-        return inputItems + " + " + inputFluids + " -> " + outputItems + " + " + outputFluids;
+        return inputItems + " + " + inputFluids + " -> " + itemProviderResult + " + " + outputFluids;
     }
 }

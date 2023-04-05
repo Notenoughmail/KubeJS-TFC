@@ -1,3 +1,6 @@
+// NOTICE: This file is now deprecated as an example source, please use the wiki
+// from now on. This file wil be removed sometime during the 0.2.1 update cycle
+
 // This is a collection of the various dumb recipes made throughout dev testing
 // This is provided here for people to look over/reverse engineer while the wiki is in progress
 
