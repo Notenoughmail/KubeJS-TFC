@@ -32,6 +32,7 @@ public class DamageInputsShapelessJS extends ShapelessRecipeJS {
             outputItems.add(parseResultItem(listJS.get(0)));
             inputItems.addAll(parseIngredientItemList(listJS.get(1)));
 
+            recipeJson = new JsonObject();
             recipeJson.addProperty("type", "minecraft:crafting_shapeless");
 
             if (serializeOutputs) {

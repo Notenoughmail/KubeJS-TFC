@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.minecraft.ShapelessRecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -9,6 +10,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
 
     private ItemStackProviderJS itemProviderResult;
+    private IngredientJS primaryIngredient;
 
     @Override
     public void create(ListJS listJS) {
@@ -19,16 +21,16 @@ public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));
+        primaryIngredient = inputItems.get(0);
     }
 
     @Override
     public void deserialize() {
         itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.addAll(parseIngredientItemList(json.get("ingredients")));
-
-        var place = inputItems.indexOf(parseIngredientItem(json.get("primary_ingredient")));
-        var primaryIngredient = inputItems.remove(place);
-        inputItems.add(0, primaryIngredient); // Ensure the primary ingredient is first
+        if (json.has("primary_ingredient")) {
+            primaryIngredient = parseIngredientItem(json.get("primary_ingredient")); // This is optional! 🙃
+        }
     }
 
     @Override
@@ -45,7 +47,9 @@ public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
                 }
             }
 
-            json.add("primary_ingredient", ingredientsJson.get(0));
+            if (primaryIngredient != null) {
+                json.add("primary_ingredient", primaryIngredient.toJson());
+            }
             json.add("ingredients", ingredientsJson);
         }
     }

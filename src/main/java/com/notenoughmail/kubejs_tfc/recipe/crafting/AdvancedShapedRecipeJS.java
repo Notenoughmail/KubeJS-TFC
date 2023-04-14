@@ -117,7 +117,7 @@ public class AdvancedShapedRecipeJS extends ShapedRecipeJS {
             key.add(entry.getKey());
         }
         row = json.get("input_row").getAsInt();
-        column = json.get("input_colum").getAsInt();
+        column = json.get("input_column").getAsInt();
     }
 
     @Override
