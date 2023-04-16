@@ -1,0 +1,6 @@
+{
+  "parent": "tfc:block/groundcover/boulder",
+  "textures": {
+    "all": "#all"
+  }
+}

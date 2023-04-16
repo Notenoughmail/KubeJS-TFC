@@ -21,7 +21,7 @@ public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
         itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         inputItems.addAll(parseIngredientItemList(listJS.get(1)));
-        primaryIngredient = inputItems.get(0);
+        primaryIngredient = inputItems.get(0).unwrapStackIngredient().get(0);
     }
 
     @Override

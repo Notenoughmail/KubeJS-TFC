@@ -2,6 +2,8 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.eerussianguy.firmalife.FirmaLife;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.GroundCoverBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.LooseRockBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
@@ -39,7 +41,7 @@ import net.minecraftforge.fml.ModList;
  *   - {@link net.dries007.tfc.common.items.TFCHoeItem Hoe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N] <br>
  *  - Blocks <br>
- *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover}
+ *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover} [Y]
  *   - {@link net.dries007.tfc.common.blocks.ThinSpikeBlock Ice/Calcite}
  *   - Supports?
  *     - {@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}
@@ -127,6 +129,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
     }
 
     @Override

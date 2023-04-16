@@ -1,0 +1,6 @@
+{
+  "parent": "tfc:block/groundcover/pebble",
+  "textures": {
+    "all": "#all"
+  }
+}
