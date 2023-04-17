@@ -12,10 +12,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
@@ -25,12 +33,16 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     @Nullable
     private TagKey<Item> cycleTag;
     private boolean updateWhenCycling;
+    private List<AABB> middleShape;
+    private List<AABB> tipShape;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
         cyclingAllowed = false;
         updateWhenCycling = true;
         noDrops();
+        middleShape = new ArrayList<>();
+        tipShape = new ArrayList<>();
     }
 
     public RockSpikeBlockBuilder allowCycling() {
@@ -50,7 +62,6 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    // TODO: replace this with an override of #isFaceSturdy or something
     /**
      * This exists because when testing the cycling feature any spike blocks above the clicked one would pop off if it
      * was bigger than the new state, this allows devs to decide if that should happen... by eliminating the block update
@@ -60,6 +71,71 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     public RockSpikeBlockBuilder dontUpdateWhenCycling() {
         updateWhenCycling = false;
         return this;
+    }
+
+    @Override
+    public VoxelShape createShape() {
+        if (customShape.isEmpty()) {
+            return RockSpikeBlock.BASE_SHAPE;
+        }
+
+        var shape = Shapes.create(customShape.get(0));
+        for (var i = 1; i < customShape.size(); i++) {
+            shape = Shapes.or(shape, Shapes.create(customShape.get(i)));
+        }
+        return shape;
+    }
+
+    public BlockBuilder middleBox(double x0, double y0, double z0, double x1, double y1, double z1, boolean scale16) {
+        if (scale16) {
+            middleShape.add(new AABB(x0 / 16D, y0 / 16D, z0 / 16D, x1 / 16D, y1 / 16D, z1 / 16D));
+        } else {
+            middleShape.add(new AABB(x0, y0, z0, x1, y1, z1));
+        }
+
+        return this;
+    }
+
+    public BlockBuilder middleBox(double x0, double y0, double z0, double x1, double y1, double z1) {
+        return middleBox(x0, y0, z0, x1, y1, z1, true);
+    }
+
+    public VoxelShape createMiddleShape() {
+        if (middleShape.isEmpty()) {
+            return RockSpikeBlock.MIDDLE_SHAPE;
+        }
+
+        var shape = Shapes.create(middleShape.get(0));
+        for (var i = 1; i < middleShape.size(); i++) {
+            shape = Shapes.or(shape, Shapes.create(middleShape.get(i)));
+        }
+        return shape;
+    }
+
+    public BlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1, boolean scale16) {
+        if (scale16) {
+            tipShape.add(new AABB(x0 / 16D, y0 / 16D, z0 / 16D, x1 / 16D, y1 / 16D, z1 / 16D));
+        } else {
+            tipShape.add(new AABB(x0, y0, z0, x1, y1, z1));
+        }
+
+        return this;
+    }
+
+    public BlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1) {
+        return tipBox(x0, y0, z0, x1, y1, z1, true);
+    }
+
+    public VoxelShape createTipShape() {
+        if (tipShape.isEmpty()) {
+            return RockSpikeBlock.TIP_SHAPE;
+        }
+
+        var shape = Shapes.create(tipShape.get(0));
+        for (var i = 1; i < tipShape.size(); i++) {
+            shape = Shapes.or(shape, Shapes.create(tipShape.get(i)));
+        }
+        return shape;
     }
 
     @Override
@@ -84,6 +160,15 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
                     return InteractionResult.SUCCESS;
                 }
                 return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+            }
+
+            @Override
+            public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+                return switch (state.getValue(PART)) {
+                    case BASE -> createShape();
+                    case MIDDLE -> createMiddleShape();
+                    default -> createTipShape();
+                };
             }
         };
     }

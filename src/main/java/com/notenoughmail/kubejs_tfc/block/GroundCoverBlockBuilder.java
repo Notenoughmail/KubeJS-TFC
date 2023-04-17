@@ -5,6 +5,8 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
 
@@ -17,6 +19,7 @@ public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
         type = Type.NONE;
         rotate = 0;
         parent = "boulder";
+        noCollision = true;
     }
 
     public GroundCoverBlockBuilder ore() {
@@ -37,6 +40,24 @@ public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
     public GroundCoverBlockBuilder notAxisAligned() {
         rotate = 45;
         return this;
+    }
+
+    public GroundCoverBlockBuilder collision() {
+        noCollision = false;
+        return this;
+    }
+
+    @Override
+    public VoxelShape createShape() {
+        if (customShape.isEmpty()) {
+            return GroundcoverBlock.MEDIUM;
+        }
+
+        var shape = Shapes.create(customShape.get(0));
+        for (var i = 1; i < customShape.size(); i++) {
+            shape = Shapes.or(shape, Shapes.create(customShape.get(i)));
+        }
+        return shape;
     }
 
     @Override

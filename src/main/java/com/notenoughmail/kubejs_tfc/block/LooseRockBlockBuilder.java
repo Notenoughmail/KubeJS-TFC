@@ -16,10 +16,16 @@ public class LooseRockBlockBuilder extends ShapedBlockBuilder {
     public LooseRockBlockBuilder(ResourceLocation i) {
         super(i);
         rotate = 0;
+        noCollision = true;
     }
 
     public LooseRockBlockBuilder notAxisAligned() {
         rotate = 45;
+        return this;
+    }
+
+    public LooseRockBlockBuilder collsion() {
+        noCollision = false;
         return this;
     }
 

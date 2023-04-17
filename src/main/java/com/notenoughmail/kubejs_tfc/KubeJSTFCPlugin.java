@@ -1,10 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.eerussianguy.firmalife.FirmaLife;
-import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.GroundCoverBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.LooseRockBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.RockSpikeBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
@@ -43,7 +40,7 @@ import net.minecraftforge.fml.ModList;
  *   - {@link net.dries007.tfc.common.items.TFCShieldItem Shield} [N] <br>
  *  - Blocks <br>
  *   - {@link net.dries007.tfc.common.blocks.GroundcoverBlock Groundcover} [Y]
- *   - {@link net.dries007.tfc.common.blocks.ThinSpikeBlock Ice/Calcite}
+ *   - {@link net.dries007.tfc.common.blocks.ThinSpikeBlock Ice/Calcite} [Y]
  *   - Supports?
  *     - {@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}
  *     - {@link net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock Horizontal}
@@ -134,6 +131,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc_thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
     }
 
     @Override
