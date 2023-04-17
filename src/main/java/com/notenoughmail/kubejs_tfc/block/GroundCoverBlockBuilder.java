@@ -5,7 +5,6 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 
 public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
 
@@ -41,7 +40,7 @@ public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
     }
 
     @Override
-    public Block createObject() {
+    public GroundcoverBlock createObject() {
         return switch (type) {
             case ORE -> GroundcoverBlock.looseOre(createProperties());
             case TWIG -> GroundcoverBlock.twig(ExtendedProperties.of(createProperties()));
@@ -53,14 +52,17 @@ public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
     // things won't load, the generator order must be blockstate -> blockmodel -> itemmodel
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        var blockModelLoc = newID("block/", "").toString();
-
-        generator.blockState(id, m -> m.variant("", v -> {
-            v.model(blockModelLoc).y(rotate);
-            v.model(blockModelLoc).y(90 + rotate);
-            v.model(blockModelLoc).y(180 + rotate);
-            v.model(blockModelLoc).y(270 + rotate);
-        }));
+        if (blockstateJson != null) {
+            generator.json(newID("blockstates/", ""), blockstateJson);
+        } else {
+            var blockModelLoc = newID("block/", "").toString();
+            generator.blockState(id, m -> m.variant("", v -> {
+                v.model(blockModelLoc).y(rotate);
+                v.model(blockModelLoc).y(90 + rotate);
+                v.model(blockModelLoc).y(180 + rotate);
+                v.model(blockModelLoc).y(270 + rotate);
+            }));
+        }
 
         if (modelJson != null) {
             generator.json(newID("models/block/", ""), modelJson);

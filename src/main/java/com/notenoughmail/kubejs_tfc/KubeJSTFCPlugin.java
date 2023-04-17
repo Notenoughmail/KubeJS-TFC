@@ -4,6 +4,7 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.notenoughmail.kubejs_tfc.block.AqueductBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.GroundCoverBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.LooseRockBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.RockSpikeBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
@@ -51,11 +52,12 @@ import net.minecraftforge.fml.ModList;
  *      - Possibly use {@link net.dries007.tfc.common.blocks.soil.TFCRootedDirtBlock Rooted Dirt} as a method to make it not grass-able
  *    - {@link net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock Grass}
  *    - {@link net.dries007.tfc.common.blocks.soil.FarmlandBlock Soil}
+ *       - These are block entities
  *    - {@link net.dries007.tfc.common.blocks.soil.MudBlock Mud?}
  *    - {@link net.dries007.tfc.common.blocks.soil.PathBlock Path}
  *  - Rock? No block entities. Gen a whole 'suite' of TFC-like blocks?
  *    - {@link net.dries007.tfc.common.blocks.rock.AqueductBlock Aqueduct} [Y]
- *    - {@link net.dries007.tfc.common.blocks.rock.RockSpikeBlock Rock Spike?}
+ *    - {@link net.dries007.tfc.common.blocks.rock.RockSpikeBlock Rock Spike?} [Y]
  *  - {@link net.dries007.tfc.common.blocks.crop.CropBlock Crops?}
  *    - These are block entities
  *    - Would need:
@@ -131,6 +133,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc_rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
     }
 
     @Override
