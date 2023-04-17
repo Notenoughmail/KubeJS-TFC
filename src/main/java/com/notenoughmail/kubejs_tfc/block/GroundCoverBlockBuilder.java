@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
+public class GroundCoverBlockBuilder extends BlockBuilder {
 
     private transient Type type;
     private transient int rotate;
@@ -90,7 +90,7 @@ public class GroundCoverBlockBuilder extends ShapedBlockBuilder {
         } else {
             generator.blockModel(id, m -> {
                 m.parent("kubejs_tfc:block/groundcover/" + parent);
-                m.texture("all", textures.get("texture").getAsString());
+                m.texture("all", id.getNamespace() + ":block/" + id.getPath());
             });
         }
 

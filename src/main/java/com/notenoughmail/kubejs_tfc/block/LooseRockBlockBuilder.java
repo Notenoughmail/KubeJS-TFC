@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
@@ -9,7 +10,7 @@ import dev.latvian.mods.kubejs.loot.LootBuilder;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 
-public class LooseRockBlockBuilder extends ShapedBlockBuilder {
+public class LooseRockBlockBuilder extends BlockBuilder {
 
     private transient int rotate;
 
@@ -63,17 +64,18 @@ public class LooseRockBlockBuilder extends ShapedBlockBuilder {
             });
         }
 
+        var texture = id.getNamespace() + ":block/" + id.getPath();
         generator.blockModel(newID("", "_pebble"), m -> {
             m.parent("kubejs_tfc:block/groundcover/pebble");
-            m.texture("all", textures.get("texture").getAsString());
+            m.texture("all", texture);
         });
         generator.blockModel(newID("", "_rubble"), m -> {
             m.parent("kubejs_tfc:block/groundcover/rubble");
-            m.texture("all", textures.get("texture").getAsString());
+            m.texture("all", texture);
         });
         generator.blockModel(newID("", "_boulder"), m -> {
             m.parent("kubejs_tfc:block/groundcover/boulder");
-            m.texture("all", textures.get("texture").getAsString());
+            m.texture("all", texture);
         });
 
         if (itemBuilder != null) {
