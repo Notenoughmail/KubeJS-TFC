@@ -82,7 +82,7 @@ import net.minecraftforge.fml.ModList;
  *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products} [Y]
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating} [Y]
- *      - Maybe also a way to give items item heats through JS?
+ *      - Maybe also a way to give items item heats through JS? [Y]
  *      - Output is optional, requires something dumb or result to not be first [Y]
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
@@ -109,6 +109,23 @@ import net.minecraftforge.fml.ModList;
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - TFC Worldgen features?
+ *    - TFC Data
+ *      - Climate Ranges? - can only modify existing ranges
+ *      - Damage Resistances
+ *        - item
+ *        - entity
+ *      - Drinkables
+ *      - Fauna? - can only modify existing fauna
+ *      - Fertilizers
+ *      - Food Items
+ *      - Fuels [Y]
+ *      - Item Heats [Y]
+ *      - Item Sizes
+ *      - lamp Fuel [Y]
+ *      - Metals [Y]
+ *      - Supports [Y]
+ *      - FirmaLife greenhouses?
+ *      - FirmaLife plantables?
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
