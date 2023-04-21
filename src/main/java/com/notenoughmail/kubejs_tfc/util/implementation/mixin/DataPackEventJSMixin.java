@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import java.util.Locale;
 public abstract class DataPackEventJSMixin {
 
     private static final String notANumber = "[^0-9.-]";
+    private static final String splitters = "[,;:]";
 
     @Shadow
     public abstract void addJson(ResourceLocation resourceLocation, JsonElement json);
@@ -28,7 +30,7 @@ public abstract class DataPackEventJSMixin {
         var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
             var value = splitValues[i];
             if (value.charAt(0) == 'p' || value.matches("piercing.+")) {
@@ -48,7 +50,7 @@ public abstract class DataPackEventJSMixin {
     public void addTFCEntityDamageResistance(String entityTag, String values) { // "p=20, c=50"
         var json = new JsonObject();
         json.addProperty("entity", entityTag);
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
             var value = splitValues[i];
             if (value.charAt(0) == 'p' || value.matches("piercing.+")) {
@@ -65,11 +67,17 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
+    public void addTFCDrinkable(Object drinkable) {
+        DrinkableData drinkableData = DrinkableData.of(drinkable);
+        addJson(dataIDTFC("drinkables/" + ingredientToName(drinkableData.fluidIngredient)), drinkableData.toJson());
+    }
+
+    @Unique
     public void addTFCFertilizer(Object ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
         var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
             var value = splitValues[i];
             if (value.charAt(0) == 'n' || value.matches("nitrogen.+")) {
@@ -118,7 +126,7 @@ public abstract class DataPackEventJSMixin {
         var ingredientjS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientjS.toJson());
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(2, splitValues.length) ; i++) {
             var value = splitValues[i];
             if (value.charAt(0) == 's' || value.matches("size=.+")) {
@@ -200,7 +208,7 @@ public abstract class DataPackEventJSMixin {
         var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(5, splitValues.length) ; i++) {
             var value = splitValues[i];
             if (value.charAt(0) == 'd' || value.matches("death.+")) {
