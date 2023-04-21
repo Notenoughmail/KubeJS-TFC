@@ -120,7 +120,7 @@ import net.minecraftforge.fml.ModList;
  *      - Food Items
  *      - Fuels [Y]
  *      - Item Heats [Y]
- *      - Item Sizes
+ *      - Item Sizes [Y]
  *      - lamp Fuel [Y]
  *      - Metals [Y]
  *      - Supports [Y]

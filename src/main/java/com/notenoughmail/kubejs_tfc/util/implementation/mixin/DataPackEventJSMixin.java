@@ -114,6 +114,33 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
+    public void addTFCItemSize(Object ingredient, String values) { // "s=tiny, weight=medium"
+        var ingredientjS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+        var json = new JsonObject();
+        json.add("ingredient", ingredientjS.toJson());
+        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split("[,;:]");
+        for (int i = 0 ; i < Math.min(2, splitValues.length) ; i++) {
+            var value = splitValues[i];
+            if (value.charAt(0) == 's' || value.matches("size=.+")) {
+                var constant = value.replaceFirst("s(?>ize)?=", "");
+                if (!constant.matches("(?>tiny|(?>very_)?(?>small|large)|normal|huge)")) {
+                    throw new IllegalArgumentException("Size value cannot be '" + constant + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
+                } else {
+                    json.addProperty("size", constant);
+                }
+            } else if (value.charAt(0) == 'w' || value.matches("weight=.+")) {
+                var constant = value.replaceFirst("w(?>eight)?=", "");
+                if (!constant.matches("(?>(?>very_)?(?>light|heavy)|medium)")) {
+                    throw new IllegalArgumentException("Weight value cannot be '" + constant + "', it must be very_light, light, medium, heavy, or very_heavy");
+                } else {
+                    json.addProperty("weight", constant);
+                }
+            }
+        }
+        addJson(dataIDTFC("item_sizes/" + ingredientToName(ingredientjS)), json);
+    }
+
+    @Unique
     public void addTFCLampFuel(Object fluidIngredient, Object blockIngredient, int burnRate) {
         var fluidIngredientJS = FluidStackIngredientJS.of(fluidIngredient);
         var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
