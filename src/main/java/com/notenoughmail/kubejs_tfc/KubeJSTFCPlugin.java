@@ -112,11 +112,11 @@ import net.minecraftforge.fml.ModList;
  *    - TFC Data
  *      - Climate Ranges? - can only modify existing ranges
  *      - Damage Resistances
- *        - item
- *        - entity
- *      - Drinkables
+ *        - item [Y]
+ *        - entity [Y]
+ *      - Drinkables /kubejs dump_registry minecraft:mob_effect
  *      - Fauna? - can only modify existing fauna
- *      - Fertilizers
+ *      - Fertilizers [Y]
  *      - Food Items
  *      - Fuels [Y]
  *      - Item Heats [Y]
@@ -124,8 +124,14 @@ import net.minecraftforge.fml.ModList;
  *      - lamp Fuel [Y]
  *      - Metals [Y]
  *      - Supports [Y]
- *      - FirmaLife greenhouses?
- *      - FirmaLife plantables?
+ *      - FirmaLife greenhouses? [Y]
+ *      - FirmaLife plantables? - that's a bloody lot of optional values without a wiki to reference
+ *      - Beneath nether fertilizers? [Y]
+ *        - Death -> d
+ *        - Destruction -> t
+ *        - Flame -> f
+ *        - Decay -> c
+ *        - Sorrow -> s
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
