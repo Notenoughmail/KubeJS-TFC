@@ -8,6 +8,9 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableDataWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.EffectDataWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemDataWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -82,7 +85,7 @@ import net.minecraftforge.fml.ModList;
  *    - {@link net.dries007.tfc.common.recipes.ExtraProductsCraftingRecipe Extra products} [Y]
  *      - See above
  *    - {@link net.dries007.tfc.common.recipes.HeatingRecipe Heating} [Y]
- *      - Maybe also a way to give items item heats through JS?
+ *      - Maybe also a way to give items item heats through JS? [Y]
  *      - Output is optional, requires something dumb or result to not be first [Y]
  *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
  *      - Specify type (rock, leather, clay) [N]
@@ -109,6 +112,29 @@ import net.minecraftforge.fml.ModList;
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
  *    - TFC Worldgen features?
+ *    - TFC Data
+ *      - Climate Ranges? - can only modify existing ranges
+ *      - Damage Resistances
+ *        - item [Y]
+ *        - entity [Y]
+ *      - Drinkables [Y] /kubejs dump_registry minecraft:mob_effect
+ *      - Fauna? - can only modify existing fauna
+ *      - Fertilizers [Y]
+ *      - Food Items [Y]
+ *      - Fuels [Y]
+ *      - Item Heats [Y]
+ *      - Item Sizes [Y]
+ *      - lamp Fuel [Y]
+ *      - Metals [Y]
+ *      - Supports [Y]
+ *      - FirmaLife greenhouses? [Y]
+ *      - FirmaLife plantables? - that's a bloody lot of optional values without a wiki to reference
+ *      - Beneath nether fertilizers? [Y]
+ *        - Death -> d
+ *        - Destruction -> t
+ *        - Flame -> f
+ *        - Decay -> c
+ *        - Sorrow -> s
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
@@ -177,6 +203,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FluidIngredient", FluidStackIngredientWrapper.class);
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
+        event.add("DrinkableData", DrinkableDataWrapper.class);
+        event.add("EffectData", EffectDataWrapper.class);
+        event.add("FoodItemData", FoodItemDataWrapper.class);
     }
 
     private void addToolTier(Tier tier) {

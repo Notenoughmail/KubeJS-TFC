@@ -135,8 +135,11 @@ repositories {
     }
 }
 
+// For some horrible reason IDEA likes to invalidate all dependencies, to fix it comment out one of these, refresh gradle, uncomment, and refresh again
+// You'll have to reapply sources, but that would be the case anyway for all of them
+// It's like the big TO-DO javadoc failing to color itself but less fun
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.73'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     implementation fg.deobf("curse.maven:terrafirmacraft-302973:${tfc_identifier}")
     implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
@@ -155,6 +158,10 @@ dependencies {
     implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
     implementation fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
+
+    if (System.getProperty("idea.sync.active") != "true") {
+        annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
+    }
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -193,4 +200,9 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+mixin {
+    add sourceSets.main, "kubejs_tfc.refmap.json"
+    config "kubejs_tfc.mixins.json"
 }

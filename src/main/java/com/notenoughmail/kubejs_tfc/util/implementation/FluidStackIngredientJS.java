@@ -130,12 +130,12 @@ public class FluidStackIngredientJS {
         var obj = new JsonObject();
         obj.addProperty("amount", amount);
 
-        obj.add("ingredient", fluidIngredientToJson());
+        obj.add("ingredient", toJsonNoAmount());
 
         return obj;
     }
 
-    private JsonElement fluidIngredientToJson() {
+    public JsonElement toJsonNoAmount() {
         if (fluids.size() == 1) {
             if (fluids.get(0).matches("#.+")) {
                 var obj = new JsonObject();

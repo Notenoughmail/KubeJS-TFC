@@ -13,6 +13,6 @@ public class KubeJSTFC {
     public static final String MODID = "kubejs_tfc";
 
     public KubeJSTFC() {
-       // ConsoleJS.CLIENT.setDebugEnabled(true);
+        // ConsoleJS.CLIENT.setDebugEnabled(true);
     }
 }
