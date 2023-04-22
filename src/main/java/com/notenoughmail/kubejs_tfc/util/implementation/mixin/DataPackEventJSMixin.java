@@ -224,7 +224,7 @@ public abstract class DataPackEventJSMixin {
             if (value.charAt(0) == 'd' || value.matches("death.+")) {
                 json.addProperty("death", Float.parseFloat(value.replaceAll(notANumber, "")));
             } else if (value.charAt(0) == 't' || value.matches("destruction.+")) {
-                json.addProperty("death", Float.parseFloat(value.replaceAll(notANumber, "")));
+                json.addProperty("destruction", Float.parseFloat(value.replaceAll(notANumber, "")));
             } else if (value.charAt(0) == 'f' || value.matches("flame.+")) {
                 json.addProperty("flame", Float.parseFloat(value.replaceAll(notANumber, "")));
             } else if (value.charAt(0) == 'c' || value.matches("decay.+")) {

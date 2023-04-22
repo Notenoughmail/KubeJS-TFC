@@ -18,7 +18,7 @@ public class FoodItemDataWrapper {
         return data.water(f);
     }
 
-    public static FoodItemData decatModifer(FoodItemData data, float f) {
+    public static FoodItemData decayModifer(FoodItemData data, float f) {
         return data.decayModifier(f);
     }
 
