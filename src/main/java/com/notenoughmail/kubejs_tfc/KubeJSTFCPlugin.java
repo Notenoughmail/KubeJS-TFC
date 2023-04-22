@@ -10,6 +10,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrap
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableDataWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.EffectDataWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemDataWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -119,7 +120,7 @@ import net.minecraftforge.fml.ModList;
  *      - Drinkables [Y] /kubejs dump_registry minecraft:mob_effect
  *      - Fauna? - can only modify existing fauna
  *      - Fertilizers [Y]
- *      - Food Items
+ *      - Food Items [Y]
  *      - Fuels [Y]
  *      - Item Heats [Y]
  *      - Item Sizes [Y]
@@ -204,6 +205,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("ItemProvider", ItemStackProviderWrapper.class);
         event.add("DrinkableData", DrinkableDataWrapper.class);
         event.add("EffectData", EffectDataWrapper.class);
+        event.add("FoodItemData", FoodItemDataWrapper.class);
     }
 
     private void addToolTier(Tier tier) {

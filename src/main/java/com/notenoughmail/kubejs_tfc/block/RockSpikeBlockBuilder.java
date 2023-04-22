@@ -40,7 +40,6 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         super(i);
         cyclingAllowed = false;
         updateWhenCycling = true;
-        noDrops();
         middleShape = new ArrayList<>();
         tipShape = new ArrayList<>();
     }
@@ -141,6 +140,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     @Override
     public RockSpikeBlock createObject() {
         return new RockSpikeBlock(createProperties()) {
+
             @Override
             public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
                 var isCorrectItem = (cycleItem != null && pPlayer.getItemInHand(pHand).is(cycleItem)) || (cycleTag != null && pPlayer.getItemInHand(pHand).is(cycleTag));

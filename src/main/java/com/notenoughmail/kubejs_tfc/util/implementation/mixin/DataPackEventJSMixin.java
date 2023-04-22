@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +42,7 @@ public abstract class DataPackEventJSMixin {
             } else if (value.charAt(0) == 'c' || value.matches("crushing.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
-                throw new IllegalArgumentException("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
+                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
             }
         }
         addJson(dataIDTFC("item_damage_resistances/" + ingredientToName(ingredientJS)), json);
@@ -60,7 +62,7 @@ public abstract class DataPackEventJSMixin {
             } else if (value.charAt(0) == 'c' || value.matches("crushing.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
-                throw new IllegalArgumentException("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
+                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
             }
         }
         addJson(dataIDTFC("entity_damage_resistances/" + ingredientToName(entityTag)), json);
@@ -87,10 +89,16 @@ public abstract class DataPackEventJSMixin {
             } else if (value.charAt(0) == 'k' || value.matches("potassium.+")) {
                 json.addProperty("potassium", Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
-                throw new IllegalArgumentException("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(n|p|k)=\\d*.\\d+/");
+                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(n|p|k)=\\d*.\\d+/");
             }
         }
         addJson(dataIDTFC("fertilizers/" + ingredientToName(ingredientJS)), json);
+    }
+
+    @Unique
+    public void addTFCFoodItem(Object foodItem) {
+        FoodItemData foodItemData = FoodItemData.of(foodItem);
+        addJson(dataIDTFC("food_items/" + ingredientToName(foodItemData.ingredient)), foodItemData.toJson());
     }
 
     @Unique
@@ -107,7 +115,7 @@ public abstract class DataPackEventJSMixin {
     public void addTFCHeat(Object ingredient, float... values) {
         var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
         if (values.length < 1) {
-            throw new IllegalArgumentException("Heat data for " + ingredientJS.toString() + " does not define a heat capacity!");
+            ConsoleJS.SERVER.error("Heat data for " + ingredientJS.toString() + " does not define a heat capacity!");
         }
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
@@ -132,17 +140,19 @@ public abstract class DataPackEventJSMixin {
             if (value.charAt(0) == 's' || value.matches("size=.+")) {
                 var constant = value.replaceFirst("s(?>ize)?=", "");
                 if (!constant.matches("(?>tiny|(?>very_)?(?>small|large)|normal|huge)")) {
-                    throw new IllegalArgumentException("Size value cannot be '" + constant + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
+                    ConsoleJS.SERVER.error("Size value cannot be '" + constant + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
                 } else {
                     json.addProperty("size", constant);
                 }
             } else if (value.charAt(0) == 'w' || value.matches("weight=.+")) {
                 var constant = value.replaceFirst("w(?>eight)?=", "");
                 if (!constant.matches("(?>(?>very_)?(?>light|heavy)|medium)")) {
-                    throw new IllegalArgumentException("Weight value cannot be '" + constant + "', it must be very_light, light, medium, heavy, or very_heavy");
+                    ConsoleJS.SERVER.error("Weight value cannot be '" + constant + "', it must be very_light, light, medium, heavy, or very_heavy!");
                 } else {
                     json.addProperty("weight", constant);
                 }
+            } else {
+                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(s=(tiny|very_small|small|normal|large|very_large|huge)|w=(very_light|light|medium|heavy|very_heavy))/");
             }
         }
         addJson(dataIDTFC("item_sizes/" + ingredientToName(ingredientjS)), json);
@@ -222,7 +232,7 @@ public abstract class DataPackEventJSMixin {
             } else if (value.charAt(0) == 's' || value.matches("sorrow.+")) {
                 json.addProperty("sorrow", Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
-                throw new IllegalArgumentException("Value '" + value + "' in values '" + values + "' is not valid! the value should match /(d|t|f|c|s)=\\d*.\\d+/");
+                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! the value should match /(d|t|f|c|s)=\\d*.\\d+/");
             }
         }
         addJson(dataIDBN("nether_fertilizers/" + ingredientToName(ingredientJS)), json);
