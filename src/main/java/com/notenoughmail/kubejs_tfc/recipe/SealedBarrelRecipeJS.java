@@ -97,7 +97,7 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
     public void serialize() {
         if (serializeOutputs) {
             if (itemProviderResult != null) {
-                json.add("ouput_item", itemProviderResult.toJson());
+                json.add("output_item", itemProviderResult.toJson());
             }
             if (!outputFluids.isEmpty()) {
                 json.add("output_fluid", outputFluids.get(0).toJson());
@@ -138,11 +138,11 @@ public class SealedBarrelRecipeJS extends TFCRecipeJS {
             builder.append(onSealISP);
             builder.append(" + [] -> ");
         } else if (onSealISP == null && onUnsealISP != null) {
-            builder.append(" [] + ");
+            builder.append("[] + ");
             builder.append(onUnsealISP);
             builder.append(" -> ");
         } else {
-            builder.append(" [] -> ");
+            builder.append("[] -> ");
         }
         if (itemProviderResult != null) {
             builder.append(itemProviderResult);

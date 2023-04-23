@@ -24,7 +24,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    public LooseRockBlockBuilder collsion() {
+    public LooseRockBlockBuilder collision() {
         noCollision = false;
         return this;
     }
