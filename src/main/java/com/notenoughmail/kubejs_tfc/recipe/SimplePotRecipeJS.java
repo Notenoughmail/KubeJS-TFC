@@ -38,7 +38,7 @@ public class SimplePotRecipeJS extends TFCRecipeJS {
             }
         }
 
-        // Blame js, toString does not return an int here
+        // Blame js, toString does not return an int-parseable string here
         duration = (int) Float.parseFloat(listJS.get(2).toString());
 
         temperature = Float.parseFloat(listJS.get(3).toString());
@@ -80,8 +80,10 @@ public class SimplePotRecipeJS extends TFCRecipeJS {
         if (serializeInputs) {
             json.add("fluid_ingredient", inputFluids.get(0).toJson());
             var array = new JsonArray();
-            for (var ingredient : inputItems) {
-                array.add(ingredient.toJson().getAsJsonObject());
+            for (var ingredientJS : inputItems) {
+                for (var ingredient : ingredientJS.unwrapStackIngredient()) {
+                    array.add(ingredient.toJson().getAsJsonObject());
+                }
             }
             json.add("ingredients", array);
             json.addProperty("duration", duration);

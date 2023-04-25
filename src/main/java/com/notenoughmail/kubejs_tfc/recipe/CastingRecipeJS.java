@@ -10,7 +10,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
     @Override
     public void create(ListJS listJS) {
-        if (listJS.size() < 4) {
+        if (listJS.size() < 3) {
             throw new RecipeExceptionJS("Requires four arguments - result, mold, fluid ingredient, and break chance");
         }
 
@@ -19,8 +19,10 @@ public class CastingRecipeJS extends TFCRecipeJS {
         inputFluids.add(FluidStackIngredientJS.of(listJS.get(2)));
 
         outputItems.add(parseResultItem(listJS.get(0)));
-
-        breakChance = Float.parseFloat(listJS.get(3).toString());
+        
+        if (listJS.size() > 3) {
+            breakChance = Float.parseFloat(listJS.get(3).toString());
+        }
     }
 
     @Override
