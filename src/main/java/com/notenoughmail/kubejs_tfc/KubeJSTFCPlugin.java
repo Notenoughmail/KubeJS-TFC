@@ -106,7 +106,7 @@ import net.minecraftforge.fml.ModList;
  *      - Make a raw ingredient builder for this
  *    - Item Stack Provider implementation [Y] <br> <br>
  *  - Misc. <br>
- *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method
+ *    - {@link net.dries007.tfc.common.items.ToolItem#calculateVanillaAttackDamage(float, Tier) TFC attack damage} as a method [Y]
  *    - {@link net.dries007.tfc.common.TFCTiers Tool tiers} [Y]
  *      - Metallum compat?
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]

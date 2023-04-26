@@ -4,7 +4,8 @@
   "package": "com.notenoughmail.kubejs_tfc.util.implementation.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "DataPackEventJSMixin"
+    "DataPackEventJSMixin",
+    "HandHeldItemBuilderMixin"
   ],
   "client": [],
   "refmap": "kubejs_tfc.refmap.json"

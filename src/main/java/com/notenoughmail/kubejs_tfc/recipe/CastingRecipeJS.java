@@ -19,7 +19,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
         inputFluids.add(FluidStackIngredientJS.of(listJS.get(2)));
 
         outputItems.add(parseResultItem(listJS.get(0)));
-        
+
         if (listJS.size() > 3) {
             breakChance = Float.parseFloat(listJS.get(3).toString());
         }
