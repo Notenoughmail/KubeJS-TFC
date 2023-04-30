@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "DataPackEventJSMixin",
-    "HandHeldItemBuilderMixin",
-    "RosiaModEventsMixin"
+    "HandHeldItemBuilderMixin"
   ],
   "client": [],
   "refmap": "kubejs_tfc.refmap.json"
