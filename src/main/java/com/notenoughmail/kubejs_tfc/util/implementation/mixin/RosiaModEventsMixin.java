@@ -13,7 +13,7 @@ public abstract class RosiaModEventsMixin {
 
     /**
      * @author NotEnoughMail
-     * @reason Currently, Rosia is broken on servers due to not checking client-ness, this is a hacky (unfortunate) temp fix to allow debug mode with its nice coloured log. This mixin will be removed once Rosia publishes the fix
+     * @reason Currently, Rosia is broken on servers due to not checking client-ness, this is a hacky (unfortunate) temp fix to allow debug mode with its nice coloured log. This mixin will be removed once Rosia publishes the fix. This <strong> does not </strong> work outside dev environments
      */
     @Overwrite(remap = false)
     public static void init() {
