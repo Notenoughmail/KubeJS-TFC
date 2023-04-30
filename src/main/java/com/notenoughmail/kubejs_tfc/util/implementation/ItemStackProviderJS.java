@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import com.eerussianguy.firmalife.FirmaLife;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,6 +12,7 @@ import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -220,23 +222,23 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS burrito() {
-        return this.simpleModifier("firmalife:burrito");
+        return firmaLoaded() ? this.simpleModifier("firmalife:burrito") : this;
     }
 
     public ItemStackProviderJS pie() {
-        return this.simpleModifier("firmalife:pie");
+        return firmaLoaded() ? this.simpleModifier("firmalife:pie") : this;
     }
 
     public ItemStackProviderJS pizza() {
-        return this.simpleModifier("firmalife:pizza");
+        return firmaLoaded() ? this.simpleModifier("firmalife:pizza") : this;
     }
 
     public ItemStackProviderJS copyDynamicFood() {
-        return this.simpleModifier("firmalife:copy_dynamic_food"); // Can't find usage, looking at code seems to be simple
+        return firmaLoaded() ? this.simpleModifier("firmalife:copy_dynamic_food") : this; // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS emptyPan(){
-        return this.simpleModifier("firmalife:empty_pan"); // Can't find usage, looking at code seems to be simple
+        return firmaLoaded() ? this.simpleModifier("firmalife:empty_pan") : this; // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS addBait() {
@@ -245,5 +247,9 @@ public class ItemStackProviderJS {
 
     public ItemStackProviderJS sandwich() {
         return this.simpleModifier("tfc:sandwich");
+    }
+
+    private boolean firmaLoaded() { // I don't know if adding FL modifiers while FL isn't loaded would break things, better safe than sorry
+        return ModList.get().isLoaded(FirmaLife.MOD_ID);
     }
 }

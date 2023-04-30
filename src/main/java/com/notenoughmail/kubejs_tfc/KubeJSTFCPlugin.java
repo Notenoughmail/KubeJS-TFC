@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.eerussianguy.firmalife.FirmaLife;
+import com.jewey.rosia.Rosia;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
@@ -111,9 +112,20 @@ import net.minecraftforge.fml.ModList;
  *      - Metallum compat?
  *    - {@link TFCArmorMaterials Armor Tiers} [Y]
  *      - See above
- *    - TFC Worldgen features?
+ *    - TFC Worldgen features? - How to properly tag these without extra user interaction?
+ *        - "addFeatureJson is deprecated for removal in 1.19.2! Please use virtual datapacks or addOre (for ores) instead." -> data event!
+ *      - Climate settings? (preset-only?)
+ *      - Rock settings? (preset-only?)
+ *      - Geode (in vein worldgen tag)
+ *      - Wild crop (conditional on getting crops working)
+ *      - Ore veins
+ *        - Cluster
+ *        - Disc
+ *        - Pipe
+ *      - Ore deposits
  *    - TFC Data
  *      - Climate Ranges? - can only modify existing ranges
+ *        - Conditional on custom crops/bushes as those have to define ranges
  *      - Damage Resistances
  *        - item [Y]
  *        - entity [Y]
@@ -192,6 +204,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {
             FirmaLifePlugin.addRecipes(event);
+        }
+
+        if (ModList.get().isLoaded(Rosia.MOD_ID)) {
+            RosiaPlugin.addRecipes(event);
         }
     }
 

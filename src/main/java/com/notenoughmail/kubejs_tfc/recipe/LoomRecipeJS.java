@@ -50,7 +50,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
         }
 
         if (serializeInputs) {
-            json.add("ingredient", inputItems.get(0).toJson());
+            json.add("ingredient", inputItems.get(0).unwrapStackIngredient().get(0).toJson());
             json.addProperty("input_count", count);
             json.addProperty("steps_required", steps);
             json.addProperty("in_progress_texture", tex);

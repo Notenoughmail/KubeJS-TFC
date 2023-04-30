@@ -57,7 +57,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     public RockSpikeBlockBuilder cycleTag(String tag) {
         cyclingAllowed = true;
-        cycleTag = new TagKey<>(Registry.ITEM_REGISTRY, new ResourceLocation(tag));
+        cycleTag = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(tag));
         return this;
     }
 
