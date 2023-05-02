@@ -142,8 +142,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     implementation fg.deobf("curse.maven:terrafirmacraft-302973:${tfc_identifier}")
+        runtimeOnly fg.deobf(("curse.maven:cyanide-541676:${cyanide_identifier}"))
     implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
-    implementation fg.deobf("tfc_rosia:rosia-${tfc_rosia_identifier}-${minecraft_version}:${tfc_rosia_identifier}")
+    implementation fg.deobf("curse.maven:rosia-856122:${tfc_rosia_identifier}")
         runtimeOnly fg.deobf("curse.maven:pipez-443900:${pipez_identifier}") // Not once have I ever found a mod that plays nice in run/mods, this is no exception
 
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api"))

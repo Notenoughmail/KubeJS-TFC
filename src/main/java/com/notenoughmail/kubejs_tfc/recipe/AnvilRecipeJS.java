@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;

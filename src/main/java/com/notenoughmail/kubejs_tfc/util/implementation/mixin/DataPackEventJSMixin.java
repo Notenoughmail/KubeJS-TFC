@@ -1,11 +1,14 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.AddGeodeProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
@@ -15,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Locale;
+import java.util.function.Consumer;
 
 // The number of iterations of trying to get a 'tfc.data' event type only to settle for this is astounding
 @SuppressWarnings("unused")
@@ -256,5 +260,37 @@ public abstract class DataPackEventJSMixin {
                 .replaceAll("_+", "_")        // Remove duplicate underscores
                 .replaceAll("^_", "")         // Remove leading underscores
                 .replaceAll("_$", "");        // Remove trailing underscores
+    }
+
+    //================================WORLDGEN================================ (misery)
+
+    @Unique
+    public void addFeaturesToTFCWorld(String path, String... values) {
+        var json = new JsonObject();
+        json.addProperty("replace", false);
+        var array = new JsonArray();
+        for (String value : values) {
+            array.add(value);
+        }
+        json.add("values", array);
+        addJson(new ResourceLocation("tfc", "tags/worldgen/placed_feature/" + path), json);
+    }
+
+    @Unique
+    public void addTFCGeode(String name, Consumer<AddGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new AddGeodeProperties();
+        geode.accept(properties);
+        addJson(configuredFeatureName(name), properties.toJson());
+        var place = new PlacedFeatureProperties(name);
+        placement.accept(place);
+        addJson(placedFeatureName(name), place.toJson());
+    }
+
+    private ResourceLocation configuredFeatureName(String path) {
+        return new ResourceLocation("kubejs_tfc", "worldgen/configured_feature/" + path);
+    }
+
+    private ResourceLocation placedFeatureName(String path) {
+        return new ResourceLocation("kubejs_tfc", "worldgen/placed_feature/" + path);
     }
 }

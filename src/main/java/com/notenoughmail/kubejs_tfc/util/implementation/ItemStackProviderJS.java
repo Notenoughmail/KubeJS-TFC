@@ -8,6 +8,7 @@ import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
+import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
@@ -46,7 +47,7 @@ public class ItemStackProviderJS {
     }
 
     public static ItemStackProviderJS of(@Nullable Object o, @Nullable Object b) {
-        return new ItemStackProviderJS(of(o).getStack(), of(b instanceof List<?> ? b : ListJS.orSelf(b)).getModifiers());
+        return new ItemStackProviderJS(of(o).getStack(), parseModifierList(ListJS.orSelf(b)));
     }
 
     private static JsonArray parseModifierList(List<?> list) {
@@ -58,6 +59,10 @@ public class ItemStackProviderJS {
                 var obj = new JsonObject();
                 obj.addProperty("type", element.toString());
                 modifiers.add(obj);
+            } else if (element instanceof JsonObject obj) {
+                modifiers.add(obj);
+            } else if (element instanceof MapJS map) {
+                modifiers.add(map.toJson());
             }
         }
         return modifiers;
@@ -109,6 +114,8 @@ public class ItemStackProviderJS {
             modifiers.add(ListJS.orSelf(nativeObject).toJson().getAsJsonObject());
         } else if (o instanceof NativeArray nativeArray) {
             modifiers.addAll(parseModifierList(nativeArray));
+        } else if (o instanceof MapJS map) {
+            modifiers.add(map.toJson());
         } else {
             throw new RecipeExceptionJS("Provided json modifier failed to parse!");
         }
