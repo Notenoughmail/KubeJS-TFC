@@ -7,7 +7,8 @@ import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.AddGeodeProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.buildBoulderProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.buildGeodeProperties;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
@@ -264,6 +265,7 @@ public abstract class DataPackEventJSMixin {
 
     //================================WORLDGEN================================ (misery)
 
+    // https://terrafirmacraft.github.io/Documentation/1.18.x/worldgen/tags/#placed-feature-tags
     @Unique
     public void addFeaturesToTFCWorld(String path, String... values) {
         var json = new JsonObject();
@@ -277,9 +279,18 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCGeode(String name, Consumer<AddGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
-        var properties = new AddGeodeProperties();
+    public void buildTFCGeode(String name, Consumer<buildGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new buildGeodeProperties();
         geode.accept(properties);
+        addJson(configuredFeatureName(name), properties.toJson());
+        var place = new PlacedFeatureProperties(name);
+        placement.accept(place);
+        addJson(placedFeatureName(name), place.toJson());
+    }
+
+    public void buildTFCBoulder(String name, Consumer<buildBoulderProperties> boulder, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new buildBoulderProperties();
+        boulder.accept(properties);
         addJson(configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);

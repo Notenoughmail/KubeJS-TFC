@@ -13,7 +13,6 @@ import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
  */
 public class RosiaPlugin {
 
-
     public static void addRecipes(RegisterRecipeHandlersEvent event) {
         event.register(ModRecipes.AUTO_QUERN_SERIALIZER.getId(), AutoQuernRecipeJS::new);
         event.register(ModRecipes.EXTRUDING_MACHINE_SERIALIZER.getId(), ExtrudingAndRollingMachineRecipesJS::new);

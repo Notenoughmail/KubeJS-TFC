@@ -125,7 +125,9 @@ import net.minecraftforge.fml.ModList;
  *        - Disc
  *        - Pipe
  *      - Ore deposits
- *      - Boulders
+ *      - Boulders [Y]
+ *      - Soil discs
+ *      - Thin spike
  *    - TFC Data
  *      - Climate Ranges? - can only modify existing ranges
  *        - Conditional on custom crops/bushes as those have to define ranges
@@ -142,6 +144,8 @@ import net.minecraftforge.fml.ModList;
  *      - lamp Fuel [Y]
  *      - Metals [Y]
  *      - Supports [Y]
+ *      - Sluicing
+ *      - Panning
  *      - FirmaLife greenhouses? [Y]
  *      - FirmaLife plantables? - that's a bloody lot of optional values without a wiki to reference
  *      - Beneath nether fertilizers? [Y]

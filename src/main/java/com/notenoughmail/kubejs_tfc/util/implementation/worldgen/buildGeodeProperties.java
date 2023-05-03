@@ -1,32 +1,32 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Map;
 
-public class AddGeodeProperties {
+import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
+import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.notANumber;
 
-    private static final String notANumber = "[^0-9.]";
+public class buildGeodeProperties {
 
     private String outerBlockState;
     private String middleBlockState;
     private final Map<String, Float> innerBlockWeightList = new Object2ObjectOpenHashMap<>();
 
-    public AddGeodeProperties outer(String s) {
+    public buildGeodeProperties outer(String s) {
         outerBlockState = s;
         return this;
     }
 
-    public AddGeodeProperties middle(String s) {
+    public buildGeodeProperties middle(String s) {
         middleBlockState = s;
         return this;
     }
 
-    public AddGeodeProperties inner(String... values) {
+    public buildGeodeProperties inner(String... values) {
         for (String s : values) {
             var biValue = s.split(" ");
             innerBlockWeightList.put(biValue[1], Float.parseFloat(biValue[0].replaceAll(notANumber, "")));
@@ -34,6 +34,7 @@ public class AddGeodeProperties {
         return this;
     }
 
+    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("type", "tfc:geode");
@@ -53,24 +54,5 @@ public class AddGeodeProperties {
 
         json.add("config", config);
         return json;
-    }
-
-    private JsonElement blockStateToLenient(String block) {
-        if (block.matches(".+\\[.+\\]")) {
-            var blockState = block.replace("]", "").split("\\[");
-            var states = blockState[1].split(",");
-
-            var json = new JsonObject();
-            json.addProperty("Name", blockState[0]);
-            var properties = new JsonObject();
-            for (String state : states) {
-                var value = state.split("=");
-                properties.addProperty(value[0], value[1]);
-            }
-            json.add("Properties", properties);
-            return json;
-        }
-
-        return new JsonPrimitive(block);
     }
 }
