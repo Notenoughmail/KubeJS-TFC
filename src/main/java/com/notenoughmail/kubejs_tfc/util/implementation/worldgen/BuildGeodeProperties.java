@@ -10,23 +10,23 @@ import java.util.Map;
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.notANumber;
 
-public class buildGeodeProperties {
+public class BuildGeodeProperties {
 
     private String outerBlockState;
     private String middleBlockState;
     private final Map<String, Float> innerBlockWeightList = new Object2ObjectOpenHashMap<>();
 
-    public buildGeodeProperties outer(String s) {
+    public BuildGeodeProperties outer(String s) {
         outerBlockState = s;
         return this;
     }
 
-    public buildGeodeProperties middle(String s) {
+    public BuildGeodeProperties middle(String s) {
         middleBlockState = s;
         return this;
     }
 
-    public buildGeodeProperties inner(String... values) {
+    public BuildGeodeProperties inner(String... values) {
         for (String s : values) {
             var biValue = s.split(" ");
             innerBlockWeightList.put(biValue[1], Float.parseFloat(biValue[0].replaceAll(notANumber, "")));

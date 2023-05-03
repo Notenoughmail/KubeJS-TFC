@@ -9,11 +9,11 @@ import java.util.List;
 
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
 
-public class buildBoulderProperties {
+public class BuildBoulderProperties {
 
     private final List<JsonObject> states = new ArrayList<>();
 
-    public buildBoulderProperties state(String rock, String... blocks) {
+    public BuildBoulderProperties state(String rock, String... blocks) {
         var obj = new JsonObject();
         obj.add("rock", blockStateToLenient(rock));
         var array = new JsonArray();

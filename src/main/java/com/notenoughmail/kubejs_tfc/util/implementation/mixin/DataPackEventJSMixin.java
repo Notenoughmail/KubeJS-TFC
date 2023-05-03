@@ -7,8 +7,9 @@ import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.buildBoulderProperties;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.buildGeodeProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildBoulderProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildGeodeProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildThinSpikeProperties;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
@@ -279,8 +280,8 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void buildTFCGeode(String name, Consumer<buildGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
-        var properties = new buildGeodeProperties();
+    public void buildTFCGeode(String name, Consumer<BuildGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new BuildGeodeProperties();
         geode.accept(properties);
         addJson(configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
@@ -288,9 +289,18 @@ public abstract class DataPackEventJSMixin {
         addJson(placedFeatureName(name), place.toJson());
     }
 
-    public void buildTFCBoulder(String name, Consumer<buildBoulderProperties> boulder, Consumer<PlacedFeatureProperties> placement) {
-        var properties = new buildBoulderProperties();
+    public void buildTFCBoulder(String name, Consumer<BuildBoulderProperties> boulder, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new BuildBoulderProperties();
         boulder.accept(properties);
+        addJson(configuredFeatureName(name), properties.toJson());
+        var place = new PlacedFeatureProperties(name);
+        placement.accept(place);
+        addJson(placedFeatureName(name), place.toJson());
+    }
+
+    public void buildTFCThinSpike(String name, Consumer<BuildThinSpikeProperties> spike, Consumer<PlacedFeatureProperties> placement) {
+        var properties = new BuildThinSpikeProperties();
+        spike.accept(properties);
         addJson(configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);

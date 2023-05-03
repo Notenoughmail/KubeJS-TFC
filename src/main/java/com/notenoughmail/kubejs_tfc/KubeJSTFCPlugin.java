@@ -127,7 +127,7 @@ import net.minecraftforge.fml.ModList;
  *      - Ore deposits
  *      - Boulders [Y]
  *      - Soil discs
- *      - Thin spike
+ *      - Thin spike [Y]
  *    - TFC Data
  *      - Climate Ranges? - can only modify existing ranges
  *        - Conditional on custom crops/bushes as those have to define ranges
