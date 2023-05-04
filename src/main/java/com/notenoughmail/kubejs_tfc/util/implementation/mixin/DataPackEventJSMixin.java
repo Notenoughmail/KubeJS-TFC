@@ -7,10 +7,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildBoulderProperties;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildGeodeProperties;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildThinSpikeProperties;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
@@ -289,6 +286,7 @@ public abstract class DataPackEventJSMixin {
         addJson(placedFeatureName(name), place.toJson());
     }
 
+    @Unique
     public void buildTFCBoulder(String name, Consumer<BuildBoulderProperties> boulder, Consumer<PlacedFeatureProperties> placement) {
         var properties = new BuildBoulderProperties();
         boulder.accept(properties);
@@ -298,12 +296,22 @@ public abstract class DataPackEventJSMixin {
         addJson(placedFeatureName(name), place.toJson());
     }
 
+    @Unique
     public void buildTFCThinSpike(String name, Consumer<BuildThinSpikeProperties> spike, Consumer<PlacedFeatureProperties> placement) {
         var properties = new BuildThinSpikeProperties();
         spike.accept(properties);
         addJson(configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);
+        addJson(placedFeatureName(name), place.toJson());
+    }
+
+    @Unique
+    public void buildTFCVein(String name, Consumer<BuildVeinProperties> vein) {
+        var properties = new BuildVeinProperties(name);
+        vein.accept(properties);
+        addJson(configuredFeatureName(name), properties.toJson());
+        var place = new PlacedFeatureProperties(name);
         addJson(placedFeatureName(name), place.toJson());
     }
 

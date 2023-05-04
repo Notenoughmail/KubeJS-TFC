@@ -15,7 +15,7 @@ public class HandHeldItemBuilderMixin {
     @Shadow public transient MutableToolTier toolTier;
 
     @Unique
-    public void useTFCDamageCalculation() { // Workshop the name
+    public void useTFCDamageCalculation() { // This doesn't return a HandHeldItemBuilder which is troublesome, not sure how to amend that
         attackDamageBaseline = ToolItem.calculateVanillaAttackDamage(attackDamageBaseline, toolTier);
     }
 }

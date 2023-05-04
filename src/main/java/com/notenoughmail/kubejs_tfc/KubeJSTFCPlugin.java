@@ -120,7 +120,7 @@ import net.minecraftforge.fml.ModList;
  *      - Rock settings? (preset-only?)
  *      - Geode (in vein worldgen tag) [Y]
  *      - Wild crop (conditional on getting crops working)
- *      - Ore veins
+ *      - Ore veins [Y]
  *        - Cluster
  *        - Disc
  *        - Pipe
@@ -128,6 +128,7 @@ import net.minecraftforge.fml.ModList;
  *      - Boulders [Y]
  *      - Soil discs
  *      - Thin spike [Y]
+ *      - methods for different types of placement modifiers in PlacedFeatureProperties
  *    - TFC Data
  *      - Climate Ranges? - can only modify existing ranges
  *        - Conditional on custom crops/bushes as those have to define ranges
