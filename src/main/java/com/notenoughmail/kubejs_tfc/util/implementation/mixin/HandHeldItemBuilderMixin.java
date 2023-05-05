@@ -8,14 +8,16 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(HandheldItemBuilder.class)
-public class HandHeldItemBuilderMixin {
+public abstract class HandHeldItemBuilderMixin {
 
     @Shadow public transient float attackDamageBaseline;
 
     @Shadow public transient MutableToolTier toolTier;
 
+    @Shadow public abstract HandheldItemBuilder attackDamageBaseline(float f);
+
     @Unique
-    public void useTFCDamageCalculation() { // This doesn't return a HandHeldItemBuilder which is troublesome, not sure how to amend that
-        attackDamageBaseline = ToolItem.calculateVanillaAttackDamage(attackDamageBaseline, toolTier);
+    public HandheldItemBuilder useTFCDamageCalculation() {
+        return attackDamageBaseline(ToolItem.calculateVanillaAttackDamage(attackDamageBaseline, toolTier));
     }
 }

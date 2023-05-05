@@ -1,9 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +25,8 @@ public class BuildVeinProperties {
     private JsonObject maxY;
     @Nullable
     private JsonObject indicator;
-    private final JsonArray biomes = new JsonArray();
+    @Nullable
+    private String biomeTag;
     @Nullable
     private Integer salt;
     private final JsonArray blocks = new JsonArray();
@@ -113,15 +112,11 @@ public class BuildVeinProperties {
         return this;
     }
 
-    // I don't understand the wiki for this
-    public BuildVeinProperties biomeFilter(Object o) {
-        if (o instanceof JsonElement element) {
-            biomes.add(element);
-        } else if (o instanceof MapJS map) {
-            biomes.add(map.toJson());
-        } else if (o instanceof CharSequence) {
-            biomes.add(o.toString());
-        }
+    // https://github.com/TerraFirmaCraft/TerraFirmaCraft/blob/1.18.x/src/main/resources/data/tfc/worldgen/configured_feature/vein/volcanic_sulfur.json#L87
+    // https://github.com/TerraFirmaCraft/TerraFirmaCraft/blob/1.18.x/src/main/java/net/dries007/tfc/world/feature/vein/VeinConfig.java#L63
+    // Optional<TagKey<Biome>>
+    public BuildVeinProperties biomeFilter(String biomeTag) {
+        this.biomeTag = biomeTag;
         return this;
     }
 
@@ -181,8 +176,8 @@ public class BuildVeinProperties {
         if (salt != null) {
             config.addProperty("salt", salt);
         }
-        if (!biomes.isEmpty()) {
-            config.add("biomes", biomes);
+        if (biomeTag != null) {
+            config.addProperty("biomes", biomeTag);
         }
         if (type == VeinType.DISC) {
             config.addProperty("height", height);
