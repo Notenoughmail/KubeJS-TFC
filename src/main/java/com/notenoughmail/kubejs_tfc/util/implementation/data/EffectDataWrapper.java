@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
+@Deprecated
 public class EffectDataWrapper {
 
     public static EffectData type(String o) {

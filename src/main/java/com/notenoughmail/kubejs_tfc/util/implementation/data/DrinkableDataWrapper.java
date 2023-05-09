@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
+@Deprecated
 public class DrinkableDataWrapper {
 
     public static DrinkableData of(Object o) {

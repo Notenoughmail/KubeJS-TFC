@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.rhino.Wrapper;
 
+@Deprecated
 public class FoodItemData {
 
     public final IngredientJS ingredient;

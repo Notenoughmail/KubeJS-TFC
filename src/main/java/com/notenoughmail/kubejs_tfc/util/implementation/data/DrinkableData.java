@@ -8,6 +8,7 @@ import dev.latvian.mods.rhino.Wrapper;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class DrinkableData {
 
     public final FluidStackIngredientJS fluidIngredient;

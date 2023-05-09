@@ -3,8 +3,11 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
@@ -71,10 +74,20 @@ public abstract class DataPackEventJSMixin {
         addJson(dataIDTFC("entity_damage_resistances/" + ingredientToName(entityTag)), json);
     }
 
+    @Deprecated
     @Unique
     public void addTFCDrinkable(Object drinkable) {
+        KubeJSTFC.LOGGER.warn("The usage of addTFCDrinkable(DrinkableData) and DrinkableData.of() are deprecated! Please use the new system, there will be a notice of this system's full removal in the changelog when it happens.");
         DrinkableData drinkableData = DrinkableData.of(drinkable);
         addJson(dataIDTFC("drinkables/" + ingredientToName(drinkableData.fluidIngredient)), drinkableData.toJson());
+    }
+
+    @Unique
+    public void addTFCDrinkable(Object fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
+        var fluidIngredientJS = FluidStackIngredientJS.of(fluidIngredient);
+        var data = new BuildDrinkableData(fluidIngredientJS);
+        drinkableData.accept(data);
+        addJson(dataIDTFC("drinkables/" + ingredientToName(fluidIngredientJS)), data.toJson());
     }
 
     @Unique
@@ -98,10 +111,20 @@ public abstract class DataPackEventJSMixin {
         addJson(dataIDTFC("fertilizers/" + ingredientToName(ingredientJS)), json);
     }
 
+    @Deprecated
     @Unique
     public void addTFCFoodItem(Object foodItem) {
+        KubeJSTFC.LOGGER.warn("The usage of addTFCFoodItem(FoodItemData) and FoodItemData.of() are deprecated! Please use the new system, there will be a notice of this system's full removal in the changelog when it happens.");
         FoodItemData foodItemData = FoodItemData.of(foodItem);
         addJson(dataIDTFC("food_items/" + ingredientToName(foodItemData.ingredient)), foodItemData.toJson());
+    }
+
+    @Unique
+    public void addTFCFoodItem(Object ingredient, Consumer<BuildFoodItemData> foodItemData) {
+        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+        var data = new BuildFoodItemData(ingredientJS);
+        foodItemData.accept(data);
+        addJson(dataIDTFC("food_items/" + ingredientToName(ingredientJS)), data.toJson());
     }
 
     @Unique

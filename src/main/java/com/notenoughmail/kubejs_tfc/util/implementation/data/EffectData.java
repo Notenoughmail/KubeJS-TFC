@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.Wrapper;
 
+@Deprecated
 public class EffectData {
 
     public String type;
