@@ -38,11 +38,11 @@ public abstract class DataPackEventJSMixin {
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
             var value = splitValues[i];
-            if (value.charAt(0) == 'p' || value.matches("piercing.+")) {
+            if (value.matches("p(?>iercing)?.+")) {
                 json.addProperty("piercing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 's' || value.matches("slashing")) {
+            } else if (value.matches("s(?>lashing)?")) {
                 json.addProperty("slashing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'c' || value.matches("crushing.+")) {
+            } else if (value.matches("c(?>rushing)?.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
                 ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
@@ -58,11 +58,11 @@ public abstract class DataPackEventJSMixin {
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
             var value = splitValues[i];
-            if (value.charAt(0) == 'p' || value.matches("piercing.+")) {
+            if (value.matches("p(?>iercing)?.+")) {
                 json.addProperty("piercing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 's' || value.matches("slashing")) {
+            } else if (value.matches("s(?>lashing)?")) {
                 json.addProperty("slashing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'c' || value.matches("crushing.+")) {
+            } else if (value.matches("c(?>rushing)?.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else {
                 ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
@@ -140,19 +140,19 @@ public abstract class DataPackEventJSMixin {
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(2, splitValues.length) ; i++) {
             var value = splitValues[i];
-            if (value.charAt(0) == 's' || value.matches("size=.+")) {
-                var constant = value.replaceFirst("s(?>ize)?=", "");
-                if (!constant.matches("(?>tiny|(?>very_)?(?>small|large)|normal|huge)")) {
-                    ConsoleJS.SERVER.error("Size value cannot be '" + constant + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
+            if (value.matches("s(?>ize)?=.+")) {
+                var constant = value.split("=");
+                if (!constant[1].matches("(?>tiny|(?>very_)?(?>small|large)|normal|huge)")) {
+                    ConsoleJS.SERVER.error("Size value cannot be '" + constant[1] + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
                 } else {
-                    json.addProperty("size", constant);
+                    json.addProperty("size", constant[1]);
                 }
-            } else if (value.charAt(0) == 'w' || value.matches("weight=.+")) {
-                var constant = value.replaceFirst("w(?>eight)?=", "");
-                if (!constant.matches("(?>(?>very_)?(?>light|heavy)|medium)")) {
-                    ConsoleJS.SERVER.error("Weight value cannot be '" + constant + "', it must be very_light, light, medium, heavy, or very_heavy!");
+            } else if (value.matches("w(?>eight)?=.+")) {
+                var constant = value.split("=");
+                if (!constant[1].matches("(?>(?>very_)?(?>light|heavy)|medium)")) {
+                    ConsoleJS.SERVER.error("Weight value cannot be '" + constant[1] + "', it must be very_light, light, medium, heavy, or very_heavy!");
                 } else {
-                    json.addProperty("weight", constant);
+                    json.addProperty("weight", constant[1]);
                 }
             } else {
                 ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(s=(tiny|very_small|small|normal|large|very_large|huge)|w=(very_light|light|medium|heavy|very_heavy))/");
@@ -204,6 +204,29 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
         addJson(dataIDTFC("supports/" + ingredientToName(blockIngredientJS)), json);
+    }
+
+    @Unique
+    public void addTFCSluicing(Object ingredient, String lootTable) {
+        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+        var json = new JsonObject();
+        json.add("ingredient", ingredientJS.toJson());
+        json.addProperty("loot_table", lootTable);
+        addJson(dataIDTFC("sluicing/" + ingredientToName(ingredient)), json);
+    }
+
+    @Unique
+    public void addTFCPanning(Object blockIngredient, String lootTable, String... models) {
+        var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
+        var json = new JsonObject();
+        json.add("ingredient", blockIngredientJS.toJson());
+        json.addProperty("loot_table", lootTable);
+        var array = new JsonArray();
+        for (String model : models) {
+            array.add(model);
+        }
+        json.add("model_stages", array);
+        addJson(dataIDTFC("panning/" + ingredientToName(blockIngredient)), json);
     }
 
     @Unique
@@ -312,6 +335,20 @@ public abstract class DataPackEventJSMixin {
         vein.accept(properties);
         addJson(configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
+        addJson(placedFeatureName(name), place.toJson());
+    }
+
+    @Unique
+    public void buildTFCIfThen(String name, String if_, String then, Consumer<PlacedFeatureProperties> placement) {
+        var json = new JsonObject();
+        json.addProperty("type", "tfc:if_then");
+        var config = new JsonObject();
+        config.addProperty("if", if_);
+        config.addProperty("then", then);
+        json.add("config", config);
+        addJson(configuredFeatureName(name), json);
+        var place = new PlacedFeatureProperties(name);
+        placement.accept(place);
         addJson(placedFeatureName(name), place.toJson());
     }
 

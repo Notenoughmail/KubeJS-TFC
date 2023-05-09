@@ -90,6 +90,14 @@ public class PlacedFeatureProperties {
         return volcano(false, distance);
     }
 
+    public PlacedFeatureProperties volcano(boolean center, float distance) {
+        var json = new JsonObject();
+        json.addProperty("type", "tfc:volcano");
+        json.addProperty("center", center);
+        json.addProperty("distance", distance);
+        return placement(json);
+    }
+
     // Some of the vanilla modifiers that I can make heads or tails of
     public PlacedFeatureProperties inSquare() {
         return placement("minecraft:in_square");
@@ -109,14 +117,7 @@ public class PlacedFeatureProperties {
         return placement(json);
     }
 
-    public PlacedFeatureProperties volcano(boolean center, float distance) {
-        var json = new JsonObject();
-        json.addProperty("type", "tfc:volcano");
-        json.addProperty("center", center);
-        json.addProperty("distance", distance);
-        return placement(json);
-    }
-
+    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("feature", feature);

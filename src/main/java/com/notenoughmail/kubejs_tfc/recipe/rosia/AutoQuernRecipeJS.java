@@ -10,7 +10,7 @@ public class AutoQuernRecipeJS extends TFCRecipeJS {
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
-            throw new RecipeExceptionJS("Requires tow arguments - result and ingredient");
+            throw new RecipeExceptionJS("Requires two arguments - result and ingredient");
         }
 
         outputItems.add(parseResultItem(listJS.get(0)));

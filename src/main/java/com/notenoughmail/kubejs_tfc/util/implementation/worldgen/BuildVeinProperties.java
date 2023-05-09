@@ -159,11 +159,11 @@ public class BuildVeinProperties {
     @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
-        switch (type) {
-            case DISC -> json.addProperty("type", "tfc:disc_vein");
-            case PIPE -> json.addProperty("type", "tfc:pipe_vein");
-            default -> json.addProperty("type", "tfc:cluster_vein");
-        }
+        json.addProperty("type", switch (type) {
+            case DISC -> "tfc:disc_vein";
+            case PIPE -> "tfc:pipe_vein";
+            default -> "tfc:cluster_vein";
+        });
         var config = new JsonObject();
         config.addProperty("rarity", rarity);
         config.addProperty("size", size);
