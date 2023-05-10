@@ -116,7 +116,11 @@ public class BuildVeinProperties {
     // https://github.com/TerraFirmaCraft/TerraFirmaCraft/blob/1.18.x/src/main/java/net/dries007/tfc/world/feature/vein/VeinConfig.java#L63
     // Optional<TagKey<Biome>>
     public BuildVeinProperties biomeFilter(String biomeTag) {
-        this.biomeTag = biomeTag;
+        if (biomeTag.matches("#.+")) {
+            this.biomeTag = biomeTag;
+        } else {
+            this.biomeTag = "#".concat(biomeTag);
+        }
         return this;
     }
 

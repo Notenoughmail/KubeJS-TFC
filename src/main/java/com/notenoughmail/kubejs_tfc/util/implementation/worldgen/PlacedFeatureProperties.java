@@ -75,6 +75,10 @@ public class PlacedFeatureProperties {
         return placement(json);
     }
 
+    public PlacedFeatureProperties shallowWater() {
+        return shallowWater(3);
+    }
+
     public PlacedFeatureProperties shallowWater(int depth) {
         var json = new JsonObject();
         json.addProperty("type", "tfc:shallow_water");

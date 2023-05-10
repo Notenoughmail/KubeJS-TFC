@@ -29,7 +29,11 @@ public class BuildGeodeProperties {
     public BuildGeodeProperties inner(String... values) {
         for (String s : values) {
             var biValue = s.split(" ");
-            innerBlockWeightList.put(biValue[1], Float.parseFloat(biValue[0].replaceAll(notANumber, "")));
+            if (biValue.length == 2) {
+                innerBlockWeightList.put(biValue[1], Float.parseFloat(biValue[0].replaceAll(notANumber, "")));
+            } else {
+                innerBlockWeightList.put(biValue[0], 1F);
+            }
         }
         return this;
     }
