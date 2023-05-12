@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 // The number of iterations of trying to get a 'tfc.data' event type only to settle for this is astounding
 @SuppressWarnings("unused")
-@Mixin(DataPackEventJS.class)
+@Mixin(value = DataPackEventJS.class, remap = false)
 public abstract class DataPackEventJSMixin {
 
     private static final String notANumber = "[^0-9.-]";

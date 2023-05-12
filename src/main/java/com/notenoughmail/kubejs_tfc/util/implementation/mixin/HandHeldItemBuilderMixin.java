@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(HandheldItemBuilder.class)
+@Mixin(value = HandheldItemBuilder.class, remap = false)
 public abstract class HandHeldItemBuilderMixin {
 
     @Shadow public transient float attackDamageBaseline;

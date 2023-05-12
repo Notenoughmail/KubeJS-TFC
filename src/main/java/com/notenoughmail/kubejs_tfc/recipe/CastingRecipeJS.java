@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -18,7 +19,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
         inputFluids.add(FluidStackIngredientJS.of(listJS.get(2)));
 
-        outputItems.add(parseResultItem(listJS.get(0)));
+        itemProviderResult = ItemStackProviderJS.of(listJS.get(0));
 
         if (listJS.size() > 3) {
             breakChance = Float.parseFloat(listJS.get(3).toString());
@@ -27,7 +28,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
     @Override
     public void deserialize() {
-        outputItems.add(parseResultItem(json.get("result")));
+        itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
         inputItems.add(parseIngredientItem(json.get("mold")));
         inputFluids.add(FluidStackIngredientJS.fromJson(json.get("fluid")));
         if (json.has("break_chance")) {
@@ -39,7 +40,7 @@ public class CastingRecipeJS extends TFCRecipeJS {
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            json.add("result", outputItems.get(0).toResultJson());
+            json.add("result", itemProviderResult.toJson());
         }
 
         if (serializeInputs) {
@@ -51,6 +52,6 @@ public class CastingRecipeJS extends TFCRecipeJS {
 
     @Override
     public String getFromToString() {
-        return inputItems + " + " + inputFluids + " -> " + outputItems;
+        return inputItems + " + " + inputFluids + " -> " + itemProviderResult;
     }
 }

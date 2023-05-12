@@ -4,7 +4,12 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -12,11 +17,14 @@ import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ItemStackProviderJS {
 
@@ -122,6 +130,7 @@ public class ItemStackProviderJS {
         return this;
     }
 
+    @HideFromJS
     public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
         var obj = new JsonObject();
         if (isAddingTrait) {
@@ -142,15 +151,57 @@ public class ItemStackProviderJS {
         return this;
     }
 
+    public ItemStackProviderJS conditional(Consumer<ModifyCondition> conditional, Consumer<ItemStackProviderJS> modifiers, @Nullable Consumer<ItemStackProviderJS> elseModifiers) {
+        if (!channelCastingLoaded()) {
+            return this;
+        }
+
+        var obj = new JsonObject();
+        obj.addProperty("type", "tfcchannelcasting:conditional");
+
+        var condition = new ModifyCondition();
+        conditional.accept(condition);
+        obj.add("condition", condition.toJson());
+
+        var modifier = new ItemStackProviderJS(null, new JsonArray());
+        modifiers.accept(modifier);
+        obj.add("modifiers", modifier.getModifiers());
+
+        if (elseModifiers != null) {
+            var elseModifier = new ItemStackProviderJS(null, new JsonArray());
+            elseModifiers.accept(elseModifier);
+            obj.add("else_modifiers", elseModifier.getModifiers());
+        }
+        this.modifiers.add(obj);
+        return this;
+    }
+
+    public ItemStackProviderJS setFoodData(Consumer<BuildFoodItemData> foodData) {
+        if (!channelCastingLoaded()) {
+            return this;
+        }
+
+        var data = new BuildFoodItemData(IngredientJS.of("minecraft:cobblestone"));
+        foodData.accept(data);
+        var obj = data.toJson();
+        obj.remove("ingredient");
+        obj.addProperty("type", "tfcchannelcasting:set_food_data");
+        modifiers.add(obj);
+        return this;
+    }
+
+    @HideFromJS
     public JsonObject getStack() {
         return stack;
     }
 
+    @HideFromJS
     public JsonArray getModifiers() {
         return modifiers;
     }
 
     // This assumes if neither element is defined the json is an item stack
+    @HideFromJS
     public static ItemStackProviderJS fromJson(JsonObject json) {
         if (!json.has("stack") && !json.has("modifiers")) {
             return new ItemStackProviderJS(json, new JsonArray());
@@ -160,19 +211,18 @@ public class ItemStackProviderJS {
         return new ItemStackProviderJS(stack, modifiers);
     }
 
+    @HideFromJS
     public JsonObject toJson() {
         if (stack == null) {
+            var obj = new JsonObject();
             if (modifiers == null || modifiers.isEmpty()) {
-                var obj = new JsonObject();
                 if (RecipeJS.itemErrors) {
                     throw new RecipeExceptionJS("KubeJS TFC tried to build an empty item stack provider!");
                 }
-                return obj;
             } else {
-                var obj = new JsonObject();
                 obj.add("modifiers", modifiers);
-                return obj;
             }
+            return obj;
         } else {
             if (modifiers == null || modifiers.isEmpty()) {
                 return stack;
@@ -258,5 +308,9 @@ public class ItemStackProviderJS {
 
     private boolean firmaLoaded() { // I don't know if adding FL modifiers while FL isn't loaded would break things, better safe than sorry
         return ModList.get().isLoaded(FirmaLife.MOD_ID);
+    }
+
+    private boolean channelCastingLoaded() {
+        return ModList.get().isLoaded(TFCChannelCasting.MOD_ID) ;
     }
 }

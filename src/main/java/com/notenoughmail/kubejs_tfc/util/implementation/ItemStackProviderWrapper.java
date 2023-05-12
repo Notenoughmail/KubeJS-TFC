@@ -1,6 +1,10 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import com.google.gson.JsonArray;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
+
+import java.util.function.Consumer;
 
 public class ItemStackProviderWrapper {
 
@@ -87,6 +91,18 @@ public class ItemStackProviderWrapper {
 
     public static ItemStackProviderJS emptyPan(ItemStackProviderJS js) {
         return js.emptyPan();
+    }
+
+    public static ItemStackProviderJS conditional(ItemStackProviderJS js, Consumer<ModifyCondition> condition, Consumer<ItemStackProviderJS> modifiers, Consumer<ItemStackProviderJS> elseModifiers) {
+        return js.conditional(condition, modifiers, elseModifiers);
+    }
+
+    public static ItemStackProviderJS conditional(ItemStackProviderJS js, Consumer<ModifyCondition> condition, Consumer<ItemStackProviderJS> modifiers) {
+        return js.conditional(condition, modifiers, null);
+    }
+
+    public static ItemStackProviderJS setFoodData(ItemStackProviderJS js, Consumer<BuildFoodItemData> foodData) {
+        return js.setFoodData(foodData);
     }
 
     // These modifiers are only usable in crafting recipes which support item stack providers
