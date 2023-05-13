@@ -1,6 +1,10 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.ljuangbminecraft.tfcchannelcasting.common.TFCCCTags;
+import com.ljuangbminecraft.tfcchannelcasting.common.items.TFCCCItems;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.TFCTags;
@@ -20,7 +24,6 @@ public class MoldItemBuilder extends ItemBuilder {
         super(i);
         this.capacity = 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
-        // unstackable(); - taking this out for now as TFC made a change making molds stackable, we'll see how it goes
     }
 
     public MoldItemBuilder capacity(int capacity) {
@@ -30,6 +33,18 @@ public class MoldItemBuilder extends ItemBuilder {
 
     public MoldItemBuilder fluidTagAccept(String fluidTag) {
         this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(fluidTag));
+        return this;
+    }
+
+    public MoldItemBuilder allowedInMoldTable() {
+        if (!KubeJSTFC.channelCastingLoaded()) {
+            return this;
+        }
+
+        // I didn't expect it to be this easy, making me very suspicious
+        TFCCCItems.registerRenderItem(id, RegistrationUtils.registerItem(id.getPath(), () -> new Item(new Item.Properties())));
+        tag(TFCCCTags.Items.ACCEPTED_IN_MOLD_TABLES.location());
+
         return this;
     }
 

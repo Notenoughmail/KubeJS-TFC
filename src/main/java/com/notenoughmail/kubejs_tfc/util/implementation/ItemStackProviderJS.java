@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
@@ -152,7 +153,7 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS conditional(Consumer<ModifyCondition> conditional, Consumer<ItemStackProviderJS> modifiers, @Nullable Consumer<ItemStackProviderJS> elseModifiers) {
-        if (!channelCastingLoaded()) {
+        if (!KubeJSTFC.channelCastingLoaded()) {
             return this;
         }
 
@@ -177,7 +178,7 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS setFoodData(Consumer<BuildFoodItemData> foodData) {
-        if (!channelCastingLoaded()) {
+        if (!KubeJSTFC.channelCastingLoaded()) {
             return this;
         }
 
@@ -279,23 +280,23 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS burrito() {
-        return firmaLoaded() ? this.simpleModifier("firmalife:burrito") : this;
+        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:burrito") : this;
     }
 
     public ItemStackProviderJS pie() {
-        return firmaLoaded() ? this.simpleModifier("firmalife:pie") : this;
+        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:pie") : this;
     }
 
     public ItemStackProviderJS pizza() {
-        return firmaLoaded() ? this.simpleModifier("firmalife:pizza") : this;
+        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:pizza") : this;
     }
 
     public ItemStackProviderJS copyDynamicFood() {
-        return firmaLoaded() ? this.simpleModifier("firmalife:copy_dynamic_food") : this; // Can't find usage, looking at code seems to be simple
+        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:copy_dynamic_food") : this; // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS emptyPan(){
-        return firmaLoaded() ? this.simpleModifier("firmalife:empty_pan") : this; // Can't find usage, looking at code seems to be simple
+        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:empty_pan") : this; // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS addBait() {
@@ -304,13 +305,5 @@ public class ItemStackProviderJS {
 
     public ItemStackProviderJS sandwich() {
         return this.simpleModifier("tfc:sandwich");
-    }
-
-    private boolean firmaLoaded() { // I don't know if adding FL modifiers while FL isn't loaded would break things, better safe than sorry
-        return ModList.get().isLoaded(FirmaLife.MOD_ID);
-    }
-
-    private boolean channelCastingLoaded() {
-        return ModList.get().isLoaded(TFCChannelCasting.MOD_ID) ;
     }
 }

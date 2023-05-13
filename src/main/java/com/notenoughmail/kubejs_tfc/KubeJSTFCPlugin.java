@@ -35,7 +35,7 @@ import net.minecraftforge.fml.ModList;
  *   - {@link net.dries007.tfc.common.items.JavelinItem Javelin} [Y]
  *   - {@link net.dries007.tfc.common.items.MaceItem Mace} [Y]
  *   - {@link net.dries007.tfc.common.items.MoldItem Mold} [Y]
- *     - TFC Casting w/ Channels integration?
+ *     - TFC Casting w/ Channels integration? [Y]
  *   - {@link net.dries007.tfc.common.items.PropickItem Propick} [Y]
  *   - {@link net.dries007.tfc.common.items.ScytheItem Scythe} [Y]
  *   - {@link net.dries007.tfc.common.items.TFCFishingRodItem Fishing Rod} [N]
