@@ -4,13 +4,18 @@ import com.notenoughmail.kubejs_tfc.recipe.TFCRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
+import org.jetbrains.annotations.Nullable;
 
 public class VatRecipeJS extends TFCRecipeJS {
 
     private int length = 600;
     private float temperature = 300f;
+    @Nullable
+    private ItemStackJS jarItem;
+
     @Override
     public void create(ListJS listJS) {
         if (listJS.size() < 2) {
@@ -64,16 +69,27 @@ public class VatRecipeJS extends TFCRecipeJS {
         if (json.has("temperature")) {
             temperature = json.get("temperature").getAsFloat();
         }
+        if (json.has("jar")) {
+            jarItem = ItemStackJS.of(json.get("jar"));
+        }
+    }
+
+    public VatRecipeJS jar(Object jar) {
+        jarItem = ItemStackJS.of(jar);
+        return this;
     }
 
     @Override
     public void serialize() {
         if (serializeOutputs) {
-            if (!outputItems.isEmpty()) {
+            if (itemProviderResult != null) {
                 json.add("output_item", itemProviderResult.toJson());
             }
             if (!outputFluids.isEmpty()) {
                 json.add("output_fluid", outputFluids.get(0).toJson());
+            }
+            if (jarItem != null) {
+                json.add("jar", jarItem.toResultJson());
             }
         }
 
@@ -91,6 +107,20 @@ public class VatRecipeJS extends TFCRecipeJS {
 
     @Override
     public String getFromToString() {
-        return inputItems + " + " + inputFluids + " -> " + itemProviderResult + " + " + outputFluids;
+        var builder = new StringBuilder();
+        builder.append(inputItems);
+        builder.append(" + ");
+        builder.append(inputFluids);
+        builder.append(" -> ");
+        if (itemProviderResult != null) {
+            builder.append(itemProviderResult);
+            builder.append(" + ");
+        }
+        if (jarItem != null) {
+            builder.append(jarItem);
+            builder.append(" + ");
+        }
+        builder.append(outputFluids);
+        return builder.toString();
     }
 }

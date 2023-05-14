@@ -148,7 +148,7 @@ import net.minecraftforge.fml.ModList;
  *      - Sluicing [Y]
  *      - Panning [Y]
  *      - FirmaLife greenhouses? [Y]
- *      - FirmaLife plantables? - that's a bloody lot of optional values without a wiki to reference
+ *      - FirmaLife plantables? - Docs! [Y]
  *      - Beneath nether fertilizers? [Y]
  *        - Death -> d
  *        - Destruction -> t

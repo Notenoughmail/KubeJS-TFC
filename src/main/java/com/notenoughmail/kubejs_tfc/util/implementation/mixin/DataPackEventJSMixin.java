@@ -6,10 +6,7 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
@@ -259,6 +256,14 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", blockIngredientJS.toJson());
         json.addProperty("tier", tier);
         addJson(dataIDFL("greenhouse/" + ingredientToName(blockIngredientJS)), json);
+    }
+
+    @Unique
+    public void addFLPlantable(Object ingredient, Consumer<BuildPlantableData> plantableData) {
+        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+        var data = new BuildPlantableData(ingredientJS);
+        plantableData.accept(data);
+        addJson(dataIDFL("plantable/" + ingredientToName(ingredientJS)), data.toJson());
     }
 
     // Why the hell not
