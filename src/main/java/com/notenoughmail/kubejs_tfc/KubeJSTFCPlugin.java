@@ -28,7 +28,7 @@ import net.minecraftforge.fml.ModList;
 /**
  * TODO: <br> <br>
  *  - [F] URGENT: All recipes which use Item Stack Providers are broken by kube <br>
- *  - [F?] URGENT: All recipes (querns at least) which use Item Ingredients are broken
+ *  - [F] URGENT: All recipes (querns at least) which use Item Ingredients are broken
  *    - The only indication of this I had was patchouli complaining about missing quern recipes, but it appears that updating TFC or actually using an ISP has fixed it <br> <br>
  *  - Items <br>
  *   - {@link net.dries007.tfc.common.items.ChiselItem Chisel} [Y]
@@ -118,6 +118,10 @@ import net.minecraftforge.fml.ModList;
  *        - "addFeatureJson is deprecated for removal in 1.19.2! Please use virtual datapacks or addOre (for ores) instead." -> data event!
  *      - Climate settings? (preset-only?)
  *      - Rock settings? (preset-only?)
+ *        - Add [Y]
+ *        - Remove
+ *        - Modify
+ *          - Due to the time this event is at modify and remove may not be possible, this also ignores the fact that either way mixins would probably be required due to private access
  *      - Geode (in vein worldgen tag) [Y]
  *      - Wild crop (conditional on getting crops working)
  *      - Ore veins [Y]

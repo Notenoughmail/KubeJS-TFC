@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc;
 import com.eerussianguy.firmalife.FirmaLife;
 import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
 import com.mojang.logging.LogUtils;
+import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +18,7 @@ public class KubeJSTFC {
 
     public KubeJSTFC() {
         RegistrationUtils.init();
+        OtherEventHandler.init();
     }
 
     public static boolean firmaLoaded() {
