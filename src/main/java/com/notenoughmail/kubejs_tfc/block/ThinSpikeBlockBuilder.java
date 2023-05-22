@@ -90,12 +90,12 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    public ThinSpikeBlockBuilder dripParticle(String particle) {
-        var particleType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(particle));
+    public ThinSpikeBlockBuilder dripParticle(ResourceLocation particle) {
+        var particleType = ForgeRegistries.PARTICLE_TYPES.getValue(particle);
         if (particleType instanceof ParticleOptions particleOptions) {
             this.particle = particleOptions;
         } else {
-            throw new IllegalArgumentException("The provided particle: " + particle + " is not a valid particle! Must be an instance of ParticleOptions.");
+            throw new IllegalArgumentException("The provided particle: '" + particle + "' is not a valid particle! Must be an instance of ParticleOptions.");
         }
         return this;
     }

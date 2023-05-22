@@ -159,6 +159,7 @@ import net.minecraftforge.fml.ModList;
  *        - Flame -> f
  *        - Decay -> c
  *        - Sorrow -> s
+ *   - Look for a way of getting a block/particle through archi instead of forge and ensure that also captures forge registry objects
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
