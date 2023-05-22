@@ -1,11 +1,11 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -38,42 +38,42 @@ public class RockSettingsEventJS extends StartupEventJS {
         }
 
         public RockSettingsJS raw(ResourceLocation raw) {
-            rawBlock = ForgeRegistries.BLOCKS.getValue(raw);
+            rawBlock = KubeJSRegistries.blocks().get(raw);
             return this;
         }
 
         public RockSettingsJS hardened(ResourceLocation hardened) {
-            hardenedBlock = ForgeRegistries.BLOCKS.getValue(hardened);
+            hardenedBlock = KubeJSRegistries.blocks().get(hardened);
             return this;
         }
 
         public RockSettingsJS gravel(ResourceLocation gravel) {
-            gravelBlock = ForgeRegistries.BLOCKS.getValue(gravel);
+            gravelBlock = KubeJSRegistries.blocks().get(gravel);
             return this;
         }
 
         public RockSettingsJS cobble(ResourceLocation cobble) {
-            cobbleBlock = ForgeRegistries.BLOCKS.getValue(cobble);
+            cobbleBlock = KubeJSRegistries.blocks().get(cobble);
             return this;
         }
 
         public RockSettingsJS sand(ResourceLocation sand) {
-            sandBlock = ForgeRegistries.BLOCKS.getValue(sand);
+            sandBlock = KubeJSRegistries.blocks().get(sand);
             return this;
         }
 
         public RockSettingsJS sandstone(ResourceLocation sandstone) {
-            sandstoneBlock = ForgeRegistries.BLOCKS.getValue(sandstone);
+            sandstoneBlock = KubeJSRegistries.blocks().get(sandstone);
             return this;
         }
 
         public RockSettingsJS spike(ResourceLocation spike) {
-            spikeBlock = ForgeRegistries.BLOCKS.getValue(spike);
+            spikeBlock = KubeJSRegistries.blocks().get(spike);
             return this;
         }
 
         public RockSettingsJS loose(ResourceLocation loose) {
-            looseBlock = ForgeRegistries.BLOCKS.getValue(loose);
+            looseBlock = KubeJSRegistries.blocks().get(loose);
             return this;
         }
 

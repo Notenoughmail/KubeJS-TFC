@@ -5,9 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IFluidBuilderMixin {
 
-    @Nullable
     ResourceLocation getBubbleParticle();
-    @Nullable
     ResourceLocation getSteamParticle();
     float getHealAmount();
+    boolean hasBubbleParticle();
+    boolean hasSteamParticle();
 }

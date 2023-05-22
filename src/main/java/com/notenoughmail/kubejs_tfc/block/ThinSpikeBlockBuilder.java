@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -41,7 +42,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     private float dripTemp;
     private boolean melts;
     private float meltTemp;
-    private ParticleOptions particle;
+    private ResourceLocation dripParticle;
     private FluidStack meltFluid;
     private String tipModel;
     private transient List<AABB> tipShape;
@@ -54,7 +55,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         melts = false;
         meltChance = 1f / 60f; // By default, TFC uses Random#nextInt(60) == 0, this is effectively equivalent;
         meltTemp = OverworldClimateModel.ICICLE_MELT_TEMPERATURE;
-        particle = ParticleTypes.DRIPPING_DRIPSTONE_WATER;
+        dripParticle = new ResourceLocation("minecraft", "dripping_dripstone_water");
         meltFluid = new FluidStack(Fluids.WATER, 100);
         tipModel = "";
         tipShape = new ArrayList<>();
@@ -91,12 +92,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     }
 
     public ThinSpikeBlockBuilder dripParticle(ResourceLocation particle) {
-        var particleType = ForgeRegistries.PARTICLE_TYPES.getValue(particle);
-        if (particleType instanceof ParticleOptions particleOptions) {
-            this.particle = particleOptions;
-        } else {
-            throw new IllegalArgumentException("The provided particle: '" + particle + "' is not a valid particle! Must be an instance of ParticleOptions.");
-        }
+        dripParticle = particle;
         return this;
     }
 
@@ -160,7 +156,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
                     final float temperature = Climate.getTemperature(level, pos);
                     if (state.getValue(TIP) && state.getValue(FLUID).getFluid() == Fluids.EMPTY && temperature > dripTemp && random.nextFloat() < dripChance) {
                         if (random.nextFloat() < dripChance) { // Weird but TFC does it
-                            spawnParticle(level, pos, state, particle);
+                            spawnParticle(level, pos, state, RegistrationUtils.getOrLogErrorParticle(dripParticle, ParticleTypes.DRIPPING_DRIPSTONE_WATER));
                         }
                     }
                 }
