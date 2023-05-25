@@ -9,6 +9,7 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.TFCIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableDataWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.EffectDataWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemDataWrapper;
@@ -235,6 +236,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("DrinkableData", DrinkableDataWrapper.class);
         event.add("EffectData", EffectDataWrapper.class);
         event.add("FoodItemData", FoodItemDataWrapper.class);
+        event.add("TFCIngredient", TFCIngredientWrapper.class);
     }
 
     private void addToolTier(Tier tier) {

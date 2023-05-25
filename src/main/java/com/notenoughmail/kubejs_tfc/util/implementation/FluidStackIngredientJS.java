@@ -4,8 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.notenoughmail.kubejs_tfc.ingredient.FluidItemIngredientJS;
 import dev.architectury.fluid.FluidStack;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.rhino.Wrapper;
 import net.minecraft.resources.ResourceLocation;
@@ -74,8 +76,16 @@ public class FluidStackIngredientJS {
         fluids.addAll(Arrays.asList(fluid));
     }
 
-    private void withAmount(int i) {
+    public void withAmount(int i) {
         amount = i;
+    }
+
+    public IngredientJS asItemIngredient() {
+        return new FluidItemIngredientJS(null, this);
+    }
+
+    public IngredientJS asItemIngredient(Object o) {
+        return new FluidItemIngredientJS(IngredientJS.of(o), this);
     }
 
     public static FluidStackIngredientJS fromJson(JsonElement json) {

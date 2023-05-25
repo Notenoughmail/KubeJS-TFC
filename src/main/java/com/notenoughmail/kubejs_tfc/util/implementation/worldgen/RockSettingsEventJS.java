@@ -32,6 +32,7 @@ public class RockSettingsEventJS extends StartupEventJS {
         private boolean top = false;
         private boolean middle = false;
         private boolean bottom = false;
+        private boolean logWarnings = true;
 
         public RockSettingsJS(ResourceLocation id) {
             this.id = id;
@@ -92,14 +93,21 @@ public class RockSettingsEventJS extends StartupEventJS {
             return this;
         }
 
+        public RockSettingsJS noWarnings() {
+            logWarnings = false;
+            return this;
+        }
+
         public RockSettings build() {
-            if (rawBlock == null) KubeJSTFC.LOGGER.warn("The raw block of the rock layer '{}' is null! This may cause issues", id);
-            if (hardenedBlock == null) KubeJSTFC.LOGGER.warn("The hardened block of the rock layer '{}' is null! This may cause issues", id);
-            if (gravelBlock == null) KubeJSTFC.LOGGER.warn("The gravel block of the rock layer '{}' is null! This may cause issues", id);
-            if (cobbleBlock == null) KubeJSTFC.LOGGER.warn("The cobble block of the rock layer '{}' is null! This may cause issues", id);
-            if (sandBlock == null) KubeJSTFC.LOGGER.warn("The sand block of the rock layer '{}' is null! This may cause issues", id);
-            if (sandstoneBlock == null) KubeJSTFC.LOGGER.warn("The sandstone block of the rock layer '{}' is null! This may cause issues", id);
-            if (!top && !middle && !bottom) KubeJSTFC.LOGGER.warn("The rock layer '{}' will not spawn because it does not declare itself as being a top, middle, or bottom layer!", id);
+            if (logWarnings) {
+                if (rawBlock == null) KubeJSTFC.LOGGER.warn("The raw block of the rock layer '{}' is null! This may cause issues", id);
+                if (hardenedBlock == null) KubeJSTFC.LOGGER.warn("The hardened block of the rock layer '{}' is null! This may cause issues", id);
+                if (gravelBlock == null) KubeJSTFC.LOGGER.warn("The gravel block of the rock layer '{}' is null! This may cause issues", id);
+                if (cobbleBlock == null) KubeJSTFC.LOGGER.warn("The cobble block of the rock layer '{}' is null! This may cause issues", id);
+                if (sandBlock == null) KubeJSTFC.LOGGER.warn("The sand block of the rock layer '{}' is null! This may cause issues", id);
+                if (sandstoneBlock == null) KubeJSTFC.LOGGER.warn("The sandstone block of the rock layer '{}' is null! This may cause issues", id);
+                if (!top && !middle && !bottom) KubeJSTFC.LOGGER.warn("The rock layer '{}' will not spawn because it does not declare itself as being a top, middle, or bottom layer!", id);
+            }
             return new RockSettings(
                 id,
                 rawBlock,

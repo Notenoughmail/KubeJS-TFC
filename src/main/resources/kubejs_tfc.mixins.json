@@ -6,7 +6,8 @@
     "mixins": [
         "DataPackEventJSMixin",
         "FluidBuilderMixin",
-        "HandHeldItemBuilderMixin"
+        "HandHeldItemBuilderMixin",
+        "IngredientJSMixin"
     ],
     "client": [],
     "refmap": "kubejs_tfc.refmap.json"
