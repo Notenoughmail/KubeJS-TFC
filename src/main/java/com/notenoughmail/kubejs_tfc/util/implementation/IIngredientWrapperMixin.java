@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.notenoughmail.kubejs_tfc.ingredient.*;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 
-public class TFCIngredientWrapper {
+public interface IIngredientWrapperMixin {
 
     public static IngredientJS heatable() {
         return new HeatableIngredientJS(null);

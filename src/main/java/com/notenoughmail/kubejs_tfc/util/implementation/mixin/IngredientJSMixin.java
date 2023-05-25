@@ -28,11 +28,11 @@ public interface IngredientJSMixin {
         return new FluidItemIngredientJS((IngredientJS) this, FluidStackIngredientJS.of(o));
     }
 
-    default IngredientJS hasTrait(String s) {
+    default IngredientJS asHasTrait(String s) {
         return new TraitIngredientJS((IngredientJS) this, s, true);
     }
 
-    default IngredientJS lacksTrait(String s) {
+    default IngredientJS asLacksTrait(String s) {
         return new TraitIngredientJS((IngredientJS) this, s, false);
     }
 }

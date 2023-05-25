@@ -9,7 +9,6 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.TFCIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableDataWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.EffectDataWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemDataWrapper;
@@ -103,7 +102,7 @@ import net.minecraftforge.fml.ModList;
  *    - Block Ingredient implementation [Y]
  *    - Fluid Stack Ingredient implementation [Y]
  *      - Allow FSI's to take nbt from kube's fluids?
- *    - Item Stack Ingredient implementation
+ *    - Item Stack Ingredient implementation [Y]
  *      - If Kube is reasonable, this should theoretically already be implemented 🙃 [Hahahahahaha]
  *      - Make a raw ingredient builder for this
  *    - Item Stack Provider implementation [Y] <br> <br>
@@ -236,7 +235,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("DrinkableData", DrinkableDataWrapper.class);
         event.add("EffectData", EffectDataWrapper.class);
         event.add("FoodItemData", FoodItemDataWrapper.class);
-        event.add("TFCIngredient", TFCIngredientWrapper.class);
     }
 
     private void addToolTier(Tier tier) {
