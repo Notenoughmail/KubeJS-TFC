@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.IRockSettingsMixin;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSettingsEventJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSettingsEventJS.RockSettingsJS;

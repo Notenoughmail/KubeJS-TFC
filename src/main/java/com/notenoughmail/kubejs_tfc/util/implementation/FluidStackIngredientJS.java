@@ -63,9 +63,7 @@ public class FluidStackIngredientJS {
     }
 
     public static FluidStackIngredientJS of(@Nullable Object o, int i) {
-        var ingredient = of(o);
-        ingredient.withAmount(i);
-        return ingredient;
+        return of(o).withAmount(i);
     }
 
     private final List<String> fluids = new ArrayList<>();
@@ -76,8 +74,9 @@ public class FluidStackIngredientJS {
         fluids.addAll(Arrays.asList(fluid));
     }
 
-    public void withAmount(int i) {
+    public FluidStackIngredientJS withAmount(int i) {
         amount = i;
+        return this;
     }
 
     public IngredientJS asItemIngredient() {
