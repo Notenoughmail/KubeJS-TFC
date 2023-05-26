@@ -8,7 +8,8 @@
         "FluidBuilderMixin",
         "HandHeldItemBuilderMixin",
         "IngredientJSMixin",
-        "IngredientWrapperMixin"
+        "IngredientWrapperMixin",
+        "RockSettingsMixin"
     ],
     "client": [],
     "refmap": "kubejs_tfc.refmap.json"

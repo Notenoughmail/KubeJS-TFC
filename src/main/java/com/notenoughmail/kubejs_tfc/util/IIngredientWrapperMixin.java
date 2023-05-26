@@ -1,6 +1,7 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.ingredient.*;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 
 public interface IIngredientWrapperMixin {

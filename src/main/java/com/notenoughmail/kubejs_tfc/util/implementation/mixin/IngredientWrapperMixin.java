@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.IIngredientWrapperMixin;
+import com.notenoughmail.kubejs_tfc.util.IIngredientWrapperMixin;
 import dev.latvian.mods.kubejs.bindings.IngredientWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 

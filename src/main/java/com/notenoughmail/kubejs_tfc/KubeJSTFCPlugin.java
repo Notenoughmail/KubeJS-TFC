@@ -117,10 +117,11 @@ import net.minecraftforge.fml.ModList;
  *          - Worldgen tagging events do not exist due to them not having 'proper' registries
  *        - "addFeatureJson is deprecated for removal in 1.19.2! Please use virtual datapacks or addOre (for ores) instead." -> data event!
  *      - Climate settings? (preset-only?)
+ *        - So little to change and may change at some point so not worth doing
  *      - Rock settings? (preset-only?)
  *        - Add [Y]
- *        - Remove
- *        - Modify
+ *        - Remove [Y]
+ *        - Modify [Y]
  *          - Due to the time this event is at modify and remove may not be possible, this also ignores the fact that either way mixins would probably be required due to private access
  *      - Geode (in vein worldgen tag) [Y]
  *      - Wild crop (conditional on getting crops working)
@@ -171,18 +172,32 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_mace", MaceItemBuilder.class, MaceItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_propick", PropickItemBuilder.class, PropickItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc_rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc_thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+        // Remove the indented ones after some time
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_mace", MaceItemBuilder.class, MaceItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_propick", PropickItemBuilder.class, PropickItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:propick", PropickItemBuilder.class, PropickItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+            RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
+        RegistryObjectBuilderTypes.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
+            RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+            RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
+            RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+            RegistryObjectBuilderTypes.BLOCK.addType("tfc_rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+            RegistryObjectBuilderTypes.BLOCK.addType("tfc_thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+
     }
 
     @Override

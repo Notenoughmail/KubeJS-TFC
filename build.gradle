@@ -54,6 +54,23 @@ minecraft {
             }
         }
 
+        // Test multiplayer with own account through IDEA
+        secondClient {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            property("mixin.env.remapRefMap", "true")
+            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
+
+            mods {
+                kubejs_tfc {
+                    source sourceSets.main
+                }
+            }
+        }
+
         server {
             workingDirectory project.file('run')
             args '--nogui'
