@@ -24,7 +24,7 @@ public interface IngredientJSMixin {
         return new TFCNotIngredientJS((IngredientJS) this);
     }
 
-    default IngredientJS asFluidItemIngredient(Object o) {
+    default IngredientJS asFluidItem(Object o) {
         return new FluidItemIngredientJS((IngredientJS) this, FluidStackIngredientJS.of(o));
     }
 

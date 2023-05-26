@@ -18,11 +18,11 @@ public interface IIngredientWrapperMixin {
         return new HeatableIngredientJS(IngredientJS.of(o), min, max);
     }
 
-    public static IngredientJS fluidIngredient(Object o) {
+    public static IngredientJS fluidItem(Object o) {
         return new FluidItemIngredientJS(null, FluidStackIngredientJS.of(o));
     }
 
-    public static IngredientJS fluidIngredient(Object fluid, Object item) {
+    public static IngredientJS fluidItem(Object fluid, Object item) {
         return new FluidItemIngredientJS(IngredientJS.of(item), FluidStackIngredientJS.of(fluid));
     }
 

@@ -130,6 +130,9 @@ public class RockSettingsEventJS extends StartupEventJS {
         }
 
         public RockSettingsJS spike(ResourceLocation spike) {
+            if (spike == null) {
+                return this;
+            }
             Block block = KubeJSRegistries.blocks().get(spike);
             if (!(block instanceof RockSpikeBlock)) {
                 KubeJSTFC.LOGGER.error("The provided block: '{}' is not an instance of RockSpikeBlock! This will cause a crash on world load!", block);
@@ -139,6 +142,9 @@ public class RockSettingsEventJS extends StartupEventJS {
         }
 
         public RockSettingsJS loose(ResourceLocation loose) {
+            if (loose == null) {
+                return this;
+            }
             Block block = KubeJSRegistries.blocks().get(loose);
             if (!(block instanceof LooseRockBlock)) {
                 KubeJSTFC.LOGGER.error("The provided block: '{}' is not an instance of LooseRockBlock! This will cause a crash on world load!", block);

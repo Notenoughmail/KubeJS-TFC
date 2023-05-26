@@ -20,7 +20,7 @@ public class TFCNotIngredientJS implements IngredientJS {
         if (internalIngredient != null) {
             return !internalIngredient.test(itemStackJS);
         }
-        return false; // I think?
+        return true; // I think? Maybe?
     }
 
     @Override
