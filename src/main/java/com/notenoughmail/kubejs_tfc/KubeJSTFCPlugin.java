@@ -1,27 +1,30 @@
 package com.notenoughmail.kubejs_tfc;
 
-import com.eerussianguy.firmalife.FirmaLife;
-import com.jewey.rosia.Rosia;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
+import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
+import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.DrinkableDataWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.EffectDataWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.FoodItemDataWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
+import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.kubejs.util.ClassFilter;
+import net.dries007.tfc.ForgeEventHandler;
+import net.dries007.tfc.client.ClientEventHandler;
+import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
+import net.dries007.tfc.util.InteractionManager;
+import net.dries007.tfc.util.SelfTests;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
-import net.minecraftforge.fml.ModList;
 
 // Mild Javadoc abuse
 
@@ -230,11 +233,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId(), AdvancedShapedRecipeJS::new);
         event.register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId(), AdvancedShapelessRecipeJS::new);
 
-        if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {
+        if (KubeJSTFC.firmaLoaded()) {
             FirmaLifePlugin.addRecipes(event);
         }
 
-        if (ModList.get().isLoaded(Rosia.MOD_ID)) {
+        if (KubeJSTFC.rosiaLoaded()) {
             RosiaPlugin.addRecipes(event);
         }
     }
@@ -247,9 +250,36 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FluidIngredient", FluidStackIngredientWrapper.class);
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
-        event.add("DrinkableData", DrinkableDataWrapper.class);
-        event.add("EffectData", EffectDataWrapper.class);
-        event.add("FoodItemData", FoodItemDataWrapper.class);
+    }
+
+    // Probably a can of worms
+    @Override
+    public void addClasses(ScriptType type, ClassFilter filter) {
+        // KubeJSTFC
+        filter.allow("com.notenoughmail.kubejs_tfc");
+        filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
+        filter.deny(KubeJSTFCPlugin.class);
+        filter.deny(FirmaLifePlugin.class);
+        filter.deny(RosiaPlugin.class);
+        filter.deny(RegistrationUtils.class);
+        filter.deny(OtherEventHandler.class);
+        // TFC - Likely will need to restrict even more
+        filter.allow("net.dries007.tfc");
+        filter.deny("net.dries007.tfc.mixin");
+        filter.deny("net.dries.tfc.network");
+        filter.deny(SelfTests.class);
+        filter.deny(ForgeEventHandler.class);
+        filter.deny(InteractionManager.class);
+        filter.deny(ClientEventHandler.class);
+        filter.deny(ClientForgeEventHandler.class);
+        // Firmalife
+        if (KubeJSTFC.firmaLoaded()) {
+            FirmaLifePlugin.addClasses(type, filter);
+        }
+        // Rosia
+        if (KubeJSTFC.rosiaLoaded()) {
+            RosiaPlugin.addClasses(type, filter);
+        }
     }
 
     private void addToolTier(Tier tier) {

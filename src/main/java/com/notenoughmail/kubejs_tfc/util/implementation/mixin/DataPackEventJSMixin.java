@@ -71,14 +71,6 @@ public abstract class DataPackEventJSMixin {
         addJson(dataIDTFC("entity_damage_resistances/" + ingredientToName(entityTag)), json);
     }
 
-    @Deprecated
-    @Unique
-    public void addTFCDrinkable(Object drinkable) {
-        KubeJSTFC.LOGGER.warn("The usage of addTFCDrinkable(DrinkableData) and DrinkableData.of() are deprecated! Please use the new system, there will be a notice of this system's full removal in the changelog when it happens.");
-        DrinkableData drinkableData = DrinkableData.of(drinkable);
-        addJson(dataIDTFC("drinkables/" + ingredientToName(drinkableData.fluidIngredient)), drinkableData.toJson());
-    }
-
     @Unique
     public void addTFCDrinkable(Object fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
         var fluidIngredientJS = FluidStackIngredientJS.of(fluidIngredient);
@@ -106,14 +98,6 @@ public abstract class DataPackEventJSMixin {
             }
         }
         addJson(dataIDTFC("fertilizers/" + ingredientToName(ingredientJS)), json);
-    }
-
-    @Deprecated
-    @Unique
-    public void addTFCFoodItem(Object foodItem) {
-        KubeJSTFC.LOGGER.warn("The usage of addTFCFoodItem(FoodItemData) and FoodItemData.of() are deprecated! Please use the new system, there will be a notice of this system's full removal in the changelog when it happens.");
-        FoodItemData foodItemData = FoodItemData.of(foodItem);
-        addJson(dataIDTFC("food_items/" + ingredientToName(foodItemData.ingredient)), foodItemData.toJson());
     }
 
     @Unique

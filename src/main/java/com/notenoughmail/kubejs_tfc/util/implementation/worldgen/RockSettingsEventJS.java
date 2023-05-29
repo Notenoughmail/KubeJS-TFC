@@ -131,7 +131,8 @@ public class RockSettingsEventJS extends StartupEventJS {
 
         public RockSettingsJS spike(ResourceLocation spike) {
             if (spike == null) {
-                return this;
+                spikeBlock = null;
+                return this; // Return early to avoid The check below
             }
             Block block = KubeJSRegistries.blocks().get(spike);
             if (!(block instanceof RockSpikeBlock)) {
@@ -143,7 +144,8 @@ public class RockSettingsEventJS extends StartupEventJS {
 
         public RockSettingsJS loose(ResourceLocation loose) {
             if (loose == null) {
-                return this;
+                looseBlock = null;
+                return this; // Return early to avoid the check below
             }
             Block block = KubeJSRegistries.blocks().get(loose);
             if (!(block instanceof LooseRockBlock)) {

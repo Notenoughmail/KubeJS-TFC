@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.eerussianguy.firmalife.FirmaLife;
+import com.jewey.rosia.Rosia;
 import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
 import com.mojang.logging.LogUtils;
 import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
@@ -27,5 +28,9 @@ public class KubeJSTFC {
 
     public static boolean channelCastingLoaded() {
         return ModList.get().isLoaded(TFCChannelCasting.MOD_ID) ;
+    }
+
+    public static boolean rosiaLoaded() {
+        return ModList.get().isLoaded(Rosia.MOD_ID);
     }
 }

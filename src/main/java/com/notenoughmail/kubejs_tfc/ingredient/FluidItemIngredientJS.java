@@ -56,7 +56,7 @@ public class FluidItemIngredientJS implements IngredientJS {
     @Override
     public String toString() {
         var builder = new StringBuilder();
-        builder.append("Ingredient.fluidIngredient(");
+        builder.append("Ingredient.fluidItem(");
         builder.append(fluidIngredient);
         if (internalIngredient != null) {
             builder.append(", ");

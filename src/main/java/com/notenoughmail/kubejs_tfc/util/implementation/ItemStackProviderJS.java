@@ -207,7 +207,6 @@ public class ItemStackProviderJS {
         return new ItemStackProviderJS(stack, modifiers);
     }
 
-    @HideFromJS
     public JsonObject toJson() {
         if (stack == null) {
             var obj = new JsonObject();

@@ -1,5 +1,11 @@
 package com.notenoughmail.kubejs_tfc;
 
+import com.eerussianguy.firmalife.client.FLClientEvents;
+import com.eerussianguy.firmalife.client.FLClientForgeEvents;
+import com.eerussianguy.firmalife.client.FLClientSelfTests;
+import com.eerussianguy.firmalife.common.FLEvents;
+import com.eerussianguy.firmalife.common.FLForgeEvents;
+import com.eerussianguy.firmalife.common.misc.FLInteractionManager;
 import com.eerussianguy.firmalife.common.recipes.FLRecipeSerializers;
 import com.notenoughmail.kubejs_tfc.recipe.KnappingRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.SimpleRecipeJS;
@@ -7,6 +13,8 @@ import com.notenoughmail.kubejs_tfc.recipe.firmalife.MixingBowlRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.firmalife.OvenRecipeJS;
 import com.notenoughmail.kubejs_tfc.recipe.firmalife.VatRecipeJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.kubejs.util.ClassFilter;
 
 /**
  * TODO:
@@ -29,5 +37,17 @@ public class FirmaLifePlugin {
         event.register(FLRecipeSerializers.OVEN.getId(), OvenRecipeJS::new);
         event.register(FLRecipeSerializers.MIXING_BOWL.getId(), MixingBowlRecipeJS::new);
         event.register(FLRecipeSerializers.VAT.getId(), VatRecipeJS::new);
+    }
+
+    public static void addClasses(ScriptType type, ClassFilter filter) {
+        filter.allow("com.eerussianguy.firmalife");
+        filter.deny("com.eerusianguy.firmalife.mixin");
+        filter.deny("com.eerussianguy.firmalife.common.network");
+        filter.deny(FLInteractionManager.class);
+        filter.deny(FLClientEvents.class);
+        filter.deny(FLClientForgeEvents.class);
+        filter.deny(FLClientSelfTests.class);
+        filter.deny(FLEvents.class);
+        filter.deny(FLForgeEvents.class);
     }
 }

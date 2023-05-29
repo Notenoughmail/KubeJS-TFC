@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class TraitIngredientJS implements IngredientJS {
