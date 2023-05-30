@@ -116,7 +116,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    public BlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1) {
+    public ThinSpikeBlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1) {
         return tipBox(x0, y0, z0, x1, y1, z1, true);
     }
 

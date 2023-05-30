@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.rhino.Wrapper;
+import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
@@ -166,6 +167,10 @@ public class FluidStackIngredientJS {
             json.add(obj);
         }
         return json;
+    }
+
+    public FluidStackIngredient asJavaObject() {
+        return FluidStackIngredient.fromJson(toJson());
     }
 
     @Override

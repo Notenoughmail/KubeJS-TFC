@@ -27,7 +27,7 @@ public abstract class DataPackEventJSMixin {
     private static final String notANumber = "[^0-9.-]";
     private static final String splitters = "[,;:]";
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract void addJson(ResourceLocation resourceLocation, JsonElement json);
 
     @Unique

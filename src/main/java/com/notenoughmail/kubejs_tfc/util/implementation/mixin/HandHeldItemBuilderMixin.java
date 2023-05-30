@@ -10,11 +10,14 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(value = HandheldItemBuilder.class, remap = false)
 public abstract class HandHeldItemBuilderMixin {
 
-    @Shadow public transient float attackDamageBaseline;
+    @Shadow(remap = false)
+    public transient float attackDamageBaseline;
 
-    @Shadow public transient MutableToolTier toolTier;
+    @Shadow(remap = false)
+    public transient MutableToolTier toolTier;
 
-    @Shadow public abstract HandheldItemBuilder attackDamageBaseline(float f);
+    @Shadow(remap = false)
+    public abstract HandheldItemBuilder attackDamageBaseline(float f);
 
     @Unique
     public HandheldItemBuilder useTFCDamageCalculation() {

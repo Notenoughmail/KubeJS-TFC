@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.block.HotWaterFluidBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.fluid.HotWaterFluidBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.IFluidBuilderMixin;
 import dev.latvian.mods.kubejs.fluid.FluidBlockBuilder;
 import dev.latvian.mods.kubejs.fluid.FluidBuilder;
@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(value = FluidBuilder.class, remap = false)
 public abstract class FluidBuilderMixin implements IFluidBuilderMixin {
 
-    @Shadow public FluidBlockBuilder block;
+    @Shadow(remap = false)
+    public FluidBlockBuilder block;
 
     private transient ResourceLocation bubbleParticle;
     private transient ResourceLocation steamParticle;

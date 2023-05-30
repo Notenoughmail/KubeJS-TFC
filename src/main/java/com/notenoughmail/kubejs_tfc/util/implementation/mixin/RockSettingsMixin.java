@@ -18,7 +18,9 @@ import java.util.function.Consumer;
 @Mixin(value = RockSettings.class, remap = false)
 public abstract class RockSettingsMixin implements IRockSettingsMixin {
 
-    @Shadow @Final private static Map<ResourceLocation, RockSettings> PRESETS;
+    @Final
+    @Shadow(remap = false)
+    private static Map<ResourceLocation, RockSettings> PRESETS;
 
     @Override
     public void removeRegisteredLayer(ResourceLocation id) {

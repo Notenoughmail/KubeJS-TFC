@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.block;
+package com.notenoughmail.kubejs_tfc.block.fluid;
 
 import com.notenoughmail.kubejs_tfc.util.IFluidBuilderMixin;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;

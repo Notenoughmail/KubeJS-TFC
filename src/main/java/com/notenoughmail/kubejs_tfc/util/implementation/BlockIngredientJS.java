@@ -8,6 +8,8 @@ import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.rhino.Wrapper;
+import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.dries007.tfc.common.recipes.ingredients.BlockIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
@@ -133,6 +135,10 @@ public class BlockIngredientJS {
             }
         }
         return json;
+    }
+
+    public BlockIngredient asJavaObject() {
+        return BlockIngredients.fromJson(toJson());
     }
 
     @Override

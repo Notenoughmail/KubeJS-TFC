@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
+import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
@@ -67,6 +68,8 @@ import net.minecraft.world.item.Tier;
  *    - Would need:
  *      - Nutrient, growing time, temperature, hydration, etc. methods
  *      - Dead, wild, flooded, double tall versions <br> <br>
+ *  - Moss(ing) blocks [Y]
+ *    - A way to convert blocks to mossing(ing) variants?
  *  - Recipes <br>
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapedRecipe Advanced Shaped Recipe?} [Y]
  *    - {@link net.dries007.tfc.common.recipes.AdvancedShapelessRecipe Advanced Shapeless Recipe?} [Y]
@@ -200,7 +203,14 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
             RegistryObjectBuilderTypes.BLOCK.addType("tfc_thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
-
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_block", MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_slab", MossSpreadingSlabBuilder.class, MossGrowingSlabBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_stair", MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_wall", MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_block", MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_slab", MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
+        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
     }
 
     @Override

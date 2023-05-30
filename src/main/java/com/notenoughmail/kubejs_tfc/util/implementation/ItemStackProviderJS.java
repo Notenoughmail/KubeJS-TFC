@@ -16,6 +16,7 @@ import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +52,7 @@ public class ItemStackProviderJS {
     }
 
     public static ItemStackProviderJS of(@Nullable Object o, @Nullable Object b) {
-        return new ItemStackProviderJS(of(o).getStack(), parseModifierList(ListJS.orSelf(b)));
+        return new ItemStackProviderJS(of(o).getJsonStack(), parseModifierList(ListJS.orSelf(b)));
     }
 
     private static JsonArray parseModifierList(List<?> list) {
@@ -187,8 +188,12 @@ public class ItemStackProviderJS {
     }
 
     @HideFromJS
-    public JsonObject getStack() {
+    public JsonObject getJsonStack() {
         return stack;
+    }
+
+    public ItemStackJS getStackJS() {
+        return ItemStackJS.of(stack);
     }
 
     @HideFromJS
@@ -230,9 +235,13 @@ public class ItemStackProviderJS {
         }
     }
 
+    public ItemStackProvider asJavaObject() {
+        return ItemStackProvider.fromJson(toJson());
+    }
+
     @Override
     public String toString() {
-        return "ItemStackProvider.of(" + getStack() + ", " + getModifiers() + ")";
+        return "ItemStackProvider.of(" + getJsonStack() + ", " + getModifiers() + ")";
     }
 
     // static methods wooooo 🙃
