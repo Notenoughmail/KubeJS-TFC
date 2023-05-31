@@ -299,8 +299,10 @@ public abstract class DataPackEventJSMixin {
     //================================WORLDGEN================================ (misery)
 
     // https://terrafirmacraft.github.io/Documentation/1.18.x/worldgen/tags/#placed-feature-tags
+    @Deprecated
     @Unique
     public void addFeaturesToTFCWorld(String path, String... values) {
+        KubeJSTFC.LOGGER.warn("The addFeaturesToTFCWorld method is deprecated! Please use the relevant tag event: https://github.com/Notenoughmail/KubeJS-TFC/wiki/World%20Generation#adding-features");
         var json = new JsonObject();
         json.addProperty("replace", false);
         var array = new JsonArray();
