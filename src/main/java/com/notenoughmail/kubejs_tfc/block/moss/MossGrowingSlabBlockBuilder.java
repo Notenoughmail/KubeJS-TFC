@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
 import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.SlabBlockBuilder;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import net.dries007.tfc.common.blocks.rock.MossGrowingSlabBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -26,11 +27,11 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
     public MossGrowingSlabBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = Blocks.OAK_SLAB.getRegistryName();
-        mossGrowthFull = ((currentLevel, pos, state, needsWater) -> (!needsWater || FluidHelpers.isSame(currentLevel.getFluidState(pos.above()), Fluids.WATER)));
-        mossGrowthHalf = ((currentLevel, pos, state, needsWater) -> (!needsWater || FluidHelpers.isSame(currentLevel.getFluidState(pos), Fluids.WATER)));
+        mossGrowthFull = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
+        mossGrowthHalf = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
 
-    public MossGrowingSlabBlockBuilder mossyBlock(ResourceLocation block) {
+    public MossGrowingSlabBlockBuilder mossySlab(ResourceLocation block) {
         mossyBlock = block;
         return this;
     }
@@ -40,7 +41,13 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
         return this;
     }
 
-    public MossGrowingSlabBlockBuilder mossConversionHalf(MossGrowingCallback callback) {
+    public MossGrowingSlabBlockBuilder mossyConversionHalf(MossGrowingCallback callback) {
+        mossGrowthHalf = callback;
+        return this;
+    }
+
+    public MossGrowingSlabBlockBuilder mossyConversion(MossGrowingCallback callback) {
+        mossGrowthFull = callback;
         mossGrowthHalf = callback;
         return this;
     }
@@ -57,14 +64,15 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" is not a slab block or does not exist!", mossyBlock);
                 }
                 if (state.getValue(TYPE) == SlabType.DOUBLE) {
-                    if (mossGrowthFull.convertToMossy(worldIn, pos, state, needsWater)) {
+                    if (mossGrowthFull.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                         worldIn.setBlockAndUpdate(pos, Helpers.copyProperties(mossBlock.defaultBlockState(), state));
                     }
                 } else {
-                    if (mossGrowthHalf.convertToMossy(worldIn, pos, state, needsWater)) {
+                    if (mossGrowthHalf.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                         worldIn.setBlockAndUpdate(pos, Helpers.copyProperties(mossBlock.defaultBlockState(), state));
                     }
-                }            }
+                }
+            }
         };
     }
 }

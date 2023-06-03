@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
 import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.StairBlockBuilder;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import net.dries007.tfc.common.blocks.rock.MossGrowingStairsBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -24,10 +25,10 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
     public MossGrowingStairBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = Blocks.OAK_STAIRS.getRegistryName();
-        mossGrowth = ((currentLevel, pos, state, needsWater) -> (!needsWater || FluidHelpers.isSame(currentLevel.getFluidState(pos), Fluids.WATER)));
+        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
 
-    public MossGrowingStairBlockBuilder mossyBlock(ResourceLocation block) {
+    public MossGrowingStairBlockBuilder mossyStair(ResourceLocation block) {
         mossyBlock = block;
         return this;
     }
@@ -48,7 +49,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
                     mossBlock = Blocks.OAK_STAIRS;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" is not a stair block or does not exist!", mossyBlock);
                 }
-                if (mossGrowth.convertToMossy(worldIn, pos, state, needsWater)) {
+                if (mossGrowth.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                     worldIn.setBlockAndUpdate(pos, Helpers.copyProperties(mossBlock.defaultBlockState(), state));
                 }
             }

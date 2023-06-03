@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
 import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.WallBlockBuilder;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import net.dries007.tfc.common.blocks.rock.MossGrowingWallBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -24,10 +25,10 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
     public MossGrowingWallBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = Blocks.COBBLESTONE_WALL.getRegistryName();
-        mossGrowth = ((currentLevel, pos, state, needsWater) -> (!needsWater || FluidHelpers.isSame(currentLevel.getFluidState(pos), Fluids.WATER)));
+        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
 
-    public MossGrowingWallBlockBuilder mossyBlock(ResourceLocation block) {
+    public MossGrowingWallBlockBuilder mossyWall(ResourceLocation block) {
         mossyBlock = block;
         return this;
     }
@@ -48,7 +49,7 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
                     mossBlock = Blocks.COBBLESTONE_WALL;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block \"{}\" is not a wall block or does not exist!", mossyBlock);
                 }
-                if (mossGrowth.convertToMossy(worldIn, pos, state, needsWater)) {
+                if (mossGrowth.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                     worldIn.setBlockAndUpdate(pos, Helpers.copyProperties(mossBlock.defaultBlockState(), state));
                 }
             }

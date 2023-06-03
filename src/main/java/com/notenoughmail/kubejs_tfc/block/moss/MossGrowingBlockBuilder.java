@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
 import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import net.dries007.tfc.common.blocks.rock.MossGrowingBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
     public MossGrowingBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = Blocks.AIR.getRegistryName();
-        mossGrowth = ((currentLevel, pos, state, needsWater) -> (!needsWater || FluidHelpers.isSame(currentLevel.getFluidState(pos.above()), Fluids.WATER)));
+        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
     }
 
     public MossGrowingBlockBuilder mossyBlock(ResourceLocation block) {
@@ -46,7 +47,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
                     mossBlock = Blocks.AIR;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" does not exist!", mossyBlock);
                 }
-                if (mossGrowth.convertToMossy(worldIn, pos, state, needsWater)) {
+                if (mossGrowth.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                     worldIn.setBlock(pos, mossBlock.defaultBlockState(), 3);
                 }
             }
