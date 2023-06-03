@@ -31,8 +31,8 @@ public class MoldItemBuilder extends ItemBuilder {
         return this;
     }
 
-    public MoldItemBuilder fluidTagAccept(String fluidTag) {
-        this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(fluidTag));
+    public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
+        this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, fluidTag);
         return this;
     }
 
@@ -50,7 +50,7 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        generator.itemModel(id, m -> ModelUtils.ITEMS.moldItemModelJson(m, id));
+        generator.itemModel(id, m -> ModelUtils.ITEMS.fluidContainerModelJson(m, id));
     }
 
     @Override

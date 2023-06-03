@@ -37,7 +37,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
 
     @Override
     public Block createObject() {
-        return new MossGrowingBlock(createProperties(), () -> KubeJSRegistries.blocks().get(mossyBlock)) {
+        return new MossGrowingBlock(createProperties(), () -> null) {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {

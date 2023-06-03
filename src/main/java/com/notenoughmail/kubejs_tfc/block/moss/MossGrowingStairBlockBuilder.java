@@ -39,7 +39,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new MossGrowingStairsBlock(Blocks.OAK_PLANKS::defaultBlockState, createProperties(), () -> KubeJSRegistries.blocks().get(mossyBlock)) {
+        return new MossGrowingStairsBlock(Blocks.OAK_PLANKS::defaultBlockState, createProperties(), () -> null) {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {

@@ -49,15 +49,15 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    public RockSpikeBlockBuilder cycleItem(String item) {
+    public RockSpikeBlockBuilder cycleItem(ResourceLocation item) {
         cyclingAllowed = true;
-        cycleItem = KubeJSRegistries.items().get(new ResourceLocation(item));
+        cycleItem = KubeJSRegistries.items().get(item);
         return this;
     }
 
-    public RockSpikeBlockBuilder cycleTag(String tag) {
+    public RockSpikeBlockBuilder cycleTag(ResourceLocation tag) {
         cyclingAllowed = true;
-        cycleTag = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(tag));
+        cycleTag = TagKey.create(Registry.ITEM_REGISTRY, tag);
         return this;
     }
 

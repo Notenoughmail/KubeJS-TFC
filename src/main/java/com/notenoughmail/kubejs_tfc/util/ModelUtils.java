@@ -8,8 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 public class ModelUtils {
 
     public static class ITEMS {
-        public static void moldItemModelJson(ModelGenerator m, ResourceLocation id) {
-            m.parent("kubejs_tfc:item/generated_mold");
+        public static void fluidContainerModelJson(ModelGenerator m, ResourceLocation id) {
+            m.parent("kubejs_tfc:item/generated_fluid_container");
             m.textures(moldTextures(id));
         }
 

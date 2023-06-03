@@ -24,8 +24,8 @@ public class ScytheItemBuilder extends HandheldItemBuilder {
         this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_SCYTHE;
     }
 
-    public ScytheItemBuilder mineableBlocksTag(String blockTag) {
-        this.mineableBlocks = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(blockTag));
+    public ScytheItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
+        this.mineableBlocks = TagKey.create(Registry.BLOCK_REGISTRY, blockTag);
         return this;
     }
 
