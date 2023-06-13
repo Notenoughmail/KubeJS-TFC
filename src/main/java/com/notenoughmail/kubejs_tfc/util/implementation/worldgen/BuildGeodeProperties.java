@@ -38,7 +38,6 @@ public class BuildGeodeProperties {
         return this;
     }
 
-    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("type", "tfc:geode");

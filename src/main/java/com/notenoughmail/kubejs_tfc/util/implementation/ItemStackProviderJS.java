@@ -127,7 +127,6 @@ public class ItemStackProviderJS {
         return this;
     }
 
-    @HideFromJS
     public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
         var obj = new JsonObject();
         if (isAddingTrait) {
@@ -187,7 +186,6 @@ public class ItemStackProviderJS {
         return this;
     }
 
-    @HideFromJS
     public JsonObject getJsonStack() {
         return stack;
     }
@@ -196,13 +194,20 @@ public class ItemStackProviderJS {
         return ItemStackJS.of(stack);
     }
 
-    @HideFromJS
+    /**
+     * Tests if the provided item provider's stack equals this item provider's stack, logic is handled natively by KubeJS' own ItemStackJS
+     * @param other The item provider to be tested
+     * @return True if the item providers' stacks are equal
+     */
+    public boolean test(ItemStackProviderJS other) {
+        return this.getStackJS().test(other.getStackJS()); // Kube can handle it
+    }
+
     public JsonArray getModifiers() {
         return modifiers;
     }
 
     // This assumes if neither element is defined the json is an item stack
-    @HideFromJS
     public static ItemStackProviderJS fromJson(JsonObject json) {
         if (!json.has("stack") && !json.has("modifiers")) {
             return new ItemStackProviderJS(json, new JsonArray());

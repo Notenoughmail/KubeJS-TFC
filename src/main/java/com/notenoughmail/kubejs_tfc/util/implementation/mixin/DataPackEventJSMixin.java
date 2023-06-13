@@ -31,8 +31,8 @@ public abstract class DataPackEventJSMixin {
     public abstract void addJson(ResourceLocation resourceLocation, JsonElement json);
 
     @Unique
-    public void addTFCItemDamageResistance(Object ingredient, String values) { // "p=20, c=50"
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCItemDamageResistance(IngredientJS ingredient, String values) { // "p=20, c=50"
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
@@ -72,16 +72,15 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCDrinkable(Object fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
-        var fluidIngredientJS = FluidStackIngredientJS.of(fluidIngredient);
-        var data = new BuildDrinkableData(fluidIngredientJS);
+    public void addTFCDrinkable(FluidStackIngredientJS fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
+        var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
-        addJson(dataIDTFC("drinkables/" + ingredientToName(fluidIngredientJS)), data.toJson());
+        addJson(dataIDTFC("drinkables/" + ingredientToName(fluidIngredient)), data.toJson());
     }
 
     @Unique
-    public void addTFCFertilizer(Object ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCFertilizer(IngredientJS ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
@@ -101,16 +100,16 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCFoodItem(Object ingredient, Consumer<BuildFoodItemData> foodItemData) {
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCFoodItem(IngredientJS ingredient, Consumer<BuildFoodItemData> foodItemData) {
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var data = new BuildFoodItemData(ingredientJS);
         foodItemData.accept(data);
         addJson(dataIDTFC("food_items/" + ingredientToName(ingredientJS)), data.toJson());
     }
 
     @Unique
-    public void addTFCFuel(Object ingredient, float temperature, int duration) {
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCFuel(IngredientJS ingredient, float temperature, int duration) {
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("temperature", temperature);
@@ -119,8 +118,8 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCHeat(Object ingredient, float... values) {
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCHeat(IngredientJS ingredient, float... values) {
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         if (values.length < 1) {
             ConsoleJS.SERVER.error("Heat data for " + ingredientJS.toString() + " does not define a heat capacity!");
         }
@@ -137,8 +136,8 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCItemSize(Object ingredient, String values) { // "s=tiny, weight=medium"
-        var ingredientjS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCItemSize(IngredientJS ingredient, String values) { // "s=tiny, weight=medium"
+        var ingredientjS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientjS.toJson());
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
@@ -166,25 +165,23 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCLampFuel(Object fluidIngredient, Object blockIngredient, int burnRate) {
-        var fluidIngredientJS = FluidStackIngredientJS.of(fluidIngredient);
-        var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
+    public void addTFCLampFuel(FluidStackIngredientJS fluidIngredient, BlockIngredientJS blockIngredient, int burnRate) {
         var json = new JsonObject();
-        json.add("fluid", fluidIngredientJS.toJsonNoAmount());
-        json.add("valid_lamps", blockIngredientJS.toJson());
+        json.add("fluid", fluidIngredient.toJsonNoAmount());
+        json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
-        addJson(dataIDTFC("lamp_fuels/" + ingredientToName(fluidIngredientJS)), json);
+        addJson(dataIDTFC("lamp_fuels/" + ingredientToName(fluidIngredient)), json);
     }
 
     @Unique
-    public void addTFCMetal(String fluid, float meltTemp, float heatCap, Object ingotIngredient, Object sheetIngredient) {
+    public void addTFCMetal(String fluid, float meltTemp, float heatCap, IngredientJS ingotIngredient, IngredientJS sheetIngredient) {
         addTFCMetal(fluid, meltTemp, heatCap, ingotIngredient, sheetIngredient, 0);
     }
 
     @Unique
-    public void addTFCMetal(String fluid, float meltTemp, float heatCap, Object ingotIngredient, Object sheetIngredient, int tier) {
-        var ingotIngredientJS = IngredientJS.of(ingotIngredient).unwrapStackIngredient().get(0);
-        var sheetIngredientJS = IngredientJS.of(sheetIngredient).unwrapStackIngredient().get(0);
+    public void addTFCMetal(String fluid, float meltTemp, float heatCap, IngredientJS ingotIngredient, IngredientJS sheetIngredient, int tier) {
+        var ingotIngredientJS = ingotIngredient.unwrapStackIngredient().get(0);
+        var sheetIngredientJS = sheetIngredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.addProperty("tier", tier);
         json.addProperty("fluid", fluid);
@@ -200,19 +197,18 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCSupport(Object blockIngredient, int up, int down, int horizontal) {
-        var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
+    public void addTFCSupport(BlockIngredientJS blockIngredient, int up, int down, int horizontal) {
         var json = new JsonObject();
-        json.add("ingredient", blockIngredientJS.toJson());
+        json.add("ingredient", blockIngredient.toJson());
         json.addProperty("support_up", up);
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
-        addJson(dataIDTFC("supports/" + ingredientToName(blockIngredientJS)), json);
+        addJson(dataIDTFC("supports/" + ingredientToName(blockIngredient)), json);
     }
 
     @Unique
-    public void addTFCSluicing(Object ingredient, String lootTable) {
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addTFCSluicing(IngredientJS ingredient, String lootTable) {
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("loot_table", lootTable);
@@ -220,10 +216,9 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addTFCPanning(Object blockIngredient, String lootTable, String... models) {
-        var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
+    public void addTFCPanning(BlockIngredientJS blockIngredient, String lootTable, String... models) {
         var json = new JsonObject();
-        json.add("ingredient", blockIngredientJS.toJson());
+        json.add("ingredient", blockIngredient.toJson());
         json.addProperty("loot_table", lootTable);
         var array = new JsonArray();
         for (String model : models) {
@@ -234,17 +229,16 @@ public abstract class DataPackEventJSMixin {
     }
 
     @Unique
-    public void addFLGreenhouse(Object blockIngredient, int tier) {
-        var blockIngredientJS = BlockIngredientJS.of(blockIngredient);
+    public void addFLGreenhouse(BlockIngredientJS blockIngredient, int tier) {
         var json = new JsonObject();
-        json.add("ingredient", blockIngredientJS.toJson());
+        json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);
-        addJson(dataIDFL("greenhouse/" + ingredientToName(blockIngredientJS)), json);
+        addJson(dataIDFL("greenhouse/" + ingredientToName(blockIngredient)), json);
     }
 
     @Unique
-    public void addFLPlantable(Object ingredient, Consumer<BuildPlantableData> plantableData) {
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addFLPlantable(IngredientJS ingredient, Consumer<BuildPlantableData> plantableData) {
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var data = new BuildPlantableData(ingredientJS);
         plantableData.accept(data);
         addJson(dataIDFL("plantable/" + ingredientToName(ingredientJS)), data.toJson());
@@ -252,8 +246,8 @@ public abstract class DataPackEventJSMixin {
 
     // Why the hell not
     @Unique
-    public void addBeneathFertilizer(Object ingredient, String values) { // "d=0.2, f=0.5"
-        var ingredientJS = IngredientJS.of(ingredient).unwrapStackIngredient().get(0);
+    public void addBeneathFertilizer(IngredientJS ingredient, String values) { // "d=0.2, f=0.5"
+        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);

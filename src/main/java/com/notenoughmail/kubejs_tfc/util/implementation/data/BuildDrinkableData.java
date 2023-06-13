@@ -55,7 +55,6 @@ public class BuildDrinkableData {
         return this;
     }
 
-    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.add("ingredient", fluidIngredient.toJsonNoAmount());

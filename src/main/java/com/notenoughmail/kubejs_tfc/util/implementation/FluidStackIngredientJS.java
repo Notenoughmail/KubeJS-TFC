@@ -17,7 +17,6 @@ import dev.latvian.mods.rhino.Wrapper;
 import dev.latvian.mods.rhino.regexp.NativeRegExp;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 import net.dries007.tfc.util.Helpers;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -116,6 +115,10 @@ public class FluidStackIngredientJS {
     public FluidStackIngredientJS withAmount(int i) {
         amount = i;
         return this;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 
     public IngredientJS asItemIngredient() {
@@ -252,6 +255,31 @@ public class FluidStackIngredientJS {
      */
     public boolean test(FluidStackJS fluidJS) {
         return test(fluidJS.getFluid());
+    }
+
+    /**
+     * Test if the provided fluid ingredient has any fluids in common with this fluid ingredient, including tag values
+     * @param other The fluid ingredient to be tested
+     * @return True if the provided fluid ingredient has any fluids in common with this fluid ingredient
+     */
+    public boolean test(FluidStackIngredientJS other) {
+        for (String fluid : other.fluids) {
+            if (this.fluids.contains(fluid)) {
+                return true; // Basic check that can be done without unrolling tags
+            }
+        }
+        List<Fluid> otherFluids = new ArrayList<>();
+        for (Fluid testingFluid : RegistrationUtils.getFluidList()) {
+            if (other.test(testingFluid)){
+                otherFluids.add(testingFluid);
+            }
+        }
+        for (Fluid fluid : otherFluids) {
+            if (this.test(fluid)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

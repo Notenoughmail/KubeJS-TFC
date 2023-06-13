@@ -115,15 +115,7 @@ public class BlockIngredientJS {
         if (json.isJsonArray()) {
             var internalBlocks = new ArrayList<String>();
             for (var member : json.getAsJsonArray()) {
-                if (member.isJsonPrimitive()) {
-                    internalBlocks.add(member.getAsString());
-                } else if (member.isJsonArray()) { // technically possible
-                    for (var memb : member.getAsJsonArray()) {
-                        internalBlocks.addAll(fromJson(memb).blocks);
-                    }
-                } else {
-                    internalBlocks.add(getFromJsonObject(member.getAsJsonObject()));
-                }
+                internalBlocks.addAll(fromJson(member).blocks);
             }
 
             String[] ingredients = new String[internalBlocks.size()];
@@ -213,6 +205,31 @@ public class BlockIngredientJS {
             throw new RecipeExceptionJS("Block '" + block + "' does not exist").error();
         }
         return test(name);
+    }
+
+    /**
+     * Test if the provided block ingredient has any blocks in common with this block ingredient, including tag values
+     * @param other The block ingredient to be tested
+     * @return True if the provided block ingredient has any blocks in common with this block ingredient
+     */
+    public boolean test(BlockIngredientJS other) {
+        for (String block : other.blocks) {
+            if (this.blocks.contains(block)) {
+                return true; // Basic check that can be done without unrolling tags
+            }
+        }
+        List<Block> otherBlocks = new ArrayList<>();
+        for (Block testingBlock : RegistrationUtils.getBlockList()) {
+            if (other.test(testingBlock)) {
+                otherBlocks.add(testingBlock);
+            }
+        }
+        for (Block block : otherBlocks) {
+            if (this.test(block)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

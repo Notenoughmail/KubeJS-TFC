@@ -35,7 +35,6 @@ public class BuildThinSpikeProperties {
         return this;
     }
 
-    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("type", "tfc:thin_spike");

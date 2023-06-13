@@ -7,9 +7,7 @@ import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -17,6 +15,7 @@ import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
+import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
@@ -263,6 +262,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FluidIngredient", FluidStackIngredientWrapper.class);
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
+    }
+
+    @Override
+    public void addTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
+        typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
+        typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
+        typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
     }
 
     // Probably a can of worms

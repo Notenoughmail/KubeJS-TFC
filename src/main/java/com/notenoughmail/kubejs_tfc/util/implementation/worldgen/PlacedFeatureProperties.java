@@ -121,7 +121,6 @@ public class PlacedFeatureProperties {
         return placement(json);
     }
 
-    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("feature", feature);
@@ -184,7 +183,6 @@ public class PlacedFeatureProperties {
             return this;
         }
 
-        @HideFromJS
         public JsonObject toJson() {
             var json = new JsonObject();
             json.addProperty("type", "tfc:climate");
@@ -232,7 +230,6 @@ public class PlacedFeatureProperties {
             return this;
         }
 
-        @HideFromJS
         public JsonObject toJson() {
             var json = new JsonObject();
             json.addProperty("type", "tfc:flat_enough");

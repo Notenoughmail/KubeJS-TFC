@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/Notenoughmail/KubeJS-TFC/issues"
     displayName="KubeJS TFC"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/kubejs-tfc"
     logoFile="kubejs_tfc_icon.png"
-    #credits="Thanks for this example mod goes to Java"
+    credits="DoubleDoorDevelopment/Claycorp for the foundation (https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea) of the container limiter functionality"
     authors="Not Enough Mail"
     description='''KubeJS Integration for TFC'''
 

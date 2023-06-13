@@ -43,9 +43,8 @@ public class ContainerSubscriber {
             Pair<Size, List<Pair<Integer, Integer>>> function = SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.get(menuType.getRegistryName());
 
             // Filter slots to only the ones that have items and (if present) within the ranges given
-            NonNullList<Slot> containerSlots = container.slots; // This also gives the player's inventory slots because why not
             List<Slot> sanitizedSlots = new ArrayList<>();
-            for (Slot slot : containerSlots) {
+            for (Slot slot : container.slots) { // This also gives the player's inventory slots because why not
                 // Do NOT touch the player inventory
                 if (!(slot.container instanceof Inventory)) {
                     sanitizedSlots.add(slot);

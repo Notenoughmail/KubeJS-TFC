@@ -160,7 +160,6 @@ public class BuildVeinProperties {
     }
 
 
-    @HideFromJS
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("type", switch (type) {
@@ -241,7 +240,6 @@ public class BuildVeinProperties {
             return this;
         }
 
-        @HideFromJS
         public JsonObject toJson() {
             var json = new JsonObject();
             json.addProperty("depth", depth);
@@ -264,7 +262,6 @@ public class BuildVeinProperties {
             return new Replace(this, replace);
         }
 
-        @HideFromJS
         public JsonArray toJson() {
             var json = new JsonArray();
             for (JsonObject block : blocks) {
