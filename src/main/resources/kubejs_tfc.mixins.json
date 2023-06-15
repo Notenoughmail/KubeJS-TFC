@@ -9,7 +9,9 @@
         "HandHeldItemBuilderMixin",
         "IngredientJSMixin",
         "IngredientWrapperMixin",
+        "RecipeEventJSMixin",
         "RecipeFilterMixin",
+        "RecipeJSMixin",
         "RockSettingsMixin"
     ],
     "client": [],

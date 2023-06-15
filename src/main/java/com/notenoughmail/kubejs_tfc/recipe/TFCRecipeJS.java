@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
@@ -14,8 +15,9 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
-public abstract class TFCRecipeJS extends RecipeJS {
+public abstract class TFCRecipeJS extends RecipeJS implements IRecipeJSExtension {
 
     public String result = "minecraft:air";
     public BlockIngredientJS blockIngredient;
@@ -86,5 +88,87 @@ public abstract class TFCRecipeJS extends RecipeJS {
             return false;
         }
         return exact ? output.equals(itemProviderResult) : output.test(itemProviderResult);
+    }
+
+    @Override
+    public boolean tfcReplaceFluidInput(FluidStackIngredientJS i, FluidStackIngredientJS with, boolean exact, BiFunction<FluidStackIngredientJS, FluidStackIngredientJS, FluidStackIngredientJS> function) {
+        boolean changed = false;
+
+        for (int j = 0 ; j < inputFluids.size() ; j++) {
+            if (exact) {
+                if (!i.equals(inputFluids.get(j))) {
+                    continue;
+                }
+            } else if (!inputFluids.get(j).test(i)) {
+                continue;
+            }
+
+            inputFluids.set(j, function.apply(with.copy(), inputFluids.get(j)));
+            changed = true;
+            serializeInputs = true;
+            save();
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean tfcReplaceFluidOutput(FluidStackJS o, FluidStackJS with, boolean exact, BiFunction<FluidStackJS, FluidStackJS, FluidStackJS> function) {
+        boolean changed = false;
+
+        for (int i = 0 ; i < outputFluids.size() ; i++) {
+            if (exact) {
+                if (!o.strongEquals(outputFluids.get(i))) {
+                    continue;
+                }
+            } else if (!o.equals(outputFluids.get(i))) {
+                continue;
+            }
+
+            outputFluids.set(i, function.apply(with.copy(), outputFluids.get(i)));
+            changed = true;
+            serializeOutputs = true;
+            save();
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean tfcReplaceBlockInput(BlockIngredientJS i, BlockIngredientJS with, boolean exact) {
+        boolean changed = false;
+
+        if (exact) {
+            if (blockIngredient.equals(i)) {
+                changed = true;
+            }
+        } else if (blockIngredient.test(i)) {
+            changed = true;
+        }
+
+        if (changed) {
+            blockIngredient = with.copy();
+            serializeInputs = true;
+            save();
+        }
+        return changed;
+    }
+
+    @Override
+    public boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact, BiFunction<ItemStackProviderJS, ItemStackProviderJS, ItemStackProviderJS> function) {
+        boolean changed = false;
+
+        if (exact) {
+            if (itemProviderResult.equals(out)) {
+                changed = true;
+            }
+        } else if (itemProviderResult.test(out)) {
+            changed = true;
+        }
+
+        if (changed) {
+            itemProviderResult = function.apply(with.copy(), itemProviderResult);
+            serializeOutputs = true;
+            save();
+        }
+        return changed;
     }
 }

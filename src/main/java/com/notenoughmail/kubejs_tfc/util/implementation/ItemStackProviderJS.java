@@ -244,6 +244,10 @@ public class ItemStackProviderJS {
         return ItemStackProvider.fromJson(toJson());
     }
 
+    public ItemStackProviderJS copy() {
+        return new ItemStackProviderJS(stack, modifiers);
+    }
+
     @Override
     public String toString() {
         return "ItemStackProvider.of(" + getJsonStack() + ", " + getModifiers() + ")";

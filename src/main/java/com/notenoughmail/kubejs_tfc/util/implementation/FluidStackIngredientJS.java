@@ -214,6 +214,10 @@ public class FluidStackIngredientJS {
         return FluidStackIngredient.fromJson(toJson());
     }
 
+    public FluidStackIngredientJS copy() {
+        return new FluidStackIngredientJS(amount, fluids.toArray(new String[0]));
+    }
+
     /**
      * Test if the provided fluid resource location is valid to this fluid stack ingredient, including possible tag values
      * @param location The resource location to be tested

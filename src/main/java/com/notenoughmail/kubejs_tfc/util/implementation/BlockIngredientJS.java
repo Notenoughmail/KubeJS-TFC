@@ -173,6 +173,10 @@ public class BlockIngredientJS {
         return BlockIngredients.fromJson(toJson());
     }
 
+    public BlockIngredientJS copy() {
+        return new BlockIngredientJS(blocks.toArray(new String[0]));
+    }
+
     /**
      * Test if the provided block resource location is valid to this block ingredient, including possible tag values
      * @param location The resource location to be tested
