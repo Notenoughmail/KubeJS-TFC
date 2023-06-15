@@ -55,4 +55,36 @@ public abstract class TFCRecipeJS extends RecipeJS {
             return ingredientJS.toJson();
         }
     }
+
+    public boolean hasFluidInput(FluidStackIngredientJS ingredient, boolean exact) {
+        for (FluidStackIngredientJS in : inputFluids) {
+            if (exact ? in.equals(ingredient) : in.test(ingredient)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasBlockInput(BlockIngredientJS ingredient, boolean exact) {
+        if (blockIngredient == null) {
+            return false;
+        }
+        return exact ? ingredient.equals(blockIngredient) : ingredient.test(blockIngredient);
+    }
+
+    public boolean hasFluidOutput(FluidStackJS output, boolean exact) {
+        for (FluidStackJS out : outputFluids) {
+            if (exact ? out.strongEquals(output) : out.equals(output)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasItemProviderOutput(ItemStackProviderJS output, boolean exact) {
+        if (itemProviderResult == null) {
+            return false;
+        }
+        return exact ? output.equals(itemProviderResult) : output.test(itemProviderResult);
+    }
 }

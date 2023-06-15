@@ -59,7 +59,7 @@ public class ContainerSubscriber {
                 });
             } else {
                 for (Pair<Integer, Integer> range : function.getSecond()) {
-                    sanitizedSlots.subList(Math.min(0, range.getFirst()), Math.min(sanitizedSlots.size() - 1, range.getSecond())).forEach(slot -> {
+                    sanitizedSlots.subList(Math.max(0, range.getFirst()), Math.min(sanitizedSlots.size() - 1, range.getSecond())).forEach(slot -> {
                         if (slot.hasItem()) {
                             filteredSlots.add(slot);
                         }

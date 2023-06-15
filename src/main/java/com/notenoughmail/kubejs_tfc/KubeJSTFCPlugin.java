@@ -8,6 +8,7 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
+import com.notenoughmail.kubejs_tfc.util.implementation.containerlimiter.ContainerSubscriber;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -178,7 +179,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        // Remove the indented ones after some time
+        // Remove the indented ones in July
             RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
             RegistryObjectBuilderTypes.ITEM.addType("tfc_chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
@@ -262,6 +263,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FluidIngredient", FluidStackIngredientWrapper.class);
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
+        event.add("TFCRecipeFilter", TFCRecipeFilterWrapper.class);
     }
 
     @Override
@@ -282,6 +284,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(RosiaPlugin.class);
         filter.deny(RegistrationUtils.class);
         filter.deny(OtherEventHandler.class);
+        filter.deny(ContainerSubscriber.class);
         // TFC - Likely will need to restrict even more
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

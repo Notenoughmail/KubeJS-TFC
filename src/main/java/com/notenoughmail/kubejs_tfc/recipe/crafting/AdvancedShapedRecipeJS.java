@@ -148,4 +148,11 @@ public class AdvancedShapedRecipeJS extends ShapedRecipeJS {
     public String getFromToString() {
         return inputItems + " -> " + itemProviderResult;
     }
+
+    public boolean hasItemProviderOutput(ItemStackProviderJS output, boolean exact) {
+        if (itemProviderResult == null) {
+            return false;
+        }
+        return exact ? output.equals(itemProviderResult) : output.test(itemProviderResult);
+    }
 }

@@ -28,7 +28,7 @@ public class SemiFunctionalContainerLimiterEventJS extends StartupEventJS {
         List<Pair<Integer, Integer>> ranges = new ArrayList<>();
         if (slotRanges != null) {
             for (int i = 0; i < slotRanges.length ; i += 2) {
-                ranges.add(new Pair<>(slotRanges[i], slotRanges[i + 1] + 1)); // Modify input values so the provided slot values are treated as inclusive -> inclusive instead of inclusive -> exclusive
+                ranges.add(Pair.of(slotRanges[i], slotRanges[i + 1] + 1)); // Modify input values so the provided slot values are treated as inclusive -> inclusive instead of inclusive -> exclusive
             }
         }
         Size sizeValue = Size.valueOf(size.toUpperCase(Locale.ROOT));

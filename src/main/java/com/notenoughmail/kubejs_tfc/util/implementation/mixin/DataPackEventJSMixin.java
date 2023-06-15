@@ -293,7 +293,7 @@ public abstract class DataPackEventJSMixin {
     //================================WORLDGEN================================ (misery)
 
     // https://terrafirmacraft.github.io/Documentation/1.18.x/worldgen/tags/#placed-feature-tags
-    @Deprecated
+    @Deprecated(since = "0.4.3", forRemoval = true) // Slated for late July
     @Unique
     public void addFeaturesToTFCWorld(String path, String... values) {
         KubeJSTFC.LOGGER.warn("The addFeaturesToTFCWorld method is deprecated! Please use the relevant tag event: https://github.com/Notenoughmail/KubeJS-TFC/wiki/World%20Generation#adding-features");
