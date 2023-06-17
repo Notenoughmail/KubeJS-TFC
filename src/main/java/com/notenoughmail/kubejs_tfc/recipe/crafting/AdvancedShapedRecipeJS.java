@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
@@ -13,8 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
-public class AdvancedShapedRecipeJS extends ShapedRecipeJS {
+public class AdvancedShapedRecipeJS extends ShapedRecipeJS implements IRecipeJSExtension {
 
     private ItemStackProviderJS itemProviderResult;
     private final List<String> pattern = new ArrayList<>();
@@ -154,5 +156,25 @@ public class AdvancedShapedRecipeJS extends ShapedRecipeJS {
             return false;
         }
         return exact ? output.equals(itemProviderResult) : output.test(itemProviderResult);
+    }
+
+    @Override
+    public boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact, BiFunction<ItemStackProviderJS, ItemStackProviderJS, ItemStackProviderJS> function) {
+        boolean changed = false;
+
+        if (exact) {
+            if (itemProviderResult.equals(out)) {
+                changed = true;
+            }
+        } else if (itemProviderResult.test(out)) {
+            changed = true;
+        }
+
+        if (changed) {
+            itemProviderResult = function.apply(with.copy(), itemProviderResult);
+            serializeOutputs = true;
+            save();
+        }
+        return changed;
     }
 }

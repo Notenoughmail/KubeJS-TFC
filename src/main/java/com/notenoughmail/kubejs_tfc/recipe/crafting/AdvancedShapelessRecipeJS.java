@@ -1,13 +1,16 @@
 package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
+import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.minecraft.ShapelessRecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
-public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
+import java.util.function.BiFunction;
+
+public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS implements IRecipeJSExtension {
 
     private ItemStackProviderJS itemProviderResult;
     private IngredientJS primaryIngredient;
@@ -64,5 +67,25 @@ public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS {
             return false;
         }
         return exact ? output.equals(itemProviderResult) : output.test(itemProviderResult);
+    }
+
+    @Override
+    public boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact, BiFunction<ItemStackProviderJS, ItemStackProviderJS, ItemStackProviderJS> function) {
+        boolean changed = false;
+
+        if (exact) {
+            if (itemProviderResult.equals(out)) {
+                changed = true;
+            }
+        } else if (itemProviderResult.test(out)) {
+            changed = true;
+        }
+
+        if (changed) {
+            itemProviderResult = function.apply(with.copy(), itemProviderResult);
+            serializeOutputs = true;
+            save();
+        }
+        return changed;
     }
 }

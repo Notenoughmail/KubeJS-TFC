@@ -2,15 +2,18 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.minecraft.ShapedRecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
-public class ExtraProductsShapedJS extends ShapedRecipeJS {
+public class ExtraProductsShapedJS extends ShapedRecipeJS implements IRecipeJSExtension {
 
     private final List<ItemStackJS> extraProducts = new ArrayList<>();
     private JsonObject recipeJson = new JsonObject();
@@ -58,5 +61,26 @@ public class ExtraProductsShapedJS extends ShapedRecipeJS {
     @Override
     public String getFromToString() {
         return recipeJS.getFromToString() + " + " + extraProducts;
+    }
+
+    @Override
+    public boolean tfcReplaceExtraItem(IngredientJS i, ItemStackJS with, boolean exact, BiFunction<ItemStackJS, ItemStackJS, ItemStackJS> function) {
+        boolean changed = false;
+
+        for (int j =0 ; j < extraProducts.size() ; j++) {
+            if (exact) {
+                if (!i.equals(extraProducts.get(j))) {
+                    continue;
+                }
+            } else if (!i.test(extraProducts.get(j))) {
+                continue;
+            }
+
+            extraProducts.set(j, convertReplacedOutput(j, extraProducts.get(j), function.apply(with.copy(), extraProducts.get(j))));
+            changed = true;
+            serializeOutputs = true;
+            save();
+        }
+        return changed;
     }
 }

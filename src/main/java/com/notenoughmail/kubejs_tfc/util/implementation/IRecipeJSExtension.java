@@ -1,6 +1,8 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 
 import java.util.function.BiFunction;
 
@@ -31,6 +33,14 @@ public interface IRecipeJSExtension {
     }
 
     default boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact, BiFunction<ItemStackProviderJS, ItemStackProviderJS, ItemStackProviderJS> function) {
+        return false;
+    }
+
+    default boolean tfcReplaceExtraItem(IngredientJS i, ItemStackJS with, boolean exact) {
+        return tfcReplaceExtraItem(i, with, exact, (out, original) -> out.withCount(original.getCount()).withChance(original.getChance()));
+    }
+
+    default boolean tfcReplaceExtraItem(IngredientJS i, ItemStackJS with, boolean exact, BiFunction<ItemStackJS, ItemStackJS, ItemStackJS> function) {
         return false;
     }
 }
