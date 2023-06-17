@@ -63,6 +63,15 @@ public class ExtraProductsShapelessJS extends ShapelessRecipeJS implements IReci
         return recipeJS.getFromToString() + " + " + extraProducts;
     }
 
+    public boolean hasExtraItem(IngredientJS i, boolean exact) {
+        for (ItemStackJS out : extraProducts) {
+            if (exact ? i.equals(out) : i.test(out)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean tfcReplaceExtraItem(IngredientJS i, ItemStackJS with, boolean exact, BiFunction<ItemStackJS, ItemStackJS, ItemStackJS> function) {
         boolean changed = false;

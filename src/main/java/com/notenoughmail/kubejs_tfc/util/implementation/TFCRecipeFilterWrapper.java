@@ -1,10 +1,8 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
-import com.notenoughmail.kubejs_tfc.filter.BlockIngredientFilter;
-import com.notenoughmail.kubejs_tfc.filter.FluidOutputFilter;
-import com.notenoughmail.kubejs_tfc.filter.FluidStackIngredientFilter;
-import com.notenoughmail.kubejs_tfc.filter.ItemStackProviderFilter;
+import com.notenoughmail.kubejs_tfc.filter.*;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.filter.RecipeFilter;
 
 public class TFCRecipeFilterWrapper {
@@ -39,5 +37,13 @@ public class TFCRecipeFilterWrapper {
 
     public static RecipeFilter itemProvider(ItemStackProviderJS itemProvider, boolean exact) {
         return new ItemStackProviderFilter(itemProvider, exact);
+    }
+
+    public static RecipeFilter extraItem(IngredientJS output, boolean exact) {
+        return new ExtraItemFilter(output, exact);
+    }
+
+    public static RecipeFilter extraItem(IngredientJS output) {
+        return new ExtraItemFilter(output, false);
     }
 }
