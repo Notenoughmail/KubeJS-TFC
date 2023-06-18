@@ -134,15 +134,7 @@ public abstract class TFCRecipeJS extends RecipeJS implements IRecipeJSExtension
 
     @Override
     public boolean tfcReplaceBlockInput(BlockIngredientJS i, BlockIngredientJS with, boolean exact) {
-        boolean changed = false;
-
-        if (exact) {
-            if (blockIngredient.equals(i)) {
-                changed = true;
-            }
-        } else if (blockIngredient.test(i)) {
-            changed = true;
-        }
+        boolean changed = exact ? blockIngredient.equals(i) : blockIngredient.test(i);
 
         if (changed) {
             blockIngredient = with.copy();

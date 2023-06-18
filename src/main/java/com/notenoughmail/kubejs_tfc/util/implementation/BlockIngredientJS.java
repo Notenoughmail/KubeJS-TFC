@@ -237,6 +237,11 @@ public class BlockIngredientJS {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BlockIngredientJS blockIngredient && blockIngredient.blocks.equals(this.blocks);
+    }
+
+    @Override
     public String toString() {
         var builder = new StringBuilder();
         builder.append("BlockIngredient.of(['");

@@ -21,9 +21,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
 
         inputItems.add(parseIngredientItem(listJS.get(1)));
 
-        count = inputItems.get(0).getCount();
-
-        steps = count;
+        steps = inputItems.get(0).getCount();
         if (listJS.size() > 2) {
             steps = (int) Float.parseFloat(listJS.get(2).toString());
         }
@@ -32,8 +30,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
     @Override
     public void deserialize() {
         itemProviderResult = ItemStackProviderJS.fromJson(json.get("result").getAsJsonObject());
-        inputItems.add(parseIngredientItem(parseIngredientItem(json.get("ingredient"))));
-        count = json.get("input_count").getAsInt();
+        inputItems.add(parseIngredientItem(json.get("ingredient")).withCount(json.get("input_count").getAsInt()));
         steps = json.get("steps_required").getAsInt();
     }
 
@@ -51,7 +48,7 @@ public class LoomRecipeJS extends TFCRecipeJS {
 
         if (serializeInputs) {
             json.add("ingredient", inputItems.get(0).unwrapStackIngredient().get(0).toJson());
-            json.addProperty("input_count", count);
+            json.addProperty("input_count", inputItems.get(0).getCount());
             json.addProperty("steps_required", steps);
             json.addProperty("in_progress_texture", tex);
         }

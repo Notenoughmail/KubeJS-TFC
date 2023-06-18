@@ -10,51 +10,51 @@ public interface IIngredientWrapperMixin {
         return new HeatableIngredientJS(null);
     }
 
-    public static IngredientJS heatable(Object o) {
-        return new HeatableIngredientJS(IngredientJS.of(o));
+    public static IngredientJS heatable(IngredientJS o) {
+        return new HeatableIngredientJS(o);
     }
 
-    public static IngredientJS heatable(Object o, int min, int max) {
-        return new HeatableIngredientJS(IngredientJS.of(o), min, max);
+    public static IngredientJS heatable(IngredientJS o, int min, int max) {
+        return new HeatableIngredientJS(o, min, max);
     }
 
-    public static IngredientJS fluidItem(Object o) {
-        return new FluidItemIngredientJS(null, FluidStackIngredientJS.of(o));
+    public static IngredientJS fluidItem(FluidStackIngredientJS o) {
+        return new FluidItemIngredientJS(null, o);
     }
 
-    public static IngredientJS fluidItem(Object fluid, Object item) {
-        return new FluidItemIngredientJS(IngredientJS.of(item), FluidStackIngredientJS.of(fluid));
+    public static IngredientJS fluidItem(FluidStackIngredientJS fluid, IngredientJS item) {
+        return new FluidItemIngredientJS(item, fluid);
     }
 
     public static IngredientJS notRotten() {
         return new NotRottenIngredientJS(null);
     }
 
-    public static IngredientJS notRotten(Object o) {
-        return new NotRottenIngredientJS(IngredientJS.of(o));
+    public static IngredientJS notRotten(IngredientJS o) {
+        return new NotRottenIngredientJS(o);
     }
 
     public static IngredientJS hasTrait(String trait) {
         return new TraitIngredientJS(null, trait, true);
     }
 
-    public static IngredientJS hasTrait(String trait, Object o) {
-        return new TraitIngredientJS(IngredientJS.of(o), trait, true);
+    public static IngredientJS hasTrait(String trait, IngredientJS o) {
+        return new TraitIngredientJS(o, trait, true);
     }
 
     public static IngredientJS lacksTrait(String trait) {
         return new TraitIngredientJS(null, trait, false);
     }
 
-    public static IngredientJS lacksTrait(String trait, Object o) {
-        return new TraitIngredientJS(IngredientJS.of(o), trait, false);
+    public static IngredientJS lacksTrait(String trait, IngredientJS o) {
+        return new TraitIngredientJS(o, trait, false);
     }
 
     public static IngredientJS tfcNot() {
         return new TFCNotIngredientJS(null);
     }
 
-    public static IngredientJS tfcNot(Object o) {
-        return new TFCNotIngredientJS(IngredientJS.of(o));
+    public static IngredientJS tfcNot(IngredientJS o) {
+        return new TFCNotIngredientJS(o);
     }
 }

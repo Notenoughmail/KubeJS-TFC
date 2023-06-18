@@ -287,6 +287,11 @@ public class FluidStackIngredientJS {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof FluidStackIngredientJS fluidIngredient && fluidIngredient.getAmount() == this.getAmount() && fluidIngredient.fluids.equals(this.fluids);
+    }
+
+    @Override
     public String toString() {
         var builder = new StringBuilder();
         builder.append("FluidStackIngredient.of(['");

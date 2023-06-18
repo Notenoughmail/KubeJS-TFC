@@ -203,6 +203,11 @@ public class ItemStackProviderJS {
         return this.getStackJS().test(other.getStackJS()); // Kube can handle it
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ItemStackProviderJS provider && provider.getStackJS().equals(this.getStackJS()) && provider.modifiers.equals(this.modifiers);
+    }
+
     public JsonArray getModifiers() {
         return modifiers;
     }
