@@ -41,7 +41,7 @@ public class FirmaLifePlugin {
 
     public static void addClasses(ScriptType type, ClassFilter filter) {
         filter.allow("com.eerussianguy.firmalife");
-        filter.deny("com.eerusianguy.firmalife.mixin");
+        filter.deny("com.eerussianguy.firmalife.mixin");
         filter.deny("com.eerussianguy.firmalife.common.network");
         filter.deny(FLInteractionManager.class);
         filter.deny(FLClientEvents.class);

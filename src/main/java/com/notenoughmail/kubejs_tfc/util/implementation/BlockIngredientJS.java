@@ -157,13 +157,13 @@ public class BlockIngredientJS {
         }
 
         var json = new JsonArray();
-        for (var ingred : blocks) {
-            if (ingred.matches("#.+")) {
+        for (var blockIngredient : blocks) {
+            if (blockIngredient.matches("#.+")) {
                 var obj = new JsonObject();
-                obj.addProperty("tag", ingred.replaceFirst("#", ""));
+                obj.addProperty("tag", blockIngredient.replaceFirst("#", ""));
                 json.add(obj); // Currently breaks stuff, see above
             } else {
-                json.add(ingred);
+                json.add(blockIngredient);
             }
         }
         return json;

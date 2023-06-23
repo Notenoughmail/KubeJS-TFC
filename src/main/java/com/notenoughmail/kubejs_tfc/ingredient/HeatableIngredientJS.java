@@ -34,7 +34,7 @@ public class HeatableIngredientJS implements IngredientJS {
         return HeatCapability.get(itemStackJS.getItemStack()) != null;
     }
 
-    public IngredientJS mintemp(int i) {
+    public IngredientJS minTemp(int i) {
         minTemp = i;
         return this;
     }

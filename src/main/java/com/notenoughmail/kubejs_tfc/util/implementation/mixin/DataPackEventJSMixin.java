@@ -40,7 +40,7 @@ public abstract class DataPackEventJSMixin {
             var value = splitValues[i];
             if (value.matches("p(?>iercing)?.+")) {
                 json.addProperty("piercing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.matches("s(?>lashing)?")) {
+            } else if (value.matches("s(?>lashing)?.+")) {
                 json.addProperty("slashing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else if (value.matches("c(?>rushing)?.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
@@ -59,7 +59,7 @@ public abstract class DataPackEventJSMixin {
             var value = splitValues[i];
             if (value.matches("p(?>iercing)?.+")) {
                 json.addProperty("piercing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.matches("s(?>lashing)?")) {
+            } else if (value.matches("s(?>lashing)?.+")) {
                 json.addProperty("slashing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
             } else if (value.matches("c(?>rushing)?.+")) {
                 json.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));

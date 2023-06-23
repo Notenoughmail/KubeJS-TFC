@@ -198,12 +198,12 @@ public class FluidStackIngredientJS {
         }
 
         var json = new JsonArray();
-        for (var ingred : fluids) {
+        for (var fluidIngredient : fluids) {
             var obj = new JsonObject();
-            if (ingred.matches("#.+")) {
-                obj.addProperty("tag", ingred.replaceFirst("#", ""));
+            if (fluidIngredient.matches("#.+")) {
+                obj.addProperty("tag", fluidIngredient.replaceFirst("#", ""));
             } else {
-                obj.addProperty("fluid", ingred);
+                obj.addProperty("fluid", fluidIngredient);
             }
             json.add(obj);
         }

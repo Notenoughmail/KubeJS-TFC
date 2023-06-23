@@ -258,8 +258,6 @@ public class ItemStackProviderJS {
         return "ItemStackProvider.of(" + getJsonStack() + ", " + getModifiers() + ")";
     }
 
-    // static methods wooooo 🙃
-
     public ItemStackProviderJS addTrait(String s) {
         return this.trait(true, s);
     }
