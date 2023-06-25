@@ -8,7 +8,6 @@ import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
-import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
@@ -16,7 +15,6 @@ import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeArray;
 import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -323,20 +321,26 @@ public class ItemStackProviderJS {
     }
 
     @SafeVarargs
-    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
+    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, @Nullable Consumer<BuildPortionData>... portions) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", "tfc:meal");
         var foodData = new BuildFoodItemData(null);
         food.accept(foodData);
         obj.add("food", foodData.toJson());
-        JsonArray portionArray = new JsonArray();
-        for (Consumer<BuildPortionData> portion : portions) {
-            var portionData = new BuildPortionData();
-            portion.accept(portionData);
-            portionArray.add(portionData.toJson());
+        if (portions != null) {
+            JsonArray portionArray = new JsonArray();
+            for (Consumer<BuildPortionData> portion : portions) {
+                var portionData = new BuildPortionData();
+                portion.accept(portionData);
+                portionArray.add(portionData.toJson());
+            }
+            obj.add("portions", portionArray);
         }
-        obj.add("portions", portionArray);
         modifiers.add(obj);
         return this;
+    }
+
+    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
+        return meal(food, (Consumer<BuildPortionData>) null);
     }
 }

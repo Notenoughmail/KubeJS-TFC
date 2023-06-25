@@ -120,4 +120,8 @@ public class ItemStackProviderWrapper {
     public static ItemStackProviderJS meal(ItemStackProviderJS js, Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
         return js.meal(food, portions);
     }
+
+    public static ItemStackProviderJS meal(ItemStackProviderJS js, Consumer<BuildFoodItemData> food) {
+        return js.meal(food);
+    }
 }
