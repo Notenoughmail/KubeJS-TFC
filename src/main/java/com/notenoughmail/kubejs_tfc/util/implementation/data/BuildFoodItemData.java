@@ -6,7 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class BuildFoodItemData {
 
+    @Nullable
     private final IngredientJS ingredient;
+    @Nullable
+    private String type;
     @Nullable
     private Integer hunger;
     @Nullable
@@ -26,8 +29,13 @@ public class BuildFoodItemData {
     @Nullable
     private Float dairy;
 
-    public BuildFoodItemData(IngredientJS ingredient) {
+    public BuildFoodItemData(@Nullable IngredientJS ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public BuildFoodItemData type(String type) {
+        this.type = type;
+        return this;
     }
 
     public BuildFoodItemData hunger(int hunger) {
@@ -77,7 +85,14 @@ public class BuildFoodItemData {
 
     public JsonObject toJson() {
         var json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
+        if (ingredient != null) {
+            json.add("ingredient", ingredient.toJson());
+
+            // Only allowed in food definitions and not ISP modifiers (presumably?)
+            if (type != null && !type.isEmpty()) {
+                json.addProperty("type", type);
+            }
+        }
         if (hunger != null) {
             json.addProperty("hunger", hunger);
         }

@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import com.google.gson.JsonArray;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
 
 import java.util.function.Consumer;
@@ -113,5 +114,10 @@ public class ItemStackProviderWrapper {
 
     public static ItemStackProviderJS sandwich(ItemStackProviderJS js) {
         return js.sandwich();
+    }
+
+    @SafeVarargs
+    public static ItemStackProviderJS meal(ItemStackProviderJS js, Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
+        return js.meal(food, portions);
     }
 }

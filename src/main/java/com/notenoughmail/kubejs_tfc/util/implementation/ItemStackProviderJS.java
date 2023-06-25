@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
@@ -177,10 +178,9 @@ public class ItemStackProviderJS {
             return this;
         }
 
-        var data = new BuildFoodItemData(IngredientJS.of("minecraft:cobblestone"));
+        var data = new BuildFoodItemData(null);
         foodData.accept(data);
         var obj = data.toJson();
-        obj.remove("ingredient");
         obj.addProperty("type", "tfcchannelcasting:set_food_data");
         modifiers.add(obj);
         return this;
@@ -320,5 +320,23 @@ public class ItemStackProviderJS {
 
     public ItemStackProviderJS sandwich() {
         return this.simpleModifier("tfc:sandwich");
+    }
+
+    @SafeVarargs
+    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", "tfc:meal");
+        var foodData = new BuildFoodItemData(null);
+        food.accept(foodData);
+        obj.add("food", foodData.toJson());
+        JsonArray portionArray = new JsonArray();
+        for (Consumer<BuildPortionData> portion : portions) {
+            var portionData = new BuildPortionData();
+            portion.accept(portionData);
+            portionArray.add(portionData.toJson());
+        }
+        obj.add("portions", portionArray);
+        modifiers.add(obj);
+        return this;
     }
 }
