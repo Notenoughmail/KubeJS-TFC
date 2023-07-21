@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-// The number of iterations of trying to get a 'tfc.data' event type only to settle for this is astounding
 @SuppressWarnings("unused")
 @Unique
 @Mixin(value = DataPackEventJS.class, remap = false)
@@ -276,20 +275,6 @@ public abstract class DataPackEventJSMixin {
     }
 
     //================================WORLDGEN================================ (misery)
-
-    // https://terrafirmacraft.github.io/Documentation/1.18.x/worldgen/tags/#placed-feature-tags
-    @Deprecated(since = "0.4.3", forRemoval = true) // Slated for late July
-    public void addFeaturesToTFCWorld(String path, String... values) {
-        KubeJSTFC.LOGGER.warn("The addFeaturesToTFCWorld method is deprecated! Please use the relevant tag event: https://github.com/Notenoughmail/KubeJS-TFC/wiki/World%20Generation#adding-features");
-        var json = new JsonObject();
-        json.addProperty("replace", false);
-        var array = new JsonArray();
-        for (String value : values) {
-            array.add(value);
-        }
-        json.add("values", array);
-        addJson(new ResourceLocation("tfc", "tags/worldgen/placed_feature/" + path), json);
-    }
 
     public void buildTFCGeode(String name, Consumer<BuildGeodeProperties> geode, Consumer<PlacedFeatureProperties> placement) {
         var properties = new BuildGeodeProperties();

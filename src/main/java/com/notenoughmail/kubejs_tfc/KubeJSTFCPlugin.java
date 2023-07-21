@@ -5,7 +5,7 @@ import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.*;
 import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
-import com.notenoughmail.kubejs_tfc.util.OtherEventHandler;
+import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.containerlimiter.ContainerSubscriber;
@@ -21,9 +21,11 @@ import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
+import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
+import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
 
@@ -179,32 +181,19 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        // Remove the indented ones in July
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_mold", MoldItemBuilder.class, MoldItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_mace", MaceItemBuilder.class, MaceItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_propick", PropickItemBuilder.class, PropickItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:propick", PropickItemBuilder.class, PropickItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
-            RegistryObjectBuilderTypes.ITEM.addType("tfc_javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
         RegistryObjectBuilderTypes.ITEM.addType("tfc:fluid_container", FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
 
-            RegistryObjectBuilderTypes.BLOCK.addType("tfc_aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
-            RegistryObjectBuilderTypes.BLOCK.addType("tfc_loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
-            RegistryObjectBuilderTypes.BLOCK.addType("tfc_groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
-            RegistryObjectBuilderTypes.BLOCK.addType("tfc_rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
-            RegistryObjectBuilderTypes.BLOCK.addType("tfc_thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_block", MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_slab", MossSpreadingSlabBuilder.class, MossGrowingSlabBlockBuilder::new);
@@ -265,6 +254,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
         event.add("TFCRecipeFilter", TFCRecipeFilterWrapper.class);
+        event.add("FireResult", StartFireEvent.FireResult.class);
+        event.add("FireStrength", StartFireEvent.FireStrength.class);
+        event.add("AnimalAge", TFCAnimalProperties.Age.class);
+        event.add("AnimalGender", TFCAnimalProperties.Gender.class);
     }
 
     @Override
@@ -284,7 +277,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(FirmaLifePlugin.class);
         filter.deny(RosiaPlugin.class);
         filter.deny(RegistrationUtils.class);
-        filter.deny(OtherEventHandler.class);
+        filter.deny(EventHandler.class);
         filter.deny(ContainerSubscriber.class);
         // TFC - Likely will need to restrict even more
         filter.allow("net.dries007.tfc");
