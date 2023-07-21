@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.RecipeUtils;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class DamageInputsShapedJS extends ShapedRecipeJS {
 
-    private JsonObject recipeJson = new JsonObject();
+    public JsonObject recipeJson = new JsonObject();
 
     @Override
     public void create(ListJS listJS) {
@@ -135,6 +136,7 @@ public class DamageInputsShapedJS extends ShapedRecipeJS {
     @Override
     public void deserialize() {
         recipeJson = json.get("recipe").getAsJsonObject();
+        RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
     }
 
     @Override

@@ -2,13 +2,14 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.RecipeUtils;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.minecraft.ShapelessRecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
 public class DamageInputsShapelessJS extends ShapelessRecipeJS {
 
-    private JsonObject recipeJson;
+    public JsonObject recipeJson = new JsonObject();
 
     @Override
     public void create(ListJS listJS) {
@@ -54,6 +55,7 @@ public class DamageInputsShapelessJS extends ShapelessRecipeJS {
     @Override
     public void deserialize() {
         recipeJson = json.get("recipe").getAsJsonObject();
+        RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
     }
 
     @Override

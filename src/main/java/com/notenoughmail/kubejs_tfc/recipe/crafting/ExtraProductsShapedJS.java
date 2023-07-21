@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.RecipeUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
@@ -15,9 +16,9 @@ import java.util.function.BiFunction;
 
 public class ExtraProductsShapedJS extends ShapedRecipeJS implements IRecipeJSExtension {
 
-    private final List<ItemStackJS> extraProducts = new ArrayList<>();
-    private JsonObject recipeJson = new JsonObject();
-    private ShapedRecipeJS recipeJS;
+    public final List<ItemStackJS> extraProducts = new ArrayList<>();
+    public JsonObject recipeJson = new JsonObject();
+    public ShapedRecipeJS recipeJS;
 
     @Override
     public void create(ListJS listJS) {
@@ -32,6 +33,8 @@ public class ExtraProductsShapedJS extends ShapedRecipeJS implements IRecipeJSEx
             recipeJS = recipe;
             recipeJson = recipe.json;
             recipe.dontAdd();
+            inputItems.addAll(recipeJS.inputItems);
+            outputItems.addAll(recipeJS.outputItems);
         } else {
             throw new RecipeExceptionJS("Second argument must be a shaped crafting recipe!");
         }
@@ -41,6 +44,7 @@ public class ExtraProductsShapedJS extends ShapedRecipeJS implements IRecipeJSEx
     public void deserialize() {
         recipeJson = json.get("recipe").getAsJsonObject();
         extraProducts.addAll(parseResultItemList(json.get("extra_products")));
+        RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
     }
 
     @Override

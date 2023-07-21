@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.RecipeUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IRecipeJSExtension;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
@@ -15,9 +16,9 @@ import java.util.function.BiFunction;
 
 public class ExtraProductsShapelessJS extends ShapelessRecipeJS implements IRecipeJSExtension {
 
-    private final List<ItemStackJS> extraProducts = new ArrayList<>();
-    private JsonObject recipeJson;
-    private ShapelessRecipeJS recipeJS;
+    public final List<ItemStackJS> extraProducts = new ArrayList<>();
+    public JsonObject recipeJson;
+    public ShapelessRecipeJS recipeJS;
 
     @Override
     public void create(ListJS listJS) {
@@ -41,6 +42,7 @@ public class ExtraProductsShapelessJS extends ShapelessRecipeJS implements IReci
     public void deserialize() {
         recipeJson = json.get("recipe").getAsJsonObject();
         extraProducts.addAll(parseResultItemList(json.get("extra_products")));
+        RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
     }
 
     @Override
