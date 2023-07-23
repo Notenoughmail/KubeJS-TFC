@@ -10,7 +10,6 @@
         "IngredientJSMixin",
         "IngredientWrapperMixin",
         "RecipeEventJSMixin",
-        "RecipeJSMixin",
         "RockSettingsMixin"
     ],
     "client": [],
