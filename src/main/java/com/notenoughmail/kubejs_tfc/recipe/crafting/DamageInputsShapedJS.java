@@ -30,8 +30,7 @@ public class DamageInputsShapedJS extends ShapedRecipeJS {
             recipe.dontAdd();
 
             // Here purely so #getFromToString() works
-            outputItems.addAll(recipe.outputItems);
-            inputItems.addAll(recipe.inputItems);
+            RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
         } else {
             /*
              * Purely so the user doesn't have to write something like

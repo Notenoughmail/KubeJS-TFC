@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.containerlimiter;
+package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;

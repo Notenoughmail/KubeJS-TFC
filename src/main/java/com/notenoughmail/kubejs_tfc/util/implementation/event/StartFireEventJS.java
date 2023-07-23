@@ -5,7 +5,6 @@ import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.level.LevelJS;
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.core.Direction;
 
@@ -37,7 +36,11 @@ public class StartFireEventJS extends PlayerEventJS {
 
     @Override
     public EntityJS getEntity() {
-        return entityOf(event.getPlayer());
+        try {
+            return entityOf(event.getPlayer());
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public ItemStackJS getItem() {

@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 
@@ -41,6 +42,22 @@ public class AlloyRecipeJS extends TFCRecipeJS {
         if (serializeInputs) {
             json.add("contents", contents);
         }
+    }
+
+    private JsonArray buildMetals(ListJS listJS) {
+        var metals = new JsonArray();
+        for (var metal : listJS) {
+            var met = ListJS.of(metal);
+            if (met == null || met.size() < 3) {
+                throw new RecipeExceptionJS("Metal object must contain a metal, a minimum, and a maximum");
+            }
+            var me = new JsonObject();
+            me.addProperty("metal", met.get(0).toString());
+            me.addProperty("min", Double.parseDouble(met.get(1).toString()));
+            me.addProperty("max", Double.parseDouble(met.get(2).toString()));
+            metals.add(me);
+        }
+        return metals;
     }
 
     @Override

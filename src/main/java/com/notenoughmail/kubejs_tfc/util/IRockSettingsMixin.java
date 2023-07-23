@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSettingsEventJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;

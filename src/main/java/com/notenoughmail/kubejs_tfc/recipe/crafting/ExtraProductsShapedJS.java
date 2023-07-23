@@ -33,8 +33,7 @@ public class ExtraProductsShapedJS extends ShapedRecipeJS implements IRecipeJSEx
             recipeJS = recipe;
             recipeJson = recipe.json;
             recipe.dontAdd();
-            inputItems.addAll(recipeJS.inputItems);
-            outputItems.addAll(recipeJS.outputItems);
+            RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
         } else {
             throw new RecipeExceptionJS("Second argument must be a shaped crafting recipe!");
         }

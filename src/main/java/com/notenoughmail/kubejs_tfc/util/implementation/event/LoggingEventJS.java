@@ -2,8 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
-import dev.latvian.mods.kubejs.level.BlockContainerJS;
-import dev.latvian.mods.kubejs.server.ServerEventJS;
 import net.dries007.tfc.util.events.LoggingEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;

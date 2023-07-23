@@ -1,10 +1,9 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.entity.EntityJS;
-import dev.latvian.mods.kubejs.level.LevelJS;
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
-import dev.latvian.mods.kubejs.server.ServerEventJS;
 import net.dries007.tfc.util.events.ProspectedEvent;
+import net.minecraft.world.level.block.Block;
 
 public class ProspectedEventJS extends PlayerEventJS {
 
@@ -16,16 +15,10 @@ public class ProspectedEventJS extends PlayerEventJS {
 
     @Override
     public EntityJS getEntity() {
-        return new EntityJS(event.getPlayer());
+        return entityOf(event.getPlayer());
     }
 
-    @Override
-    public LevelJS getLevel() {
-        return super.getLevel();
-    }
-
-    @Override
-    public boolean canCancel() {
-        return super.canCancel();
+    public Block getBlock() {
+        return event.getBlock();
     }
 }

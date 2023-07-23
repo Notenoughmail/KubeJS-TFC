@@ -1,6 +1,7 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
 
 import com.google.gson.JsonArray;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;

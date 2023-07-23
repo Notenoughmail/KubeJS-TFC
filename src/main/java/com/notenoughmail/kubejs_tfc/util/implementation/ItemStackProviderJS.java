@@ -75,7 +75,7 @@ public class ItemStackProviderJS {
     private final JsonObject stack;
     private final JsonArray modifiers;
 
-    ItemStackProviderJS(JsonObject stack, JsonArray modifiers) {
+    public ItemStackProviderJS(JsonObject stack, JsonArray modifiers) {
         this.stack = stack;
         this.modifiers = modifiers;
     }

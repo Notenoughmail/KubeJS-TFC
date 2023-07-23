@@ -1,4 +1,6 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
+
+import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 
 public class BlockIngredientWrapper {
 

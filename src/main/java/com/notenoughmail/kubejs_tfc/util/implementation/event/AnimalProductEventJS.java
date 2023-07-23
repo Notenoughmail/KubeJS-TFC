@@ -64,6 +64,10 @@ public class AnimalProductEventJS extends PlayerEventJS {
         return new BoundFluidStackJS(FluidStackHooksForge.fromForge(event.getFluidProduct()));
     }
 
+    public boolean isItemProduct() {
+        return !getItemProduct().isEmpty();
+    }
+
     public void setItemProduct(ItemStackJS item) {
         event.setProduct(item.getItemStack());
     }

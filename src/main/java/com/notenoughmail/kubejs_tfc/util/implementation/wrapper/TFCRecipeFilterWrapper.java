@@ -1,6 +1,9 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
 
 import com.notenoughmail.kubejs_tfc.filter.*;
+import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.filter.RecipeFilter;

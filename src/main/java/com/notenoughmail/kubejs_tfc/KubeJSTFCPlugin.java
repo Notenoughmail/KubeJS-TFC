@@ -8,7 +8,7 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.containerlimiter.ContainerSubscriber;
+import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -25,6 +25,9 @@ import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
+import net.dries007.tfc.util.calendar.Month;
+import net.dries007.tfc.util.calendar.Season;
+import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
@@ -258,6 +261,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FireStrength", StartFireEvent.FireStrength.class);
         event.add("AnimalAge", TFCAnimalProperties.Age.class);
         event.add("AnimalGender", TFCAnimalProperties.Gender.class);
+        event.add("Climate", ClimateWrapper.class);
+        event.add("Month", Month.class);
+        event.add("Season", Season.class);
     }
 
     @Override
@@ -265,6 +271,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
         typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
         typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
+        typeWrappers.register(ClimateModel.class, ClimateWrapper::getModel);
     }
 
     // Probably a can of worms
@@ -278,7 +285,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(RosiaPlugin.class);
         filter.deny(RegistrationUtils.class);
         filter.deny(EventHandler.class);
-        filter.deny(ContainerSubscriber.class);
         // TFC - Likely will need to restrict even more
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

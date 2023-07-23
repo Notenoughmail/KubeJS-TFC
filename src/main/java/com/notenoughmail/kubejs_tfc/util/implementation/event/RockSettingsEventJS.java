@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
+package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.IRockSettingsMixin;

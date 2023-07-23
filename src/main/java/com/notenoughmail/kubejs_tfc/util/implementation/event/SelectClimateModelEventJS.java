@@ -14,6 +14,7 @@ public class SelectClimateModelEventJS extends LevelEventJS {
         this.event = event;
     }
 
+    @Override
     public LevelJS getLevel() {
         return UtilsJS.getLevel(event.level());
     }

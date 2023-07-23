@@ -33,6 +33,7 @@ public class ExtraProductsShapelessJS extends ShapelessRecipeJS implements IReci
             recipeJS = recipe;
             recipeJson = recipe.json;
             recipe.dontAdd();
+            RecipeUtils.populateIOFromJson(recipeJson, outputItems, inputItems);
         } else {
             throw new RecipeExceptionJS("Second argument must be a shapeless crafting recipe!");
         }

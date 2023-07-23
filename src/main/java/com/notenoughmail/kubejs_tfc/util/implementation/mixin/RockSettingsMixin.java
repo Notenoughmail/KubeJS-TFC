@@ -1,8 +1,8 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
 import com.notenoughmail.kubejs_tfc.util.IRockSettingsMixin;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSettingsEventJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSettingsEventJS.RockSettingsJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS.RockSettingsJS;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
