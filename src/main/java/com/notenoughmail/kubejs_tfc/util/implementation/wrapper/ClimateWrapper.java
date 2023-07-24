@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.level.LevelJS;
 import net.dries007.tfc.util.calendar.Calendars;

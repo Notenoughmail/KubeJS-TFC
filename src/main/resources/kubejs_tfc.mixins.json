@@ -9,6 +9,7 @@
         "HandHeldItemBuilderMixin",
         "IngredientJSMixin",
         "IngredientWrapperMixin",
+        "OpenSimplex2DMixin",
         "RecipeEventJSMixin",
         "RockSettingsMixin"
     ],

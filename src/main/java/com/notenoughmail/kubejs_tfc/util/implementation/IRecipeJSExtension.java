@@ -3,9 +3,11 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 
 import java.util.function.BiFunction;
 
+@HideFromJS
 public interface IRecipeJSExtension {
 
     default boolean tfcReplaceFluidInput(FluidStackIngredientJS i, FluidStackIngredientJS with, boolean exact) {

@@ -46,6 +46,7 @@ public class RockSettingsEventJS extends StartupEventJS {
         }
     }
 
+    @HideFromJS
     public static void applyQueuedEdits() {
         queueAction = false;
         int i = 0;

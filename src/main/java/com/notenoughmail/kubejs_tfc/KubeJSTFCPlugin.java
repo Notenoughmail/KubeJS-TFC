@@ -25,6 +25,7 @@ import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
+import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.Month;
 import net.dries007.tfc.util.calendar.Season;
 import net.dries007.tfc.util.climate.ClimateModel;
@@ -264,6 +265,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("Climate", ClimateWrapper.class);
         event.add("Month", Month.class);
         event.add("Season", Season.class);
+        event.add("Calendar", Calendars.get());
     }
 
     @Override

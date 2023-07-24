@@ -20,16 +20,12 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
     public void registerClimateModel(ResourceLocation name, Consumer<KubeJSClimateModel> model) {
         var climate = new KubeJSClimateModel(name);
         model.accept(climate);
-        if (climate.isValid()) {
-            CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
-        }
+        CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
     }
 
     public void registerAdvancedClimateModel(ResourceLocation name, Consumer<AdvancedKubeJSClimateModel> model) {
         var climate = new AdvancedKubeJSClimateModel(name);
         model.accept(climate);
-        if (climate.isValid()) {
-            CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
-        }
+        CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
     }
 }

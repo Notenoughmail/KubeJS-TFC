@@ -1,10 +1,10 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterClimateModelEventJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
+import net.dries007.tfc.world.noise.OpenSimplex2D;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +13,9 @@ import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KubeJSClimateModel implements ClimateModel {
 
@@ -23,6 +26,7 @@ public class KubeJSClimateModel implements ClimateModel {
     public LevelPosLong2FloatCallback airFog = (level, pos, ticks) -> 0.0F;
     public LevelPosLong2FloatCallback waterFog = (level, pos, ticks) -> 1.0F;
     protected long climateSeed = 0L;
+    private final List<OpenSimplex2D> noises = new ArrayList<>();
 
     public KubeJSClimateModel(ResourceLocation name) {
         this.name = name;
@@ -50,6 +54,12 @@ public class KubeJSClimateModel implements ClimateModel {
 
     public long getClimateSeed() {
         return climateSeed; // Can be accessed, but not modified
+    }
+
+    public OpenSimplex2D getNewNoise() {
+        var noise = new OpenSimplex2D(climateSeed);
+        noises.add(noise);
+        return noise;
     }
 
     @HideFromJS
@@ -99,6 +109,9 @@ public class KubeJSClimateModel implements ClimateModel {
     @Override
     public void onWorldLoad(ServerLevel level) {
         climateSeed = LinearCongruentialGenerator.next(level.getSeed(), name.hashCode() * 4621445665421L);
+        for (OpenSimplex2D noise : noises) {
+            ((IOpenSimplex2dMixin) noise).setSeed(climateSeed);
+        }
     }
 
     @HideFromJS
@@ -113,30 +126,9 @@ public class KubeJSClimateModel implements ClimateModel {
         climateSeed = buffer.readLong();
     }
 
-    @HideFromJS
-    public boolean isValid() {
-        if (averageTemperature == null) {
-            error("average temperature");
-            return false;
-        }
-        if (currentTemperature == null) {
-            error("current temperature");
-            return false;
-        }
-        if (averageRainfall == null) {
-            error("average rainfall");
-            return false;
-        }
-        return true;
-    }
-
-    protected void error(String object) {
-        KubeJSTFC.LOGGER.error("The climate model {} does not specify an {}, it will not be registered!", name, object);
-    }
-
     @Override
     public String toString() {
-        return getClass().getName() + "{'" + name + "'}@" + Integer.toHexString(hashCode());
+        return getClass().getName() + "{" + name + "}@" + Integer.toHexString(hashCode());
     }
 
     @FunctionalInterface
