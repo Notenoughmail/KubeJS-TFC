@@ -7,7 +7,6 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 
 import java.util.function.BiFunction;
 
-@HideFromJS
 public interface IRecipeJSExtension {
 
     default boolean tfcReplaceFluidInput(FluidStackIngredientJS i, FluidStackIngredientJS with, boolean exact) {
