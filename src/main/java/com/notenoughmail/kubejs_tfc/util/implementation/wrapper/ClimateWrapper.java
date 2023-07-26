@@ -4,10 +4,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.level.LevelJS;
 import net.dries007.tfc.util.calendar.Calendars;
-import net.dries007.tfc.util.climate.BiomeBasedClimateModel;
-import net.dries007.tfc.util.climate.Climate;
-import net.dries007.tfc.util.climate.ClimateModel;
-import net.dries007.tfc.util.climate.ClimateModels;
+import net.dries007.tfc.util.climate.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
@@ -26,6 +23,8 @@ public class ClimateWrapper {
             return Climate.model(level);
         } else if (o instanceof LevelJS js) {
             return Climate.model(js.minecraftLevel);
+        } else if (o instanceof ClimateModelType type) {
+            return type.create();
         }
 
         KubeJSTFC.LOGGER.warn("Could not find climate model of object {} of type {}, returning default", o, o.getClass());

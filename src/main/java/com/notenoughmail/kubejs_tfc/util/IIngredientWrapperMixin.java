@@ -5,7 +5,6 @@ import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 
-@HideFromJS
 public interface IIngredientWrapperMixin {
 
     public static IngredientJS heatable() {
