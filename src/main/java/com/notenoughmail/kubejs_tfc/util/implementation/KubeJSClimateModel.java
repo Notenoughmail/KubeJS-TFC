@@ -103,18 +103,12 @@ public class KubeJSClimateModel implements ClimateModel {
     @HideFromJS
     @Override
     public float getFogginess(LevelReader level, BlockPos pos, long calendarTime) {
-        if (airFog == null) {
-            return ClimateModel.super.getFogginess(level, pos, calendarTime);
-        }
         return Mth.clamp(airFog.getValue(level, pos, calendarTime), 0.0F, 1.0F);
     }
 
     @HideFromJS
     @Override
     public float getWaterFogginess(LevelReader level, BlockPos pos, long calendarTime) {
-        if (waterFog == null) {
-            return ClimateModel.super.getWaterFogginess(level, pos, calendarTime);
-        }
         return Mth.clamp(waterFog.getValue(level, pos, calendarTime), 0.0F, 1.0F);
     }
 
