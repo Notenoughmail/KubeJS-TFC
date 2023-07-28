@@ -18,11 +18,11 @@ import java.util.function.BiFunction;
 
 public class AdvancedShapedRecipeJS extends ShapedRecipeJS implements IRecipeJSExtension {
 
-    private ItemStackProviderJS itemProviderResult;
-    private final List<String> pattern = new ArrayList<>();
-    private final List<String> key = new ArrayList<>();
-    private int row;
-    private int column;
+    public ItemStackProviderJS itemProviderResult;
+    public final List<String> pattern = new ArrayList<>();
+    public final List<String> key = new ArrayList<>();
+    public int row;
+    public int column;
 
     @Override
     public void create(ListJS listJS) {

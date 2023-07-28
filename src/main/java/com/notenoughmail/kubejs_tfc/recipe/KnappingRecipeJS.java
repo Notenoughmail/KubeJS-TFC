@@ -6,8 +6,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class KnappingRecipeJS extends TFCRecipeJS {
 
-    private JsonArray knapPattern = new JsonArray();
-    private boolean outsideSlots = true;
+    public JsonArray knapPattern = new JsonArray();
+    public boolean outsideSlots = true;
 
     @Override
     public void create(ListJS listJS) {
@@ -33,7 +33,11 @@ public class KnappingRecipeJS extends TFCRecipeJS {
     }
 
     public KnappingRecipeJS outsideSlotNotRequired() {
-        outsideSlots = false;
+        return outSideSlotsRequired(false);
+    }
+
+    public KnappingRecipeJS outSideSlotsRequired(boolean required) {
+        outsideSlots = required;
         save();
         return this;
     }

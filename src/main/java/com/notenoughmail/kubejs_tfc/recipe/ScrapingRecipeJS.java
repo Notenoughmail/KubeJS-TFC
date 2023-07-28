@@ -6,8 +6,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class ScrapingRecipeJS extends TFCRecipeJS {
 
-    private String tex_in = "tfc:item/hide/large/soaked";
-    private String tex_out = "tfc:item/hide/large/scraped";
+    public String tex_in = "tfc:item/hide/large/soaked";
+    public String tex_out = "tfc:item/hide/large/scraped";
 
     @Override
     public void create(ListJS listJS) {

@@ -7,7 +7,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class CastingRecipeJS extends TFCRecipeJS {
 
-    private float breakChance = 1f;
+    public float breakChance = 1f;
 
     @Override
     public void create(ListJS listJS) {

@@ -12,8 +12,8 @@ import java.util.function.BiFunction;
 
 public class AdvancedShapelessRecipeJS extends ShapelessRecipeJS implements IRecipeJSExtension {
 
-    private ItemStackProviderJS itemProviderResult;
-    private IngredientJS primaryIngredient;
+    public ItemStackProviderJS itemProviderResult;
+    public IngredientJS primaryIngredient;
 
     @Override
     public void create(ListJS listJS) {

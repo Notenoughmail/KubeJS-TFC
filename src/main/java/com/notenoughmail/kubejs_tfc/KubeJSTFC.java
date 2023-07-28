@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.ProspectedEventJS;
+import com.therighthon.afc.AFC;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.dries007.tfc.util.events.ProspectedEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,5 +39,9 @@ public class KubeJSTFC {
 
     public static boolean rosiaLoaded() {
         return ModList.get().isLoaded(Rosia.MOD_ID);
+    }
+
+    public static boolean arborLoaded() {
+        return ModList.get().isLoaded(AFC.MOD_ID);
     }
 }

@@ -7,9 +7,9 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class AnvilRecipeJS extends TFCRecipeJS {
 
-    private JsonArray rules;
-    private int tier = -1;
-    private boolean bonus = false;
+    public JsonArray rules;
+    public int tier = -1;
+    public boolean bonus = false;
 
     @Override
     public void create(ListJS listJS) {
@@ -44,7 +44,11 @@ public class AnvilRecipeJS extends TFCRecipeJS {
     }
 
     public AnvilRecipeJS applyBonus() {
-        bonus = true;
+        return applyBonus(true);
+    }
+
+    public AnvilRecipeJS applyBonus(boolean apply) {
+        bonus = apply;
         save();
         return this;
     }

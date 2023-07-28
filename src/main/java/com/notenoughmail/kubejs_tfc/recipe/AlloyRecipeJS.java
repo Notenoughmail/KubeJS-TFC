@@ -7,8 +7,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class AlloyRecipeJS extends TFCRecipeJS {
 
-    private JsonArray contents = new JsonArray();
-    private String resultMetal;
+    public JsonArray contents = new JsonArray();
+    public String resultMetal;
 
     @Override
     public void create(ListJS listJS) {

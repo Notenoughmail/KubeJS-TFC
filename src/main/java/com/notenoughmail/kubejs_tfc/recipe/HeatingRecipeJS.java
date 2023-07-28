@@ -7,8 +7,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class HeatingRecipeJS extends TFCRecipeJS {
 
-    private float temperature;
-    private boolean useDurability = false;
+    public float temperature;
+    public boolean useDurability = false;
 
     @Override
     public void create(ListJS listJS) {
@@ -51,7 +51,11 @@ public class HeatingRecipeJS extends TFCRecipeJS {
     }
 
     public HeatingRecipeJS useDurability() {
-        useDurability = true;
+        return useDurability(true);
+    }
+
+    public HeatingRecipeJS useDurability(boolean use) {
+        useDurability = use;
         save();
         return this;
     }

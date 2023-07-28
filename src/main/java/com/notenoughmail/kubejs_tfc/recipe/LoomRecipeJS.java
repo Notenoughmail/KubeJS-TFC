@@ -6,10 +6,9 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class LoomRecipeJS extends TFCRecipeJS {
 
-    private String tex = "minecraft:block/white_wool";
+    public String tex = "minecraft:block/white_wool";
 
-    private int count;
-    private int steps;
+    public int steps;
 
     @Override
     public void create(ListJS listJS) {

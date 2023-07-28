@@ -9,7 +9,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class ChiselRecipeJS extends TFCRecipeJS {
 
-    private String mode = "smooth";
+    public String mode = "smooth";
 
     @Override
     public void create(ListJS listJS) {

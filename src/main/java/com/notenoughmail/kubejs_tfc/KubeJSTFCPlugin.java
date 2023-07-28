@@ -246,6 +246,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         if (KubeJSTFC.rosiaLoaded()) {
             RosiaPlugin.addRecipes(event);
         }
+
+        if (KubeJSTFC.arborLoaded()) {
+            ArborFirmaCraftPlugin.registerRecipes(event);
+        }
     }
 
     @Override

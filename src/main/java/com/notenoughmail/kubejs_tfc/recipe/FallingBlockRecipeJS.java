@@ -6,7 +6,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class FallingBlockRecipeJS extends TFCRecipeJS {
 
-    private boolean copy = false;
+    public boolean copy = false;
 
     @Override
     public void create(ListJS listJS) {

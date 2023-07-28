@@ -7,8 +7,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class OvenRecipeJS extends TFCRecipeJS {
 
-    private int duration;
-    private float temperature;
+    public int duration;
+    public float temperature;
 
     @Override
     public void create(ListJS listJS) {

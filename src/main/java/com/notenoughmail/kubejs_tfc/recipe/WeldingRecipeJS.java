@@ -6,8 +6,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class WeldingRecipeJS extends TFCRecipeJS {
 
-    private int weldingTier = -1; // TFC's default
-    private boolean combineForgingBonus = false;
+    public int weldingTier = -1; // TFC's default
+    public boolean combineForgingBonus = false;
 
     @Override
     public void create(ListJS listJS) {
@@ -38,7 +38,11 @@ public class WeldingRecipeJS extends TFCRecipeJS {
     }
 
     public WeldingRecipeJS combineForgingBonus() {
-        combineForgingBonus = true;
+        return combineForgingBonus(true);
+    }
+
+    public WeldingRecipeJS combineForgingBonus(boolean combine) {
+        combineForgingBonus = combine;
         save();
         return this;
     }

@@ -7,7 +7,7 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class BloomeryRecipeJS extends TFCRecipeJS {
 
-    private int duration;
+    public int duration;
 
     @Override
     public void create(ListJS listJS) {

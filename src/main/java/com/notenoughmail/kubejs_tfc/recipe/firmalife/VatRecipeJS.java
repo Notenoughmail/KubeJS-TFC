@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class VatRecipeJS extends TFCRecipeJS {
 
-    private int length = 600;
-    private float temperature = 300f;
+    public int length = 600;
+    public float temperature = 300f;
     @Nullable
-    private ItemStackJS jarItem;
+    public ItemStackJS jarItem;
 
     @Override
     public void create(ListJS listJS) {

@@ -11,8 +11,8 @@ import dev.latvian.mods.kubejs.util.ListJS;
 // Is completely valid to TFC
 public class SimplePotRecipeJS extends TFCRecipeJS {
 
-    private int duration;
-    private float temperature;
+    public int duration;
+    public float temperature;
 
     @Override
     public void create(ListJS listJS) {

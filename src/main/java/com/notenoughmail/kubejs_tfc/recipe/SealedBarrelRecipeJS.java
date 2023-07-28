@@ -9,9 +9,9 @@ import dev.latvian.mods.kubejs.util.ListJS;
 
 public class SealedBarrelRecipeJS extends TFCRecipeJS {
 
-    private int duration;
-    private ItemStackProviderJS onSealISP;
-    private ItemStackProviderJS onUnsealISP;
+    public int duration;
+    public ItemStackProviderJS onSealISP;
+    public ItemStackProviderJS onUnsealISP;
 
     @Override
     public void create(ListJS listJS) {
