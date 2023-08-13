@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

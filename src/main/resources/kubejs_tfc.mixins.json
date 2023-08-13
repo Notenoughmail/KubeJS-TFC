@@ -11,7 +11,9 @@
         "IngredientWrapperMixin",
         "OpenSimplex2DMixin",
         "RecipeEventJSMixin",
-        "RockSettingsMixin"
+        "RockSettingsMixin",
+        "accessor.CollapseAccessor",
+        "WorldTrackerMixin"
     ],
     "client": [],
     "refmap": "kubejs_tfc.refmap.json"

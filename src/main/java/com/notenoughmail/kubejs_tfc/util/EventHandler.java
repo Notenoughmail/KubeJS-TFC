@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
 import dev.architectury.event.events.common.LifecycleEvent;

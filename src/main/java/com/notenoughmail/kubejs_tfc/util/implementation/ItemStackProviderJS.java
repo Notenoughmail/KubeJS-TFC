@@ -331,6 +331,7 @@ public class ItemStackProviderJS {
             JsonArray portionArray = new JsonArray();
             for (Consumer<BuildPortionData> portion : portions) {
                 var portionData = new BuildPortionData();
+                assert portion != null;
                 portion.accept(portionData);
                 portionArray.add(portionData.toJson());
             }
