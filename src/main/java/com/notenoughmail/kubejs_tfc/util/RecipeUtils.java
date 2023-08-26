@@ -3,9 +3,11 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
+import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import net.minecraft.Util;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +18,11 @@ import java.util.Map;
 
 public class RecipeUtils {
 
+    /**
+     * Do <b>not</b> use this for actual handling of a recipe, especially if that recipe has the potential
+     * to have an ItemStackProvider output. The sole purpose of this is to populate an extended JS crafting
+     * recipe's {@link RecipeJS#getFromToString()}, other uses are bad and will remove critical data.
+     */
     public static void populateIOFromJson(JsonObject recipeJson, List<ItemStackJS> outputs, List<IngredientJS> inputs) {
         if (recipeJson.has("recipe")) {
             populateIOFromJson(recipeJson.getAsJsonObject("recipe"), outputs, inputs);
@@ -34,11 +41,17 @@ public class RecipeUtils {
         }
     }
 
-    // Static versions of those in RecipeJS and lacking the fabric check
-    public static ItemStackJS staticResultParse(@Nullable Object o) {
-        ItemStackJS result = ItemStackJS.of(o);
+    // Static versions of those in RecipeJS, lacking the fabric check, and simplifying ItemStackProviders
+    public static ItemStackJS staticResultParse(JsonElement element) {
+        if (element.isJsonObject()) {
+            var obj = element.getAsJsonObject();
+            if (obj.has("stack") || obj.has("modifiers")) {
+                return ItemStackProviderJS.fromJson(obj).getStackJS();
+            }
+        }
+        ItemStackJS result = ItemStackJS.of(element);
         if (result.isInvalidRecipeIngredient()) {
-            throw new RecipeExceptionJS(o + " is not a valid result!");
+            throw new RecipeExceptionJS(element + " is not a valid result!");
         }
         return result;
     }

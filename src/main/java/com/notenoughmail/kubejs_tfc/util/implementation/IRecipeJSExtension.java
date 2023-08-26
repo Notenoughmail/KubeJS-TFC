@@ -30,7 +30,7 @@ public interface IRecipeJSExtension {
     }
 
     default boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact) {
-        return tfcReplaceItemProvider(out, with, exact, (provider, original) -> ItemStackProviderJS.of(provider.getJsonStack(), original.getModifiers()));
+        return tfcReplaceItemProvider(out, with, exact, (provider, original) -> ItemStackProviderJS.of(provider.getStackJS(), original.getModifiers()));
     }
 
     default boolean tfcReplaceItemProvider(ItemStackProviderJS out, ItemStackProviderJS with, boolean exact, BiFunction<ItemStackProviderJS, ItemStackProviderJS, ItemStackProviderJS> function) {

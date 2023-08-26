@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 public class ItemStackProviderJS {
 
-    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(null, null);
+    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStackJS.EMPTY, null);
 
     public static ItemStackProviderJS of(@Nullable Object o) {
         if (o instanceof Wrapper w) {
@@ -34,24 +34,51 @@ public class ItemStackProviderJS {
         if (o == null) {
             throw new RecipeExceptionJS("KubeJS TFC tried to build a null Item Stack Provider");
         } else if (o instanceof ItemStackJS item) {
-            return new ItemStackProviderJS(item.toResultJson().getAsJsonObject(), new JsonArray());
+            return new ItemStackProviderJS(item, new JsonArray());
         } else if (o instanceof ItemStackProviderJS js) {
             return js;
         } else if (o instanceof JsonArray json) {
-            return new ItemStackProviderJS(null, json);
+            return new ItemStackProviderJS(ItemStackJS.EMPTY, json);
         } else if (o instanceof JsonObject json) {
             return new ItemStackProviderJS(json, new JsonArray());
         } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
-            return new ItemStackProviderJS(ItemStackJS.of(o).toResultJson().getAsJsonObject(), new JsonArray());
+            return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
         } else if (o instanceof List<?> list) {
-            return new ItemStackProviderJS(null, parseModifierList(list));
+            return new ItemStackProviderJS(ItemStackJS.EMPTY, parseModifierList(list));
         }
 
         return EMPTY;
     }
 
+    // Helpful methods left over from when I initially panic-implemented IngredientJS, there's a reason I didn't do that to begin with
+    public boolean test(ItemStackJS itemStackJS) {
+        return stack.test(itemStackJS) && modifiers.isEmpty();
+    }
+
+    public boolean isEmpty() {
+        return stack.isEmpty() && modifiers.isEmpty();
+    }
+
+    public ItemStackProviderJS withCount(int count) {
+        stack.withCount(count);
+        return this;
+    }
+
+    public ItemStackProviderJS x(int c) {
+        stack.x(c);
+        return this;
+    }
+
+    public int getCount() {
+        return stack.getCount();
+    }
+
+    public boolean isSimple() {
+        return modifiers.isEmpty();
+    }
+
     public static ItemStackProviderJS of(@Nullable Object o, @Nullable Object b) {
-        return new ItemStackProviderJS(of(o).getJsonStack(), parseModifierList(ListJS.orSelf(b)));
+        return new ItemStackProviderJS(ItemStackJS.of(o), parseModifierList(ListJS.orSelf(b)));
     }
 
     private static JsonArray parseModifierList(List<?> list) {
@@ -72,10 +99,16 @@ public class ItemStackProviderJS {
         return modifiers;
     }
 
-    private final JsonObject stack;
+    private final ItemStackJS stack;
     private final JsonArray modifiers;
 
+    @Deprecated
     public ItemStackProviderJS(JsonObject stack, JsonArray modifiers) {
+        this.stack = ItemStackJS.of(stack);
+        this.modifiers = modifiers;
+    }
+
+    public ItemStackProviderJS(ItemStackJS stack, JsonArray modifiers) {
         this.stack = stack;
         this.modifiers = modifiers;
     }
@@ -158,12 +191,12 @@ public class ItemStackProviderJS {
         conditional.accept(condition);
         obj.add("condition", condition.toJson());
 
-        var modifier = new ItemStackProviderJS(null, new JsonArray());
+        var modifier = new ItemStackProviderJS(ItemStackJS.EMPTY, new JsonArray());
         modifiers.accept(modifier);
         obj.add("modifiers", modifier.getModifiers());
 
         if (elseModifiers != null) {
-            var elseModifier = new ItemStackProviderJS(null, new JsonArray());
+            var elseModifier = new ItemStackProviderJS(ItemStackJS.EMPTY, new JsonArray());
             elseModifiers.accept(elseModifier);
             obj.add("else_modifiers", elseModifier.getModifiers());
         }
@@ -185,11 +218,11 @@ public class ItemStackProviderJS {
     }
 
     public JsonObject getJsonStack() {
-        return stack;
+        return stack.toResultJson().getAsJsonObject();
     }
 
     public ItemStackJS getStackJS() {
-        return ItemStackJS.of(stack);
+        return stack;
     }
 
     /**
@@ -213,15 +246,15 @@ public class ItemStackProviderJS {
     // This assumes if neither element is defined the json is an item stack
     public static ItemStackProviderJS fromJson(JsonObject json) {
         if (!json.has("stack") && !json.has("modifiers")) {
-            return new ItemStackProviderJS(json, new JsonArray());
+            return new ItemStackProviderJS(ItemStackJS.of(json), new JsonArray());
         }
-        var stack = json.has("stack") ? json.get("stack").getAsJsonObject() : null;
+        var stack = json.has("stack") ? ItemStackJS.of(json.get("stack")) : ItemStackJS.EMPTY;
         var modifiers = json.has("modifiers") ? json.get("modifiers").getAsJsonArray() : new JsonArray();
         return new ItemStackProviderJS(stack, modifiers);
     }
 
     public JsonObject toJson() {
-        if (stack == null) {
+        if (stack.isEmpty()) {
             var obj = new JsonObject();
             if (modifiers == null || modifiers.isEmpty()) {
                 if (RecipeJS.itemErrors) {
@@ -233,10 +266,10 @@ public class ItemStackProviderJS {
             return obj;
         } else {
             if (modifiers == null || modifiers.isEmpty()) {
-                return stack;
+                return getJsonStack();
             } else {
                 var obj = new JsonObject();
-                obj.add("stack", stack);
+                obj.add("stack", getJsonStack());
                 obj.add("modifiers", modifiers);
                 return obj;
             }
@@ -248,12 +281,12 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS copy() {
-        return new ItemStackProviderJS(stack, modifiers);
+        return new ItemStackProviderJS(stack.copy(), modifiers.deepCopy());
     }
 
     @Override
     public String toString() {
-        return "ItemStackProvider.of(" + getJsonStack() + ", " + getModifiers() + ")";
+        return "ItemStackProvider.of(" + getStackJS() + ", " + getModifiers() + ")";
     }
 
     public ItemStackProviderJS addTrait(String s) {

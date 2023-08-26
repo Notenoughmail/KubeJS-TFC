@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
+import dev.latvian.mods.kubejs.item.ItemStackJS;
 
 import java.util.function.Consumer;
 
@@ -20,7 +21,7 @@ public class ItemStackProviderWrapper {
 
     // Needed/Recommended in order to use convenience methods
     public static ItemStackProviderJS empty() {
-        return new ItemStackProviderJS(null, new JsonArray());
+        return new ItemStackProviderJS(ItemStackJS.EMPTY, new JsonArray());
     }
 
     public static ItemStackProviderJS addHeat(ItemStackProviderJS js, int i) {
