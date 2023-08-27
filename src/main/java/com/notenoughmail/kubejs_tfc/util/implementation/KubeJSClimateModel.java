@@ -75,7 +75,6 @@ public class KubeJSClimateModel implements ClimateModel {
         return rainfallSettings;
     }
 
-    @HideFromJS
     @NotNull
     @Override
     public ClimateModelType type() {

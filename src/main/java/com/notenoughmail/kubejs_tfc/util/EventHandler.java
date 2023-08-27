@@ -48,33 +48,33 @@ public class EventHandler {
     }
 
     private static void onSelectClimateModel(SelectClimateModelEvent event) {
-        new SelectClimateModelEventJS(event).post(ScriptType.STARTUP, "tfc.climate_model.select");
+        new SelectClimateModelEventJS(event).post(ScriptType.SERVER, "tfc.climate_model.select");
     }
 
     private static void onFireStart(StartFireEvent event) {
-        if (new StartFireEventJS(event).post(ScriptType.STARTUP, "tfc.start_fire")) {
+        if (new StartFireEventJS(event).post(ScriptType.SERVER, "tfc.start_fire")) {
             event.setCanceled(true);
         }
     }
 
     private static void onProspect(ProspectedEvent event) {
-        new ProspectedEventJS(event).post(ScriptType.STARTUP, "tfc.prospect");
+        new ProspectedEventJS(event).post(ScriptType.SERVER, "tfc.prospect");
     }
 
     private static void onLog(LoggingEvent event) {
-        if (new LoggingEventJS(event).post(ScriptType.STARTUP, "tfc.logging")) {
+        if (new LoggingEventJS(event).post(ScriptType.SERVER, "tfc.logging")) {
             event.setCanceled(true);
         }
     }
 
     private static void onAnimalProduct(AnimalProductEvent event) {
-        if (new AnimalProductEventJS(event).post(ScriptType.STARTUP, "tfc.animal_product")) {
+        if (new AnimalProductEventJS(event).post(ScriptType.SERVER, "tfc.animal_product")) {
             event.setCanceled(true);
         }
     }
 
     private static void onCollapse(CollapseEvent event) {
-        new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post("tfc.collapse");
+        new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post(ScriptType.SERVER, "tfc.collapse");
     }
 
     /**
