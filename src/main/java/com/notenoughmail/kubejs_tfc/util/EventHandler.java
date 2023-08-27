@@ -37,6 +37,7 @@ public class EventHandler {
         bus.addListener(EventHandler::onLog);
         bus.addListener(EventHandler::onAnimalProduct);
         bus.addListener(EventHandler::limitContainers);
+        bus.addListener(EventHandler::onCollapse);
     }
 
     private static void setupEvents() {
@@ -70,6 +71,10 @@ public class EventHandler {
         if (new AnimalProductEventJS(event).post(ScriptType.STARTUP, "tfc.animal_product")) {
             event.setCanceled(true);
         }
+    }
+
+    private static void onCollapse(CollapseEvent event) {
+        new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post("tfc.collapse");
     }
 
     /**

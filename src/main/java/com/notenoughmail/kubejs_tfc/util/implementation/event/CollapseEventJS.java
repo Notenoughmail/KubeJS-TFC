@@ -15,12 +15,14 @@ public class CollapseEventJS extends StartupEventJS {
     private final LevelJS level;
     private final double radiusSquared;
     private final List<BlockPos> secondaries;
+    private final boolean isFake;
 
-    public CollapseEventJS(BlockPos center, List<BlockPos> secondaries, double radiusSquared, Level level) {
+    public CollapseEventJS(BlockPos center, List<BlockPos> secondaries, double radiusSquared, Level level, boolean isFake) {
         this.level = KubeJS.PROXY.getLevel(level);
         centerBlock = this.level.getBlock(center);
         this.radiusSquared = radiusSquared;
         this.secondaries = secondaries;
+        this.isFake = isFake;
     }
 
     public BlockContainerJS getCenterBlock() {
@@ -37,5 +39,9 @@ public class CollapseEventJS extends StartupEventJS {
 
     public List<BlockPos> getSecondaryPositions() {
         return secondaries;
+    }
+
+    public boolean isFake() {
+        return isFake;
     }
 }
