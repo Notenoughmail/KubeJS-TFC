@@ -39,9 +39,7 @@ public class ItemStackProviderJS {
             return js;
         } else if (o instanceof JsonArray json) {
             return new ItemStackProviderJS(ItemStackJS.EMPTY, json);
-        } else if (o instanceof JsonObject json) {
-            return new ItemStackProviderJS(json, new JsonArray());
-        } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
+        } else if (o instanceof CharSequence || o instanceof ResourceLocation || o instanceof JsonElement) {
             return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
         } else if (o instanceof List<?> list) {
             return new ItemStackProviderJS(ItemStackJS.EMPTY, parseModifierList(list));
