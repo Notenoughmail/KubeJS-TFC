@@ -30,7 +30,7 @@ issueTrackerURL="https://github.com/Notenoughmail/KubeJS-TFC/issues"
 [[dependencies.kubejs_tfc]]
     modId = "tfc"
     mandatory = true
-    versionRange = "[2.1.14,)"
+    versionRange = "[2.2.29,)"
     ordering = "AFTER"
     side = "BOTH"
 

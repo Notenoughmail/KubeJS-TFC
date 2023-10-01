@@ -40,23 +40,8 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-            mods {
-                kubejs_tfc {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        // Test multiplayer with own account through IDEA
-        secondClient {
-            workingDirectory project.file('run')
+            arg '-mixin.config=kubejs_tfc.mixins.json'
+            arg '--debug'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -73,7 +58,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            args '--nogui'
+            arg '--nogui'
+            arg '-mixin.config=kubejs_tfc.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -90,6 +76,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            arg '-mixin.config=kubejs_tfc.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -180,7 +167,7 @@ dependencies {
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
     implementation fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
     // Probe
-    implementation fg.deobf("curse.maven:probejs-585406:${probejs_version}")
+    runtimeOnly fg.deobf("curse.maven:probejs-585406:${probejs_version}")
 
     if (System.getProperty("idea.sync.active") != "true") {
         annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
@@ -197,7 +184,8 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "notenoughmail",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "kubejs_tfc.mixins.json"
         ])
     }
 }
@@ -227,5 +215,4 @@ tasks.withType(JavaCompile).configureEach {
 
 mixin {
     add sourceSets.main, "kubejs_tfc.refmap.json"
-    config "kubejs_tfc.mixins.json"
 }
