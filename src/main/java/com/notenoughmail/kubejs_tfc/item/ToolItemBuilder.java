@@ -31,13 +31,13 @@ public class ToolItemBuilder extends HandheldItemBuilder {
 
     public ToolItemBuilder hammer() {
         this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_HAMMER;
-        tag(new ResourceLocation("tfc", "hammers"));
+        tag(TFCTags.Items.HAMMERS.location());
         return this;
     }
 
     public ToolItemBuilder knife() {
         this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
-        tag(new ResourceLocation("tfc", "knives"));
+        tag(TFCTags.Items.KNIVES.location());
         return this;
     }
 

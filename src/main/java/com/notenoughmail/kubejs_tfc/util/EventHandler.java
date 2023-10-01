@@ -62,8 +62,10 @@ public class EventHandler {
     }
 
     private static void onLog(LoggingEvent event) {
-        if (new LoggingEventJS(event).post(ScriptType.SERVER, "tfc.logging")) {
-            event.setCanceled(true);
+        if (event.getLevel() instanceof Level level) {
+            if (new LoggingEventJS(level, event.getPos(), event.getAxe()).post(ScriptType.SERVER, "tfc.logging")) {
+                event.setCanceled(true);
+            }
         }
     }
 

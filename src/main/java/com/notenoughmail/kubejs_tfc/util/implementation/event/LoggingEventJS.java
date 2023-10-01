@@ -1,18 +1,27 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
+import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.level.LevelJS;
 import net.dries007.tfc.util.events.LoggingEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class LoggingEventJS extends EventJS {
 
-    private final LoggingEvent event;
+    private final LevelJS level;
+    private final BlockContainerJS block;
+    private final ItemStackJS axe;
 
-    public LoggingEventJS(LoggingEvent event) {
-        this.event = event;
+    public LoggingEventJS(Level level, BlockPos pos, ItemStack axe) {
+        this.level = KubeJS.PROXY.getLevel(level);
+        this.block = this.level.getBlock(pos);
+        this.axe = new ItemStackJS(axe);
     }
 
     @Override
@@ -20,19 +29,15 @@ public class LoggingEventJS extends EventJS {
         return true;
     }
 
-    public LevelAccessor getLevel() {
-        return event.getLevel();
-    }
-
-    public BlockPos getPos() {
-        return event.getPos();
-    }
-
-    public BlockState getState() {
-        return event.getState();
+    public LevelJS getLevel() {
+        return level;
     }
 
     public ItemStackJS getAxe() {
-        return new ItemStackJS(event.getAxe());
+        return axe;
+    }
+
+    public BlockContainerJS getBlock() {
+        return block;
     }
 }
