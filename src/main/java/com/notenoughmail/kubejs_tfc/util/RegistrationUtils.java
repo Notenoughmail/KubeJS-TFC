@@ -54,9 +54,7 @@ public class RegistrationUtils {
     public static List<Block> getBlockList() {
         NonNullList<Block> blockList = NonNullList.create();
 
-        for (var block : KubeJSRegistries.blocks()) {
-            blockList.add(block);
-        }
+        KubeJSRegistries.blocks().forEach(blockList::add);
 
         return blockList;
     }
@@ -64,9 +62,7 @@ public class RegistrationUtils {
     public static List<Fluid> getFluidList() {
         NonNullList<Fluid> fluidList = NonNullList.create();
 
-        for (var fluid : KubeJSRegistries.fluids()) {
-            fluidList.add(fluid);
-        }
+        KubeJSRegistries.fluids().forEach(fluidList::add);
 
         return fluidList;
     }

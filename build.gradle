@@ -40,8 +40,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg '-mixin.config=kubejs_tfc.mixins.json'
-            arg '--debug'
+            args '-mixin.config=kubejs_tfc.mixins.json', '--debug'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -58,8 +57,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            arg '--nogui'
-            arg '-mixin.config=kubejs_tfc.mixins.json'
+            args '--nogui', '-mixin.config=kubejs_tfc.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -76,7 +74,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            arg '-mixin.config=kubejs_tfc.mixins.json'
+            args '-mixin.config=kubejs_tfc.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
