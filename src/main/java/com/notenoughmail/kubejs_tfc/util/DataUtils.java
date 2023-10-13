@@ -4,7 +4,9 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
@@ -21,6 +23,10 @@ public class DataUtils {
 
     public static ResourceLocation dataID(String path, String mod, String category) {
         return dataID("kubejs_tfc", path, mod, category);
+    }
+
+    public static ResourceLocation dataIDFromObject(Object path, String mod, String category) {
+        return dataID(simplifyObject(path), mod, category);
     }
 
     public static ResourceLocation dataID(String namespace, String path, String mod, String category) {
@@ -68,10 +74,16 @@ public class DataUtils {
         }
     }
 
-    public static JsonObject baseHeat(IngredientJS ingredient, float heatCapacity) {
+    public static JsonObject buildHeat(IngredientJS ingredient, float heatCap, @Nullable Float forgeTemp, @Nullable Float weldTemp) {
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        json.addProperty("heat_capacity", heatCapacity);
+        json.addProperty("heat_capacity", heatCap);
+        if (forgeTemp != null) {
+            json.addProperty("forging_temperature", forgeTemp);
+        }
+        if (weldTemp != null) {
+            json.addProperty("welding_temperature", weldTemp);
+        }
         return json;
     }
 
@@ -99,16 +111,16 @@ public class DataUtils {
         }
     }
 
-    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, IngredientJS ingot, IngredientJS sheet, int tier) {
-        var ingotJS = ingot.unwrapStackIngredient().get(0);
-        var sheetJS = sheet.unwrapStackIngredient().get(0);
+    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier) {
+        var ingotJS = ingot != null ? ingot.unwrapStackIngredient().get(0).toJson() : Ingredient.EMPTY.toJson();
+        var sheetJS = sheet != null ? sheet.unwrapStackIngredient().get(0).toJson() : Ingredient.EMPTY.toJson();
         var json = new JsonObject();
         json.addProperty("tier", tier);
         json.addProperty("fluid", fluid);
         json.addProperty("melt_temperature", meltTemp);
         json.addProperty("specific_heat_capacity", heatCap);
-        json.add("ingots", ingotJS.toJson());
-        json.add("sheets", sheetJS.toJson());
+        json.add("ingots", ingotJS);
+        json.add("sheets", sheetJS);
         return json;
     }
 

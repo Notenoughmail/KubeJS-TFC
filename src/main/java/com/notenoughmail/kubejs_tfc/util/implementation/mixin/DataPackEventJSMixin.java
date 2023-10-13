@@ -12,23 +12,16 @@ import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPlantableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.RemapForJS;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * The current implementation of heats, sluicing, and
- * possibly more are kinda broken due to rhino type
- * coercion shenanigans, they cannot be fixed without
- * breaking changes <br>
- * TODO: Make the breaking changes :(
- */
 @SuppressWarnings("unused")
 @Mixin(value = DataPackEventJS.class, remap = false)
 public abstract class DataPackEventJSMixin {
@@ -43,7 +36,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleResistances(values, json);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "item_damage_resistances"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_damage_resistances"), json);
     }
 
     @RemapForJS("addTFCItemDamageResistance")
@@ -62,7 +55,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.addProperty("entity", entityTag);
         DataUtils.handleResistances(values, json);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(entityTag), "tfc", "entity_damage_resistances"), json);
+        addJson(DataUtils.dataIDFromObject(entityTag, "tfc", "entity_damage_resistances"), json);
     }
 
     @RemapForJS("addTFCEntityDamageResistance")
@@ -79,7 +72,7 @@ public abstract class DataPackEventJSMixin {
     public void kubeJS_TFC$Drinkable(FluidStackIngredientJS fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(fluidIngredient), "tfc", "drinkables"), data.toJson());
+        addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "drinkables"), data.toJson());
     }
 
     @RemapForJS("addTFCDrinkable")
@@ -97,7 +90,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleFertilizers(values, json);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "fertilizers"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fertilizers"), json);
     }
 
     @RemapForJS("addTFCFertilizer")
@@ -116,7 +109,7 @@ public abstract class DataPackEventJSMixin {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var data = new BuildFoodItemData(ingredientJS);
         foodItemData.accept(data);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "food_items"), data.toJson());
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "food_items"), data.toJson());
     }
 
     @RemapForJS("addTFCFoodItem")
@@ -136,7 +129,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("temperature", temperature);
         json.addProperty("duration", duration);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "fuels"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fuels"), json);
     }
 
     @RemapForJS("addTFCFuel")
@@ -150,57 +143,18 @@ public abstract class DataPackEventJSMixin {
         addJson(DataUtils.dataID(name, "tfc", "fuels"), json);
     }
 
-    // There's probably a better way to do this
     @RemapForJS("addTFCHeat")
     @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity) {
+    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature) {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "item_heats"), DataUtils.baseHeat(ingredientJS, heatCapacity));
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
     @RemapForJS("addTFCHeat")
     @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, ResourceLocation name) {
+    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature, ResourceLocation name) {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.baseHeat(ingredientJS, heatCapacity));
-    }
-
-    @RemapForJS("addTFCHeat")
-    @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, float forgingTemperature) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var json = DataUtils.baseHeat(ingredientJS, heatCapacity);
-        json.addProperty("forging_temperature", forgingTemperature);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "item_heats"), json);
-    }
-
-    @RemapForJS("addTFCHeat")
-    @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, float forgingTemperature, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var json = DataUtils.baseHeat(ingredientJS, heatCapacity);
-        json.addProperty("forging_temperature", forgingTemperature);
-        addJson(DataUtils.dataID(name, "tfc", "item_heats"), json);
-    }
-
-    @RemapForJS("addTFCHeat")
-    @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, float forgingTemperature, float weldingTemperature) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var json = DataUtils.baseHeat(ingredientJS, heatCapacity);
-        json.addProperty("forging_temperature", forgingTemperature);
-        json.addProperty("welding_temperature", weldingTemperature);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "item_heats"), json);
-    }
-
-    @RemapForJS("addTFCHeat")
-    @Unique
-    public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, float forgingTemperature, float weldingTemperature, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var json = DataUtils.baseHeat(ingredientJS, heatCapacity);
-        json.addProperty("forging_temperature", forgingTemperature);
-        json.addProperty("welding_temperature", weldingTemperature);
-        addJson(DataUtils.dataID(name, "tfc", "item_heats"), json);
+        addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
     @RemapForJS("addTFCItemSize")
@@ -210,7 +164,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", ingredientjS.toJson());
         DataUtils.handleItemSize(values, json);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientjS), "tfc", "item_sizes"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientjS, "tfc", "item_sizes"), json);
     }
 
     @RemapForJS("addTFCItemSize")
@@ -230,7 +184,7 @@ public abstract class DataPackEventJSMixin {
         json.add("fluid", fluidIngredient.toJsonNoAmount());
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(fluidIngredient), "tfc", "lamp_fuels"), json);
+        addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "lamp_fuels"), json);
     }
 
     @RemapForJS("addTFCLampFuel")
@@ -245,21 +199,9 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCMetal")
     @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet) {
-        kubeJS_TFC$Metal(fluid, meltTemperature, heatCapacity, ingot, sheet, 0);
-    }
-
-    @RemapForJS("addTFCMetal")
-    @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, ResourceLocation name) {
-        kubeJS_TFC$Metal(fluid, meltTemperature, heatCapacity, ingot, sheet, 0, name);
-    }
-
-    @RemapForJS("addTFCMetal")
-    @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier) {
+    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier) {
         var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(fluid), "tfc", "metals"), json);
+        addJson(DataUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
         // The name has potential to collide if the user defines multiple metals off of one fluid, but TFC states
         // "   Creating multiple metals that reference the same fluid is
         //     liable to cause undefined behavior and may introduce bugs   "
@@ -268,7 +210,7 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCMetal")
     @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemp, float heatCap, IngredientJS ingot, IngredientJS sheet, int tier, ResourceLocation name) {
+    public void kubeJS_TFC$Metal(String fluid, float meltTemp, float heatCap, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier, ResourceLocation name) {
         var json = DataUtils.makeMetal(fluid, meltTemp, heatCap, ingot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }
@@ -281,7 +223,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("support_up", up);
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(blockIngredient), "tfc", "supports"), json);
+        addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "supports"), json);
     }
 
     @RemapForJS("addTFCSupport")
@@ -302,7 +244,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("loot_table", lootTable);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "tfc", "sluicing"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "sluicing"), json);
     }
 
     @RemapForJS("addTFCSluicing")
@@ -317,22 +259,6 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCPanning")
     @Unique
-    @Deprecated(forRemoval = true, since = "0.6.0")
-    public void kubeJS_TFC$Panning(BlockIngredientJS blockIngredient, String lootTable, String... models) {
-        ConsoleJS.SERVER.error("The usage of addTFCPanning(BlockIngredientJS blockIngredient, String lootTable, String... models) is deprecated! Please use the new method, where the models argument is a List<String>. A notice of this method's full removal will present in the changelog when it happens.");
-        var json = new JsonObject();
-        json.add("ingredient", blockIngredient.toJson());
-        json.addProperty("loot_table", lootTable);
-        var array = new JsonArray();
-        for (String model : models) {
-            array.add(model);
-        }
-        json.add("model_stages", array);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(blockIngredient), "tfc", "panning"), json);
-    }
-
-    @RemapForJS("addTFCPanning")
-    @Unique
     public void kubeJS_TFC$Panning(BlockIngredientJS blockIngredient, String lootTable, List<String> models) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
@@ -340,7 +266,7 @@ public abstract class DataPackEventJSMixin {
         var array = new JsonArray();
         models.forEach(array::add);
         json.add("model_stages", array);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(blockIngredient), "tfc", "panning"), json);
+        addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
     }
 
     @RemapForJS("addTFCPanning")
@@ -361,7 +287,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(blockIngredient), "firmalife", "greenhouse"), json);
+        addJson(DataUtils.dataIDFromObject(blockIngredient, "firmalife", "greenhouse"), json);
     }
 
     @RemapForJS("addFLGreenhouse")
@@ -379,7 +305,7 @@ public abstract class DataPackEventJSMixin {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         var data = new BuildPlantableData(ingredientJS);
         plantableData.accept(data);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "firmalife", "plantable"), data.toJson());
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "firmalife", "plantable"), data.toJson());
     }
 
     @RemapForJS("addFLPlantable")
@@ -399,7 +325,7 @@ public abstract class DataPackEventJSMixin {
         var json = new JsonObject();
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleNetherFertilizers(values, json);
-        addJson(DataUtils.dataID(DataUtils.simplifyObject(ingredientJS), "beneath", "nether_fertilizers"), json);
+        addJson(DataUtils.dataIDFromObject(ingredientJS, "beneath", "nether_fertilizers"), json);
     }
 
     @RemapForJS("addBeneathFertilizer")
