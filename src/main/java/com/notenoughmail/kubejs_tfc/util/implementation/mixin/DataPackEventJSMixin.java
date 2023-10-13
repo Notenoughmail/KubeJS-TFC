@@ -6,9 +6,7 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPlantableData;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
@@ -279,6 +277,24 @@ public abstract class DataPackEventJSMixin {
         models.forEach(array::add);
         json.add("model_stages", array);
         addJson(DataUtils.dataID(name, "tfc", "panning"), json);
+    }
+
+    @RemapForJS("addTFCFauna")
+    @Unique
+    public void kubeJS_TFC$Fauna(Consumer<PlacedFeatureProperties.Climate> climate, Consumer<BuildFaunaData> fauna, ResourceLocation name) {
+        var climateObj = new PlacedFeatureProperties.Climate();
+        climate.accept(climateObj);
+        var faunaObj = new BuildFaunaData(climateObj);
+        fauna.accept(faunaObj);
+        addJson(DataUtils.dataID(name, "tfc", "fauna"), faunaObj.toJson());
+    }
+
+    @RemapForJS("addTFCClimateRange")
+    @Unique
+    public void kubeJS_TFC$ClimateRange(Consumer<BuildClimateRangeData> climateRange, ResourceLocation name) {
+        var climateRageObj = new BuildClimateRangeData();
+        climateRange.accept(climateRageObj);
+        addJson(DataUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
     }
 
     @RemapForJS("addFLGreenhouse")

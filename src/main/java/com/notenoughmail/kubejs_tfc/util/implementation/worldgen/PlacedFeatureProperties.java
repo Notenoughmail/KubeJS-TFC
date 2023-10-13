@@ -132,7 +132,7 @@ public class PlacedFeatureProperties {
         return json;
     }
 
-    private static class Climate {
+    public static class Climate {
 
         @Nullable
         private Float minTemp;
