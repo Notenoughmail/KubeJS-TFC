@@ -41,7 +41,6 @@ public class EventHandler {
     }
 
     private static void setupEvents() {
-        new RockSettingsEventJS().post("rock_settings.register");
         new RockSettingsEventJS().post("tfc.rock_settings.register");
         new SemiFunctionalContainerLimiterEventJS().post("tfc.limit_container_size");
         new RegisterClimateModelEventJS().post("tfc.climate_model.register");

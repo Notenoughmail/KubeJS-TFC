@@ -63,10 +63,8 @@ import net.minecraft.world.item.Tier;
  *      - Wild crop (conditional on getting crops working)
  *      - Ore deposits
  *      - Soil discs
- *    - TFC Data
- *      - Climate Ranges? - can only modify existing ranges
- *        - Conditional on custom crops/bushes as those have to define ranges
- *      - Fauna? - can only modify existing fauna
+ *   - Data
+ *     - Some way of not having the half-dozen Build[Thing]Data classes?
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

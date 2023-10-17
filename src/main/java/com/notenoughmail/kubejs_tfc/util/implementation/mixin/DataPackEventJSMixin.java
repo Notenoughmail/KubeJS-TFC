@@ -208,8 +208,8 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCMetal")
     @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemp, float heatCap, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier, ResourceLocation name) {
-        var json = DataUtils.makeMetal(fluid, meltTemp, heatCap, ingot, sheet, tier);
+    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier, ResourceLocation name) {
+        var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }
 

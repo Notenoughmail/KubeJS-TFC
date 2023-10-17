@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ public class DataUtils {
     }
 
     public static ResourceLocation dataID(String path, String mod, String category) {
-        return dataID("kubejs_tfc", path, mod, category);
+        return dataID(KubeJSTFC.MODID, path, mod, category);
     }
 
     public static ResourceLocation dataIDFromObject(Object path, String mod, String category) {
@@ -146,10 +147,17 @@ public class DataUtils {
 
     // "worldgen" is my favorite mod!
     public static ResourceLocation configuredFeatureName(String path) {
-        return dataID(path, "worldgen", "configured_feature");
+        return dataID(normalizeResourceLocation(path), "worldgen", "configured_feature");
     }
 
     public static ResourceLocation placedFeatureName(String path) {
-        return dataID(path, "worldgen", "placed_feature");
+        return dataID(normalizeResourceLocation(path), "worldgen", "placed_feature");
+    }
+
+    public static ResourceLocation normalizeResourceLocation(String resourceLocation) {
+        if (resourceLocation.lastIndexOf(":") != -1) {
+            return new ResourceLocation(resourceLocation);
+        }
+        return new ResourceLocation(KubeJSTFC.MODID, resourceLocation);
     }
 }
