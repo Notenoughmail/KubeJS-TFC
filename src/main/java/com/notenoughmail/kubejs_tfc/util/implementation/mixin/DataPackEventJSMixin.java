@@ -197,7 +197,7 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCMetal")
     @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier) {
+    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier) {
         var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
         addJson(DataUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
         // The name has potential to collide if the user defines multiple metals off of one fluid, but TFC states
@@ -208,7 +208,7 @@ public abstract class DataPackEventJSMixin {
 
     @RemapForJS("addTFCMetal")
     @Unique
-    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier, ResourceLocation name) {
+    public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier, ResourceLocation name) {
         var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }

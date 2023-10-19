@@ -112,9 +112,9 @@ public class DataUtils {
         }
     }
 
-    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, @Nullable IngredientJS ingot, @Nullable IngredientJS sheet, int tier) {
-        var ingotJS = ingot != null ? ingot.unwrapStackIngredient().get(0).toJson() : Ingredient.EMPTY.toJson();
-        var sheetJS = sheet != null ? sheet.unwrapStackIngredient().get(0).toJson() : Ingredient.EMPTY.toJson();
+    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, IngredientJS ingot, IngredientJS sheet, int tier) {
+        var ingotJS =  ingot.unwrapStackIngredient().get(0).toJson();
+        var sheetJS =  sheet.unwrapStackIngredient().get(0).toJson();
         var json = new JsonObject();
         json.addProperty("tier", tier);
         json.addProperty("fluid", fluid);

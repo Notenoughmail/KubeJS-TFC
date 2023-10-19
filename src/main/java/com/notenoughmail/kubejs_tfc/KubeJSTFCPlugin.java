@@ -8,11 +8,14 @@ import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
+import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.player.PlayerDataJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import dev.latvian.mods.kubejs.script.AttachDataEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
@@ -199,6 +202,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         // Rosia
         if (KubeJSTFC.rosiaLoaded()) {
             RosiaPlugin.addClasses(type, filter);
+        }
+    }
+
+    @Override
+    public void attachPlayerData(AttachDataEvent<PlayerDataJS> event) {
+        if (event.parent().getMinecraftPlayer() != null) {
+            event.add("tfc:player_data", new TFCPlayerDataJS(event.parent().getMinecraftPlayer()));
         }
     }
 

@@ -12,9 +12,9 @@
     - For item heat definitions: The forging and welding temps are no longer optional, but nullable
     - For metal definitions: The tier is no longer optional
 	- For panning definitions: The model stages are no longer a `String...`, but a `List<String>`, just wrap your model names in square brackets to update
-- The ingot and sheet ingredients for metal definitions are now nullable
 - Add data builders for climate ranges and fauna
 - Worldgen builders in `server.datapack.*` events can now specify the namespace of the name (allows overwriting default features), if no colon is found, the namespace will default to `kubejs_tfc` as it did before
+- Add the ability to access TFC player data (nutrition, chisel mode, intoxication) through `PlayerJS#getData()`
 
 ### 0.5.5
 - Fix a problem introduced in 0.5.3 that caused any delegate recipe types with ItemStackProvider outputs to fail
