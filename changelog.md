@@ -6,7 +6,7 @@
 - Add `tfc:tool` item type
   - Has `.hammer()` and `.knife()` methods
 - Minimum TFC version is now `2.2.29`
-- The `tfc.logging` event now provides a `LevelJS` and `BlockContainerJS`, instead of a raw `LevelAccessor`, `BlockState`, `BlockPos`
+- The `tfc.logging` event now provides a `LevelJS` and `BlockContainerJS`, instead of a raw `LevelAccessor`, `BlockState`, and `BlockPos`
 - Data builders in the `server.datapack.*` events now have an optional `ResourceLocation` as a final argument
   - Unfortunately, this means that several once optional arguments are no longer optional
     - For item heat definitions: The forging and welding temps are no longer optional, but nullable
@@ -15,6 +15,7 @@
 - Add data builders for climate ranges and fauna
 - Worldgen builders in `server.datapack.*` events can now specify the namespace of the name (allows overwriting default features), if no colon is found, the namespace will default to `kubejs_tfc` as it did before
 - Add the ability to access TFC player data (nutrition, chisel mode, intoxication) through `PlayerJS#getData()`
+- Modification and removal of default rock layers now fires as late as possible
 
 ### 0.5.5
 - Fix a problem introduced in 0.5.3 that caused any delegate recipe types with ItemStackProvider outputs to fail
