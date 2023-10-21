@@ -26,7 +26,7 @@ public class BuildFaunaData {
         return this;
     }
 
-    public BuildFaunaData distancebelowSeaLevel(int i) {
+    public BuildFaunaData distanceBelowSeaLevel(int i) {
         this.belowSeaLevel = i;
         return this;
     }

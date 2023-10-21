@@ -1,4 +1,4 @@
-### 0.6.0 (WIP)
+### 0.6.0
 ⚠️ This update has major breaking changes, see below ⚠️
 - Add `tfc.collapse` server event
 - Events fired on the server (`tfc.climate_model.select`, `tfc.start_fire`, `tfc.prospect`, `tfc.logging`, and `tfc.animal_product`) are now able to be handled in server scripts
