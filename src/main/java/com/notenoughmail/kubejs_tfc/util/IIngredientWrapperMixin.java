@@ -6,55 +6,55 @@ import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 
 public interface IIngredientWrapperMixin {
 
-    public static IngredientJS heatable() {
+    static IngredientJS heatable() {
         return new HeatableIngredientJS(null);
     }
 
-    public static IngredientJS heatable(IngredientJS o) {
+    static IngredientJS heatable(IngredientJS o) {
         return new HeatableIngredientJS(o);
     }
 
-    public static IngredientJS heatable(IngredientJS o, int min, int max) {
+    static IngredientJS heatable(IngredientJS o, int min, int max) {
         return new HeatableIngredientJS(o, min, max);
     }
 
-    public static IngredientJS fluidItem(FluidStackIngredientJS o) {
+    static IngredientJS fluidItem(FluidStackIngredientJS o) {
         return new FluidItemIngredientJS(null, o);
     }
 
-    public static IngredientJS fluidItem(FluidStackIngredientJS fluid, IngredientJS item) {
+    static IngredientJS fluidItem(FluidStackIngredientJS fluid, IngredientJS item) {
         return new FluidItemIngredientJS(item, fluid);
     }
 
-    public static IngredientJS notRotten() {
+    static IngredientJS notRotten() {
         return new NotRottenIngredientJS(null);
     }
 
-    public static IngredientJS notRotten(IngredientJS o) {
+    static IngredientJS notRotten(IngredientJS o) {
         return new NotRottenIngredientJS(o);
     }
 
-    public static IngredientJS hasTrait(String trait) {
+    static IngredientJS hasTrait(String trait) {
         return new TraitIngredientJS(null, trait, true);
     }
 
-    public static IngredientJS hasTrait(String trait, IngredientJS o) {
+    static IngredientJS hasTrait(String trait, IngredientJS o) {
         return new TraitIngredientJS(o, trait, true);
     }
 
-    public static IngredientJS lacksTrait(String trait) {
+    static IngredientJS lacksTrait(String trait) {
         return new TraitIngredientJS(null, trait, false);
     }
 
-    public static IngredientJS lacksTrait(String trait, IngredientJS o) {
+    static IngredientJS lacksTrait(String trait, IngredientJS o) {
         return new TraitIngredientJS(o, trait, false);
     }
 
-    public static IngredientJS tfcNot() {
+    static IngredientJS tfcNot() {
         return new TFCNotIngredientJS(null);
     }
 
-    public static IngredientJS tfcNot(IngredientJS o) {
+    static IngredientJS tfcNot(IngredientJS o) {
         return new TFCNotIngredientJS(o);
     }
 }

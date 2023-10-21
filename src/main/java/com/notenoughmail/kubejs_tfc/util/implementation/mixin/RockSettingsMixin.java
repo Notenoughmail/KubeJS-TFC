@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -34,8 +34,8 @@ public abstract class RockSettingsMixin implements IRockSettingsMixin {
         RockSettings.register(rockSettings.build());
     }
 
-    @Inject(method = "registerDefaultRocks()V", at = @At("RETURN"))
-    private static void kubejs_tfc$registerDefaultRocks(CallbackInfo ci) {
+    @Inject(method = "getDefaults()Ljava/util/Map;", at = @At("HEAD"))
+    private static void kubejs_tfc$getDefaults(CallbackInfoReturnable<Map<ResourceLocation, RockSettings>> cir) {
         RockSettingsEventJS.applyQueuedEdits();
     }
 }
