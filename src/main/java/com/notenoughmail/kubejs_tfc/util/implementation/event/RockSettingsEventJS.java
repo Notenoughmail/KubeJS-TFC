@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.IRockSettingsMixin;
 import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
@@ -17,12 +16,10 @@ import java.util.function.Consumer;
 
 public class RockSettingsEventJS extends StartupEventJS {
 
-    private static boolean queueAction = true;
-
-    private static final List<ResourceLocation> queuedRemovals = new ArrayList<>();
-    private static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
-
-    private static final RockSettings mixinHelper = new RockSettings(null, null, null, null, null, null, null, null, null, false, false, false);
+    @HideFromJS
+    public static final List<ResourceLocation> queuedRemovals = new ArrayList<>();
+    @HideFromJS
+    public static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
 
     public void addDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
         RockSettingsJS rockSettings = new RockSettingsJS(id);
@@ -31,37 +28,11 @@ public class RockSettingsEventJS extends StartupEventJS {
     }
 
     public void removeDefaultLayer(ResourceLocation id) {
-        if (queueAction) {
-            queuedRemovals.add(id);
-        } else {
-            ((IRockSettingsMixin) (Object) mixinHelper).removeRegisteredLayer(id);
-        }
+        queuedRemovals.add(id);
     }
 
     public void modifyDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
-        if (queueAction) {
-            queuedModifications.put(id, settings);
-        } else {
-            ((IRockSettingsMixin) (Object) mixinHelper).modifyRegisteredLayer(id, settings);
-        }
-    }
-
-    @HideFromJS
-    public static void applyQueuedEdits() {
-        queueAction = false;
-        int i = 0;
-        for (ResourceLocation id : queuedRemovals) {
-            ((IRockSettingsMixin) (Object) mixinHelper).removeRegisteredLayer(id);
-            i++;
-        }
-        int j = 0;
-        for (Map.Entry<ResourceLocation, Consumer<RockSettingsJS>> entry : queuedModifications.entrySet()) {
-            ((IRockSettingsMixin) (Object) mixinHelper).modifyRegisteredLayer(entry.getKey(), entry.getValue());
-            j++;
-        }
-        if (i > 0 || j > 0) {
-            KubeJSTFC.LOGGER.info("Applied {} queued rock layer removals and {} queued rock layer modifications", i, j);
-        }
+        queuedModifications.put(id, settings);
     }
 
     public static class RockSettingsJS {
