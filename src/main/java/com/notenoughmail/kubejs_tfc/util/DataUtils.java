@@ -2,18 +2,26 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
- * Helper class used by methods in {@link com.notenoughmail.kubejs_tfc.util.implementation.mixin.DataPackEventJSMixin DataPackEventJSMixin}
+ * Helper class used by methods in {@link TFCDataEventJS DataEventJS}
  */
 public class DataUtils {
+
+    public static void warnOfDataDeprecation(String method) {
+        ConsoleJS.SERVER.warnf("The method '{}' in the 'server.datapack.*' events is deprecated! Please use the method with the same name in the 'tfc.data' event", method);
+    }
+
+    public static void warnOfWorldgenDeprecation(String method) {
+        ConsoleJS.SERVER.warnf("The method '{}' in the 'server.datapack.*' events is deprecated! Please use the method with the same name in the 'tfc.worldgen.data' event", method);
+    }
 
     private static final String notANumber = "[^0-9.-]";
     private static final String splitters = "[,;:]";

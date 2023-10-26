@@ -1,3 +1,7 @@
+### 0.6.1
+- Add `tfc.data` and `tfc.worldgen.data` events to replace a mixin into `DataPackEventJS`
+- Deprecate the data builder methods currently present in the `server.datapack.*` events, they are now available in the new events above
+
 ### 0.6.0
 ⚠️ This update has major breaking changes, see below ⚠️
 - Add `tfc.collapse` server event

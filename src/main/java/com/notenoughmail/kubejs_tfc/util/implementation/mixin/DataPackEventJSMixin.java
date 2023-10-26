@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Deprecated(since = "0.6.1", forRemoval = true)
 @SuppressWarnings("unused")
 @Mixin(value = DataPackEventJS.class, remap = false)
 public abstract class DataPackEventJSMixin {
@@ -35,6 +36,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleResistances(values, json);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_damage_resistances"), json);
+        DataUtils.warnOfDataDeprecation("addTFCItemDamageResistance");
     }
 
     @RemapForJS("addTFCItemDamageResistance")
@@ -45,6 +47,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleResistances(values, json);
         addJson(DataUtils.dataID(name, "tfc", "item_damage_resistances"), json);
+        DataUtils.warnOfDataDeprecation("addTFCItemDamageResistance");
     }
 
     @RemapForJS("addTFCEntityDamageResistance")
@@ -54,6 +57,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("entity", entityTag);
         DataUtils.handleResistances(values, json);
         addJson(DataUtils.dataIDFromObject(entityTag, "tfc", "entity_damage_resistances"), json);
+        DataUtils.warnOfDataDeprecation("addTFCEntityDamageResistance");
     }
 
     @RemapForJS("addTFCEntityDamageResistance")
@@ -63,6 +67,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("entity", entityTag);
         DataUtils.handleResistances(values, json);
         addJson(DataUtils.dataID(name, "tfc", "entity_damage_resistances"), json);
+        DataUtils.warnOfDataDeprecation("addTFCEntityDamageResistance");
     }
 
     @RemapForJS("addTFCDrinkable")
@@ -71,6 +76,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
         addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "drinkables"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCDrinkable");
     }
 
     @RemapForJS("addTFCDrinkable")
@@ -79,6 +85,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
         addJson(DataUtils.dataID(name, "tfc", "drinkables"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCDrinkable");
     }
 
     @RemapForJS("addTFCFertilizer")
@@ -89,6 +96,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleFertilizers(values, json);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fertilizers"), json);
+        DataUtils.warnOfDataDeprecation("addTFCFertilizer");
     }
 
     @RemapForJS("addTFCFertilizer")
@@ -99,6 +107,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleFertilizers(values, json);
         addJson(DataUtils.dataID(name, "tfc", "fertilizers"), json);
+        DataUtils.warnOfDataDeprecation("addTFCFertilizer");
     }
 
     @RemapForJS("addTFCFoodItem")
@@ -108,6 +117,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildFoodItemData(ingredientJS);
         foodItemData.accept(data);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "food_items"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCFoodItem");
     }
 
     @RemapForJS("addTFCFoodItem")
@@ -117,6 +127,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildFoodItemData(ingredientJS);
         foodItemData.accept(data);
         addJson(DataUtils.dataID(name, "tfc", "food_items"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCFoodItem");
     }
 
     @RemapForJS("addTFCFuel")
@@ -128,6 +139,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("temperature", temperature);
         json.addProperty("duration", duration);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fuels"), json);
+        DataUtils.warnOfDataDeprecation("addTFCFuel");
     }
 
     @RemapForJS("addTFCFuel")
@@ -139,6 +151,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("temperature", temperature);
         json.addProperty("duration", duration);
         addJson(DataUtils.dataID(name, "tfc", "fuels"), json);
+        DataUtils.warnOfDataDeprecation("addTFCFuel");
     }
 
     @RemapForJS("addTFCHeat")
@@ -146,6 +159,7 @@ public abstract class DataPackEventJSMixin {
     public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature) {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
+        DataUtils.warnOfDataDeprecation("addTFCHeat");
     }
 
     @RemapForJS("addTFCHeat")
@@ -153,6 +167,7 @@ public abstract class DataPackEventJSMixin {
     public void kubeJS_TFC$Heat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature, ResourceLocation name) {
         var ingredientJS = ingredient.unwrapStackIngredient().get(0);
         addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
+        DataUtils.warnOfDataDeprecation("addTFCHeat");
     }
 
     @RemapForJS("addTFCItemSize")
@@ -163,6 +178,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientjS.toJson());
         DataUtils.handleItemSize(values, json);
         addJson(DataUtils.dataIDFromObject(ingredientjS, "tfc", "item_sizes"), json);
+        DataUtils.warnOfDataDeprecation("addTFCItemSize");
     }
 
     @RemapForJS("addTFCItemSize")
@@ -173,6 +189,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleItemSize(values, json);
         addJson(DataUtils.dataID(name, "tfc", "item_sizes"), json);
+        DataUtils.warnOfDataDeprecation("addTFCItemSize");
     }
 
     @RemapForJS("addTFCLampFuel")
@@ -183,6 +200,7 @@ public abstract class DataPackEventJSMixin {
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
         addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "lamp_fuels"), json);
+        DataUtils.warnOfDataDeprecation("addTFCLampFuel");
     }
 
     @RemapForJS("addTFCLampFuel")
@@ -193,6 +211,7 @@ public abstract class DataPackEventJSMixin {
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
         addJson(DataUtils.dataID(name, "tfc", "lamp_fuels"), json);
+        DataUtils.warnOfDataDeprecation("addTFCLampFuel");
     }
 
     @RemapForJS("addTFCMetal")
@@ -204,6 +223,7 @@ public abstract class DataPackEventJSMixin {
         // "   Creating multiple metals that reference the same fluid is
         //     liable to cause undefined behavior and may introduce bugs   "
         // Thus pretend this is actually a safeguard against undefined behavior 👍
+        DataUtils.warnOfDataDeprecation("addTFCMetal");
     }
 
     @RemapForJS("addTFCMetal")
@@ -211,6 +231,7 @@ public abstract class DataPackEventJSMixin {
     public void kubeJS_TFC$Metal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier, ResourceLocation name) {
         var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
+        DataUtils.warnOfDataDeprecation("addTFCMetal");
     }
 
     @RemapForJS("addTFCSupport")
@@ -222,6 +243,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
         addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "supports"), json);
+        DataUtils.warnOfDataDeprecation("addTFCSupport");
     }
 
     @RemapForJS("addTFCSupport")
@@ -233,6 +255,7 @@ public abstract class DataPackEventJSMixin {
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
         addJson(DataUtils.dataID(name, "tfc", "supports"), json);
+        DataUtils.warnOfDataDeprecation("addTFCSupport");
     }
 
     @RemapForJS("addTFCSluicing")
@@ -243,6 +266,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("loot_table", lootTable);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "sluicing"), json);
+        DataUtils.warnOfDataDeprecation("addTFCSluicing");
     }
 
     @RemapForJS("addTFCSluicing")
@@ -253,6 +277,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         json.addProperty("loot_table", lootTable);
         addJson(DataUtils.dataID(name, "tfc", "sluicing"), json);
+        DataUtils.warnOfDataDeprecation("addTFCSluicing");
     }
 
     @RemapForJS("addTFCPanning")
@@ -265,6 +290,7 @@ public abstract class DataPackEventJSMixin {
         models.forEach(array::add);
         json.add("model_stages", array);
         addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
+        DataUtils.warnOfDataDeprecation("addTFCPanning");
     }
 
     @RemapForJS("addTFCPanning")
@@ -277,6 +303,7 @@ public abstract class DataPackEventJSMixin {
         models.forEach(array::add);
         json.add("model_stages", array);
         addJson(DataUtils.dataID(name, "tfc", "panning"), json);
+        DataUtils.warnOfDataDeprecation("addTFCPanning");
     }
 
     @RemapForJS("addTFCFauna")
@@ -287,6 +314,7 @@ public abstract class DataPackEventJSMixin {
         var faunaObj = new BuildFaunaData(climateObj);
         fauna.accept(faunaObj);
         addJson(DataUtils.dataID(name, "tfc", "fauna"), faunaObj.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCFauna");
     }
 
     @RemapForJS("addTFCClimateRange")
@@ -295,6 +323,7 @@ public abstract class DataPackEventJSMixin {
         var climateRageObj = new BuildClimateRangeData();
         climateRange.accept(climateRageObj);
         addJson(DataUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
+        DataUtils.warnOfDataDeprecation("addTFCClimateRange");
     }
 
     @RemapForJS("addFLGreenhouse")
@@ -304,6 +333,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);
         addJson(DataUtils.dataIDFromObject(blockIngredient, "firmalife", "greenhouse"), json);
+        DataUtils.warnOfDataDeprecation("addFLGreenhouse");
     }
 
     @RemapForJS("addFLGreenhouse")
@@ -313,6 +343,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);
         addJson(DataUtils.dataID(name, "firmalife", "greenhouse"), json);
+        DataUtils.warnOfDataDeprecation("addFLGreenhouse");
     }
 
     @RemapForJS("addFLPlantable")
@@ -322,6 +353,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildPlantableData(ingredientJS);
         plantableData.accept(data);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "firmalife", "plantable"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addFLPlantable");
     }
 
     @RemapForJS("addFLPlantable")
@@ -331,6 +363,7 @@ public abstract class DataPackEventJSMixin {
         var data = new BuildPlantableData(ingredientJS);
         plantableData.accept(data);
         addJson(DataUtils.dataID(name, "firmalife", "plantable"), data.toJson());
+        DataUtils.warnOfDataDeprecation("addFLPlantable");
     }
 
     // Why the hell not
@@ -342,6 +375,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleNetherFertilizers(values, json);
         addJson(DataUtils.dataIDFromObject(ingredientJS, "beneath", "nether_fertilizers"), json);
+        DataUtils.warnOfDataDeprecation("addBeneathFertilizer");
     }
 
     @RemapForJS("addBeneathFertilizer")
@@ -352,6 +386,7 @@ public abstract class DataPackEventJSMixin {
         json.add("ingredient", ingredientJS.toJson());
         DataUtils.handleNetherFertilizers(values, json);
         addJson(DataUtils.dataID(name, "beneath", "nether_fertilizers"), json);
+        DataUtils.warnOfDataDeprecation("addBeneathFertilizer");
     }
 
     //================================WORLDGEN================================ (misery)
@@ -365,6 +400,7 @@ public abstract class DataPackEventJSMixin {
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+        DataUtils.warnOfWorldgenDeprecation("buildTFCGeode");
     }
 
     @RemapForJS("buildTFCBoulder")
@@ -376,6 +412,7 @@ public abstract class DataPackEventJSMixin {
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+        DataUtils.warnOfWorldgenDeprecation("buildTFCGeode");
     }
 
     @RemapForJS("buildTFCThinSpike")
@@ -387,6 +424,7 @@ public abstract class DataPackEventJSMixin {
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+        DataUtils.warnOfWorldgenDeprecation("buildTFCGeode");
     }
 
     @RemapForJS("buildTFCVein")
@@ -397,6 +435,7 @@ public abstract class DataPackEventJSMixin {
         addJson(DataUtils.configuredFeatureName(name), properties.toJson());
         var place = new PlacedFeatureProperties(name);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+        DataUtils.warnOfWorldgenDeprecation("buildTFCGeode");
     }
 
     @RemapForJS("buildTFCIfThen")
@@ -412,5 +451,6 @@ public abstract class DataPackEventJSMixin {
         var place = new PlacedFeatureProperties(name);
         placement.accept(place);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+        DataUtils.warnOfWorldgenDeprecation("buildTFCGeode");
     }
 }

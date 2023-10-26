@@ -9,9 +9,12 @@ import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCWorldgenEventJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.player.PlayerDataJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
@@ -210,6 +213,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         if (event.parent().getMinecraftPlayer() != null) {
             event.add("tfc:player_data", new TFCPlayerDataJS(event.parent().getMinecraftPlayer()));
         }
+    }
+
+    @Override
+    public void generateDataJsons(DataJsonGenerator generator) {
+        new TFCDataEventJS(generator).post(ScriptType.SERVER, "tfc.data");
+        new TFCWorldgenEventJS(generator).post(ScriptType.SERVER, "tfc.worldgen.data");
     }
 
     private void addToolTier(Tier tier) {
