@@ -9,6 +9,7 @@ import com.notenoughmail.kubejs_tfc.util.EventHandler;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterFoodTraitEventJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCWorldgenEventJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
@@ -37,6 +38,8 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
+
+import java.util.Map;
 
 // Mild Javadoc abuse
 
@@ -219,6 +222,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void generateDataJsons(DataJsonGenerator generator) {
         new TFCDataEventJS(generator).post(ScriptType.SERVER, "tfc.data");
         new TFCWorldgenEventJS(generator).post(ScriptType.SERVER, "tfc.worldgen.data");
+    }
+
+    @Override
+    public void generateLang(Map<String, String> lang) {
+        lang.putAll(KubeJSTFC.translations);
     }
 
     private void addToolTier(Tier tier) {

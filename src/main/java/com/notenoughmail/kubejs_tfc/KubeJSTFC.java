@@ -17,12 +17,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {
 
     public static final String MOD_NAME = "KubeJS TFC";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
+
+    public static final Map<String, String> translations = new HashMap<>();
 
     public KubeJSTFC() {
         RegistrationUtils.init();

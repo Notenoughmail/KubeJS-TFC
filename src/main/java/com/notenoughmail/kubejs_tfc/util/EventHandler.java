@@ -44,6 +44,7 @@ public class EventHandler {
         new RockSettingsEventJS().post("tfc.rock_settings.register");
         new SemiFunctionalContainerLimiterEventJS().post("tfc.limit_container_size");
         new RegisterClimateModelEventJS().post("tfc.climate_model.register");
+        new RegisterFoodTraitEventJS().post("tfc.food_trait.register");
     }
 
     private static void onSelectClimateModel(SelectClimateModelEvent event) {
