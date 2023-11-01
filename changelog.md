@@ -1,7 +1,8 @@
 ### 0.6.1 (WIP)
 - Add `tfc.data` and `tfc.worldgen.data` events to replace a mixin into `DataPackEventJS`
-- Deprecate the data builder methods currently present in the `server.datapack.*` events, they are now available in the new events above
+- Deprecate the data builder methods currently present in the `server.datapack.*` events, they are now available in the above mentioned events
 - Add the ability to register custom food traits
+- Fix potential problems with certain client-possible events trying to call server code
 
 ### 0.6.0
 ⚠️ This update has major breaking changes, see below ⚠️

@@ -47,22 +47,25 @@ public class EventHandler {
         new RegisterFoodTraitEventJS().post("tfc.food_trait.register");
     }
 
+    // Guaranteed only server - provides a ServerLevel
     private static void onSelectClimateModel(SelectClimateModelEvent event) {
         new SelectClimateModelEventJS(event).post(ScriptType.SERVER, "tfc.climate_model.select");
     }
 
     private static void onFireStart(StartFireEvent event) {
-        if (new StartFireEventJS(event).post(ScriptType.SERVER, "tfc.start_fire")) {
+        if (!event.getLevel().isClientSide() && new StartFireEventJS(event).post(ScriptType.SERVER, "tfc.start_fire")) {
             event.setCanceled(true);
         }
     }
 
     private static void onProspect(ProspectedEvent event) {
-        new ProspectedEventJS(event).post(ScriptType.SERVER, "tfc.prospect");
+        if (!event.getPlayer().level.isClientSide()) {
+            new ProspectedEventJS(event).post(ScriptType.SERVER, "tfc.prospect");
+        }
     }
 
     private static void onLog(LoggingEvent event) {
-        if (event.getLevel() instanceof Level level) {
+        if (event.getLevel() instanceof Level level && !level.isClientSide()) {
             if (new LoggingEventJS(level, event.getPos(), event.getAxe()).post(ScriptType.SERVER, "tfc.logging")) {
                 event.setCanceled(true);
             }
@@ -70,11 +73,12 @@ public class EventHandler {
     }
 
     private static void onAnimalProduct(AnimalProductEvent event) {
-        if (new AnimalProductEventJS(event).post(ScriptType.SERVER, "tfc.animal_product")) {
+        if (!event.getLevel().isClientSide() && new AnimalProductEventJS(event).post(ScriptType.SERVER, "tfc.animal_product")) {
             event.setCanceled(true);
         }
     }
 
+    // Guaranteed only server
     private static void onCollapse(CollapseEvent event) {
         new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post(ScriptType.SERVER, "tfc.collapse");
     }
