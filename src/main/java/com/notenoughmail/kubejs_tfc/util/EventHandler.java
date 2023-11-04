@@ -5,11 +5,13 @@ import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.util.events.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -81,6 +83,13 @@ public class EventHandler {
     // Guaranteed only server
     private static void onCollapse(CollapseEvent event) {
         new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post(ScriptType.SERVER, "tfc.collapse");
+    }
+
+    public static void postDataEvents(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
+        if (pack != null && manager != null) {
+            new TFCDataEventJS(pack, manager).post(ScriptType.SERVER, "tfc.data");
+            new TFCWorldgenDataEventJS(pack, manager).post(ScriptType.SERVER, "tfc.worldgen.data");
+        }
     }
 
     /**
