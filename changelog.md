@@ -1,3 +1,6 @@
+### 0.6.2
+- Fix data events data being added too late for metals and worldgen to be useful in-world
+
 ### 0.6.1
 - Add `tfc.data` and `tfc.worldgen.data` events to replace a mixin into `DataPackEventJS`
 - Deprecate the data builder methods currently present in the `server.datapack.*` events, they are now available in the above mentioned events
