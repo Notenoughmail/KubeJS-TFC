@@ -1,44 +1,31 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-        maven { url = "https://maven.parchmentmc.org" }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+', changing: true
-        classpath "org.spongepowered:mixingradle:${mixingradle_version}"
-    }
-}
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'maven-publish'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
 
-version = "${minecraft_version}-${mod_version}"
-group = 'com.notenoughmail.kubejs_tfc' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'kubejs_tfc'
+version = mod_version
+group = mod_group_id
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+base {
+    archivesName = mod_id
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: 'parchment', version: '2022.11.06-1.18.2'
+    mappings channel: mapping_channel, version: mapping_version
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+    copyIdeResources = true
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
     runs {
-        client {
+        configureEach {
             workingDirectory project.file('run')
             args '-mixin.config=kubejs_tfc.mixins.json', '--debug'
 
@@ -49,47 +36,29 @@ minecraft {
             property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
 
             mods {
-                kubejs_tfc {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         server {
-            workingDirectory project.file('run')
-            args '--nogui', '-mixin.config=kubejs_tfc.mixins.json'
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-            mods {
-                kubejs_tfc {
-                    source sourceSets.main
-                }
-            }
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
-            workingDirectory project.file('run')
-            args '-mixin.config=kubejs_tfc.mixins.json'
+            workingDirectory project.file('run-data')
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'kubejs_tfc', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                kubejs_tfc {
-                    source sourceSets.main
-                }
-            }
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
@@ -137,29 +106,25 @@ repositories {
     }
 }
 
-// For some horrible reason IDEA likes to invalidate all dependencies, to fix it comment out one of these, refresh gradle, uncomment, and refresh again
-// You'll have to reapply sources, but that would be the case anyway for all of them
-// It's like the big TO-DO javadoc failing to color itself but less fun
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     implementation fg.deobf("curse.maven:terrafirmacraft-302973:${tfc_identifier}")
         runtimeOnly fg.deobf(("curse.maven:cyanide-541676:${cyanide_identifier}"))
-    implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
-    implementation fg.deobf("curse.maven:rosia-856122:${tfc_rosia_identifier}")
-    implementation fg.deobf("curse.maven:tfccc-820815:${tfccc_identifer}")
-    implementation fg.deobf("curse.maven:arborfirmacraft-877545:${arbor_identifier}")
+    // implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
+    // implementation fg.deobf("curse.maven:rosia-856122:${rosia_identifier}")
+    // implementation fg.deobf("curse.maven:tfccc-820815:${tfccc_identifer}")
+    // implementation fg.deobf("curse.maven:arborfirmacraft-877545:${arbor_identifier}")
 
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api"))
-    implementation(fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}"))
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")  // Do I need this?
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}") // Do I need this?
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}")
 
-    compileOnly(fg.deobf("curse.maven:jade-324717:${jade_version}"))
-    runtimeOnly(fg.deobf("curse.maven:jade-324717:${jade_version}"))
-
-    compileOnly(fg.deobf("curse.maven:top-245211:${top_version}"))
+    compileOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
 
     implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
@@ -172,31 +137,41 @@ dependencies {
     }
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "kubejs_tfc",
-                "Specification-Vendor"    : "notenoughmail",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "notenoughmail",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "kubejs_tfc.mixins.json"
-        ])
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+            tfc_version_range: tfc_version_range, kube_version_range: kube_version_range
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
     }
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        register('mavenJava', MavenPublication) {
             artifact jar
         }
     }
@@ -209,8 +184,4 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-mixin {
-    add sourceSets.main, "kubejs_tfc.refmap.json"
 }

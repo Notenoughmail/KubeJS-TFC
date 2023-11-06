@@ -1,42 +1,42 @@
 modLoader="javafml"
-loaderVersion="[40,)"
-license="MIT"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
 issueTrackerURL="https://github.com/Notenoughmail/KubeJS-TFC/issues"
 
 [[mods]]
-    modId="kubejs_tfc"
-    version="${file.jarVersion}"
-    displayName="KubeJS TFC"
+    modId="${mod_id}"
+    version="${mod_version}"
+    displayName="${mod_name}"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/kubejs-tfc"
     logoFile="kubejs_tfc_icon.png"
     credits="DoubleDoorDevelopment/Claycorp for the foundation (https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea) of the container limiter functionality"
-    authors="Not Enough Mail"
-    description='''KubeJS Integration for TFC'''
+    authors="${mod_authors}"
+    description='''${mod_description}'''
 
-[[dependencies.kubejs_tfc]]
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.kubejs_tfc]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.kubejs_tfc]]
+[[dependecies.${mod_id}]]
     modId = "tfc"
     mandatory = true
-    versionRange = "[2.2.29,)"
-    ordering = "AFTER"
+    versionRange = "${tfc_version_range}"
+    ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.kubejs_tfc]]
+[[dependencies.${mod_id}]]
     modId = "kubejs"
     mandatory = true
-    versionRange = "[1802.5.4-build.521,)"
-    ordering = "AFTER"
+    versionRange = "{kube_version_range}"
+    ordering = "NONE"
     side = "BOTH"
