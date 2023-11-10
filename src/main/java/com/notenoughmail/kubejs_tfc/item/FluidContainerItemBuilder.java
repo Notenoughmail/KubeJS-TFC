@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.item;
 
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.TFCTags;
@@ -76,5 +77,10 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     public void generateLang(Map<String, String> lang) {
         super.generateLang(lang);
         lang.put(translationKey + ".filled", filledDisplayName);
+    }
+
+    @Override
+    public void generateLang(LangEventJS lang) {
+        super.generateLang(lang);
     }
 }

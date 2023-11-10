@@ -3,24 +3,27 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.item.*;
-import com.notenoughmail.kubejs_tfc.recipe.*;
-import com.notenoughmail.kubejs_tfc.recipe.crafting.*;
-import com.notenoughmail.kubejs_tfc.util.EventHandler;
+import com.notenoughmail.kubejs_tfc.recipe.schema.*;
+import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
+import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.player.PlayerDataJS;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
+import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.script.AttachDataEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
 import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
 import net.dries007.tfc.ForgeEventHandler;
+import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
@@ -32,10 +35,9 @@ import net.dries007.tfc.util.calendar.Month;
 import net.dries007.tfc.util.calendar.Season;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.events.StartFireEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
-
-import java.util.Map;
 
 // Mild Javadoc abuse
 
@@ -107,6 +109,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryObjectBuilderTypes.BLOCK.addType("tfc:raw_rock", RawRockBlockBuilder.class, RawRockBlockBuilder::new);
     }
 
+    /*
     @Override
     public void addRecipes(RegisterRecipeHandlersEvent event) {
         event.register(TFCRecipeSerializers.CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
@@ -149,9 +152,32 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             ArborFirmaCraftPlugin.registerRecipes(event);
         }
     }
+    */
 
     @Override
-    public void addBindings(BindingsEvent event) {
+    public void registerEvents() {
+        super.registerEvents();
+    }
+
+    @Override
+    public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
+        event.namespace(TerraFirmaCraft.MOD_ID)
+                .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
+                .register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
+                .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvacnedCraftingSchema.SHAPED)
+                .register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId().getPath(), AdvacnedCraftingSchema.SHAPELESS)
+                .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
+                .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
+                .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
+                .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
+                .register(TFCRecipeSerializers.ALLOY.getId().getPath(), AlloySchema.SCHEMA)
+                .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
+                .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
+                ;
+    }
+
+    @Override
+    public void registerBindings(BindingsEvent event) {
         event.add("BlockIngredient", BlockIngredientWrapper.class);
         event.add("BlockIng", BlockIngredientWrapper.class);
         event.add("FluidStackIngredient", FluidStackIngredientWrapper.class);
@@ -170,16 +196,15 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     }
 
     @Override
-    public void addTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
+    public void registerTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
         typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
         typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
         typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
         typeWrappers.register(ClimateModel.class, ClimateWrapper::getModel);
     }
 
-    // Probably a can of worms
     @Override
-    public void addClasses(ScriptType type, ClassFilter filter) {
+    public void registerClasses(ScriptType type, ClassFilter filter) {
         // KubeJSTFC
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
@@ -187,7 +212,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(FirmaLifePlugin.class);
         filter.deny(RosiaPlugin.class);
         filter.deny(RegistrationUtils.class);
-        filter.deny(EventHandler.class);
+        filter.deny(EventHandlers.class);
         // TFC - Likely will need to restrict even more
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");
@@ -208,15 +233,15 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     }
 
     @Override
-    public void attachPlayerData(AttachDataEvent<PlayerDataJS> event) {
-        if (event.parent().getMinecraftPlayer() != null) {
-            event.add("tfc:player_data", new TFCPlayerDataJS(event.parent().getMinecraftPlayer()));
+    public void attachPlayerData(AttachedData<Player> event) {
+        if (event.getParent() != null) {
+            event.add("tfc:player_data", new TFCPlayerDataJS(event.getParent()));
         }
     }
 
     @Override
-    public void generateLang(Map<String, String> lang) {
-        lang.putAll(KubeJSTFC.translations);
+    public void generateLang(LangEventJS event) {
+        event.addAll(KubeJSTFC.translations);
     }
 
     private void addToolTier(Tier tier) {

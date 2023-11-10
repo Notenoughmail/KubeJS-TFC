@@ -4,6 +4,8 @@ import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
 import dev.architectury.event.events.common.LifecycleEvent;
+import dev.latvian.mods.kubejs.event.EventGroup;
+import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
@@ -26,20 +28,37 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventHandler {
+// Basically everything mentioned here requires a massive refactor
+public class EventHandlers {
+
+    public static final EventGroup TFCEvents = EventGroup.of("TFC");
+
+    public static final EventHandler registerRocks = TFCEvents.startup("registerRockSettings", () -> RockSettingsEventJS.class);
+    public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> SemiFunctionalContainerLimiterEventJS.class);
+    public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
+    public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
+
+    public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
+    public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class);
+    public static final EventHandler prospect = TFCEvents.server("prospect", () -> ProspectedEventJS.class);
+    public static final EventHandler log = TFCEvents.server("log", () -> LoggingEventJS.class);
+    public static final EventHandler animalProduct = TFCEvents.server("animalProduct", () -> AnimalProductEventJS.class);
+    public static final EventHandler collapse = TFCEvents.server("collapse", () -> CollapseEventJS.class);
+    public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
+    public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
 
     public static void init() {
-        LifecycleEvent.SETUP.register(EventHandler::setupEvents);
+        LifecycleEvent.SETUP.register(EventHandlers::setupEvents);
 
         final IEventBus bus = MinecraftForge.EVENT_BUS;
 
-        bus.addListener(EventHandler::onSelectClimateModel);
-        bus.addListener(EventHandler::onFireStart);
-        bus.addListener(EventHandler::onProspect);
-        bus.addListener(EventHandler::onLog);
-        bus.addListener(EventHandler::onAnimalProduct);
-        bus.addListener(EventHandler::limitContainers);
-        bus.addListener(EventHandler::onCollapse);
+        bus.addListener(EventHandlers::onSelectClimateModel);
+        bus.addListener(EventHandlers::onFireStart);
+        bus.addListener(EventHandlers::onProspect);
+        bus.addListener(EventHandlers::onLog);
+        bus.addListener(EventHandlers::onAnimalProduct);
+        bus.addListener(EventHandlers::limitContainers);
+        bus.addListener(EventHandlers::onCollapse);
     }
 
     private static void setupEvents() {

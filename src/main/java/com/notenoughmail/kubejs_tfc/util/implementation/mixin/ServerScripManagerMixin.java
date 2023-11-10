@@ -1,19 +1,17 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.EventHandler;
+import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.kubejs.server.ServerScriptManager;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -31,11 +29,10 @@ public abstract class ServerScripManagerMixin {
     @Unique
     private VirtualKubeJSDataPack kubeJS_TFC$VirtualDataPack;
 
-    @Inject(method = "reloadScriptManager", at = @At(value = "HEAD"), remap = false)
-    private void captureWrappedManager(ResourceManager resourceManager, CallbackInfo ci) {
-        if (resourceManager instanceof MultiPackResourceManager multiManager) {
-            kubeJS_TFC$WrappedManager = multiManager;
-        }
+    @Inject(method = "wrapResourceManager", at = @At(value = "INVOKE", target = "Ldev/latvian/mods/kubejs/server/ServerScriptManager;reload(Lnet/minecraft/server/packs/resources/ResourceManager;)V"))
+    private void captureMultiManager(CloseableResourceManager original, CallbackInfoReturnable<MultiPackResourceManager> cir) {
+        kubeJS_TFC$WrappedManager = cir.getReturnValue();
+        KubeJSTFC.LOGGER.debug("Successfully captured the resource manager");
     }
 
     @ModifyVariable(method = "wrapResourceManager", at = @At(value = "STORE", args = "class=dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack"), remap = false, ordinal = 1)
@@ -45,8 +42,8 @@ public abstract class ServerScripManagerMixin {
         return pack;
     }
 
-    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/util/ConsoleJS;setLineNumber(Z)V", shift = At.Shift.BEFORE, value = "INVOKE", ordinal = 1), remap = false)
+    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/util/ConsoleJS;info(Ljava/lang/Object;)V", shift = At.Shift.BEFORE, value = "INVOKE"), remap = false)
     private void postDataEvents(CloseableResourceManager original, CallbackInfoReturnable<MultiPackResourceManager> cir) {
-        EventHandler.postDataEvents(kubeJS_TFC$VirtualDataPack, kubeJS_TFC$WrappedManager);
+        EventHandlers.postDataEvents(kubeJS_TFC$VirtualDataPack, kubeJS_TFC$WrappedManager);
     }
 }
