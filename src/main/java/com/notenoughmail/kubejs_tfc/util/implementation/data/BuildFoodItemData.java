@@ -2,12 +2,13 @@ package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 public class BuildFoodItemData {
 
     @Nullable
-    private final IngredientJS ingredient;
+    private final Ingredient ingredient;
     @Nullable
     private String type;
     @Nullable
@@ -29,7 +30,7 @@ public class BuildFoodItemData {
     @Nullable
     private Float dairy;
 
-    public BuildFoodItemData(@Nullable IngredientJS ingredient) {
+    public BuildFoodItemData(@Nullable Ingredient ingredient) {
         this.ingredient = ingredient;
     }
 

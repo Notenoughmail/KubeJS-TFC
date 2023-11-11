@@ -62,52 +62,64 @@ public class EventHandlers {
     }
 
     private static void setupEvents() {
-        new RockSettingsEventJS().post("tfc.rock_settings.register");
-        new SemiFunctionalContainerLimiterEventJS().post("tfc.limit_container_size");
-        new RegisterClimateModelEventJS().post("tfc.climate_model.register");
-        new RegisterFoodTraitEventJS().post("tfc.food_trait.register");
+        registerRocks.post(new RockSettingsEventJS());
+        limitContainerSize.post(new SemiFunctionalContainerLimiterEventJS());
+        registerClimateModel.post(new RegisterClimateModelEventJS());
+        registerFoodTrait.post(new RegisterFoodTraitEventJS());
     }
 
     // Guaranteed only server - provides a ServerLevel
     private static void onSelectClimateModel(SelectClimateModelEvent event) {
-        new SelectClimateModelEventJS(event).post(ScriptType.SERVER, "tfc.climate_model.select");
+        if (selectClimateModel.hasListeners()) {
+            selectClimateModel.post(new SelectClimateModelEventJS(event));
+        }
     }
 
     private static void onFireStart(StartFireEvent event) {
-        if (!event.getLevel().isClientSide() && new StartFireEventJS(event).post(ScriptType.SERVER, "tfc.start_fire")) {
-            event.setCanceled(true);
+        if (!event.getLevel().isClientSide() && startFire.hasListeners()) {
+            if (startFire.post(new StartFireEventJS(event)).interruptFalse()) {
+                event.setCanceled(true);
+            }
         }
     }
 
     private static void onProspect(ProspectedEvent event) {
-        if (!event.getPlayer().level.isClientSide()) {
-            new ProspectedEventJS(event).post(ScriptType.SERVER, "tfc.prospect");
+        if (!event.getPlayer().level().isClientSide() && prospect.hasListeners()) {
+            prospect.post(new ProspectedEventJS(event));
         }
     }
 
     private static void onLog(LoggingEvent event) {
-        if (event.getLevel() instanceof Level level && !level.isClientSide()) {
-            if (new LoggingEventJS(level, event.getPos(), event.getAxe()).post(ScriptType.SERVER, "tfc.logging")) {
+        if (event.getLevel() instanceof Level level && !level.isClientSide() && log.hasListeners()) {
+            if (log.post(new LoggingEventJS(level, event.getPos(), event.getAxe())).interruptFalse()) {
                 event.setCanceled(true);
             }
         }
     }
 
     private static void onAnimalProduct(AnimalProductEvent event) {
-        if (!event.getLevel().isClientSide() && new AnimalProductEventJS(event).post(ScriptType.SERVER, "tfc.animal_product")) {
-            event.setCanceled(true);
+        if (!event.getLevel().isClientSide() && animalProduct.hasListeners()) {
+            if (animalProduct.post(new AnimalProductEventJS(event)).interruptFalse()) {
+                event.setCanceled(true);
+            }
         }
     }
 
     // Guaranteed only server
     private static void onCollapse(CollapseEvent event) {
-        new CollapseEventJS(event.getCenterPos(), event.getNextPositions(), event.getRadiusSquared(), event.getLevel(), event.isFake()).post(ScriptType.SERVER, "tfc.collapse");
+        if (collapse.hasListeners()) {
+            collapse.post(new CollapseEventJS(event));
+        }
     }
 
     public static void postDataEvents(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
         if (pack != null && manager != null) {
-            new TFCDataEventJS(pack, manager).post(ScriptType.SERVER, "tfc.data");
-            new TFCWorldgenDataEventJS(pack, manager).post(ScriptType.SERVER, "tfc.worldgen.data");
+            if (data.hasListeners()) {
+                data.post(new TFCDataEventJS(pack, manager));
+            }
+            if (worldgenData.hasListeners()) {
+                worldgenData.post(new TFCWorldgenDataEventJS(pack, manager));
+            }
         }
     }
 
@@ -115,6 +127,7 @@ public class EventHandlers {
      * The majority of this event's handling is based off of <i><a href="https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea">Oversized Item in Storage Area</a></i><br>
      * <i>Oversized Item in Storage Area</i> is licenced under the <a href="https://www.curseforge.com/minecraft/mc-mods/oversized-item-in-storage-area/comments#license">BSD Licence</a>
      */
+    // TODO: Investigate if there is a better way to do this now
     private static void limitContainers(PlayerContainerEvent.Close event) {
         AbstractContainerMenu container = event.getContainer();
         MenuType<?> menuType;
@@ -125,7 +138,7 @@ public class EventHandlers {
             return; // Do nothing as a menu is needed
         }
 
-        if (event.getPlayer() instanceof ServerPlayer player && SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuType.getRegistryName())) {
+        if (event.getEntity() instanceof ServerPlayer player && SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuType.getRegistryName())) {
             Pair<Size, List<Pair<Integer, Integer>>> function = SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.get(menuType.getRegistryName());
 
             // Filter slots to only the ones that have items and (if present) within the ranges given
@@ -153,7 +166,7 @@ public class EventHandlers {
                 }
             }
 
-            Level level = player.level;
+            Level level = player.level();
             BlockPos pos = player.getOnPos().above();
             for (Slot slot : filteredSlots) {
                 ItemStack slotItem = slot.getItem();

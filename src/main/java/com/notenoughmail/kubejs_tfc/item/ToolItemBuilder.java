@@ -2,11 +2,11 @@ package com.notenoughmail.kubejs_tfc.item;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ToolItem;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,7 +25,7 @@ public class ToolItemBuilder extends HandheldItemBuilder {
     }
 
     public ToolItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
-        this.mineableBlocks = TagKey.create(Registry.BLOCK_REGISTRY, blockTag);
+        this.mineableBlocks = TagKey.create(Registries.BLOCK, blockTag);
         return this;
     }
 
@@ -54,7 +54,7 @@ public class ToolItemBuilder extends HandheldItemBuilder {
             public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
                 if (!modified) {
                     modified = true;
-                    attributes.forEach((r, m) -> defaultModifiers.put(KubeJSRegistries.attributes().get(r), m));
+                    attributes.forEach((r, m) -> defaultModifiers.put(RegistryInfo.ATTRIBUTE.getValue(r), m));
                 }
                 return super.getDefaultAttributeModifiers(equipmentSlot);
             }

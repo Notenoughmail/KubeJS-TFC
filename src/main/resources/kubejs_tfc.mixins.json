@@ -12,8 +12,7 @@
     "RecipeEventJSMixin",
     "RockSettingsMixin",
     "ServerScripManagerMixin",
-    "accessor.BlockIngredientAccessor",
-    "accessor.FluidIngredientAccessor"
+    "accessor.BlockIngredientAccessor"
   ],
   "client": [],
   "refmap": "kubejs_tfc.refmap.json"

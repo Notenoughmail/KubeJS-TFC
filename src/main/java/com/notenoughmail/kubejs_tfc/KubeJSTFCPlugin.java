@@ -6,17 +6,13 @@ import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
-import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.player.PlayerDataJS;
-import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
-import dev.latvian.mods.kubejs.script.AttachDataEvent;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.AttachedData;
@@ -83,80 +79,35 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:propick", PropickItemBuilder.class, PropickItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:fluid_container", FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
-        RegistryObjectBuilderTypes.ITEM.addType("tfc:tool", ToolItemBuilder.class, ToolItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:propick", PropickItemBuilder.class, PropickItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:fluid_container", FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:tool", ToolItemBuilder.class, ToolItemBuilder::new);
 
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_block", MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_slab", MossSpreadingSlabBuilder.class, MossGrowingSlabBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_stair", MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_spreading_wall", MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_block", MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_slab", MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
-        RegistryObjectBuilderTypes.BLOCK.addType("tfc:raw_rock", RawRockBlockBuilder.class, RawRockBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:groundcover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_spreading_block", MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_spreading_slab", MossSpreadingSlabBuilder.class, MossGrowingSlabBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_spreading_stair", MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_spreading_wall", MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_growing_block", MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_growing_slab", MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:raw_rock", RawRockBlockBuilder.class, RawRockBlockBuilder::new);
     }
-
-    /*
-    @Override
-    public void addRecipes(RegisterRecipeHandlersEvent event) {
-        event.register(TFCRecipeSerializers.CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
-        event.register(TFCRecipeSerializers.FIRE_CLAY_KNAPPING.getId(), KnappingRecipeJS::new);
-        event.register(TFCRecipeSerializers.LEATHER_KNAPPING.getId(), KnappingRecipeJS::new);
-        event.register(TFCRecipeSerializers.ROCK_KNAPPING.getId(), RockKnappingRecipeJS::new);
-        event.register(TFCRecipeSerializers.WELDING.getId(), WeldingRecipeJS::new);
-        event.register(TFCRecipeSerializers.ALLOY.getId(), AlloyRecipeJS::new);
-        event.register(TFCRecipeSerializers.SCRAPING.getId(), ScrapingRecipeJS::new);
-        event.register(TFCRecipeSerializers.QUERN.getId(), SimpleRecipeJS::new);
-        event.register(TFCRecipeSerializers.LANDSLIDE.getId(), FallingBlockRecipeJS::new);
-        event.register(TFCRecipeSerializers.COLLAPSE.getId(), FallingBlockRecipeJS::new);
-        event.register(TFCRecipeSerializers.ANVIL.getId(), AnvilRecipeJS::new);
-        event.register(TFCRecipeSerializers.CHISEL.getId(), ChiselRecipeJS::new);
-        event.register(TFCRecipeSerializers.CASTING.getId(), CastingRecipeJS::new);
-        event.register(TFCRecipeSerializers.BLOOMERY.getId(), BloomeryRecipeJS::new);
-        event.register(TFCRecipeSerializers.BLAST_FURNACE.getId(), BlastFurnaceRecipeJS::new);
-        event.register(TFCRecipeSerializers.INSTANT_BARREL.getId(), InstantBarrelRecipeJS::new);
-        event.register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId(), InstantFluidBarrelRecipeJS::new);
-        event.register(TFCRecipeSerializers.SEALED_BARREL.getId(), SealedBarrelRecipeJS::new);
-        event.register(TFCRecipeSerializers.LOOM.getId(), LoomRecipeJS::new);
-        event.register(TFCRecipeSerializers.POT_SIMPLE.getId(), SimplePotRecipeJS::new);
-        event.register(TFCRecipeSerializers.HEATING.getId(), HeatingRecipeJS::new);
-        event.register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId(), DamageInputsShapedJS::new);
-        event.register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId(), DamageInputsShapelessJS::new);
-        event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId(), ExtraProductsShapedJS::new);
-        event.register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId(), ExtraProductsShapelessJS::new);
-        event.register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId(), AdvancedShapedRecipeJS::new);
-        event.register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId(), AdvancedShapelessRecipeJS::new);
-
-        if (KubeJSTFC.firmaLoaded()) {
-            FirmaLifePlugin.addRecipes(event);
-        }
-
-        if (KubeJSTFC.rosiaLoaded()) {
-            RosiaPlugin.addRecipes(event);
-        }
-
-        if (KubeJSTFC.arborLoaded()) {
-            ArborFirmaCraftPlugin.registerRecipes(event);
-        }
-    }
-    */
 
     @Override
     public void registerEvents() {
-        super.registerEvents();
+        EventHandlers.TFCEvents.register();
     }
 
     @Override
@@ -164,8 +115,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.namespace(TerraFirmaCraft.MOD_ID)
                 .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
                 .register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
-                .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvacnedCraftingSchema.SHAPED)
-                .register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId().getPath(), AdvacnedCraftingSchema.SHAPELESS)
+                .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPED)
+                .register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPELESS)
                 .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPED_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
@@ -173,6 +124,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.ALLOY.getId().getPath(), AlloySchema.SCHEMA)
                 .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
                 .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
+                .register(TFCRecipeSerializers.WELDING.getId().getPath(), WeldingSchema.SCHEMA)
+                .register(TFCRecipeSerializers.HEATING.getId().getPath(), HeatingSchema.SCHEMA)
+                .register(TFCRecipeSerializers.BLAST_FURNACE.getId().getPath(), BlastFurnaceSchema.SCHEMA)
+                .register(TFCRecipeSerializers.CHISEL.getId().getPath(), ChiselSchema.SCHEMA)
+                .register(TFCRecipeSerializers.CASTING.getId().getPath(), CastingSchema.SCHEMA)
+                .register(TFCRecipeSerializers.QUERN.getId().getPath(), BasicSchema.SCHEMA)
+                .register(TFCRecipeSerializers.ANVIL.getId().getPath(), AnvilSchema.SCHEMA)
                 ;
     }
 
@@ -197,10 +155,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
-        typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
-        typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
-        typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
-        typeWrappers.register(ClimateModel.class, ClimateWrapper::getModel);
+        // typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
+        // typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
+        // typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
+        typeWrappers.registerSimple(ClimateModel.class, ClimateWrapper::getModel);
     }
 
     @Override
@@ -209,11 +167,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
         filter.deny(KubeJSTFCPlugin.class);
-        filter.deny(FirmaLifePlugin.class);
-        filter.deny(RosiaPlugin.class);
         filter.deny(RegistrationUtils.class);
         filter.deny(EventHandlers.class);
-        // TFC - Likely will need to restrict even more
+        // TFC
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");
         filter.deny("net.dries.tfc.network");
@@ -222,14 +178,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(InteractionManager.class);
         filter.deny(ClientEventHandler.class);
         filter.deny(ClientForgeEventHandler.class);
-        // Firmalife
-        if (KubeJSTFC.firmaLoaded()) {
-            FirmaLifePlugin.addClasses(type, filter);
-        }
-        // Rosia
-        if (KubeJSTFC.rosiaLoaded()) {
-            RosiaPlugin.addClasses(type, filter);
-        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+// TODO: FIX
 public class GroundCoverBlockBuilder extends BlockBuilder {
 
     private transient Type type;

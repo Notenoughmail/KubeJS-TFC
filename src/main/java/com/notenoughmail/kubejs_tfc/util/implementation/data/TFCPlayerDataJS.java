@@ -32,7 +32,7 @@ public class TFCPlayerDataJS {
     }
 
     public long getIntoxicatedTicks() {
-        return tfcData.getIntoxicatedTicks(player.getLevel().isClientSide);
+        return tfcData.getIntoxicatedTicks(player.level().isClientSide());
     }
 
     public void addIntoxicationTicks(long ticks) {

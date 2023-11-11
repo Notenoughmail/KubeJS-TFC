@@ -31,11 +31,11 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
         } else if (from instanceof JsonElement json) {
             return BlockIngredient.fromJson(json);
         } else if (from instanceof Block block) {
-            return IngredientHelpers.of(block);
+            return IngredientHelpers.block(block);
         } else if (from instanceof BlockState state) {
-            return IngredientHelpers.of(state.getBlock());
+            return IngredientHelpers.block(state.getBlock());
         } else {
-            return IngredientHelpers.of(Blocks.AIR);
+            return IngredientHelpers.block(Blocks.AIR);
         }
     }
 }

@@ -15,11 +15,13 @@ import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
+// TODO: Fix buiiders that took an IngredientJS, rework uses of BlockingredientJS and FluidStackIngredient, rewrite string parsers to just be enums
 @SuppressWarnings("unused")
 public class TFCDataEventJS extends DataPackEventJS {
 
@@ -39,18 +41,16 @@ public class TFCDataEventJS extends DataPackEventJS {
         super.addJson(id, json);
     }
 
-    public void addTFCItemDamageResistance(IngredientJS ingredient, String values) { // "p=20, c=50"
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCItemDamageResistance(Ingredient ingredient, String values) { // "p=20, c=50"
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleResistances(values, json);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_damage_resistances"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_damage_resistances"), json);
     }
 
-    public void addTFCItemDamageResistance(IngredientJS ingredient, String values, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCItemDamageResistance(Ingredient ingredient, String values, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleResistances(values, json);
         addJson(DataUtils.dataID(name, "tfc", "item_damage_resistances"), json);
     }
@@ -81,76 +81,66 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "drinkables"), data.toJson());
     }
 
-    public void addTFCFertilizer(IngredientJS ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCFertilizer(Ingredient ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleFertilizers(values, json);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fertilizers"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fertilizers"), json);
     }
 
-    public void addTFCFertilizer(IngredientJS ingredient, String values, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCFertilizer(Ingredient ingredient, String values, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleFertilizers(values, json);
         addJson(DataUtils.dataID(name, "tfc", "fertilizers"), json);
     }
 
-    public void addTFCFoodItem(IngredientJS ingredient, Consumer<BuildFoodItemData> foodItemData) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var data = new BuildFoodItemData(ingredientJS);
+    public void addTFCFoodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData) {
+        var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "food_items"), data.toJson());
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "food_items"), data.toJson());
     }
 
-    public void addTFCFoodItem(IngredientJS ingredient, Consumer<BuildFoodItemData> foodItemData, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var data = new BuildFoodItemData(ingredientJS);
+    public void addTFCFoodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData, ResourceLocation name) {
+        var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
         addJson(DataUtils.dataID(name, "tfc", "food_items"), data.toJson());
     }
 
-    public void addTFCFuel(IngredientJS ingredient, float temperature, int duration) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCFuel(Ingredient ingredient, float temperature, int duration) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         json.addProperty("temperature", temperature);
         json.addProperty("duration", duration);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "fuels"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fuels"), json);
     }
 
-    public void addTFCFuel(IngredientJS ingredient, float temperature, int duration, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCFuel(Ingredient ingredient, float temperature, int duration, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         json.addProperty("temperature", temperature);
         json.addProperty("duration", duration);
         addJson(DataUtils.dataID(name, "tfc", "fuels"), json);
     }
 
-    public void addTFCHeat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
+    public void addTFCHeat(Ingredient ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature) {
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_heats"), DataUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
-    public void addTFCHeat(IngredientJS ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredientJS, heatCapacity, forgingTemperature, weldingTemperature));
+    public void addTFCHeat(Ingredient ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature, ResourceLocation name) {
+        addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
-    public void addTFCItemSize(IngredientJS ingredient, String values) { // "s=tiny, weight=medium"
-        var ingredientjS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCItemSize(Ingredient ingredient, String values) { // "s=tiny, weight=medium"
         var json = new JsonObject();
-        json.add("ingredient", ingredientjS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleItemSize(values, json);
-        addJson(DataUtils.dataIDFromObject(ingredientjS, "tfc", "item_sizes"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_sizes"), json);
     }
 
-    public void addTFCItemSize(IngredientJS ingredient, String values, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCItemSize(Ingredient ingredient, String values, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleItemSize(values, json);
         addJson(DataUtils.dataID(name, "tfc", "item_sizes"), json);
     }
@@ -203,18 +193,16 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "supports"), json);
     }
 
-    public void addTFCSluicing(IngredientJS ingredient, String lootTable) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCSluicing(Ingredient ingredient, String lootTable) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         json.addProperty("loot_table", lootTable);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "tfc", "sluicing"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "sluicing"), json);
     }
 
-    public void addTFCSluicing(IngredientJS ingredient, String lootTable, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addTFCSluicing(Ingredient ingredient, String lootTable, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         json.addProperty("loot_table", lootTable);
         addJson(DataUtils.dataID(name, "tfc", "sluicing"), json);
     }
@@ -267,33 +255,29 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "firmalife", "greenhouse"), json);
     }
 
-    public void addFLPlantable(IngredientJS ingredient, Consumer<BuildPlantableData> plantableData) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var data = new BuildPlantableData(ingredientJS);
+    public void addFLPlantable(Ingredient ingredient, Consumer<BuildPlantableData> plantableData) {
+        var data = new BuildPlantableData(ingredient);
         plantableData.accept(data);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "firmalife", "plantable"), data.toJson());
+        addJson(DataUtils.dataIDFromObject(ingredient, "firmalife", "plantable"), data.toJson());
     }
 
-    public void addFLPlantable(IngredientJS ingredient, Consumer<BuildPlantableData> plantableData, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
-        var data = new BuildPlantableData(ingredientJS);
+    public void addFLPlantable(Ingredient ingredient, Consumer<BuildPlantableData> plantableData, ResourceLocation name) {
+        var data = new BuildPlantableData(ingredient);
         plantableData.accept(data);
         addJson(DataUtils.dataID(name, "firmalife", "plantable"), data.toJson());
     }
 
     // Why the hell not
-    public void addBeneathFertilizer(IngredientJS ingredient, String values) { // "d=0.2, f=0.5"
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addBeneathFertilizer(Ingredient ingredient, String values) { // "d=0.2, f=0.5"
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleNetherFertilizers(values, json);
-        addJson(DataUtils.dataIDFromObject(ingredientJS, "beneath", "nether_fertilizers"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, "beneath", "nether_fertilizers"), json);
     }
 
-    public void addBeneathFertilizer(IngredientJS ingredient, String values, ResourceLocation name) {
-        var ingredientJS = ingredient.unwrapStackIngredient().get(0);
+    public void addBeneathFertilizer(Ingredient ingredient, String values, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("ingredient", ingredientJS.toJson());
+        json.add("ingredient", ingredient.toJson());
         DataUtils.handleNetherFertilizers(values, json);
         addJson(DataUtils.dataID(name, "beneath", "nether_fertilizers"), json);
     }

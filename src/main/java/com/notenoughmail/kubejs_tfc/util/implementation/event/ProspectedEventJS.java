@@ -1,9 +1,9 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import dev.latvian.mods.kubejs.entity.EntityJS;
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
 import net.dries007.tfc.common.items.ProspectResult;
 import net.dries007.tfc.util.events.ProspectedEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 
 public class ProspectedEventJS extends PlayerEventJS {
@@ -15,8 +15,8 @@ public class ProspectedEventJS extends PlayerEventJS {
     }
 
     @Override
-    public EntityJS getEntity() {
-        return entityOf(event.getPlayer());
+    public Player getEntity() {
+        return event.getPlayer();
     }
 
     public Block getBlock() {

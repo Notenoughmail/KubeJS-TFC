@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.loot.LootBuilder;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 
+// TODO: Update model generation?
 public class LooseRockBlockBuilder extends BlockBuilder {
 
     private transient int rotate;

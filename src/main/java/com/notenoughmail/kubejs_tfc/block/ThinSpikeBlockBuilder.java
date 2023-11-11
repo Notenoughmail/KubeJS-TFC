@@ -15,6 +15,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// TODO: Fix shape
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     private float dripChance;
@@ -150,7 +152,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return new ThinSpikeBlock(melts ? createProperties().randomTicks() : createProperties()) {
 
             @Override
-            public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
+            public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
                 if (drips) {
                     final float temperature = Climate.getTemperature(level, pos);
                     if (state.getValue(TIP) && state.getValue(FLUID).getFluid() == Fluids.EMPTY && temperature > dripTemp && random.nextFloat() < dripChance) {
@@ -170,10 +172,10 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
             }
 
             /**
-             * Copied wholesale from {@link net.dries007.tfc.common.blocks.IcicleBlock#randomTick(BlockState, ServerLevel, BlockPos, Random)} and modified to accept custom values
+             * Copied wholesale from {@link net.dries007.tfc.common.blocks.IcicleBlock#randomTick(BlockState, ServerLevel, BlockPos, RandomSource)} and modified to accept custom values
              */
             @Override
-            public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random)
+            public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
             {
                 if (melts) {
                     final float temperature = Climate.getTemperature(level, pos);

@@ -9,14 +9,13 @@ import net.dries007.tfc.client.particle.TFCParticles;
 import net.dries007.tfc.common.blocks.HotWaterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-
-import java.util.Random;
 
 public class HotWaterFluidBlockBuilder extends FluidBlockBuilder {
 
@@ -29,11 +28,11 @@ public class HotWaterFluidBlockBuilder extends FluidBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new HotWaterBlock(UtilsJS.cast(builder.flowingFluid), Block.Properties.of(Material.WATER).noCollission().strength(100.0F).noDrops()) {
+        return new HotWaterBlock(UtilsJS.cast(builder.flowingFluid), Block.Properties.copy(Blocks.WATER).noLootTable()) {
 
             // Copied and modified from actual class
             @Override
-            public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random random)
+            public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource random)
             {
                 var bubble = ((IFluidBuilderMixin) builder).getBubbleParticle();
                 var steam = ((IFluidBuilderMixin) builder).getSteamParticle();

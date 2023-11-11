@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.FluidContainerItem;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -47,7 +48,7 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     }
 
     public FluidContainerItemBuilder fluidTagAccept(ResourceLocation tag) {
-        whitelist = TagKey.create(Registry.FLUID_REGISTRY, tag);
+        whitelist = TagKey.create(Registries.FLUID, tag);
         return this;
     }
 
@@ -74,13 +75,8 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void generateLang(Map<String, String> lang) {
-        super.generateLang(lang);
-        lang.put(translationKey + ".filled", filledDisplayName);
-    }
-
-    @Override
     public void generateLang(LangEventJS lang) {
         super.generateLang(lang);
+        lang.add(translationKey + ".filled", filledDisplayName);
     }
 }

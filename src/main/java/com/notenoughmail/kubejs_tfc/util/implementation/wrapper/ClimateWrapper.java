@@ -2,14 +2,16 @@ package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
-import dev.latvian.mods.kubejs.level.LevelJS;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.climate.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
+
 public class ClimateWrapper {
 
+    @Nullable
     public static ClimateModel getModel(Object o) {
         if (o instanceof ClimateModel climate ) {
             return climate;
@@ -21,14 +23,10 @@ public class ClimateWrapper {
             return model;
         } else if (o instanceof Level level) {
             return Climate.model(level);
-        } else if (o instanceof LevelJS js) {
-            return Climate.model(js.minecraftLevel);
         } else if (o instanceof ClimateModelType type) {
             return type.create();
         }
-
-        KubeJSTFC.LOGGER.warn("Could not find climate model of object {} of type {}, returning default", o, o.getClass());
-        return ClimateModels.BIOME_BASED.get().create();
+        return null;
     }
 
     public static ResourceLocation getName(ClimateModel model) {

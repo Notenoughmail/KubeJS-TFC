@@ -4,11 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: Replace usage of ItemStackJS
 public class BuildPlantableData {
 
-    private final IngredientJS ingredient;
+    private final Ingredient ingredient;
     @Nullable
     private String planter;
     private int tier = 0;
@@ -22,7 +24,7 @@ public class BuildPlantableData {
     private final JsonArray textures = new JsonArray();
     private final JsonArray specials = new JsonArray();
 
-    public BuildPlantableData(IngredientJS ingredient) {
+    public BuildPlantableData(Ingredient ingredient) {
         this.ingredient = ingredient;
     }
 

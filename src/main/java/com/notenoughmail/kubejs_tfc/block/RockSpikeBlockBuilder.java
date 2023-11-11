@@ -1,11 +1,11 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Fix shapes
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
     private boolean cyclingAllowed;
@@ -33,8 +34,8 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     @Nullable
     private TagKey<Item> cycleTag;
     private boolean updateWhenCycling;
-    private List<AABB> middleShape;
-    private List<AABB> tipShape;
+    private final List<AABB> middleShape;
+    private final List<AABB> tipShape;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -51,13 +52,13 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     public RockSpikeBlockBuilder cycleItem(ResourceLocation item) {
         cyclingAllowed = true;
-        cycleItem = KubeJSRegistries.items().get(item);
+        cycleItem = RegistryInfo.ITEM.getValue(item);
         return this;
     }
 
     public RockSpikeBlockBuilder cycleTag(ResourceLocation tag) {
         cyclingAllowed = true;
-        cycleTag = TagKey.create(Registry.ITEM_REGISTRY, tag);
+        cycleTag = TagKey.create(Registries.ITEM, tag);
         return this;
     }
 

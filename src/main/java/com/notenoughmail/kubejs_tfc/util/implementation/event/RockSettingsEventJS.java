@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -14,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.*;
 import java.util.function.Consumer;
 
+// TODO: Redo this for new rock stuff
 public class RockSettingsEventJS extends StartupEventJS {
 
     @HideFromJS

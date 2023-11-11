@@ -1,12 +1,11 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.level.LevelEventJS;
-import dev.latvian.mods.kubejs.level.LevelJS;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.events.SelectClimateModelEvent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class SelectClimateModelEventJS extends LevelEventJS {
 
@@ -17,8 +16,8 @@ public class SelectClimateModelEventJS extends LevelEventJS {
     }
 
     @Override
-    public LevelJS getLevel() {
-        return UtilsJS.getLevel(event.level());
+    public Level getLevel() {
+        return event.level();
     }
 
     public ClimateModel getModel() {

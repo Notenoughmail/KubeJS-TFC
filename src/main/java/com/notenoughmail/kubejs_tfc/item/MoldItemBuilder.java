@@ -10,6 +10,8 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.MoldItem;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -32,19 +34,7 @@ public class MoldItemBuilder extends ItemBuilder {
     }
 
     public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
-        this.acceptableFluids = TagKey.create(Registry.FLUID_REGISTRY, fluidTag);
-        return this;
-    }
-
-    public MoldItemBuilder allowedInMoldTable() {
-        if (!KubeJSTFC.channelCastingLoaded()) {
-            return this;
-        }
-
-        // I didn't expect it to be this easy, making me very suspicious
-        TFCCCItems.registerRenderItem(id, RegistrationUtils.registerItem(id.getPath(), () -> new Item(new Item.Properties())));
-        tag(TFCCCTags.Items.ACCEPTED_IN_MOLD_TABLES.location());
-
+        this.acceptableFluids = TagKey.create(Registries.FLUID, fluidTag);
         return this;
     }
 

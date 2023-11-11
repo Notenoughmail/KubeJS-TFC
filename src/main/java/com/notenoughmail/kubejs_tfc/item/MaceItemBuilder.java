@@ -2,8 +2,8 @@ package com.notenoughmail.kubejs_tfc.item;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.items.MaceItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -30,7 +30,7 @@ public class MaceItemBuilder extends HandheldItemBuilder {
             public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
                 if (!modified) {
                     modified = true;
-                    attributes.forEach((r, m) -> defaultModifiers.put(KubeJSRegistries.attributes().get(r), m));
+                    attributes.forEach((r, m) -> defaultModifiers.put(RegistryInfo.ATTRIBUTE.getValue(r), m));
                 }
                 return super.getDefaultAttributeModifiers(equipmentSlot);
             }

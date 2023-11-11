@@ -12,7 +12,7 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import dev.latvian.mods.kubejs.util.TinyMap;
 
 
-public interface AdvacnedCraftingSchema {
+public interface AdvancedCraftingSchema {
 
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
     RecipeKey<String[]> PATTERN = StringComponent.NON_EMPTY.asArray().key("pattern");
