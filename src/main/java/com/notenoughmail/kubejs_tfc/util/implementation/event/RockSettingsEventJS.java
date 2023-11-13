@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
@@ -16,24 +17,24 @@ import java.util.function.Consumer;
 // TODO: Redo this for new rock stuff
 public class RockSettingsEventJS extends StartupEventJS {
 
-    @HideFromJS
-    public static final List<ResourceLocation> queuedRemovals = new ArrayList<>();
-    @HideFromJS
-    public static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
+    // @HideFromJS
+    // public static final List<ResourceLocation> queuedRemovals = new ArrayList<>();
+    // @HideFromJS
+    // public static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
 
     public void addDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
         RockSettingsJS rockSettings = new RockSettingsJS(id);
         settings.accept(rockSettings);
-        RockSettings.register(rockSettings.build());
+        RockSettings.register(id, rockSettings.build());
     }
 
-    public void removeDefaultLayer(ResourceLocation id) {
-        queuedRemovals.add(id);
-    }
-
-    public void modifyDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
-        queuedModifications.put(id, settings);
-    }
+    // Removed for now as its a bit of a pain to get this working like it previously did
+    // public void removeDefaultLayer(ResourceLocation id) {
+    //     queuedRemovals.add(id);
+    // }
+    // public void modifyDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
+    //     queuedModifications.put(id, settings);
+    // }
 
     public static class RockSettingsJS {
 
@@ -46,17 +47,15 @@ public class RockSettingsEventJS extends StartupEventJS {
         private Block sandstoneBlock;
         private Block spikeBlock;
         private Block looseBlock;
-        private boolean top = false;
-        private boolean middle = false;
-        private boolean bottom = false;
+        private Block mossyLooseBlock;
         private boolean logWarnings = true;
 
         public RockSettingsJS(ResourceLocation id) {
             this.id = id;
         }
 
-        public RockSettingsJS(RockSettings settings) {
-            id = settings.id();
+        public RockSettingsJS(ResourceLocation id, RockSettings settings) {
+            this.id = id;
             rawBlock = settings.raw();
             hardenedBlock = settings.hardened();
             gravelBlock = settings.gravel();
@@ -65,38 +64,36 @@ public class RockSettingsEventJS extends StartupEventJS {
             sandstoneBlock = settings.sandstone();
             settings.spike().ifPresent(spike -> spikeBlock = spike);
             settings.loose().ifPresent(loose -> looseBlock = loose);
-            top = settings.topLayer();
-            middle = settings.middleLayer();
-            bottom = settings.bottomLayer();
+            settings.mossyLoose().ifPresent(mossy -> mossyLooseBlock = mossy);
         }
 
         public RockSettingsJS raw(ResourceLocation raw) {
-            rawBlock = KubeJSRegistries.blocks().get(raw);
+            rawBlock = RegistryInfo.BLOCK.getValue(raw);
             return this;
         }
 
         public RockSettingsJS hardened(ResourceLocation hardened) {
-            hardenedBlock = KubeJSRegistries.blocks().get(hardened);
+            hardenedBlock = RegistryInfo.BLOCK.getValue(hardened);
             return this;
         }
 
         public RockSettingsJS gravel(ResourceLocation gravel) {
-            gravelBlock = KubeJSRegistries.blocks().get(gravel);
+            gravelBlock = RegistryInfo.BLOCK.getValue(gravel);
             return this;
         }
 
         public RockSettingsJS cobble(ResourceLocation cobble) {
-            cobbleBlock = KubeJSRegistries.blocks().get(cobble);
+            cobbleBlock = RegistryInfo.BLOCK.getValue(cobble);
             return this;
         }
 
         public RockSettingsJS sand(ResourceLocation sand) {
-            sandBlock = KubeJSRegistries.blocks().get(sand);
+            sandBlock = RegistryInfo.BLOCK.getValue(sand);
             return this;
         }
 
         public RockSettingsJS sandstone(ResourceLocation sandstone) {
-            sandstoneBlock = KubeJSRegistries.blocks().get(sandstone);
+            sandstoneBlock = RegistryInfo.BLOCK.getValue(sandstone);
             return this;
         }
 
@@ -105,7 +102,7 @@ public class RockSettingsEventJS extends StartupEventJS {
                 spikeBlock = null;
                 return this; // Return early to avoid The check below
             }
-            Block block = KubeJSRegistries.blocks().get(spike);
+            Block block = RegistryInfo.BLOCK.getValue(spike);
             if (!(block instanceof RockSpikeBlock)) {
                 KubeJSTFC.LOGGER.error("The provided block: '{}' is not an instance of RockSpikeBlock! This will cause a crash on world load!", block);
             }
@@ -118,7 +115,7 @@ public class RockSettingsEventJS extends StartupEventJS {
                 looseBlock = null;
                 return this; // Return early to avoid the check below
             }
-            Block block = KubeJSRegistries.blocks().get(loose);
+            Block block = RegistryInfo.BLOCK.getValue(loose);
             if (!(block instanceof LooseRockBlock)) {
                 KubeJSTFC.LOGGER.error("The provided block: '{}' is not an instance of LooseRockBlock! This will cause a crash on world load!", block);
             }
@@ -126,30 +123,16 @@ public class RockSettingsEventJS extends StartupEventJS {
             return this;
         }
 
-        public RockSettingsJS top() {
-            return top(true);
-        }
-
-        public RockSettingsJS top(boolean top) {
-            this.top = top;
-            return this;
-        }
-
-        public RockSettingsJS middle() {
-            return middle(true);
-        }
-
-        public RockSettingsJS middle(boolean middle) {
-            this.middle = middle;
-            return this;
-        }
-
-        public RockSettingsJS bottom() {
-            return bottom(true);
-        }
-
-        public RockSettingsJS bottom(boolean bottom) {
-            this.bottom = bottom;
+        public RockSettingsJS mossyLoose(ResourceLocation loose) {
+            if (loose == null) {
+                mossyLooseBlock = null;
+                return this; // Return early to avoid the check below
+            }
+            Block block = RegistryInfo.BLOCK.getValue(loose);
+            if (!(block instanceof LooseRockBlock)) {
+                KubeJSTFC.LOGGER.error("The provided block: '{}' is not an instance of LooseRockBlock! This will cause a crash on world load!", block);
+            }
+            mossyLooseBlock = block;
             return this;
         }
 
@@ -166,10 +149,8 @@ public class RockSettingsEventJS extends StartupEventJS {
                 if (cobbleBlock == null) KubeJSTFC.LOGGER.warn("The cobble block of the rock layer '{}' is null! This may cause issues", id);
                 if (sandBlock == null) KubeJSTFC.LOGGER.warn("The sand block of the rock layer '{}' is null! This may cause issues", id);
                 if (sandstoneBlock == null) KubeJSTFC.LOGGER.warn("The sandstone block of the rock layer '{}' is null! This may cause issues", id);
-                if (!top && !middle && !bottom) KubeJSTFC.LOGGER.warn("The rock layer '{}' will not spawn because it does not declare itself as being a top, middle, or bottom layer!", id);
             }
             return new RockSettings(
-                id,
                 rawBlock,
                 hardenedBlock,
                 gravelBlock,
@@ -178,9 +159,7 @@ public class RockSettingsEventJS extends StartupEventJS {
                 sandstoneBlock,
                 Optional.ofNullable(spikeBlock),
                 Optional.ofNullable(looseBlock),
-                top,
-                middle,
-                bottom
+                Optional.ofNullable(mossyLooseBlock)
             );
         }
     }

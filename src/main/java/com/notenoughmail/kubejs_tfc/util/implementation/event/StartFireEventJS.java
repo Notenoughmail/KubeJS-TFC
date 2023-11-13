@@ -41,14 +41,6 @@ public class StartFireEventJS extends PlayerEventJS {
         return event.getItemStack();
     }
 
-    public StartFireEvent.FireResult getFireResult() {
-        return event.getFireResult();
-    }
-
-    public void setFireResult(StartFireEvent.FireResult result) {
-        event.setFireResult(result);
-    }
-
     public boolean isStrong() {
         return event.isStrong();
     }

@@ -142,8 +142,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("FluidIngredient", FluidStackIngredientWrapper.class);
         event.add("ItemStackProvider", ItemStackProviderWrapper.class);
         event.add("ItemProvider", ItemStackProviderWrapper.class);
-        event.add("TFCRecipeFilter", TFCRecipeFilterWrapper.class);
-        event.add("FireResult", StartFireEvent.FireResult.class);
         event.add("FireStrength", StartFireEvent.FireStrength.class);
         event.add("AnimalAge", TFCAnimalProperties.Age.class);
         event.add("AnimalGender", TFCAnimalProperties.Gender.class);

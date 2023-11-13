@@ -21,7 +21,7 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
 
     @Override
     public JsonElement write(RecipeJS recipe, BlockIngredient value) {
-        return IngredientType.toJson(value, IngredientHelpers.blockIngredientFactory);
+        return value.toJson();
     }
 
     @Override

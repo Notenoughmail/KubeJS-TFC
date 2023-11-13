@@ -9,10 +9,7 @@
     "IngredientJSMixin",
     "IngredientWrapperMixin",
     "OpenSimplex2DMixin",
-    "RecipeEventJSMixin",
-    "RockSettingsMixin",
-    "ServerScripManagerMixin",
-    "accessor.BlockIngredientAccessor"
+    "ServerScripManagerMixin"
   ],
   "client": [],
   "refmap": "kubejs_tfc.refmap.json"

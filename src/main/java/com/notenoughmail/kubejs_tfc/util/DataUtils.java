@@ -3,25 +3,19 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
-import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
+import net.dries007.tfc.common.capabilities.size.Size;
+import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
- * Helper class used by methods in {@link TFCDataEventJS DataEventJS}
+ * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS}
  */
 public class DataUtils {
-
-    public static void warnOfDataDeprecation(String method) {
-        ConsoleJS.SERVER.warnf("The method '{}' in the 'server.datapack.*' events is deprecated! Please use the method with the same name in the 'tfc.data' event", method);
-    }
-
-    public static void warnOfWorldgenDeprecation(String method) {
-        ConsoleJS.SERVER.warnf("The method '{}' in the 'server.datapack.*' events is deprecated! Please use the method with the same name in the 'tfc.worldgen.data' event", method);
-    }
 
     private static final String notANumber = "[^0-9.-]";
     private static final String splitters = "[,;:]";
@@ -51,39 +45,31 @@ public class DataUtils {
         return out.length() > 64 ? out.substring(0, 64) : out; // Limit length to 64 chars
     }
 
-    public static void handleResistances(String values, JsonObject objToAddTo) {
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
-        for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
-            var value = splitValues[i];
-            if (value.matches("p(?>iercing)?.+")) {
-                objToAddTo.addProperty("piercing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.matches("s(?>lashing)?.+")) {
-                objToAddTo.addProperty("slashing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.matches("c(?>rushing)?.+")) {
-                objToAddTo.addProperty("crushing", (int) Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else {
-                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(p|s|c)=\\d+/");
-            }
+    public static void handleResistances(JsonObject json, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
+        if (piercing != null) {
+            json.addProperty("piercing", piercing);
+        }
+        if (slashing != null) {
+            json.addProperty("slashing", slashing);
+        }
+        if (crushing != null) {
+            json.addProperty("crushing", crushing);
         }
     }
 
-    public static void handleFertilizers(String values, JsonObject objToAddTo) {
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
-        for (int i = 0 ; i < Math.min(3, splitValues.length) ; i++) {
-            var value = splitValues[i];
-            if (value.charAt(0) == 'n' || value.matches("nitrogen.+")) {
-                objToAddTo.addProperty("nitrogen",  Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'p' || value.matches("phosphorus.+")) {
-                objToAddTo.addProperty("phosphorus", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'k' || value.matches("potassium.+")) {
-                objToAddTo.addProperty("potassium", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else {
-                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(n|p|k)=\\d*.\\d+/");
-            }
+    public static void handleFertilizers(JsonObject json, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium) {
+        if (nitrogen != null) {
+            json.addProperty("nitrogen", nitrogen);
+        }
+        if (phosphorous != null) {
+            json.addProperty("phosphorous", phosphorous);
+        }
+        if (potassium != null) {
+            json.addProperty("potassium", potassium);
         }
     }
 
-    public static JsonObject buildHeat(IngredientJS ingredient, float heatCap, @Nullable Float forgeTemp, @Nullable Float weldTemp) {
+    public static JsonObject buildHeat(Ingredient ingredient, float heatCap, @Nullable Float forgeTemp, @Nullable Float weldTemp) {
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("heat_capacity", heatCap);
@@ -96,43 +82,36 @@ public class DataUtils {
         return json;
     }
 
-    public static void handleItemSize(String values, JsonObject objToAddTo) {
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
-        for (int i = 0 ; i < Math.min(2, splitValues.length) ; i++) {
-            var value = splitValues[i];
-            if (value.matches("s(?>ize)?=.+")) {
-                var constant = value.split("=");
-                if (!constant[1].matches("(?>tiny|(?>very_)?(?>small|large)|normal|huge)")) {
-                    ConsoleJS.SERVER.error("Size value cannot be '" + constant[1] + "', must be tiny, very_small, small, normal, large, very_large, or huge!");
-                } else {
-                    objToAddTo.addProperty("size", constant[1]);
-                }
-            } else if (value.matches("w(?>eight)?=.+")) {
-                var constant = value.split("=");
-                if (!constant[1].matches("(?>(?>very_)?(?>light|heavy)|medium)")) {
-                    ConsoleJS.SERVER.error("Weight value cannot be '" + constant[1] + "', it must be very_light, light, medium, heavy, or very_heavy!");
-                } else {
-                    objToAddTo.addProperty("weight", constant[1]);
-                }
-            } else {
-                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! The value should match /(s=(tiny|very_small|small|normal|large|very_large|huge)|w=(very_light|light|medium|heavy|very_heavy))/");
-            }
+    // Should have been this way from the beginning
+    public static void handleItemSize(JsonObject json, @Nullable Size size, @Nullable Weight weight) {
+        if (size != null) {
+            json.addProperty("size", size.name);
+        }
+        if (weight != null) {
+            json.addProperty("weight", weight.name);
         }
     }
 
-    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, IngredientJS ingot, IngredientJS sheet, int tier) {
-        var ingotJS =  ingot.unwrapStackIngredient().get(0).toJson();
-        var sheetJS =  sheet.unwrapStackIngredient().get(0).toJson();
+    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
         var json = new JsonObject();
         json.addProperty("tier", tier);
         json.addProperty("fluid", fluid);
         json.addProperty("melt_temperature", meltTemp);
         json.addProperty("specific_heat_capacity", heatCap);
-        json.add("ingots", ingotJS);
-        json.add("sheets", sheetJS);
+        if (ingot != null) {
+            json.add("ingot", ingot.toJson());
+        }
+        if (doubleIngot != null) {
+            json.add("double_ingot", doubleIngot.toJson());
+        }
+        if (sheet != null) {
+            json.add("sheet", sheet.toJson());
+        }
         return json;
     }
 
+    /*
+     * See comment in TFCDataEventJS
     public static void handleNetherFertilizers(String values, JsonObject objToAddTo) {
         var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
         for (int i = 0 ; i < Math.min(5, splitValues.length) ; i++) {
@@ -152,6 +131,7 @@ public class DataUtils {
             }
         }
     }
+    */
 
     // "worldgen" is my favorite mod!
     public static ResourceLocation configuredFeatureName(String path) {

@@ -13,6 +13,8 @@ import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import net.dries007.tfc.common.capabilities.size.Size;
+import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-// TODO: Fix buiiders that took an IngredientJS, rework uses of BlockingredientJS and FluidStackIngredient, rewrite string parsers to just be enums
+// TODO: Rework uses of BlockIngredientJS and FluidStackIngredientJS, ensure builders are up to spec, write JSDocs
 @SuppressWarnings("unused")
 public class TFCDataEventJS extends DataPackEventJS {
 
@@ -41,31 +43,31 @@ public class TFCDataEventJS extends DataPackEventJS {
         super.addJson(id, json);
     }
 
-    public void addTFCItemDamageResistance(Ingredient ingredient, String values) { // "p=20, c=50"
+    public void addTFCItemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) { // "p=20, c=50"
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleResistances(values, json);
+        DataUtils.handleResistances(json, piercing, slashing, crushing);
         addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_damage_resistances"), json);
     }
 
-    public void addTFCItemDamageResistance(Ingredient ingredient, String values, ResourceLocation name) {
+    public void addTFCItemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleResistances(values, json);
+        DataUtils.handleResistances(json, piercing, slashing, crushing);
         addJson(DataUtils.dataID(name, "tfc", "item_damage_resistances"), json);
     }
 
-    public void addTFCEntityDamageResistance(String entityTag, String values) { // "p=20, c=50"
+    public void addTFCEntityDamageResistance(String entityTag, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) { // "p=20, c=50"
         var json = new JsonObject();
         json.addProperty("entity", entityTag);
-        DataUtils.handleResistances(values, json);
+        DataUtils.handleResistances(json, piercing, slashing, crushing);
         addJson(DataUtils.dataIDFromObject(entityTag, "tfc", "entity_damage_resistances"), json);
     }
 
-    public void addTFCEntityDamageResistance(String entityTag, String values, ResourceLocation name) {
+    public void addTFCEntityDamageResistance(String entityTag, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing, ResourceLocation name) {
         var json = new JsonObject();
         json.addProperty("entity", entityTag);
-        DataUtils.handleResistances(values, json);
+        DataUtils.handleResistances(json, piercing, slashing, crushing);
         addJson(DataUtils.dataID(name, "tfc", "entity_damage_resistances"), json);
     }
 
@@ -81,17 +83,17 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "drinkables"), data.toJson());
     }
 
-    public void addTFCFertilizer(Ingredient ingredient, String values) { // "n=0.2, p=0.2, k=0.2"
+    public void addTFCFertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium) { // "n=0.2, p=0.2, k=0.2"
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(values, json);
+        DataUtils.handleFertilizers(json, nitrogen, phosphorous, potassium);
         addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fertilizers"), json);
     }
 
-    public void addTFCFertilizer(Ingredient ingredient, String values, ResourceLocation name) {
+    public void addTFCFertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(values, json);
+        DataUtils.handleFertilizers(json, nitrogen, phosphorous, potassium);
         addJson(DataUtils.dataID(name, "tfc", "fertilizers"), json);
     }
 
@@ -131,17 +133,17 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
-    public void addTFCItemSize(Ingredient ingredient, String values) { // "s=tiny, weight=medium"
+    public void addTFCItemSize(Ingredient ingredient, @Nullable Size size, @Nullable Weight weight) { // "s=tiny, weight=medium"
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleItemSize(values, json);
+        DataUtils.handleItemSize(json, size, weight);
         addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_sizes"), json);
     }
 
-    public void addTFCItemSize(Ingredient ingredient, String values, ResourceLocation name) {
+    public void addTFCItemSize(Ingredient ingredient, @Nullable Size size, @Nullable Weight weight, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleItemSize(values, json);
+        DataUtils.handleItemSize(json, size, weight);
         addJson(DataUtils.dataID(name, "tfc", "item_sizes"), json);
     }
 
@@ -161,8 +163,8 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "lamp_fuels"), json);
     }
 
-    public void addTFCMetal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier) {
-        var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
+    public void addTFCMetal(String fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
+        var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
         addJson(DataUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
         // The name has potential to collide if the user defines multiple metals off of one fluid, but TFC states
         // "   Creating multiple metals that reference the same fluid is
@@ -170,8 +172,8 @@ public class TFCDataEventJS extends DataPackEventJS {
         // Thus pretend this is actually a safeguard against undefined behavior 👍
     }
 
-    public void addTFCMetal(String fluid, float meltTemperature, float heatCapacity, IngredientJS ingot, IngredientJS sheet, int tier, ResourceLocation name) {
-        var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, sheet, tier);
+    public void addTFCMetal(String fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier, ResourceLocation name) {
+        var json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }
 
@@ -241,6 +243,8 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
     }
 
+    /*
+     * FirmaLife and Beneath aren't out for 1.20 yet, they may potentially change how they do things
     public void addFLGreenhouse(BlockIngredientJS blockIngredient, int tier) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
@@ -281,4 +285,5 @@ public class TFCDataEventJS extends DataPackEventJS {
         DataUtils.handleNetherFertilizers(values, json);
         addJson(DataUtils.dataID(name, "beneath", "nether_fertilizers"), json);
     }
+    */
 }
