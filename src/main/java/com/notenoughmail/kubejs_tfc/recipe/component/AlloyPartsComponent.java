@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: this is wrong
 public record AlloyPartsComponent(RecipeComponent<String> metal, RecipeComponent<Double> min, RecipeComponent<Double> max) implements RecipeComponent<TinyMap<String, AlloyRecipe.Range>> {
 
     public static final AlloyPartsComponent ALLOY = new AlloyPartsComponent(StringComponent.ID, NumberComponent.doubleRange(0, 1), NumberComponent.doubleRange(0, 1));

@@ -6,8 +6,6 @@
   "mixins": [
     "FluidBuilderMixin",
     "HandHeldItemBuilderMixin",
-    "IngredientJSMixin",
-    "IngredientWrapperMixin",
     "OpenSimplex2DMixin",
     "ServerScripManagerMixin"
   ],

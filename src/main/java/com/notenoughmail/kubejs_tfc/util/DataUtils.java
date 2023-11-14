@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.resources.ResourceLocation;

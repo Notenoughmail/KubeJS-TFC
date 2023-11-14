@@ -4,8 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.*;
-import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.rhino.util.HideFromJS;

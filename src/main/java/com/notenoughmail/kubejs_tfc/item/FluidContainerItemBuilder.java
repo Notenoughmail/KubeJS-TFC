@@ -6,14 +6,11 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.FluidContainerItem;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
-
-import java.util.Map;
 
 public class FluidContainerItemBuilder extends ItemBuilder {
 

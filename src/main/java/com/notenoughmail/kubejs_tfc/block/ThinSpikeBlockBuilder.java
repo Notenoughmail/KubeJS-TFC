@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 // TODO: Fix shape
 public class ThinSpikeBlockBuilder extends BlockBuilder {

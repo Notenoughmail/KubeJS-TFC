@@ -2,11 +2,9 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.event.RockSettingsEventJS;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
-import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;

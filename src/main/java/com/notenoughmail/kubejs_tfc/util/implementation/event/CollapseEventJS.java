@@ -1,11 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
-import dev.latvian.mods.kubejs.level.LevelJS;
-import dev.latvian.mods.kubejs.server.ServerEventJS;
 import net.dries007.tfc.util.events.CollapseEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

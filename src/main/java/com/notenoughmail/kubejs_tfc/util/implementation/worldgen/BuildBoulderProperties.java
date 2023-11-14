@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dev.latvian.mods.rhino.util.HideFromJS;
 
 import java.util.ArrayList;
 import java.util.List;

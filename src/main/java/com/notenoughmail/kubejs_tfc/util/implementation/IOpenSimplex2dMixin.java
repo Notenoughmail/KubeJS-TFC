@@ -5,5 +5,5 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 @HideFromJS
 public interface IOpenSimplex2dMixin {
 
-    void setSeed(long seed);
+    void kubejs_tfc$SetSeed(long seed);
 }

@@ -116,7 +116,7 @@ public class KubeJSClimateModel implements ClimateModel {
     public void onWorldLoad(ServerLevel level) {
         climateSeed = LinearCongruentialGenerator.next(level.getSeed(), name.hashCode() * 4621445665421L);
         for (int i = 0 ; i < noises.size() ; i++) {
-            ((IOpenSimplex2dMixin) noises.get(i)).setSeed(climateSeed + (35242456354313L * i));
+            ((IOpenSimplex2dMixin) noises.get(i)).kubejs_tfc$SetSeed(climateSeed + (35242456354313L * i));
         }
         if (level.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension extension) {
             temperatureSettings = extension.getBiomeSourceExtension().settings().temperatureSettings();

@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.latvian.mods.rhino.util.HideFromJS;
 
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
 

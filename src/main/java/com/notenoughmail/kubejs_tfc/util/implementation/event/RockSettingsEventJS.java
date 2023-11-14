@@ -3,15 +3,13 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.rhino.util.HideFromJS;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 // TODO: Redo this for new rock stuff

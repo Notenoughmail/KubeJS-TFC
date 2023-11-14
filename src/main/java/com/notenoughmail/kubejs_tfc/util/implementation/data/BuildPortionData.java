@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonObject;
-import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 

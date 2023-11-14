@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeObject;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

@@ -149,6 +149,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         event.add("Month", Month.class);
         event.add("Season", Season.class);
         event.add("Calendar", CalendarWrapper.class);
+        event.add("TFCIngredient", TFCIngredientWrapper.class);
     }
 
     @Override

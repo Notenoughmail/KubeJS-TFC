@@ -17,7 +17,7 @@ public class OpenSimplex2DMixin implements IOpenSimplex2dMixin {
 
     @HideFromJS
     @Override
-    public void setSeed(long seed) {
+    public void kubejs_tfc$SetSeed(long seed) {
         fnl.SetSeed((int) (seed ^ (seed >> 32)));
     }
 }
