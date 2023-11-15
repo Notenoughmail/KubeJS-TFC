@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
@@ -23,14 +24,13 @@ import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
-import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
+import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
+import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
-import net.dries007.tfc.util.calendar.Month;
-import net.dries007.tfc.util.calendar.Season;
 import net.dries007.tfc.util.climate.ClimateModel;
-import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
@@ -136,20 +136,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerBindings(BindingsEvent event) {
-        event.add("BlockIngredient", BlockIngredientWrapper.class);
-        event.add("BlockIng", BlockIngredientWrapper.class);
-        event.add("FluidStackIngredient", FluidStackIngredientWrapper.class);
-        event.add("FluidIngredient", FluidStackIngredientWrapper.class);
-        event.add("ItemStackProvider", ItemStackProviderWrapper.class);
-        event.add("ItemProvider", ItemStackProviderWrapper.class);
-        event.add("FireStrength", StartFireEvent.FireStrength.class);
-        event.add("AnimalAge", TFCAnimalProperties.Age.class);
-        event.add("AnimalGender", TFCAnimalProperties.Gender.class);
-        event.add("Climate", ClimateWrapper.class);
-        event.add("Month", Month.class);
-        event.add("Season", Season.class);
-        event.add("Calendar", CalendarWrapper.class);
-        event.add("TFCIngredient", TFCIngredientWrapper.class);
+        event.add("TFC", TFCBindings.class);
     }
 
     @Override
@@ -157,7 +144,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         // typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
         // typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
         // typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
-        typeWrappers.registerSimple(ClimateModel.class, ClimateWrapper::getModel);
+        typeWrappers.registerSimple(ClimateModel.class, ClimateBindings.INSTANCE::getModel);
+        typeWrappers.registerSimple(BlockIngredient.class, IngredientHelpers::ofBlockIngredient);
+        typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
+        typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
     }
 
     @Override
@@ -168,6 +158,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(KubeJSTFCPlugin.class);
         filter.deny(RegistrationUtils.class);
         filter.deny(EventHandlers.class);
+        filter.deny(IngredientHelpers.class);
         // TFC
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

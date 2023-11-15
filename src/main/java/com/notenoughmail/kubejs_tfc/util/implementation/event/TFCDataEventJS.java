@@ -4,8 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.BlockIngredientJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildClimateRangeData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFaunaData;
@@ -16,6 +14,8 @@ import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
+import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-// TODO: Rework uses of BlockIngredientJS and FluidStackIngredientJS, ensure builders are up to spec, write JSDocs
+// TODO: Ensure builders are up to spec, write JSDocs
 @SuppressWarnings("unused")
 public class TFCDataEventJS extends DataPackEventJS {
 
@@ -72,13 +72,13 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "entity_damage_resistances"), json);
     }
 
-    public void addTFCDrinkable(FluidStackIngredientJS fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
+    public void addTFCDrinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
         addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "drinkables"), data.toJson());
     }
 
-    public void addTFCDrinkable(FluidStackIngredientJS fluidIngredient, Consumer<BuildDrinkableData> drinkableData, ResourceLocation name) {
+    public void addTFCDrinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData, ResourceLocation name) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
         addJson(DataUtils.dataID(name, "tfc", "drinkables"), data.toJson());
@@ -148,17 +148,17 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "item_sizes"), json);
     }
 
-    public void addTFCLampFuel(FluidStackIngredientJS fluidIngredient, BlockIngredientJS blockIngredient, int burnRate) {
+    public void addTFCLampFuel(FluidIngredient fluidIngredient, BlockIngredient blockIngredient, int burnRate) {
         var json = new JsonObject();
-        json.add("fluid", fluidIngredient.toJsonNoAmount());
+        json.add("fluid", fluidIngredient.toJson());
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
         addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "lamp_fuels"), json);
     }
 
-    public void addTFCLampFuel(FluidStackIngredientJS fluidIngredient, BlockIngredientJS blockIngredient, int burnRate, ResourceLocation name) {
+    public void addTFCLampFuel(FluidIngredient fluidIngredient, BlockIngredient blockIngredient, int burnRate, ResourceLocation name) {
         var json = new JsonObject();
-        json.add("fluid", fluidIngredient.toJsonNoAmount());
+        json.add("fluid", fluidIngredient.toJson());
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
         addJson(DataUtils.dataID(name, "tfc", "lamp_fuels"), json);
@@ -178,7 +178,7 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }
 
-    public void addTFCSupport(BlockIngredientJS blockIngredient, int up, int down, int horizontal) {
+    public void addTFCSupport(BlockIngredient blockIngredient, int up, int down, int horizontal) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("support_up", up);
@@ -187,7 +187,7 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "supports"), json);
     }
 
-    public void addTFCSupport(BlockIngredientJS blockIngredient, int up, int down, int horizontal, ResourceLocation name) {
+    public void addTFCSupport(BlockIngredient blockIngredient, int up, int down, int horizontal, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("support_up", up);
@@ -210,7 +210,7 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataID(name, "tfc", "sluicing"), json);
     }
 
-    public void addTFCPanning(BlockIngredientJS blockIngredient, String lootTable, List<String> models) {
+    public void addTFCPanning(BlockIngredient blockIngredient, String lootTable, List<String> models) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("loot_table", lootTable);
@@ -220,7 +220,7 @@ public class TFCDataEventJS extends DataPackEventJS {
         addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
     }
 
-    public void addTFCPanning(BlockIngredientJS blockIngredient, String lootTable, List<String> models, ResourceLocation name) {
+    public void addTFCPanning(BlockIngredient blockIngredient, String lootTable, List<String> models, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("loot_table", lootTable);
@@ -246,14 +246,14 @@ public class TFCDataEventJS extends DataPackEventJS {
 
     /*
      * FirmaLife and Beneath aren't out for 1.20 yet, they may potentially change how they do things
-    public void addFLGreenhouse(BlockIngredientJS blockIngredient, int tier) {
+    public void addFLGreenhouse(BlockIngredient blockIngredient, int tier) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);
         addJson(DataUtils.dataIDFromObject(blockIngredient, "firmalife", "greenhouse"), json);
     }
 
-    public void addFLGreenhouse(BlockIngredientJS blockIngredient, int tier, ResourceLocation name) {
+    public void addFLGreenhouse(BlockIngredient blockIngredient, int tier, ResourceLocation name) {
         var json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("tier", tier);

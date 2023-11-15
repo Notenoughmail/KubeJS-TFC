@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.implementation.FluidStackIngredientJS;
+import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class BuildDrinkableData {
 
-    private final FluidStackIngredientJS fluidIngredient;
+    private final FluidIngredient fluidIngredient;
     @Nullable
     private Float consumeChance;
     @Nullable
@@ -21,7 +21,7 @@ public class BuildDrinkableData {
     private final List<JsonObject> effects = new ArrayList<>();
 
 
-    public BuildDrinkableData(FluidStackIngredientJS fluidIngredient) {
+    public BuildDrinkableData(FluidIngredient fluidIngredient) {
         this.fluidIngredient = fluidIngredient;
     }
 
@@ -56,7 +56,7 @@ public class BuildDrinkableData {
 
     public JsonObject toJson() {
         var json = new JsonObject();
-        json.add("ingredient", fluidIngredient.toJsonNoAmount());
+        json.add("ingredient", fluidIngredient.toJson());
         if (consumeChance != null) {
             json.addProperty("consume_chance", consumeChance);
         }

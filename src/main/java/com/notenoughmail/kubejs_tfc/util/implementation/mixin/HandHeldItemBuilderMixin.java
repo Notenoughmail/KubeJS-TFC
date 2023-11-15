@@ -14,9 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class HandHeldItemBuilderMixin {
 
     @Shadow(remap = false)
-    public transient float attackDamageBaseline;
-
-    @Shadow(remap = false)
     public transient MutableToolTier toolTier;
 
     @Shadow(remap = false)

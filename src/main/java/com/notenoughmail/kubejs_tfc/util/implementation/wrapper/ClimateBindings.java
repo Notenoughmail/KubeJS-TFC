@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.climate.BiomeBasedClimateModel;
 import net.dries007.tfc.util.climate.Climate;
@@ -12,10 +13,13 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class ClimateWrapper {
+// TODO: JSDocs
+public enum ClimateBindings {
+    @HideFromJS
+    INSTANCE;
 
     @Nullable
-    public static ClimateModel getModel(Object o) {
+    public ClimateModel getModel(Object o) {
         if (o instanceof ClimateModel climate ) {
             return climate;
         } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
@@ -32,35 +36,35 @@ public class ClimateWrapper {
         return null;
     }
 
-    public static ResourceLocation getName(ClimateModel model) {
+    public ResourceLocation getName(ClimateModel model) {
         return Climate.getId(model);
     }
 
-    public static float getCurrentTemperature(BlockContainerJS block) {
+    public float getCurrentTemperature(BlockContainerJS block) {
         return getTemperature(block, Calendars.get(block.minecraftLevel).getCalendarTicks());
     }
 
-    public static float getTemperature(BlockContainerJS block, long calendarTick) {
+    public float getTemperature(BlockContainerJS block, long calendarTick) {
         return Climate.getTemperature(block.minecraftLevel, block.getPos(), calendarTick, Calendars.get(block.minecraftLevel).getCalendarDaysInMonth());
     }
 
-    public static float getAverageTemperature(BlockContainerJS block) {
+    public float getAverageTemperature(BlockContainerJS block) {
         return Climate.getAverageTemperature(block.minecraftLevel, block.getPos());
     }
 
-    public static float getAverageRainfall(BlockContainerJS block) {
+    public float getAverageRainfall(BlockContainerJS block) {
         return Climate.getRainfall(block.minecraftLevel, block.getPos());
     }
 
-    public static float getFogginess(BlockContainerJS block) {
+    public float getFogginess(BlockContainerJS block) {
         return Climate.getFogginess(block.minecraftLevel, block.getPos());
     }
 
-    public static float getWaterFoginess(BlockContainerJS block) {
+    public float getWaterFoginess(BlockContainerJS block) {
         return Climate.getWaterFogginess(block.minecraftLevel, block.getPos());
     }
 
-    public static boolean isWarmEnoughToRain(BlockContainerJS block) {
+    public boolean isWarmEnoughToRain(BlockContainerJS block) {
         return Climate.warmEnoughToRain(block.minecraftLevel, block.getPos());
     }
 }

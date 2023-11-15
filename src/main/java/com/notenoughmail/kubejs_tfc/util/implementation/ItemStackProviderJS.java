@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-// TODO: Investigate making this extend OutputItem
+// TODO: Investigate making this extend OutputItem, make this functional
 public class ItemStackProviderJS {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStackJS.EMPTY, null);
