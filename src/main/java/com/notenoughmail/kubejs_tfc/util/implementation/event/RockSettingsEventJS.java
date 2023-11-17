@@ -26,7 +26,7 @@ public class RockSettingsEventJS extends StartupEventJS {
         RockSettings.register(id, rockSettings.build());
     }
 
-    // Removed for now as its a bit of a pain to get this working like it previously did
+    // Removed for now as it's a bit of a pain to get this working like it previously did
     // public void removeDefaultLayer(ResourceLocation id) {
     //     queuedRemovals.add(id);
     // }

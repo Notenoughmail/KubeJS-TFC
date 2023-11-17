@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
+package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 
 // TODO: JSDocs
+@SuppressWarnings("unused")
 public enum ClimateBindings {
     @HideFromJS
     INSTANCE;
@@ -60,7 +61,7 @@ public enum ClimateBindings {
         return Climate.getFogginess(block.minecraftLevel, block.getPos());
     }
 
-    public float getWaterFoginess(BlockContainerJS block) {
+    public float getWaterFogginess(BlockContainerJS block) {
         return Climate.getWaterFogginess(block.minecraftLevel, block.getPos());
     }
 

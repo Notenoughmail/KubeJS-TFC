@@ -1,13 +1,14 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
-import dev.latvian.mods.kubejs.item.ItemStackJS;
 import net.dries007.tfc.common.capabilities.food.Nutrient;
 import net.dries007.tfc.common.capabilities.food.NutritionData;
 import net.dries007.tfc.common.capabilities.food.TFCFoodData;
 import net.dries007.tfc.common.capabilities.player.PlayerData;
 import net.dries007.tfc.common.recipes.ChiselRecipe;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
+@SuppressWarnings("unused")
 public class TFCPlayerDataJS {
 
     private final PlayerData tfcData;
@@ -47,8 +48,8 @@ public class TFCPlayerDataJS {
         tfcData.setLastDrinkTick(lastDrinkTick);
     }
 
-    public void playerEat(ItemStackJS item) {
-        foodData.eat(item.getItem(), item.getItemStack(), null);
+    public void playerEat(ItemStack itemStack) {
+        foodData.eat(itemStack.getItem(), itemStack, null);
     }
 
     public int getFoodLevel() {
@@ -71,7 +72,7 @@ public class TFCPlayerDataJS {
         foodData.setFoodLevel(food);
     }
 
-    public void setSaturationlevel(float saturation) {
+    public void setSaturationLevel(float saturation) {
         foodData.setSaturation(saturation);
     }
 

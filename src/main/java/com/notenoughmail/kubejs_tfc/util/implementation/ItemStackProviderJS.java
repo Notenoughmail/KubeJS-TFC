@@ -3,29 +3,28 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.ModifyCondition;
+import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
-import dev.latvian.mods.rhino.NativeArray;
-import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.Wrapper;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-// TODO: Investigate making this extend OutputItem, make this functional
-public class ItemStackProviderJS {
+public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
 
-    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStackJS.EMPTY, null);
+    public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));
 
     public static ItemStackProviderJS of(@Nullable Object o) {
         if (o instanceof Wrapper w) {
@@ -34,24 +33,17 @@ public class ItemStackProviderJS {
 
         if (o == null) {
             throw new RecipeExceptionJS("KubeJS TFC tried to build a null Item Stack Provider");
-        } else if (o instanceof ItemStackJS item) {
+        } else if (o instanceof ItemStack item) {
             return new ItemStackProviderJS(item, new JsonArray());
         } else if (o instanceof ItemStackProviderJS js) {
             return js;
         } else if (o instanceof JsonArray json) {
-            return new ItemStackProviderJS(ItemStackJS.EMPTY, json);
-        } else if (o instanceof CharSequence || o instanceof ResourceLocation || o instanceof JsonElement) {
-            return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
+            return new ItemStackProviderJS(ItemStack.EMPTY, json);
         } else if (o instanceof List<?> list) {
-            return new ItemStackProviderJS(ItemStackJS.EMPTY, parseModifierList(list));
+            return new ItemStackProviderJS(ItemStack.EMPTY, parseModifierList(list));
         }
 
-        return EMPTY;
-    }
-
-    // Helpful methods left over from when I initially panic-implemented IngredientJS, there's a reason I didn't do that to begin with
-    public boolean test(ItemStackJS itemStackJS) {
-        return stack.test(itemStackJS) && modifiers.isEmpty();
+        return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
     }
 
     public boolean isEmpty() {
@@ -59,12 +51,7 @@ public class ItemStackProviderJS {
     }
 
     public ItemStackProviderJS withCount(int count) {
-        stack.withCount(count);
-        return this;
-    }
-
-    public ItemStackProviderJS x(int c) {
-        stack.x(c);
+        stack.setCount(count);
         return this;
     }
 
@@ -76,40 +63,38 @@ public class ItemStackProviderJS {
         return modifiers.isEmpty();
     }
 
-    public static ItemStackProviderJS of(@Nullable Object o, @Nullable Object b) {
-        return new ItemStackProviderJS(ItemStackJS.of(o), parseModifierList(ListJS.orSelf(b)));
+    @Nullable
+    public CompoundTag getTag() {
+        return stack.getTag();
     }
 
+    public void setTag(CompoundTag tag) {
+        stack.setTag(tag);
+    }
+
+    public void mergeTag(CompoundTag tag) {
+        stack.getOrCreateTag().merge(tag);
+    }
+
+    public static ItemStackProviderJS of(ItemStack stack, @Nullable Object b) {
+        return new ItemStackProviderJS(stack, parseModifierList(ListJS.orEmpty(b)));
+    }
+
+    // TODO: Possibly rework how this handles stuff
     private static JsonArray parseModifierList(List<?> list) {
         var modifiers = new JsonArray();
         for (var element : list) {
-            if (element instanceof NativeObject object) {
-                modifiers.add(ListJS.orSelf(object).toJson().get(0).getAsJsonObject());
-            } else if (element instanceof CharSequence) {
+            if (element instanceof CharSequence) {
                 var obj = new JsonObject();
                 obj.addProperty("type", element.toString());
                 modifiers.add(obj);
             } else if (element instanceof JsonObject obj) {
                 modifiers.add(obj);
-            } else if (element instanceof MapJS map) {
-                modifiers.add(map.toJson());
+            } else {
+                modifiers.add(MapJS.json(element));
             }
         }
         return modifiers;
-    }
-
-    private final ItemStackJS stack;
-    private final JsonArray modifiers;
-
-    @Deprecated
-    public ItemStackProviderJS(JsonObject stack, JsonArray modifiers) {
-        this.stack = ItemStackJS.of(stack);
-        this.modifiers = modifiers;
-    }
-
-    public ItemStackProviderJS(ItemStackJS stack, JsonArray modifiers) {
-        this.stack = stack;
-        this.modifiers = modifiers;
     }
 
     public ItemStackProviderJS addHeat(int temperature) {
@@ -127,44 +112,15 @@ public class ItemStackProviderJS {
         return this;
     }
 
-    public ItemStackProviderJS jsonModifier(Object o) {
-        if (o instanceof JsonElement json) {
-            if (json.isJsonArray()) {
-                for (var element : json.getAsJsonArray()) {
-                    if (element.isJsonObject()) {
-                        modifiers.add(element.getAsJsonObject());
-                    } else if (element.isJsonPrimitive()) {
-                        var obj = new JsonObject();
-                        obj.addProperty("type", element.getAsString());
-                        modifiers.add(obj);
-                    } else {
-                        throw new RecipeExceptionJS("Provided element in json array should be a json object or json primitive!");
-                    }
-                }
-            } else if (json.isJsonObject()) {
-                modifiers.add(json.getAsJsonObject());
-            } else {
-                throw new RecipeExceptionJS("Provided json modifier must either be a json array or object!");
-            }
-        } else if (o instanceof NativeObject nativeObject) {
-            modifiers.add(ListJS.orSelf(nativeObject).toJson().getAsJsonObject());
-        } else if (o instanceof NativeArray nativeArray) {
-            modifiers.addAll(parseModifierList(nativeArray));
-        } else if (o instanceof MapJS map) {
-            modifiers.add(map.toJson());
-        } else {
-            throw new RecipeExceptionJS("Provided json modifier failed to parse!");
-        }
+    public ItemStackProviderJS jsonModifier(JsonObject json) {
+        modifiers.add(json);
         return this;
     }
 
     public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
-        var obj = new JsonObject();
-        if (isAddingTrait) {
-            obj.addProperty("type", "tfc:add_trait");
-        } else {
-            obj.addProperty("type", "tfc:remove_trait");
-        }
+        final JsonObject obj = new JsonObject();
+        final String type = isAddingTrait ? "tfc:add_trait" : "tfc:remove_trait";
+        obj.addProperty("type", type);
         obj.addProperty("trait", foodTrait);
         modifiers.add(obj);
         return this;
@@ -178,68 +134,29 @@ public class ItemStackProviderJS {
         return this;
     }
 
-    public ItemStackProviderJS conditional(Consumer<ModifyCondition> conditional, Consumer<ItemStackProviderJS> modifiers, @Nullable Consumer<ItemStackProviderJS> elseModifiers) {
-        if (!KubeJSTFC.channelCastingLoaded()) {
-            return this;
-        }
-
-        var obj = new JsonObject();
-        obj.addProperty("type", "tfcchannelcasting:conditional");
-
-        var condition = new ModifyCondition();
-        conditional.accept(condition);
-        obj.add("condition", condition.toJson());
-
-        var modifier = new ItemStackProviderJS(ItemStackJS.EMPTY, new JsonArray());
-        modifiers.accept(modifier);
-        obj.add("modifiers", modifier.getModifiers());
-
-        if (elseModifiers != null) {
-            var elseModifier = new ItemStackProviderJS(ItemStackJS.EMPTY, new JsonArray());
-            elseModifiers.accept(elseModifier);
-            obj.add("else_modifiers", elseModifier.getModifiers());
-        }
-        this.modifiers.add(obj);
-        return this;
-    }
-
-    public ItemStackProviderJS setFoodData(Consumer<BuildFoodItemData> foodData) {
-        if (!KubeJSTFC.channelCastingLoaded()) {
-            return this;
-        }
-
-        var data = new BuildFoodItemData(null);
-        foodData.accept(data);
-        var obj = data.toJson();
-        obj.addProperty("type", "tfcchannelcasting:set_food_data");
-        modifiers.add(obj);
-        return this;
-    }
-
     public JsonObject getJsonStack() {
-        return stack.toResultJson().getAsJsonObject();
-    }
-
-    public ItemStackJS getStackJS() {
-        return stack;
-    }
-
-    /**
-     * Tests if the provided item provider's stack equals this item provider's stack, logic is handled natively by KubeJS' own ItemStackJS
-     * @param other The item provider to be tested
-     * @return True if the item providers' stacks are equal
-     */
-    public boolean test(ItemStackProviderJS other) {
-        return this.getStackJS().test(other.getStackJS()); // Kube can handle it
+        return IngredientHelpers.itemStackToJson(stack);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof ItemStackProviderJS provider && provider.getStackJS().equals(this.getStackJS()) && provider.modifiers.equals(this.modifiers);
+        if (obj instanceof ItemStackProviderJS provider) {
+            return provider.stack().equals(this.stack()) && provider.modifiers.equals(this.modifiers);
+        } else if (obj instanceof ItemStack itemStack) {
+            return this.modifiers.isEmpty() && itemStack.equals(this.stack);
+        }
+        return false;
     }
 
-    public JsonArray getModifiers() {
-        return modifiers;
+    @Generics(base = JsonObject.class, value = {}) // is this how you do it? Who knows
+    public List<JsonObject> getModifiersOfType(String type) {
+        final List<JsonObject> list = new ArrayList<>();
+        for (JsonElement element : modifiers) {
+            if (element.getAsJsonObject().has(type)) {
+                list.add(element.getAsJsonObject());
+            }
+        }
+        return list;
     }
 
     // This assumes if neither element is defined the json is an item stack
@@ -247,7 +164,7 @@ public class ItemStackProviderJS {
         if (!json.has("stack") && !json.has("modifiers")) {
             return new ItemStackProviderJS(ItemStackJS.of(json), new JsonArray());
         }
-        var stack = json.has("stack") ? ItemStackJS.of(json.get("stack")) : ItemStackJS.EMPTY;
+        var stack = json.has("stack") ? ItemStackJS.of(json.get("stack")) : ItemStack.EMPTY;
         var modifiers = json.has("modifiers") ? json.get("modifiers").getAsJsonArray() : new JsonArray();
         return new ItemStackProviderJS(stack, modifiers);
     }
@@ -255,21 +172,21 @@ public class ItemStackProviderJS {
     public JsonObject toJson() {
         if (stack.isEmpty()) {
             var obj = new JsonObject();
-            if (modifiers == null || modifiers.isEmpty()) {
+            if (modifiers.isEmpty()) {
                 if (RecipeJS.itemErrors) {
                     throw new RecipeExceptionJS("KubeJS TFC tried to build an empty item stack provider!");
                 }
             } else {
-                obj.add("modifiers", modifiers);
+                obj.add("modifiers", modifiers());
             }
             return obj;
         } else {
-            if (modifiers == null || modifiers.isEmpty()) {
+            if (modifiers.isEmpty()) {
                 return getJsonStack();
             } else {
                 var obj = new JsonObject();
                 obj.add("stack", getJsonStack());
-                obj.add("modifiers", modifiers);
+                obj.add("modifiers", modifiers());
                 return obj;
             }
         }
@@ -285,7 +202,7 @@ public class ItemStackProviderJS {
 
     @Override
     public String toString() {
-        return "ItemStackProvider.of(" + getStackJS() + ", " + getModifiers() + ")";
+        return "TFC.itemStackProvider.of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")";
     }
 
     public ItemStackProviderJS addTrait(String s) {
@@ -322,26 +239,6 @@ public class ItemStackProviderJS {
 
     public ItemStackProviderJS copyOldestFood() {
         return this.simpleModifier("tfc:copy_oldest_food");
-    }
-
-    public ItemStackProviderJS burrito() {
-        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:burrito") : this;
-    }
-
-    public ItemStackProviderJS pie() {
-        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:pie") : this;
-    }
-
-    public ItemStackProviderJS pizza() {
-        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:pizza") : this;
-    }
-
-    public ItemStackProviderJS copyDynamicFood() {
-        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:copy_dynamic_food") : this; // Can't find usage, looking at code seems to be simple
-    }
-
-    public ItemStackProviderJS emptyPan(){
-        return KubeJSTFC.firmaLoaded() ? this.simpleModifier("firmalife:empty_pan") : this; // Can't find usage, looking at code seems to be simple
     }
 
     public ItemStackProviderJS addBait() {

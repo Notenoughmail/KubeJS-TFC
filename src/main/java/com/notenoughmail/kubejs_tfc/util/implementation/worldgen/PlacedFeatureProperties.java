@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeObject;
@@ -12,66 +13,49 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class PlacedFeatureProperties {
 
     private final String feature;
     private final List<JsonObject> placements = new ArrayList<>();
 
     public PlacedFeatureProperties(String name) {
-        feature = "kubejs_tfc:" + name;
+        feature = DataUtils.normalizeResourceLocation(name).toString();
     }
 
-    public PlacedFeatureProperties placement(Object o) {
-        if (o instanceof NativeObject obj) {
-            placements.add(ListJS.orSelf(obj).toJson().get(0).getAsJsonObject());
-        } else if (o instanceof JsonObject obj) {
-            placements.add(obj);
-        } else if (o instanceof MapJS map) {
-            placements.add(map.toJson());
-        } else if(o instanceof CharSequence) {
-            var obj = new JsonObject();
-            obj.addProperty("type", o.toString());
-            placements.add(obj);
-        } else if (o instanceof List<?> list) {
-            var listJS = ListJS.orSelf(list);
-            for (var element : listJS) {
-                if (element instanceof NativeObject obj) {
-                    placements.add(ListJS.orSelf(obj).toJson().get(0).getAsJsonObject());
-                } else if (element instanceof JsonObject obj) {
-                    placements.add(obj);
-                } else if (element instanceof MapJS map) {
-                    placements.add(map.toJson());
-                } else if(element instanceof CharSequence) {
-                    var obj = new JsonObject();
-                    obj.addProperty("type", element.toString());
-                    placements.add(obj);
-                }
-            }
-        }
+    public PlacedFeatureProperties simplePlacement(String type) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("type", type);
+        placements.add(json);
+        return this;
+    }
+
+    public PlacedFeatureProperties jsonPlacement(JsonObject json) {
+        placements.add(json);
         return this;
     }
 
     public PlacedFeatureProperties tfcBiome() {
-        return placement("tfc:biome");
+        return simplePlacement("tfc:biome");
     }
 
     public PlacedFeatureProperties climate(Consumer<Climate> climate) {
         var placer = new Climate();
         climate.accept(placer);
-        return placement(placer.toJson());
+        return jsonPlacement(placer.toJson());
     }
 
     public PlacedFeatureProperties flatEnough(Consumer<Flatness> flatness) {
         var placer = new Flatness();
         flatness.accept(placer);
-        return placement(placer.toJson());
+        return jsonPlacement(placer.toJson());
     }
 
     public PlacedFeatureProperties nearWater(int i) {
         var json = new JsonObject();
         json.addProperty("type", "tfc:near_water");
         json.addProperty("radius", i);
-        return placement(json);
+        return jsonPlacement(json);
     }
 
     public PlacedFeatureProperties shallowWater() {
@@ -82,11 +66,11 @@ public class PlacedFeatureProperties {
         var json = new JsonObject();
         json.addProperty("type", "tfc:shallow_water");
         json.addProperty("max_depth", depth);
-        return placement(json);
+        return jsonPlacement(json);
     }
 
     public PlacedFeatureProperties underground() {
-        return placement("tfc:underground");
+        return simplePlacement("tfc:underground");
     }
 
     public PlacedFeatureProperties volcano(float distance) {
@@ -98,26 +82,26 @@ public class PlacedFeatureProperties {
         json.addProperty("type", "tfc:volcano");
         json.addProperty("center", center);
         json.addProperty("distance", distance);
-        return placement(json);
+        return jsonPlacement(json);
     }
 
     // Some of the vanilla modifiers that I can make heads or tails of
     public PlacedFeatureProperties inSquare() {
-        return placement("minecraft:in_square");
+        return simplePlacement("minecraft:in_square");
     }
 
     public PlacedFeatureProperties rarityFilter(int i) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:rarity_filter");
         json.addProperty("chance", i);
-        return placement(json);
+        return jsonPlacement(json);
     }
 
     public PlacedFeatureProperties heightMap(String s) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:heightmap");
         json.addProperty("height_map", s.toUpperCase(Locale.ROOT));
-        return placement(json);
+        return jsonPlacement(json);
     }
 
     public JsonObject toJson() {
@@ -208,7 +192,7 @@ public class PlacedFeatureProperties {
         }
     }
 
-    private static class Flatness {
+    public static class Flatness {
 
         private float flatness = 0.5f;
         private int radius = 2;

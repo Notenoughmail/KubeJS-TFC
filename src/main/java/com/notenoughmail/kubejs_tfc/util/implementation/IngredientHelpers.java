@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.architectury.fluid.FluidStack;
+import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -12,6 +13,7 @@ import net.dries007.tfc.common.recipes.ingredients.IngredientType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -149,5 +151,13 @@ public class IngredientHelpers {
             return new FluidStackIngredient(fluid(fluidStack.getFluid()), (int) fluidStack.getAmount());
         }
         return new FluidStackIngredient(ofFluidIngredient(o), (int) FluidStack.bucketAmount()); // A not wholly unreasonable fallback
+    }
+
+    public static JsonObject itemStackToJson(ItemStack stack) {
+        return ((ItemStackKJS) (Object) stack).toJsonJS();
+    }
+
+    public static String stringifyItemStack(ItemStack stack) {
+        return ((ItemStackKJS) (Object) stack).kjs$toItemString();
     }
 }

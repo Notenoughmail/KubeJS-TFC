@@ -7,8 +7,10 @@ import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
+import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.wrapper.*;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -49,7 +51,6 @@ import net.minecraft.world.item.Tier;
  *    - {@link net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock Grass}
  *    - {@link net.dries007.tfc.common.blocks.soil.FarmlandBlock Soil}
  *       - These are block entities
- *    - {@link net.dries007.tfc.common.blocks.soil.MudBlock Mud?}
  *    - {@link net.dries007.tfc.common.blocks.soil.PathBlock Path}
  *  - {@link net.dries007.tfc.common.blocks.crop.CropBlock Crops?}
  *    - These are block entities
@@ -141,13 +142,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
-        // typeWrappers.register(FluidStackIngredientJS.class, FluidStackIngredientJS::of);
-        // typeWrappers.register(BlockIngredientJS.class, BlockIngredientJS::of);
-        // typeWrappers.register(ItemStackProviderJS.class, ItemStackProviderJS::of);
         typeWrappers.registerSimple(ClimateModel.class, ClimateBindings.INSTANCE::getModel);
         typeWrappers.registerSimple(BlockIngredient.class, IngredientHelpers::ofBlockIngredient);
         typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
+        typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
     }
 
     @Override

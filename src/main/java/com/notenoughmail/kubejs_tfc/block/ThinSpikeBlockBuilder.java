@@ -45,7 +45,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     private ResourceLocation dripParticle;
     private FluidStack meltFluid;
     private String tipModel;
-    private transient List<AABB> tipShape;
+    private final List<AABB> tipShape;
 
     public ThinSpikeBlockBuilder(ResourceLocation i) {
         super(i);

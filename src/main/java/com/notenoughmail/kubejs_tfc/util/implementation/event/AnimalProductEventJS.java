@@ -71,7 +71,7 @@ public class AnimalProductEventJS extends PlayerEventJS {
         event.setProduct(item);
     }
 
-    public void setFluidProcuct(FluidStackJS fluid) {
+    public void setFluidProduct(FluidStackJS fluid) {
         event.setProduct(FluidStackHooksForge.toForge(fluid.getFluidStack()));
     }
 

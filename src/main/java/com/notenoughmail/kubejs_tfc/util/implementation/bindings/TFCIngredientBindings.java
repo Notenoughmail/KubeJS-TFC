@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.wrapper;
+package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;

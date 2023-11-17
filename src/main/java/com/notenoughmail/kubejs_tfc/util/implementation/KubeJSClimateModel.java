@@ -4,9 +4,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterClimateMod
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
-import net.dries007.tfc.world.chunkdata.ChunkGeneratorExtension;
 import net.dries007.tfc.world.noise.OpenSimplex2D;
-import net.dries007.tfc.world.settings.ClimateSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -30,8 +28,6 @@ public class KubeJSClimateModel implements ClimateModel {
     public LevelPosLong2FloatCallback waterFog = (level, pos, ticks) -> 1.0F;
     protected long climateSeed = 0L;
     private final List<OpenSimplex2D> noises = new ArrayList<>();
-    protected ClimateSettings temperatureSettings = ClimateSettings.DEFAULT;
-    protected ClimateSettings rainfallSettings = ClimateSettings.DEFAULT;
 
 
     public KubeJSClimateModel(ResourceLocation name) {
@@ -63,17 +59,9 @@ public class KubeJSClimateModel implements ClimateModel {
     }
 
     public OpenSimplex2D getNewNoise() {
-        var noise = new OpenSimplex2D(climateSeed);
+        var noise = new OpenSimplex2D(0);
         noises.add(noise);
         return noise;
-    }
-
-    public ClimateSettings getTemperatureSettings() {
-        return temperatureSettings;
-    }
-
-    public ClimateSettings getRainfallSettings() {
-        return rainfallSettings;
     }
 
     @NotNull
@@ -119,32 +107,18 @@ public class KubeJSClimateModel implements ClimateModel {
         for (int i = 0 ; i < noises.size() ; i++) {
             ((IOpenSimplex2dMixin) noises.get(i)).kubejs_tfc$SetSeed(climateSeed + (35242456354313L * i));
         }
-        if (level.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension extension) {
-            temperatureSettings = extension.getBiomeSourceExtension().settings().temperatureSettings();
-            rainfallSettings = extension.getBiomeSourceExtension().settings().rainfallSettings();
-        }
     }
 
     @HideFromJS
     @Override
     public void onSyncToClient(FriendlyByteBuf buffer) {
         buffer.writeLong(climateSeed);
-        buffer.writeInt(temperatureSettings.scale());
-        buffer.writeBoolean(temperatureSettings.endlessPoles());
-        buffer.writeInt(rainfallSettings.scale());
-        buffer.writeBoolean(rainfallSettings.endlessPoles());
     }
 
     @HideFromJS
     @Override
     public void onReceiveOnClient(FriendlyByteBuf buffer) {
         climateSeed = buffer.readLong();
-        var tempScale = buffer.readInt();
-        var tempPole = buffer.readBoolean();
-        var rainScale = buffer.readInt();
-        var rainPole = buffer.readBoolean();
-        temperatureSettings = new ClimateSettings(tempScale, tempPole);
-        rainfallSettings = new ClimateSettings(rainScale, rainPole);
     }
 
     @Override
