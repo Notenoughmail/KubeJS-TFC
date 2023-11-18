@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -33,7 +32,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Fix shape
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     private float dripChance;
@@ -46,6 +44,8 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     private FluidStack meltFluid;
     private String tipModel;
     private final List<AABB> tipShape;
+    private VoxelShape cachedTipShape;
+    private VoxelShape cachedBaseShape;
 
     public ThinSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -121,29 +121,24 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return tipBox(x0, y0, z0, x1, y1, z1, true);
     }
 
-    public VoxelShape createTipShape() {
+    private VoxelShape getTipShape() {
         if (tipShape.isEmpty()) {
             return ThinSpikeBlock.TIP_SHAPE;
         }
-
-        var shape = Shapes.create(tipShape.get(0));
-        for (int i = 1; i < tipShape.size() ; i++) {
-            shape = Shapes.or(shape, Shapes.create(tipShape.get(i)));
+        if (cachedTipShape == null) {
+            cachedTipShape = BlockBuilder.createShape(tipShape);
         }
-        return shape;
+        return cachedTipShape;
     }
 
-    @Override
-    public VoxelShape createShape() {
+    private VoxelShape getBaseShape() {
         if (customShape.isEmpty()) {
             return ThinSpikeBlock.PILLAR_SHAPE;
         }
-
-        var shape = Shapes.create(customShape.get(0));
-        for (var i = 1; i < customShape.size(); i++) {
-            shape = Shapes.or(shape, Shapes.create(customShape.get(i)));
+        if (cachedBaseShape == null) {
+            cachedBaseShape = BlockBuilder.createShape(customShape);
         }
-        return shape;
+        return cachedBaseShape;
     }
 
     @Override
@@ -156,7 +151,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
                     final float temperature = Climate.getTemperature(level, pos);
                     if (state.getValue(TIP) && state.getValue(FLUID).getFluid() == Fluids.EMPTY && temperature > dripTemp && random.nextFloat() < dripChance) {
                         if (random.nextFloat() < dripChance) { // Weird but TFC does it
-                            spawnParticle(level, pos, state, RegistrationUtils.getOrLogErrorParticle(dripParticle, ParticleTypes.DRIPPING_DRIPSTONE_WATER));
+                            spawnParticle(level, pos, state, RegistryUtils.getOrLogErrorParticle(dripParticle, ParticleTypes.DRIPPING_DRIPSTONE_WATER));
                         }
                     }
                 }
@@ -213,7 +208,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
             @Override
             public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
             {
-                return state.getValue(TIP) ? createTipShape() : createShape();
+                return state.getValue(TIP) ? getTipShape() : getBaseShape();
             }
         };
     }

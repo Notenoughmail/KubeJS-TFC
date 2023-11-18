@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +138,7 @@ public class EventHandlers {
             return; // Do nothing as a menu is needed
         }
 
-        ResourceLocation menuName = ForgeRegistries.MENU_TYPES.getKey(menuType);
+        final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
 
         if (event.getEntity() instanceof ServerPlayer player && SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
             Pair<Size, List<Pair<Integer, Integer>>> function = SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.get(menuName);

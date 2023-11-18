@@ -2,9 +2,9 @@ package com.notenoughmail.kubejs_tfc.block.moss;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.SlabBlockBuilder;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blocks.rock.MossGrowingSlabBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -26,7 +26,7 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
 
     public MossGrowingSlabBlockBuilder(ResourceLocation i) {
         super(i);
-        mossyBlock = Blocks.OAK_SLAB.getRegistryName();
+        mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_PLANKS);
         mossGrowthFull = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
         mossGrowthHalf = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
@@ -58,7 +58,7 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = KubeJSRegistries.blocks().get(mossyBlock);
+                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof SlabBlock)) {
                     mossBlock = Blocks.OAK_SLAB;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" is not a slab block or does not exist!", mossyBlock);

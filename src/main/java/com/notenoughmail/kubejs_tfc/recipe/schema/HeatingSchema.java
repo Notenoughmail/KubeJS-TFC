@@ -16,7 +16,7 @@ public interface HeatingSchema {
     RecipeKey<ItemStackProviderJS> ITEM_RESULT = ItemProviderComponent.PROVIDER.key("result_item").optional(ItemStackProviderJS.EMPTY);
     RecipeKey<OutputFluid> FLUID_RESULT = FluidComponents.OUTPUT.key("result_fluid").optional(EmptyFluidStackJS.INSTANCE);
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
-    RecipeKey<Double> TEMP = NumberComponent.DOUBLE.key("temperature");
+    RecipeKey<Float> TEMP = NumberComponent.FLOAT.key("temperature");
 
     RecipeSchema SCHEMA = new RecipeSchema(ITEM_RESULT, FLUID_RESULT, INGREDIENT, TEMP)
             .constructor(ITEM_RESULT, INGREDIENT, TEMP)

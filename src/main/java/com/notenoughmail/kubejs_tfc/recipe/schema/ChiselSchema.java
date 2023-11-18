@@ -23,7 +23,6 @@ public interface ChiselSchema {
     RecipeKey<ItemStackProviderJS> EXTRA_DROP = ItemProviderComponent.PROVIDER.key("extra_drop").optional(ItemStackProviderJS.EMPTY).preferred("extraDrop");
 
     RecipeSchema SCHEMA = new RecipeSchema(RESULT, INGREDIENT, MODE, ITEM_INGREDIENT, EXTRA_DROP)
-            .constructor(RESULT, INGREDIENT, MODE, ITEM_INGREDIENT)
             .constructor(RESULT, INGREDIENT, MODE, EXTRA_DROP)
             .constructor(RESULT, INGREDIENT, MODE);
 }

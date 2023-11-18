@@ -2,9 +2,9 @@ package com.notenoughmail.kubejs_tfc.block.moss;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blocks.rock.MossGrowingBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
 
     public MossGrowingBlockBuilder(ResourceLocation i) {
         super(i);
-        mossyBlock = Blocks.AIR.getRegistryName();
+        mossyBlock = RegistryInfo.BLOCK.getId(Blocks.AIR);
         mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
     }
 
@@ -42,7 +42,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = KubeJSRegistries.blocks().get(mossyBlock);
+                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (mossBlock == null) {
                     mossBlock = Blocks.AIR;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" does not exist!", mossyBlock);

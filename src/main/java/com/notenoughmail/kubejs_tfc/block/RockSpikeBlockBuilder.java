@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Fix shapes
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
     private boolean cyclingAllowed;
@@ -36,6 +35,9 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     private boolean updateWhenCycling;
     private final List<AABB> middleShape;
     private final List<AABB> tipShape;
+    private VoxelShape cachedBaseShape;
+    private VoxelShape cachedMiddleShape;
+    private VoxelShape cachedTipShape;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -73,17 +75,14 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Override
-    public VoxelShape createShape() {
+    private VoxelShape getBaseShape() {
         if (customShape.isEmpty()) {
             return RockSpikeBlock.BASE_SHAPE;
         }
-
-        var shape = Shapes.create(customShape.get(0));
-        for (var i = 1; i < customShape.size(); i++) {
-            shape = Shapes.or(shape, Shapes.create(customShape.get(i)));
+        if (cachedBaseShape == null) {
+            cachedBaseShape = BlockBuilder.createShape(customShape);
         }
-        return shape;
+        return cachedBaseShape;
     }
 
     public BlockBuilder middleBox(double x0, double y0, double z0, double x1, double y1, double z1, boolean scale16) {
@@ -100,16 +99,14 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return middleBox(x0, y0, z0, x1, y1, z1, true);
     }
 
-    public VoxelShape createMiddleShape() {
+    private VoxelShape getMiddleShape() {
         if (middleShape.isEmpty()) {
             return RockSpikeBlock.MIDDLE_SHAPE;
         }
-
-        var shape = Shapes.create(middleShape.get(0));
-        for (var i = 1; i < middleShape.size(); i++) {
-            shape = Shapes.or(shape, Shapes.create(middleShape.get(i)));
+        if (cachedMiddleShape == null) {
+            cachedMiddleShape = BlockBuilder.createShape(middleShape);
         }
-        return shape;
+        return cachedMiddleShape;
     }
 
     public BlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1, boolean scale16) {
@@ -126,16 +123,14 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return tipBox(x0, y0, z0, x1, y1, z1, true);
     }
 
-    public VoxelShape createTipShape() {
+    private VoxelShape createTipShape() {
         if (tipShape.isEmpty()) {
             return RockSpikeBlock.TIP_SHAPE;
         }
-
-        var shape = Shapes.create(tipShape.get(0));
-        for (var i = 1; i < tipShape.size(); i++) {
-            shape = Shapes.or(shape, Shapes.create(tipShape.get(i)));
+        if (cachedTipShape == null) {
+            cachedTipShape = BlockBuilder.createShape(tipShape);
         }
-        return shape;
+        return cachedTipShape;
     }
 
     @Override
@@ -166,8 +161,8 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
             @Override
             public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
                 return switch (state.getValue(PART)) {
-                    case BASE -> createShape();
-                    case MIDDLE -> createMiddleShape();
+                    case BASE -> getBaseShape();
+                    case MIDDLE -> getMiddleShape();
                     default -> createTipShape();
                 };
             }

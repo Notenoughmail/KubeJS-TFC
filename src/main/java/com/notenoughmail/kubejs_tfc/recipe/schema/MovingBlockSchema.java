@@ -11,11 +11,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface MovingBlockSchema {
 
-    RecipeKey<BlockState> RESULT = BlockStateComponent.OUTPUT.key("result").optional(Blocks.AIR.defaultBlockState()).alwaysWrite();
+    RecipeKey<BlockState> RESULT = BlockStateComponent.OUTPUT.key("result").defaultOptional(); // Oh how nice, this doesn't work. See: https://github.com/KubeJS-Mods/KubeJS/issues/743
     RecipeKey<BlockIngredient> INGREDIENT = BlockIngredientComponent.INGREDIENT.key("ingredient");
     RecipeKey<Boolean> COPY_INPUT = BooleanComponent.BOOLEAN.key("copy_input").optional(false);
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, INGREDIENT, COPY_INPUT)
+    RecipeSchema SCHEMA = new RecipeSchema()
             .constructor(RESULT, INGREDIENT)
-            .constructor(INGREDIENT, COPY_INPUT);
+            .constructor(RESULT, INGREDIENT, COPY_INPUT);
 }

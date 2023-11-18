@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import dev.architectury.fluid.FluidStack;
 import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.ListJS;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
@@ -16,13 +17,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.openjdk.nashorn.internal.objects.NativeString;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Wait for FluidTag and BlockTag to be public
 public class IngredientHelpers {
 
     public static BlockIngredient block(Block block) {
@@ -70,7 +69,7 @@ public class IngredientHelpers {
             if (name.charAt(0) == '#') {
                 return block(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
             } else {
-                final Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+                final Block block = RegistryInfo.BLOCK.getValue(new ResourceLocation(name));
                 if (block != null) {
                     return block(block);
                 }
@@ -86,7 +85,7 @@ public class IngredientHelpers {
                 if (name.charAt(0) == '#') {
                     blocks.add(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
                 } else {
-                    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+                    Block block = RegistryInfo.BLOCK.getValue(new ResourceLocation(name));
                     if (block != null) {
                         blocks.add(blockObj(block));
                     }
@@ -110,7 +109,7 @@ public class IngredientHelpers {
             if (name.charAt(0) == '#') {
                 return fluid(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
             } else {
-                final Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(name));
+                final Fluid fluid = RegistryInfo.FLUID.getValue(new ResourceLocation(name));
                 if (fluid != null) {
                     return fluid(fluid);
                 }
@@ -126,7 +125,7 @@ public class IngredientHelpers {
                 if (name.charAt(0) == '#') {
                     fluids.add(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
                 } else {
-                    Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(name));
+                    Fluid fluid = RegistryInfo.FLUID.getValue(new ResourceLocation(name));
                     if (fluid != null) {
                         fluids.add(fluidObj(fluid));
                     }

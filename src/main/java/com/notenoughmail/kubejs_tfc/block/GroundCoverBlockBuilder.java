@@ -5,15 +5,14 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-// TODO: FIX
 public class GroundCoverBlockBuilder extends BlockBuilder {
 
     private transient Type type;
     private transient int rotate;
     private transient String parent;
+    private VoxelShape cachedShape;
 
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
@@ -48,17 +47,14 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Override
-    public VoxelShape createShape() {
+    public VoxelShape getShape() {
         if (customShape.isEmpty()) {
             return GroundcoverBlock.MEDIUM;
         }
-
-        var shape = Shapes.create(customShape.get(0));
-        for (var i = 1; i < customShape.size(); i++) {
-            shape = Shapes.or(shape, Shapes.create(customShape.get(i)));
+        if (cachedShape == null) {
+            cachedShape = BlockBuilder.createShape(customShape);
         }
-        return shape;
+        return cachedShape;
     }
 
     @Override
@@ -66,7 +62,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         return switch (type) {
             case ORE -> GroundcoverBlock.looseOre(createProperties());
             case TWIG -> GroundcoverBlock.twig(ExtendedProperties.of(createProperties()));
-            default -> new GroundcoverBlock(ExtendedProperties.of(createProperties()), createShape(), itemBuilder == null ? null : () -> itemBuilder.get());
+            default -> new GroundcoverBlock(ExtendedProperties.of(createProperties()), getShape(), itemBuilder == null ? null : () -> itemBuilder.get());
         };
     }
 

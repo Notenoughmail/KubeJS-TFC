@@ -64,31 +64,27 @@ public class BuildVeinProperties {
         return this;
     }
 
-    public BuildVeinProperties minY(Object o) {
-        if (o instanceof JsonObject obj) {
-            minY = obj;
-        } else if (o instanceof MapJS map) {
-            minY = map.toJson();
-        } else if (o instanceof Number num) {
-            var obj = new JsonObject();
-            var i = num.intValue();
-            obj.addProperty("absolute", i);
-            minY = obj;
-        }
+    public BuildVeinProperties minY(JsonObject json) {
+        minY = json;
         return this;
     }
 
-    public BuildVeinProperties maxY(Object o) {
-        if (o instanceof JsonObject obj) {
-            maxY = obj;
-        } else if (o instanceof MapJS map) {
-            maxY = map.toJson();
-        } else if (o instanceof Number num) {
-            var obj = new JsonObject();
-            var i = num.intValue();
-            obj.addProperty("absolute", i);
-            maxY = obj;
-        }
+    public BuildVeinProperties absoluteMinY(int i) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("absolute", i);
+        minY = json;
+        return this;
+    }
+
+    public BuildVeinProperties maxY(JsonObject json) {
+        maxY = json;
+        return this;
+    }
+
+    public BuildVeinProperties absoluteMaxY(int i) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("absolute", i);
+        maxY = json;
         return this;
     }
 

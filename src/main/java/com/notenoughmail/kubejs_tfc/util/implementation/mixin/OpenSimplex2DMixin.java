@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = OpenSimplex2D.class, remap = false)
-public class OpenSimplex2DMixin implements IOpenSimplex2dMixin {
+public abstract class OpenSimplex2DMixin implements IOpenSimplex2dMixin {
 
     @Shadow(remap = false)
     @Final

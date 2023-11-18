@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Fix this
+// TODO: Add wind vector stuff
 public class KubeJSClimateModel implements ClimateModel {
 
     protected final ResourceLocation name;

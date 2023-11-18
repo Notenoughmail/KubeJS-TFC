@@ -2,9 +2,9 @@ package com.notenoughmail.kubejs_tfc.block.moss;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.StairBlockBuilder;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blocks.rock.MossGrowingStairsBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -24,7 +24,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
 
     public MossGrowingStairBlockBuilder(ResourceLocation i) {
         super(i);
-        mossyBlock = Blocks.OAK_STAIRS.getRegistryName();
+        mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_STAIRS);
         mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
 
@@ -44,7 +44,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = KubeJSRegistries.blocks().get(mossyBlock);
+                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof StairBlock)) {
                     mossBlock = Blocks.OAK_STAIRS;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" is not a stair block or does not exist!", mossyBlock);

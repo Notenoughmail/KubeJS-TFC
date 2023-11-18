@@ -2,10 +2,11 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
+import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
-import com.notenoughmail.kubejs_tfc.util.RegistrationUtils;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
@@ -104,6 +105,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:raw_rock", RawRockBlockBuilder.class, RawRockBlockBuilder::new);
+
+        RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
 
     @Override
@@ -114,6 +117,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
         event.namespace(TerraFirmaCraft.MOD_ID)
+                // IMPORTANT: These are absolutely awful for anything that has more than one optional argument due to not being able to have
                 .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
                 .register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
                 .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPED)
@@ -124,9 +128,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.ALLOY.getId().getPath(), AlloySchema.SCHEMA)
                 .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
-                .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
+                .register(TFCRecipeSerializers.COLLAPSE.getId().getPath(), MovingBlockSchema.SCHEMA)
                 .register(TFCRecipeSerializers.WELDING.getId().getPath(), WeldingSchema.SCHEMA)
-                .register(TFCRecipeSerializers.HEATING.getId().getPath(), HeatingSchema.SCHEMA)
+                // .register(TFCRecipeSerializers.HEATING.getId().getPath(), HeatingSchema.SCHEMA) // See comment above
                 .register(TFCRecipeSerializers.BLAST_FURNACE.getId().getPath(), BlastFurnaceSchema.SCHEMA)
                 .register(TFCRecipeSerializers.CHISEL.getId().getPath(), ChiselSchema.SCHEMA)
                 .register(TFCRecipeSerializers.CASTING.getId().getPath(), CastingSchema.SCHEMA)
@@ -155,7 +159,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
         filter.deny(KubeJSTFCPlugin.class);
-        filter.deny(RegistrationUtils.class);
+        filter.deny(RegistryUtils.class);
         filter.deny(EventHandlers.class);
         filter.deny(IngredientHelpers.class);
         // TFC

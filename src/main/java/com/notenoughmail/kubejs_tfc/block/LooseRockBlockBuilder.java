@@ -3,25 +3,29 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
+import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 
-// TODO: Update model generation?
 public class LooseRockBlockBuilder extends BlockBuilder {
 
-    private transient int rotate;
+    private int rotate;
+    public JsonObject itemTextures;
 
     public LooseRockBlockBuilder(ResourceLocation i) {
         super(i);
         rotate = 0;
         noCollision = true;
+        itemTextures = new JsonObject();
     }
 
-    public LooseRockBlockBuilder notAxisAligned() {
-        rotate = 45;
+    public LooseRockBlockBuilder rotateModel(int i) {
+        rotate = i;
         return this;
     }
 
@@ -30,41 +34,32 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info("Sets the item's texture (layer0).")
+    public LooseRockBlockBuilder itemTexture(String tex) {
+        itemTextures.addProperty("layer0", tex);
+        return this;
+    }
+
+    @Info("Sets the item's texture by given key.")
+    public LooseRockBlockBuilder itemTexture(String key, String tex) {
+        itemTextures.addProperty(key, tex);
+        return this;
+    }
+
+    @Info("Directlys set the item's texture json.")
+    public LooseRockBlockBuilder itemTextureJson(JsonObject json) {
+        itemTextures = json;
+        return this;
+    }
+
     @Override
     public LooseRockBlock createObject() {
         return new LooseRockBlock(createProperties());
     }
 
-    // I hate dealing with this so much, why must it fight me
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        if (blockstateJson != null) {
-            generator.json(newID("blockstates/", ""), blockstateJson);
-        } else {
-            var blockModelLoc = newID("block/", "").toString();
-            generator.blockState(id, m -> {
-                m.variant("count=1", v -> {
-                    v.model(blockModelLoc + "_pebble").y(rotate);
-                    v.model(blockModelLoc + "_pebble").y(90 + rotate);
-                    v.model(blockModelLoc + "_pebble").y(180 + rotate);
-                    v.model(blockModelLoc + "_pebble").y(270 + rotate);
-                });
-                m.variant("count=2", v -> {
-                    v.model(blockModelLoc + "_rubble").y(rotate);
-                    v.model(blockModelLoc + "_rubble").y(90 + rotate);
-                    v.model(blockModelLoc + "_rubble").y(180 + rotate);
-                    v.model(blockModelLoc + "_rubble").y(270 + rotate);
-                });
-                m.variant("count=3", v -> {
-                    v.model(blockModelLoc + "_boulder").y(rotate);
-                    v.model(blockModelLoc + "_boulder").y(90 + rotate);
-                    v.model(blockModelLoc + "_boulder").y(180 + rotate);
-                    v.model(blockModelLoc + "_boulder").y(270 + rotate);
-                });
-            });
-        }
-
-        var texture = id.getNamespace() + ":block/" + id.getPath();
+    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        final String texture = newID("block/", "").toString();
         generator.blockModel(newID("", "_pebble"), m -> {
             m.parent("kubejs_tfc:block/groundcover/pebble");
             m.texture("all", texture);
@@ -77,25 +72,49 @@ public class LooseRockBlockBuilder extends BlockBuilder {
             m.parent("kubejs_tfc:block/groundcover/boulder");
             m.texture("all", texture);
         });
-
-        if (itemBuilder != null) {
-            generator.itemModel(itemBuilder.id, m -> {
-                if (!model.isEmpty()) {
-                    m.parent(model);
-                } else {
-                    m.parent("item/generated");
-                }
-
-                if (itemBuilder.textureJson.size() == 0) {
-                    itemBuilder.texture(newID("item/", "").toString());
-                }
-                m.textures(itemBuilder.textureJson);
-            });
-        }
     }
 
     @Override
+    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+        final String blockModelLocation = newID("block/", "").toString();
+        bs.variant("count=1", v -> {
+            v.model(blockModelLocation + "_pebble").y(rotate);
+            v.model(blockModelLocation + "_pebble").y(90 + rotate);
+            v.model(blockModelLocation + "_pebble").y(180 + rotate);
+            v.model(blockModelLocation + "_pebble").y(270 + rotate);
+        });
+        bs.variant("count=2", v -> {
+            v.model(blockModelLocation + "_rubble").y(rotate);
+            v.model(blockModelLocation + "_rubble").y(90 + rotate);
+            v.model(blockModelLocation + "_rubble").y(180 + rotate);
+            v.model(blockModelLocation + "_rubble").y(270 + rotate);
+        });
+        bs.variant("count=3", v -> {
+            v.model(blockModelLocation + "_boulder").y(rotate);
+            v.model(blockModelLocation + "_boulder").y(90 + rotate);
+            v.model(blockModelLocation + "_boulder").y(180 + rotate);
+            v.model(blockModelLocation + "_boulder").y(270 + rotate);
+        });
+    }
+
+    @Override
+    protected void generateItemModelJson(ModelGenerator m) {
+        if (!model.isEmpty()) {
+            m.parent(model);
+        } else {
+            m.parent("item/generated");
+        }
+
+        if (itemTextures.size() == 0) {
+            itemTexture(newID("item/", "").toString());
+        }
+        m.textures(itemTextures);
+    }
+
+    // TODO: Make this work in general?
+    @Override
     public void generateDataJsons(DataJsonGenerator generator) {
+        // Did this ever work...
         if (lootTable != null && itemBuilder != null) {
             var lootbuilder = new LootBuilder(null);
             lootbuilder.type = "minecraft:block";

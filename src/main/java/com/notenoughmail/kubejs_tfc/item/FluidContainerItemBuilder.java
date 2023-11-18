@@ -12,6 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
+// TODO: Somehow assign this the correct color handler
 public class FluidContainerItemBuilder extends ItemBuilder {
 
     public transient boolean canPlaceLiquid;

@@ -2,9 +2,9 @@ package com.notenoughmail.kubejs_tfc.block.moss;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.MossGrowingCallback;
-import dev.latvian.mods.kubejs.KubeJSRegistries;
 import dev.latvian.mods.kubejs.block.custom.WallBlockBuilder;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blocks.rock.MossGrowingWallBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -24,7 +24,7 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
 
     public MossGrowingWallBlockBuilder(ResourceLocation i) {
         super(i);
-        mossyBlock = Blocks.COBBLESTONE_WALL.getRegistryName();
+        mossyBlock = RegistryInfo.BLOCK.getId(Blocks.COBBLESTONE_WALL);
         mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
     }
 
@@ -44,7 +44,8 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = KubeJSRegistries.blocks().get(mossyBlock);
+                state.toString();
+                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof WallBlock)) {
                     mossBlock = Blocks.COBBLESTONE_WALL;
                     KubeJSTFC.LOGGER.error("The provided 'mossy' block \"{}\" is not a wall block or does not exist!", mossyBlock);
