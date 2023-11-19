@@ -10,6 +10,7 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
 
@@ -42,30 +43,34 @@ public enum ClimateBindings {
     }
 
     public float getCurrentTemperature(BlockContainerJS block) {
-        return getTemperature(block, Calendars.get(block.minecraftLevel).getCalendarTicks());
+        return getTemperature(block, Calendars.get(block.getLevel()).getCalendarTicks());
     }
 
     public float getTemperature(BlockContainerJS block, long calendarTick) {
-        return Climate.getTemperature(block.minecraftLevel, block.getPos(), calendarTick, Calendars.get(block.minecraftLevel).getCalendarDaysInMonth());
+        return Climate.getTemperature(block.getLevel(), block.getPos(), calendarTick, Calendars.get(block.getLevel()).getCalendarDaysInMonth());
     }
 
     public float getAverageTemperature(BlockContainerJS block) {
-        return Climate.getAverageTemperature(block.minecraftLevel, block.getPos());
+        return Climate.getAverageTemperature(block.getLevel(), block.getPos());
     }
 
     public float getAverageRainfall(BlockContainerJS block) {
-        return Climate.getRainfall(block.minecraftLevel, block.getPos());
+        return Climate.getRainfall(block.getLevel(), block.getPos());
     }
 
     public float getFogginess(BlockContainerJS block) {
-        return Climate.getFogginess(block.minecraftLevel, block.getPos());
+        return Climate.getFogginess(block.getLevel(), block.getPos());
     }
 
     public float getWaterFogginess(BlockContainerJS block) {
-        return Climate.getWaterFogginess(block.minecraftLevel, block.getPos());
+        return Climate.getWaterFogginess(block.getLevel(), block.getPos());
+    }
+
+    public Vec2 getWindVector(BlockContainerJS block) {
+        return Climate.getWindVector(block.getLevel(), block.getPos());
     }
 
     public boolean isWarmEnoughToRain(BlockContainerJS block) {
-        return Climate.warmEnoughToRain(block.minecraftLevel, block.getPos());
+        return Climate.warmEnoughToRain(block.getLevel(), block.getPos());
     }
 }
