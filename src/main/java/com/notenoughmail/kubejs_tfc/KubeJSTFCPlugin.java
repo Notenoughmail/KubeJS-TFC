@@ -136,6 +136,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.CASTING.getId().getPath(), CastingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.QUERN.getId().getPath(), BasicSchema.SCHEMA)
                 .register(TFCRecipeSerializers.ANVIL.getId().getPath(), AnvilSchema.SCHEMA)
+        // TODO: Find out what the hell is going on with that one knapping recipe
                 ;
     }
 

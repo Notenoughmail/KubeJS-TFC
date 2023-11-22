@@ -18,6 +18,7 @@ public interface MovingBlockSchema {
 
     RecipeSchema SCHEMA = new RecipeSchema(INGREDIENT, RESULT, COPY_INPUT)
             .constructor(RESULT, INGREDIENT)
+            // Weird hack, but it seems to work
             .constructor((recipe, schemaType, keys, from) -> {
                 recipe.setValue(INGREDIENT, from.getValue(recipe, INGREDIENT));
                 recipe.setValue(RESULT, Blocks.AIR.defaultBlockState());

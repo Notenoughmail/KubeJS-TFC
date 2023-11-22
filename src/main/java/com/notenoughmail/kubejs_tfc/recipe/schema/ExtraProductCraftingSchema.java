@@ -10,7 +10,7 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 public interface ExtraProductCraftingSchema {
 
     RecipeKey<RecipeJS> RECIPE = new NestedRecipeComponent().key("recipe");
-    RecipeKey<OutputItem[]> EXTRAS = ItemComponents.OUTPUT_ARRAY.key("extra_products");
+    RecipeKey<OutputItem[]> EXTRAS = ItemComponents.OUTPUT_ARRAY.key("extra_products").preferred("extraProducts");
 
     RecipeSchema SCHEMA = new RecipeSchema(EXTRAS, RECIPE);
 }

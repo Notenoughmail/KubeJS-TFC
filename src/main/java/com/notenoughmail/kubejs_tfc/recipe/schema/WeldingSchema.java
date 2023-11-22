@@ -10,8 +10,8 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 
 public interface WeldingSchema {
 
-    RecipeKey<InputItem> FIRST_INPUT = ItemComponents.INPUT.key("first_input");
-    RecipeKey<InputItem> SECOND_INPUT = ItemComponents.INPUT.key("second_input");
+    RecipeKey<InputItem> FIRST_INPUT = ItemComponents.INPUT.key("first_input").preferred("firstInput");
+    RecipeKey<InputItem> SECOND_INPUT = ItemComponents.INPUT.key("second_input").preferred("secondInput");
     RecipeKey<Integer> TIER = NumberComponent.INT.key("tier").optional(-1);
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
 

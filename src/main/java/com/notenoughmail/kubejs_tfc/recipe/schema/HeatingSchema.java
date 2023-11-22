@@ -13,8 +13,8 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 
 public interface HeatingSchema {
 
-    RecipeKey<ItemStackProviderJS> ITEM_RESULT = ItemProviderComponent.PROVIDER.key("result_item").optional(ItemStackProviderJS.EMPTY);
-    RecipeKey<OutputFluid> FLUID_RESULT = FluidComponents.OUTPUT.key("result_fluid").optional(EmptyFluidStackJS.INSTANCE);
+    RecipeKey<ItemStackProviderJS> ITEM_RESULT = ItemProviderComponent.PROVIDER.key("result_item").optional(ItemStackProviderJS.EMPTY).preferred("resultItem");
+    RecipeKey<OutputFluid> FLUID_RESULT = FluidComponents.OUTPUT.key("result_fluid").optional(EmptyFluidStackJS.INSTANCE).preferred("resultFluid");
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
     RecipeKey<Float> TEMP = NumberComponent.FLOAT.key("temperature");
 

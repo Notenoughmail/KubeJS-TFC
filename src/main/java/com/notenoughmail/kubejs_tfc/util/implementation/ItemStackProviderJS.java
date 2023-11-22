@@ -13,6 +13,7 @@ import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -194,6 +195,15 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
 
     public ItemStackProvider asJavaObject() {
         return ItemStackProvider.fromJson(toJson());
+    }
+
+    public boolean dependsOnInput() {
+        for (JsonElement element : modifiers) {
+            if (ItemStackModifiers.fromJson(element).dependsOnInput()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ItemStackProviderJS copy() {

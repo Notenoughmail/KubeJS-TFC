@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.AnvilWorkingRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -17,9 +18,8 @@ public interface AnvilSchema {
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
     RecipeKey<ForgeRule[]> RULES = new EnumComponent<>(ForgeRule.class).asArray().key("rules");
     RecipeKey<Integer> TIER = NumberComponent.INT.key("tier").optional(-1);
-    RecipeKey<Boolean> BONUS = BooleanComponent.BOOLEAN.key("apply_forging_bonus").optional(false);
+    RecipeKey<Boolean> BONUS = BooleanComponent.BOOLEAN.key("apply_forging_bonus").optional(false).preferred("bonus");
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, INPUT, RULES, TIER, BONUS)
-            .constructor(RESULT, INPUT, RULES, TIER)
+    RecipeSchema SCHEMA = new RecipeSchema(AnvilWorkingRecipeJS.class, AnvilWorkingRecipeJS::new, RESULT, INPUT, RULES, TIER, BONUS)
             .constructor(RESULT, INPUT, RULES);
 }

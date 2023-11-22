@@ -27,6 +27,10 @@ public class TFCBindings {
         return fluidStackIngredient;
     }
 
+    public static FluidStackIngredient fluidStackIngredient(FluidIngredient fluidIngredient, int amount) {
+        return new FluidStackIngredient(fluidIngredient, amount);
+    }
+
     // Possibly move this into a recipe sub-binding
     public static AlloyPartComponent.AlloyPart alloyPart(String metal, double min, double max) {
         return new AlloyPartComponent.AlloyPart(metal, min, max);

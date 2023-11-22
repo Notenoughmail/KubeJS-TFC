@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import org.openjdk.nashorn.internal.objects.NativeString;
 
@@ -60,10 +61,6 @@ public class IngredientHelpers {
     public static BlockIngredient ofBlockIngredient(Object o) {
         if (o instanceof BlockIngredient block) {
             return block;
-        } else if (o instanceof JsonElement json) {
-            return BlockIngredient.fromJson(json);
-        } else if (o instanceof Block block) {
-            return block(block);
         } else if (o instanceof CharSequence || o instanceof NativeString) {
             final String name = o.toString();
             if (name.charAt(0) == '#') {
@@ -74,13 +71,17 @@ public class IngredientHelpers {
                     return block(block);
                 }
             }
+        } else if (o instanceof JsonElement json) {
+            return BlockIngredient.fromJson(json);
+        } else if (o instanceof Block block) {
+            return block(block);
+        } else if (o instanceof BlockState state) {
+            return block(state.getBlock());
         }
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Block>> blocks = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof IngredientType.Entry<?> entry) {
-                blocks.add((IngredientType.Entry<Block>) entry); // If someone manages to provide an Entry<Fluid> they deserve whatever this causes
-            } else if (object instanceof CharSequence || object instanceof NativeString) {
+            if (object instanceof CharSequence || object instanceof NativeString) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     blocks.add(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
@@ -90,8 +91,12 @@ public class IngredientHelpers {
                         blocks.add(blockObj(block));
                     }
                 }
+            } else if (object instanceof IngredientType.Entry<?> entry) {
+                blocks.add((IngredientType.Entry<Block>) entry); // If someone manages to provide an Entry<Fluid> they deserve whatever this causes
             } else if (object instanceof Block block) {
                 blocks.add(blockObj(block));
+            } else if (object instanceof BlockState state) {
+                blocks.add(blockObj(state.getBlock()));
             }
         }
         return new BlockIngredient(blocks);
@@ -100,10 +105,6 @@ public class IngredientHelpers {
     public static FluidIngredient ofFluidIngredient(Object o) {
         if (o instanceof FluidIngredient fluid) {
             return fluid;
-        } else if (o instanceof JsonElement json) {
-            return FluidIngredient.fromJson(json);
-        } else if (o instanceof FluidStackIngredient stack) { // Sometimes people get confused
-            return stack.ingredient();
         } else if (o instanceof CharSequence || o instanceof NativeString) {
             final String name = o.toString();
             if (name.charAt(0) == '#') {
@@ -114,13 +115,15 @@ public class IngredientHelpers {
                     return fluid(fluid);
                 }
             }
+        } else if (o instanceof JsonElement json) {
+            return FluidIngredient.fromJson(json);
+        } else if (o instanceof FluidStackIngredient stack) { // Sometimes people get confused
+            return stack.ingredient();
         }
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Fluid>> fluids = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof IngredientType.Entry<?> entry) {
-                fluids.add((IngredientType.Entry<Fluid>) entry); // If someone manages to provide an Entry<Block> they deserve whatever this causes
-            } else if (object instanceof CharSequence || object instanceof NativeString) {
+            if (object instanceof CharSequence || object instanceof NativeString) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     fluids.add(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
@@ -130,6 +133,8 @@ public class IngredientHelpers {
                         fluids.add(fluidObj(fluid));
                     }
                 }
+            } else if (object instanceof IngredientType.Entry<?> entry) {
+                fluids.add((IngredientType.Entry<Fluid>) entry); // If someone manages to provide an Entry<Block> they deserve whatever this causes
             } else if (o instanceof Fluid fluid) {
                 fluids.add(fluidObj(fluid));
             } else if (o instanceof FluidStackJS fluid) {

@@ -14,7 +14,7 @@ public interface CastingSchema {
     RecipeKey<InputItem> MOLD = ItemComponents.INPUT.key("mold");
     RecipeKey<FluidStackIngredient> FLUID = FluidIngredientComponent.STACK_INGREDIENT.key("fluid");
     RecipeKey<OutputItem> RESULT = ItemComponents.OUTPUT.key("result");
-    RecipeKey<Double> BREAK_CHANCE = NumberComponent.doubleRange(0, 1).key("break_chance");
+    RecipeKey<Double> BREAK_CHANCE = NumberComponent.doubleRange(0, 1).key("break_chance").preferred("breakChance");
 
     RecipeSchema SCHEMA = new RecipeSchema(RESULT, MOLD, FLUID, BREAK_CHANCE);
 }

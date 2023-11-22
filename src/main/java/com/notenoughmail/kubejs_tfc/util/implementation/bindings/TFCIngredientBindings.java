@@ -5,18 +5,19 @@ import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.recipes.ingredients.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.Nullable;
 
 // TODO: JSDocs
 public enum TFCIngredientBindings {
     @HideFromJS
     INSTANCE;
 
-    public Ingredient heatable(int min, int max) {
-        return HeatableIngredient.of(null, min, max);
+    public Ingredient heatable(@Nullable Integer min, @Nullable Integer max) {
+        return HeatableIngredient.of(null, min == null ? Integer.MIN_VALUE : min, max == null ? Integer.MAX_VALUE : max);
     }
 
-    public Ingredient heatable(Ingredient delegate, int min, int max) {
-        return HeatableIngredient.of(delegate, min, max);
+    public Ingredient heatable(Ingredient delegate, @Nullable Integer min, @Nullable Integer max) {
+        return HeatableIngredient.of(delegate, min == null ? Integer.MIN_VALUE : min, max == null ? Integer.MAX_VALUE : max);
     }
 
     public Ingredient not() {
