@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.HeatingRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.EmptyFluidStackJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
@@ -18,8 +19,6 @@ public interface HeatingSchema {
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
     RecipeKey<Float> TEMP = NumberComponent.FLOAT.key("temperature");
 
-    RecipeSchema SCHEMA = new RecipeSchema(ITEM_RESULT, FLUID_RESULT, INGREDIENT, TEMP)
-            .constructor(ITEM_RESULT, INGREDIENT, TEMP)
-            .constructor(FLUID_RESULT, INGREDIENT, TEMP)
+    RecipeSchema SCHEMA = new RecipeSchema(HeatingRecipeJS.class, HeatingRecipeJS::new,ITEM_RESULT, FLUID_RESULT, INGREDIENT, TEMP)
             .constructor(INGREDIENT, TEMP);
 }

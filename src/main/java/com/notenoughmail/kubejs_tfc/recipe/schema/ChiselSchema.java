@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.BlockIngredientComponent;
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.ChiselRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -22,7 +23,6 @@ public interface ChiselSchema {
     RecipeKey<InputItem> ITEM_INGREDIENT = ItemComponents.INPUT.key("item_ingredient").optional(InputItem.of("#" + TFCTags.Items.CHISELS.location())).preferred("itemIngredient");
     RecipeKey<ItemStackProviderJS> EXTRA_DROP = ItemProviderComponent.PROVIDER.key("extra_drop").optional(ItemStackProviderJS.EMPTY).preferred("extraDrop");
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, INGREDIENT, MODE, ITEM_INGREDIENT, EXTRA_DROP)
-            .constructor(RESULT, INGREDIENT, MODE, EXTRA_DROP)
+    RecipeSchema SCHEMA = new RecipeSchema(ChiselRecipeJS.class, ChiselRecipeJS::new, RESULT, INGREDIENT, MODE, ITEM_INGREDIENT, EXTRA_DROP)
             .constructor(RESULT, INGREDIENT, MODE);
 }

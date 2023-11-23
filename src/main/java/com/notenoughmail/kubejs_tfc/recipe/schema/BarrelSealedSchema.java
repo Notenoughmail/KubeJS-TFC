@@ -26,6 +26,6 @@ public interface BarrelSealedSchema {
     RecipeKey<ItemStackProviderJS> ON_SEAL = ItemProviderComponent.PROVIDER.key("on_seal").optional(ItemStackProviderJS.EMPTY).preferred("onSeal");
     RecipeKey<ItemStackProviderJS> ON_UNSEAL = ItemProviderComponent.PROVIDER.key("on_unseal").optional(ItemStackProviderJS.EMPTY).preferred("onUnseal");
 
-    RecipeSchema SCHEMA = new RecipeSchema(SealedBarrelRecipeJS.class, SealedBarrelRecipeJS::new, OUTPUT_ITEM, OUTPUT_FLUID, INPUT_ITEM, INPUT_FLUID, SOUND, DURATION, ON_SEAL, ON_UNSEAL)
+    RecipeSchema SCHEMA = new RecipeSchema(SealedBarrelRecipeJS.class, SealedBarrelRecipeJS::new, DURATION, OUTPUT_ITEM, OUTPUT_FLUID, INPUT_ITEM, INPUT_FLUID, SOUND, ON_SEAL, ON_UNSEAL)
             .constructor(DURATION); // Everything is optional, delegate to methods
 }
