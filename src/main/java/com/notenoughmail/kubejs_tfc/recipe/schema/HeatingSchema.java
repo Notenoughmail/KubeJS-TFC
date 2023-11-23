@@ -19,6 +19,6 @@ public interface HeatingSchema {
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
     RecipeKey<Float> TEMP = NumberComponent.FLOAT.key("temperature");
 
-    RecipeSchema SCHEMA = new RecipeSchema(HeatingRecipeJS.class, HeatingRecipeJS::new,ITEM_RESULT, FLUID_RESULT, INGREDIENT, TEMP)
+    RecipeSchema SCHEMA = new RecipeSchema(HeatingRecipeJS.class, HeatingRecipeJS::new, INGREDIENT, TEMP, ITEM_RESULT, FLUID_RESULT)
             .constructor(INGREDIENT, TEMP);
 }
