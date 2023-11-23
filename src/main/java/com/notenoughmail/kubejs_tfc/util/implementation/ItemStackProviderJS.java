@@ -149,7 +149,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return false;
     }
 
-    @Generics(base = JsonObject.class, value = {}) // is this how you do it? Who knows
+    @Generics(base = JsonObject.class, value = {}) // Is this how you do it? Who knows
     public List<JsonObject> getModifiersOfType(String type) {
         final List<JsonObject> list = new ArrayList<>();
         for (JsonElement element : modifiers) {

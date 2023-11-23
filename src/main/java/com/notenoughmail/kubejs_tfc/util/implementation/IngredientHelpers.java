@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import dev.architectury.fluid.FluidStack;
 import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
+import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.ListJS;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -163,5 +164,14 @@ public class IngredientHelpers {
 
     public static String stringifyItemStack(ItemStack stack) {
         return ((ItemStackKJS) (Object) stack).kjs$toItemString();
+    }
+
+    public static JsonObject inputItemToItemStackIngredient(InputItem value) {
+        final JsonObject json = new JsonObject();
+        json.add("ingredient", value.ingredient.toJson());
+        if (value.count > 1) {
+            json.addProperty("count", value.count);
+        }
+        return json;
     }
 }

@@ -2,10 +2,12 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.google.gson.JsonArray;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.world.item.ItemStack;
 
 // TODO: JSDocs
 public enum ItemStackProviderBindings {
+    @HideFromJS
     INSTANCE;
 
     public ItemStackProviderJS of(ItemStack itemStack) {

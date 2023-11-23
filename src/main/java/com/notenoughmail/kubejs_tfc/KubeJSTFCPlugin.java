@@ -117,7 +117,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
         event.namespace(TerraFirmaCraft.MOD_ID)
-                // IMPORTANT: These are absolutely awful for anything that has more than one optional argument due to not being able to have
                 .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
                 .register(TFCRecipeSerializers.DAMAGE_INPUTS_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
                 .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPED)
@@ -130,12 +129,14 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.LANDSLIDE.getId().getPath(), MovingBlockSchema.SCHEMA)
                 .register(TFCRecipeSerializers.COLLAPSE.getId().getPath(), MovingBlockSchema.SCHEMA)
                 .register(TFCRecipeSerializers.WELDING.getId().getPath(), WeldingSchema.SCHEMA)
-                // .register(TFCRecipeSerializers.HEATING.getId().getPath(), HeatingSchema.SCHEMA) // See comment above
                 .register(TFCRecipeSerializers.BLAST_FURNACE.getId().getPath(), BlastFurnaceSchema.SCHEMA)
                 .register(TFCRecipeSerializers.CHISEL.getId().getPath(), ChiselSchema.SCHEMA)
                 .register(TFCRecipeSerializers.CASTING.getId().getPath(), CastingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.QUERN.getId().getPath(), BasicSchema.SCHEMA)
                 .register(TFCRecipeSerializers.ANVIL.getId().getPath(), AnvilSchema.SCHEMA)
+                .register(TFCRecipeSerializers.INSTANT_FLUID_BARREL.getId().getPath(), BarrelInstantFluidSchema.SCHEMA)
+                .register(TFCRecipeSerializers.INSTANT_BARREL.getId().getPath(), BarrelInstantSchema.SCHEMA)
+                .register(TFCRecipeSerializers.SEALED_BARREL.getId().getPath(), BarrelSealedSchema.SCHEMA)
         // TODO: Find out what the hell is going on with that one knapping recipe
                 ;
     }
