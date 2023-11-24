@@ -21,10 +21,8 @@ public interface AdvancedCraftingSchema {
     RecipeKey<Integer> ROW = NumberComponent.INT.key("input_row").preferred("inputRow");
     RecipeKey<Integer> COLUMN = NumberComponent.INT.key("input_column").preferred("inputColumn");
     RecipeKey<InputItem[]> INGREDIENTS = ItemComponents.UNWRAPPED_INPUT_ARRAY.key("ingredients");
-    RecipeKey<InputItem> PRIMARY_INGREDIENT = ItemComponents.INPUT.key("primary_ingredient").defaultOptional().preferred("primaryIngredient");
+    RecipeKey<InputItem> PRIMARY_INGREDIENT = ItemComponents.INPUT.key("primary_ingredient").optional(InputItem.EMPTY).preferred("primaryIngredient");
 
     RecipeSchema SHAPED = new RecipeSchema(RESULT, PATTERN, KEY, ROW, COLUMN);
-    RecipeSchema SHAPELESS = new RecipeSchema(RESULT, INGREDIENTS, PRIMARY_INGREDIENT)
-            .constructor(RESULT, INGREDIENTS, PRIMARY_INGREDIENT)
-            .constructor(RESULT, INGREDIENTS);
+    RecipeSchema SHAPELESS = new RecipeSchema(RESULT, INGREDIENTS, PRIMARY_INGREDIENT);
 }
