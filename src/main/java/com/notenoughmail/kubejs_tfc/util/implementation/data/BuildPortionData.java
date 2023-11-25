@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonObject;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,21 +16,25 @@ public class BuildPortionData {
     @Nullable
     private Float saturationModifier;
 
+    @Info(value = "Sets the ingredient this portion corresponds to")
     public BuildPortionData ingredient(Ingredient ingredient) {
         this.ingredient = ingredient;
         return this;
     }
 
+    @Info(value = "Multiplies the nutrition from the food using this portion, defaults to 1")
     public BuildPortionData nutrientModifier(float mod) {
         nutrientModifier = mod;
         return this;
     }
 
+    @Info(value = "Multiplies the water from the food using this portion, defaults to 1")
     public BuildPortionData waterModifier(float mod) {
         waterModifier = mod;
         return this;
     }
 
+    @Info(value = "Multiplies the saturation from the food using this portion, defaults to 1")
     public BuildPortionData saturationModifier(float mod) {
         saturationModifier = mod;
         return this;

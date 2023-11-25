@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+// TODO: JSDoc
 public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));
@@ -98,14 +99,6 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return modifiers;
     }
 
-    public ItemStackProviderJS addHeat(int temperature) {
-        var obj = new JsonObject();
-        obj.addProperty("type", "tfc:add_heat");
-        obj.addProperty("temperature", temperature);
-        modifiers.add(obj);
-        return this;
-    }
-
     public ItemStackProviderJS simpleModifier(String s) {
         var obj = new JsonObject();
         obj.addProperty("type", s);
@@ -149,7 +142,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return false;
     }
 
-    @Generics(base = JsonObject.class, value = {}) // Is this how you do it? Who knows
+    @Generics(value = JsonObject.class) // Is this how you do it? Who knows
     public List<JsonObject> getModifiersOfType(String type) {
         final List<JsonObject> list = new ArrayList<>();
         for (JsonElement element : modifiers) {
@@ -215,12 +208,24 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return "TFC.itemStackProvider.of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")";
     }
 
+    public ItemStackProviderJS addHeat(int temperature) {
+        var obj = new JsonObject();
+        obj.addProperty("type", "tfc:add_heat");
+        obj.addProperty("temperature", temperature);
+        modifiers.add(obj);
+        return this;
+    }
+
     public ItemStackProviderJS addTrait(String s) {
         return this.trait(true, s);
     }
 
     public ItemStackProviderJS removeTrait(String s) {
         return this.trait(false, s);
+    }
+
+    public ItemStackProviderJS addGlass() {
+        return this.simpleModifier("tfc:add_glass");
     }
 
     public ItemStackProviderJS copyFood() {
@@ -260,6 +265,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
     }
 
     @SafeVarargs
+    @Generics(value = {BuildFoodItemData.class, BuildPortionData.class})
     public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, @Nullable Consumer<BuildPortionData>... portions) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", "tfc:meal");
@@ -280,6 +286,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return this;
     }
 
+    @Generics(value = BuildFoodItemData.class)
     public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
         return meal(food, (Consumer<BuildPortionData>) null);
     }

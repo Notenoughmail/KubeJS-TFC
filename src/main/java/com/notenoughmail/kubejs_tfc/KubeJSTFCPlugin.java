@@ -146,9 +146,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
-        // TODO: Find out what the hell is going on with that one knapping recipe
-        // Oh, its intermittent, joy
-        // It effects alloy recipes too, sounds like bad interactions between TFC's DataManager and Kube's recipe multithreading? or whatever it does
                 ;
     }
 

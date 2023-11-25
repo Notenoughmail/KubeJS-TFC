@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.NativeObject;
@@ -131,36 +132,43 @@ public class PlacedFeatureProperties {
         private String maxForest;
         private boolean fuzzy = false;
 
+        @Info(value = "Sets the minimum temperature of the climate decorator")
         public Climate minTemp(float f) {
             minTemp = f;
             return this;
         }
 
+        @Info(value = "Sets the maximum temperature of the climate decorator")
         public Climate maxTemp(float f) {
             maxTemp = f;
             return this;
         }
 
+        @Info(value = "Sets the minimum rainfall of the climate decorator")
         public Climate minRain(float f) {
             minRain = f;
             return this;
         }
 
+        @Info(value = "Sets the maximum rainfall of the climate decorator")
         public Climate maxRain(float f) {
             maxRain = f;
             return this;
         }
 
+        @Info(value = "Sets the minimum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
         public Climate minForest(String s) {
             minForest = s;
             return this;
         }
 
+        @Info(value = "Sets the maximum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
         public Climate maxForest(String s) {
             maxForest = s;
             return this;
         }
 
+        @Info(value = "Determines if the temperature and rainfall requirements will be probabilistic relative to the center point")
         public Climate fuzzy(boolean b) {
             fuzzy = b;
             return this;
@@ -198,16 +206,19 @@ public class PlacedFeatureProperties {
         private int radius = 2;
         private int maxDepth = 4;
 
+        @Info(value = "Sets the required flatness of the surrounding area, in the range [0, 1]. Defaults to 0.5")
         public Flatness flatness(float f) {
             flatness = f;
             return this;
         }
 
+        @Info(value = "The radius around the initial position the area is checked for when calculation flatness, defaults to 2")
         public Flatness radius(int i) {
             radius = i;
             return this;
         }
 
+        @Info(value = "How deep from the initial position the decorator should search, defaults to 4")
         public Flatness maxDepth(int i) {
             maxDepth = i;
             return this;

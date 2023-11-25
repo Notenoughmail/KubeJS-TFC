@@ -2,10 +2,12 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
@@ -91,6 +93,21 @@ public class DataUtils {
         }
     }
 
+    public static JsonObject knappingType(Ingredient ingredient, int ingredientCount, int amountToConsume, ResourceLocation clickSound, boolean consumeAfterComplete, boolean useDisabledTexture, boolean spawnsParticles, ItemStack jeiIconItem) {
+        final JsonObject isi = new JsonObject();
+        isi.add("ingredient", ingredient.toJson());
+        isi.addProperty("count", ingredientCount);
+        final JsonObject json = new JsonObject();
+        json.add("input", isi);
+        json.addProperty("amount_to_consume", amountToConsume);
+        json.addProperty("click_sound", clickSound.toString());
+        json.addProperty("consume_after_complete", consumeAfterComplete);
+        json.addProperty("use_disabled_texture", useDisabledTexture);
+        json.addProperty("spawn_particles", spawnsParticles);
+        json.add("jei_icon_item", IngredientHelpers.itemStackToJson(jeiIconItem));
+        return json;
+    }
+
     public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
         var json = new JsonObject();
         json.addProperty("tier", tier);
@@ -98,13 +115,13 @@ public class DataUtils {
         json.addProperty("melt_temperature", meltTemp);
         json.addProperty("specific_heat_capacity", heatCap);
         if (ingot != null) {
-            json.add("ingot", ingot.toJson());
+            json.add("ingots", ingot.toJson());
         }
         if (doubleIngot != null) {
-            json.add("double_ingot", doubleIngot.toJson());
+            json.add("double_ingots", doubleIngot.toJson());
         }
         if (sheet != null) {
-            json.add("sheet", sheet.toJson());
+            json.add("sheets", sheet.toJson());
         }
         return json;
     }
