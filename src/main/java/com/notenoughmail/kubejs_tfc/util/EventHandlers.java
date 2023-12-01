@@ -31,7 +31,7 @@ import java.util.List;
 // Basically everything mentioned here requires a massive refactor
 public class EventHandlers {
 
-    public static final EventGroup TFCEvents = EventGroup.of("TFC");
+    public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
     public static final EventHandler registerRocks = TFCEvents.startup("registerRockSettings", () -> RockSettingsEventJS.class);
     public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> SemiFunctionalContainerLimiterEventJS.class);

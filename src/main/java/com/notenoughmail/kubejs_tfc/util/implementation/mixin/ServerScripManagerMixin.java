@@ -7,11 +7,13 @@ import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.kubejs.server.ServerScriptManager;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -29,10 +31,13 @@ public abstract class ServerScripManagerMixin {
     @Unique
     private VirtualKubeJSDataPack kubeJS_TFC$VirtualDataPack;
 
-    @Inject(method = "wrapResourceManager", at = @At(value = "INVOKE", target = "Ldev/latvian/mods/kubejs/server/ServerScriptManager;reload(Lnet/minecraft/server/packs/resources/ResourceManager;)V"))
-    private void captureMultiManager(CloseableResourceManager original, CallbackInfoReturnable<MultiPackResourceManager> cir) {
-        kubeJS_TFC$WrappedManager = cir.getReturnValue();
-        KubeJSTFC.LOGGER.debug("Successfully captured the resource manager");
+    @Redirect(method = "wrapResourceManager", at = @At(value = "INVOKE", target = "Ldev/latvian/mods/kubejs/server/ServerScriptManager;reload(Lnet/minecraft/server/packs/resources/ResourceManager;)V"))
+    private void captureMultiManager(ServerScriptManager instance, ResourceManager resourceManager) {
+        ((ServerScriptManager) (Object) this).reload(resourceManager);
+        if (resourceManager instanceof MultiPackResourceManager multi) {
+            kubeJS_TFC$WrappedManager = multi;
+            KubeJSTFC.LOGGER.debug("Successfully captured the resource manager");
+        }
     }
 
     @ModifyVariable(method = "wrapResourceManager", at = @At(value = "STORE", args = "class=dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack"), remap = false, ordinal = 1)

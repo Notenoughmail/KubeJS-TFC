@@ -1,6 +1,9 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterClimateModelEventJS;
+import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
@@ -11,7 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ public class KubeJSClimateModel implements ClimateModel {
     public TemperatureCallback currentTemperature = (level, pos, ticks, days) -> 0.0F;
     public LevelPosLong2FloatCallback airFog = (level, pos, ticks) -> 0.0F;
     public LevelPosLong2FloatCallback waterFog = (level, pos, ticks) -> 1.0F;
+    public WindVectorCallback windVector = (block, calendarTick) -> Vec2.ZERO;
     protected long climateSeed = 0L;
     private final List<OpenSimplex2D> noises = new ArrayList<>();
 
@@ -34,30 +40,42 @@ public class KubeJSClimateModel implements ClimateModel {
         this.name = name;
     }
 
+    @Info(value = "Sets how the model will determine the current temperature at a given position and time")
     public void setCurrentTemperatureCalculation(TemperatureCallback callback) {
         currentTemperature = callback;
     }
 
+    @Info(value = "Sets how the model will determine the average temperature at a given position")
     public void setAverageTemperatureCalculation(LevelPos2FloatCallback callback) {
         averageTemperature = callback;
     }
 
+    @Info(value = "Sets how the model will determine the average rainfall at a given position")
     public void setAverageRainfallCalculation(LevelPos2FloatCallback callback) {
         averageRainfall = callback;
     }
 
+    @Info(value = "Sets how the model will determine the fogginess at a given position and time")
     public void setAirFog(LevelPosLong2FloatCallback callback) {
         airFog = callback;
     }
 
+    @Info(value = "Sets how the model will determine the fogginess in water at a given position and time")
     public void setWaterFog(LevelPosLong2FloatCallback callback) {
         waterFog = callback;
     }
 
+    @Info(value = "Sets how hte model will determine its wind vector at the given position and time")
+    public void setWindVector(WindVectorCallback callback) {
+        windVector = callback;
+    }
+
+    @Info(value = "Returns a the climate seed being used")
     public long getClimateSeed() {
         return climateSeed; // Can be accessed, but not modified
     }
 
+    @Info(value = "Returns a new OpenSimplex2D noise")
     public OpenSimplex2D getNewNoise() {
         var noise = new OpenSimplex2D(0);
         noises.add(noise);
@@ -100,6 +118,13 @@ public class KubeJSClimateModel implements ClimateModel {
         return Mth.clamp(waterFog.getValue(level, pos, calendarTime), 0.0F, 1.0F);
     }
 
+    @NotNull
+    @HideFromJS
+    @Override
+    public Vec2 getWindVector(Level level, BlockPos pos, long calendarTime) {
+        return windVector.getValue(new BlockContainerJS(level, pos), calendarTime);
+    }
+
     @HideFromJS
     @Override
     public void onWorldLoad(ServerLevel level) {
@@ -126,18 +151,44 @@ public class KubeJSClimateModel implements ClimateModel {
         return getClass().getName() + "{" + name + "}@" + Integer.toHexString(hashCode());
     }
 
+    @Info(value = "A callback which takes a LevelReader and a BlockPos and returns a number")
     @FunctionalInterface
     public interface LevelPos2FloatCallback {
+        @Info(params = {
+                @Param(name = "level", value = "The LevelReader"),
+                @Param(name = "pos", value = "The position")
+        })
         float getValue(LevelReader level, BlockPos pos);
     }
 
+    @Info(value = "A callback which takes a LevelReader, a BlockPos, a number, and a number and returns a number")
     @FunctionalInterface
     public interface TemperatureCallback {
+        @Info(params = {
+                @Param(name = "level", value = "The LevelReader"),
+                @Param(name = "pos", value = "The position"),
+                @Param(name = "calendarTicks", value = "The calendar tick during which the calculation is being made"),
+                @Param(name = "daysInMonth", value = "The number of days in a month")
+        })
         float getValue(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth);
     }
 
     @FunctionalInterface
     public interface LevelPosLong2FloatCallback {
+        @Info(params = {
+                @Param(name = "level", value = "The levelReader"),
+                @Param(name = "pos", value = "The position"),
+                @Param(name = "calendarTicks", value = "The calendar tick during which the calculation is being made")
+        })
         float getValue(LevelReader level, BlockPos pos, long calendarTicks);
+    }
+
+    @FunctionalInterface
+    public interface WindVectorCallback {
+        @Info(params = {
+                @Param(name = "block", value = "The level and position"),
+                @Param(name = "calendarTicks", value = "The calendar tick during which the calculation is being made")
+        })
+        Vec2 getValue(BlockContainerJS block, long calendarTicks);
     }
 }

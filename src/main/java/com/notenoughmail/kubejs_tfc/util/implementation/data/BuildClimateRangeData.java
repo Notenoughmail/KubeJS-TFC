@@ -14,11 +14,11 @@ public class BuildClimateRangeData {
     @Nullable
     private Integer hydroWiggle;
     @Nullable
-    private Integer minTemp;
+    private Float minTemp;
     @Nullable
-    private Integer maxTemp;
+    private Float maxTemp;
     @Nullable
-    private Integer tempWiggle;
+    private Float tempWiggle;
 
     @Info(value = "Sets the minimum hydration of the climate range")
     public BuildClimateRangeData minHydration(int i) {
@@ -39,20 +39,20 @@ public class BuildClimateRangeData {
     }
 
     @Info(value = "Sets the minimum temperature of the climate range")
-    public BuildClimateRangeData minTemperature(int i) {
-        minTemp = i;
+    public BuildClimateRangeData minTemperature(float f) {
+        minTemp = f;
         return this;
     }
 
     @Info(value = "Sets the maximum temperature of the climate range")
-    public BuildClimateRangeData maxTemperature(int i) {
-        maxTemp = i;
+    public BuildClimateRangeData maxTemperature(float f) {
+        maxTemp = f;
         return this;
     }
 
     @Info(value = "Sets the wiggle range when determining if the temperature fits the temperature bounds, defaults to 0")
-    public BuildClimateRangeData temperatureWiggle(int i) {
-        tempWiggle = i;
+    public BuildClimateRangeData temperatureWiggle(float f) {
+        tempWiggle = f;
         return this;
     }
 

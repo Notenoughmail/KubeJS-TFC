@@ -8,8 +8,6 @@ import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class BuildDrinkableData {
@@ -22,6 +20,8 @@ public class BuildDrinkableData {
     @Nullable
     private Integer intoxication;
     private final JsonArray effects = new JsonArray();
+    @Nullable
+    private JsonObject food;
 
 
     public BuildDrinkableData(FluidIngredient fluidIngredient) {
@@ -66,6 +66,15 @@ public class BuildDrinkableData {
         return this;
     }
 
+    @Info(value = "Adds food data to the drinkable")
+    @Generics(value = BuildFoodItemData.class)
+    public BuildDrinkableData food(Consumer<BuildFoodItemData> foodData) {
+        final BuildFoodItemData data = new BuildFoodItemData(null);
+        foodData.accept(data);
+        food = data.toJson();
+        return this;
+    }
+
     public JsonObject toJson() {
         final JsonObject json = new JsonObject();
         json.add("ingredient", fluidIngredient.toJson());
@@ -80,6 +89,9 @@ public class BuildDrinkableData {
         }
         if (!effects.isEmpty()) {
             json.add("effects", effects);
+        }
+        if (food != null) {
+            json.add("food", food);
         }
         return json;
     }

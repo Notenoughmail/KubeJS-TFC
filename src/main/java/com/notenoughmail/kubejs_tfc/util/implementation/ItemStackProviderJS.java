@@ -186,7 +186,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         }
     }
 
-    public ItemStackProvider asJavaObject() {
+    public ItemStackProvider asCanonClass() {
         return ItemStackProvider.fromJson(toJson());
     }
 

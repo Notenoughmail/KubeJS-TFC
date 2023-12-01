@@ -12,7 +12,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
-// TODO: Somehow assign this the correct color handler
+import java.util.ArrayList;
+import java.util.List;
+
 public class FluidContainerItemBuilder extends ItemBuilder {
 
     public transient boolean canPlaceLiquid;
@@ -21,6 +23,8 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     public transient TagKey<Fluid> whitelist;
     public transient String filledDisplayName;
 
+    public static List<FluidContainerItemBuilder> thisList = new ArrayList<>();
+
     public FluidContainerItemBuilder(ResourceLocation i) {
         super(i);
         canPlaceLiquid = false;
@@ -28,6 +32,7 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         capacity = 100;
         whitelist = TFCTags.Fluids.USABLE_IN_JUG;
         filledDisplayName = "%s " + displayName;
+        thisList.add(this);
     }
 
     public FluidContainerItemBuilder canPlaceLiquid(boolean b) {

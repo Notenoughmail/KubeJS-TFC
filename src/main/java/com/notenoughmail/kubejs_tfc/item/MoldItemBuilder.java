@@ -11,16 +11,21 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
-// TODO: Somehow assign this the correct color handler
+import java.util.ArrayList;
+import java.util.List;
+
 public class MoldItemBuilder extends ItemBuilder {
 
     public transient int capacity;
     public transient TagKey<Fluid> acceptableFluids;
 
+    public static List<MoldItemBuilder> thisList = new ArrayList<>();
+
     public MoldItemBuilder(ResourceLocation i) {
         super(i);
         this.capacity = 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
+        thisList.add(this);
     }
 
     public MoldItemBuilder capacity(int capacity) {
@@ -36,6 +41,18 @@ public class MoldItemBuilder extends ItemBuilder {
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
         generator.itemModel(id, m -> ModelUtils.ITEMS.fluidContainerModelJson(m, id));
+        if (modelJson != null) {
+            generator.json(AssetJsonGenerator.asItemModelLocation(id), modelJson);
+            return;
+        }
+
+        generator.itemModel(id, m -> {
+            if (!parentModel.isEmpty()) {
+                m.parent(parentModel);
+            } else {
+                ModelUtils.ITEMS.fluidContainerModelJson(m, id);
+            }
+        });
     }
 
     @Override

@@ -11,7 +11,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS}
@@ -38,12 +45,38 @@ public class DataUtils {
     }
 
     public static String simplifyObject(Object object) {
-        String out = object.toString().toLowerCase(Locale.ROOT)
+        String out;
+        if (object instanceof CharSequence s) {
+            out = s.toString();
+        } else {
+            out = getObjectHashString(object);
+        }
+        out = out.toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]", "_") // Make the string not explode when parsed (yes I know there are a few more allowed chars, but it doesn't matter)
                 .replaceAll("_+", "_")        // Remove duplicate underscores
                 .replaceAll("^_", "")         // Remove leading underscores
                 .replaceAll("_$", "");        // Remove trailing underscores
-        return out.length() > 64 ? out.substring(0, 64) : out; // Limit length to 64 chars
+        return out.length() > 64 ? out.substring(0, 64).replaceAll("_$", "") : out; // Limit length to 64 chars
+    }
+
+    public static byte[] getObjectHashBytes(Object o) {
+        var baos = new ByteArrayOutputStream();
+        try {
+            new DataOutputStream(baos).writeBytes(o.toString());
+        } catch (IOException ignored) {
+            var h = o.hashCode();
+            return new byte[]{(byte) (h >> 24), (byte) (h >> 16), (byte) (h >> 8), (byte) h};
+        }
+        return baos.toByteArray();
+    }
+
+    public static String getObjectHashString(Object o) {
+        try {
+            var messageDigest = Objects.requireNonNull(MessageDigest.getInstance("MD5"));
+            return new BigInteger(HexFormat.of().formatHex(messageDigest.digest(getObjectHashBytes(o))), 16).toString(36);
+        } catch (Exception ignored) {
+            return "%08x".formatted(o.hashCode());
+        }
     }
 
     public static void handleResistances(JsonObject json, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
@@ -103,7 +136,7 @@ public class DataUtils {
         json.addProperty("click_sound", clickSound.toString());
         json.addProperty("consume_after_complete", consumeAfterComplete);
         json.addProperty("use_disabled_texture", useDisabledTexture);
-        json.addProperty("spawn_particles", spawnsParticles);
+        json.addProperty("spawns_particles", spawnsParticles);
         json.add("jei_icon_item", IngredientHelpers.itemStackToJson(jeiIconItem));
         return json;
     }
