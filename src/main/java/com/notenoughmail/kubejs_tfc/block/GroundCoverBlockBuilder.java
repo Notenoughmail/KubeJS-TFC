@@ -1,12 +1,16 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
+import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+// TODO: Allow custom vanilla items for these?
 public class GroundCoverBlockBuilder extends BlockBuilder {
 
     private transient Type type;
@@ -22,31 +26,41 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         noCollision = true;
     }
 
+    @Info(value = "Sets the block to have the same bounding box as TFC's ore pieces")
     public GroundCoverBlockBuilder ore() {
         type = Type.ORE;
         return this;
     }
 
+    @Info(value = "Sets the block to have the same bounding box as TFC's twigs")
     public GroundCoverBlockBuilder twig() {
         type = Type.TWIG;
         return this;
     }
 
-    public GroundCoverBlockBuilder groundCoverModel(String s) {
+    @Info(value = """
+            Set's the block's parent model
+            
+            Accepts anything under the 'kubejs_tfc:block/ground_cover/' namespace
+            """)
+    public GroundCoverBlockBuilder groundCoverModelShape(String s) {
         parent = s;
         return this;
     }
 
+    @Info(value = "Rotates the default models by 45 degrees")
     public GroundCoverBlockBuilder notAxisAligned() {
         rotate = 45;
         return this;
     }
 
+    @Info(value = "Makes the block collide with entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
         return this;
     }
 
+    // Default b/c the basic shape should not be a full block
     public VoxelShape getShape() {
         if (customShape.isEmpty()) {
             return GroundcoverBlock.MEDIUM;
@@ -66,46 +80,23 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         };
     }
 
-    // To anyone (probably my future self) who is searching through this for answers as to why
-    // things won't load, the generator order must be blockstate -> blockmodel -> itemmodel
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        if (blockstateJson != null) {
-            generator.json(newID("blockstates/", ""), blockstateJson);
-        } else {
-            var blockModelLoc = newID("block/", "").toString();
-            generator.blockState(id, m -> m.variant("", v -> {
-                v.model(blockModelLoc).y(rotate);
-                v.model(blockModelLoc).y(90 + rotate);
-                v.model(blockModelLoc).y(180 + rotate);
-                v.model(blockModelLoc).y(270 + rotate);
-            }));
-        }
+    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        generator.blockModel(id, m -> {
+            m.parent("kubejs_tfc:block/ground_cover/" + parent);
+            m.texture("all", id.getNamespace() + ":block/" + id.getPath());
+        });
+    }
 
-        if (modelJson != null) {
-            generator.json(newID("models/block/", ""), modelJson);
-        } else {
-            generator.blockModel(id, m -> {
-                m.parent("kubejs_tfc:block/groundcover/" + parent);
-                m.texture("all", id.getNamespace() + ":block/" + id.getPath());
-            });
-        }
-
-        if (itemBuilder != null) {
-            var ibid = itemBuilder.id;
-            if (itemBuilder.modelJson != null) {
-                generator.json(AssetJsonGenerator.asItemModelLocation(ibid), itemBuilder.modelJson);
-            } else {
-                generator.itemModel(ibid, m -> {
-                    if (!itemBuilder.parentModel.isEmpty()) {
-                        m.parent(itemBuilder.parentModel);
-                    } else {
-                        m.parent("minecraft:item/generated");
-                    }
-                    m.texture("layer0", ibid.getNamespace() + ":item/" + ibid.getPath());
-                });
-            }
-        }
+    @Override
+    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+        final String blockModelLoc = model.isEmpty() ? (id.getNamespace() + ":block/" + id.getPath()) : model;
+        bs.variant("", v -> {
+            v.model(blockModelLoc).y(rotate);
+            v.model(blockModelLoc).y(90 + rotate);
+            v.model(blockModelLoc).y(180 + rotate);
+            v.model(blockModelLoc).y(270 + rotate);
+        });
     }
 
     private enum Type {

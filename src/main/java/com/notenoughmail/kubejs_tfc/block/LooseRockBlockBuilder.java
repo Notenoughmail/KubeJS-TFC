@@ -29,6 +29,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info(value = "Makes the block collide with entities")
     public LooseRockBlockBuilder collision() {
         noCollision = false;
         return this;

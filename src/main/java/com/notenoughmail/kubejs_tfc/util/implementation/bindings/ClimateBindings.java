@@ -26,7 +26,7 @@ public enum ClimateBindings {
     @Nullable
     @Info(value = "Tries to get the climate model of the provided object. Returns null if it cannot do so")
     public ClimateModel getModel(Object o) {
-        if (o instanceof ClimateModel climate ) {
+        if (o instanceof ClimateModel climate) {
             return climate;
         } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
             var model = Climate.create(new ResourceLocation(o.toString()));

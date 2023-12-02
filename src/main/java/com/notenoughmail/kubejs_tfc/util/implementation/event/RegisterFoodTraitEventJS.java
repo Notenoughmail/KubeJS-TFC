@@ -12,7 +12,7 @@ public class RegisterFoodTraitEventJS extends StartupEventJS {
     }
 
     public void registerTraitWithName(float decayModifier, ResourceLocation id, String name) {
-        var key = id.getNamespace() + ".tooltip.foodtrait." + id.getPath().replaceAll("^[a-z0-9]+", ".");
+        var key = id.getNamespace() + ".tooltip.foodtrait." + id.getPath();
         FoodTrait.register(id, new FoodTrait(decayModifier, key));
         KubeJSTFC.translations.put(key, name);
     }

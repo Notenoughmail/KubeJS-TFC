@@ -2,6 +2,8 @@ package com.notenoughmail.kubejs_tfc.fluid;
 
 import com.notenoughmail.kubejs_tfc.block.fluid.HotWaterFluidBlockBuilder;
 import dev.latvian.mods.kubejs.fluid.FluidBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import net.minecraft.resources.ResourceLocation;
 
 public class HotWaterFluidBuilder extends FluidBuilder {
@@ -22,26 +24,31 @@ public class HotWaterFluidBuilder extends FluidBuilder {
         hasSteam = true;
     }
 
+    @Info(value = "Sets the liquid's bubble particle", params = @Param(name = "bubbleParticle", value = "The registry name of the particle type"))
     public HotWaterFluidBuilder bubbleParticle(ResourceLocation bubbleParticle) {
         this.bubbleParticle = bubbleParticle;
         return this;
     }
 
+    @Info(value = "Sets the liquid's steam particle", params = @Param(name = "steamParticle", value = "The registry name of the particle type"))
     public HotWaterFluidBuilder steamParticle(ResourceLocation steamParticle) {
         this.steamParticle = steamParticle;
         return this;
     }
 
+    @Info(value = "Sets the amount of healt the liquid heals while a living entity is in it")
     public HotWaterFluidBuilder healingAmount(float healing) {
         healingAmount = healing;
         return this;
     }
 
+    @Info(value = "Determines if the liquid gives off bubble particles")
     public HotWaterFluidBuilder hasBubbles(boolean b) {
         hasBubbles = b;
         return this;
     }
 
+    @Info(value = "Determines if the liquid gives off steam particles")
     public HotWaterFluidBuilder hasSteam(boolean b) {
         hasSteam = b;
         return this;

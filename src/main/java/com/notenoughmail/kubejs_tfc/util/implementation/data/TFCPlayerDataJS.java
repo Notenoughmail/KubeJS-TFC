@@ -35,7 +35,7 @@ public class TFCPlayerDataJS {
         tfcData.setChiselMode(mode);
     }
 
-    @Info(value = "Returns the player's number of intoxicated ticks")
+    @Info(value = "Returns the number of ticks the player is intoxicated for")
     public long getIntoxicatedTicks() {
         return tfcData.getIntoxicatedTicks(player.level().isClientSide());
     }
@@ -65,6 +65,11 @@ public class TFCPlayerDataJS {
         return foodData.getFoodLevel();
     }
 
+    @Info(value = "Sets the player's food value")
+    public void setFoodLevel(int food) {
+        foodData.setFoodLevel(food);
+    }
+
     @Info(value = "Returns true if the player needs food")
     public boolean needsFood() {
         return foodData.needsFood();
@@ -80,22 +85,17 @@ public class TFCPlayerDataJS {
         return foodData.getSaturationLevel();
     }
 
-    @Info(value = "Sets the player's food value")
-    public void setFoodLevel(int food) {
-        foodData.setFoodLevel(food);
-    }
-
     @Info(value = "Set's the player's saturation level")
     public void setSaturationLevel(float saturation) {
         foodData.setSaturation(saturation);
     }
 
-    @Info(value = "Returns the total thirst loss per tick, on a scale of [0, 100]")
+    @Info(value = "Returns the player's total thirst loss per tick, on a scale of [0, 100]")
     public float getThirstModifier() {
         return foodData.getThirstModifier(player);
     }
 
-    @Info(value = "Returns the total thirst lost per tick from ambient temperature in addition to regular loss")
+    @Info(value = "Returns the player's total thirst lost per tick from ambient temperature in addition to regular loss")
     public float getThirstContributionFromTemperature() {
         return foodData.getThirstContributionFromTemperature(player);
     }

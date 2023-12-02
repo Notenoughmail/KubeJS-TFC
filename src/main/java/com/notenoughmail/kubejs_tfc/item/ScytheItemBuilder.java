@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ScytheItem;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +25,7 @@ public class ScytheItemBuilder extends HandheldItemBuilder {
         this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_SCYTHE;
     }
 
+    @Info(value = "sets the block tag that the scythe can properly dig at full speed")
     public ScytheItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
         this.mineableBlocks = TagKey.create(Registries.BLOCK, blockTag);
         return this;

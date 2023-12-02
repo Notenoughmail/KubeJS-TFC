@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.item;
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.MoldItem;
 import net.minecraft.core.registries.Registries;
@@ -28,11 +29,13 @@ public class MoldItemBuilder extends ItemBuilder {
         thisList.add(this);
     }
 
+    @Info(value = "Sets the capacity, in mB, of the mold")
     public MoldItemBuilder capacity(int capacity) {
         this.capacity = capacity;
         return this;
     }
 
+    @Info(value = "Sets the fluid tag that the mold item is allowed to hold")
     public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
         this.acceptableFluids = TagKey.create(Registries.FLUID, fluidTag);
         return this;

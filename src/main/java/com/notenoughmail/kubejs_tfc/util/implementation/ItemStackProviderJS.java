@@ -10,6 +10,8 @@ import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
@@ -21,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
-// TODO: JSDoc
 public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));
@@ -48,34 +50,43 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
     }
 
+    @Info(value = "Returns true if this ISP's stack is empty and the modifier list is empty")
     public boolean isEmpty() {
         return stack.isEmpty() && modifiers.isEmpty();
     }
 
+    @Info(value = "Sets the ISP's count")
     public ItemStackProviderJS withCount(int count) {
         stack.setCount(count);
         return this;
     }
 
+    @Info(value = "Returns the ISP's count, will return 0 if its item stack is empty")
     public int getCount() {
         return stack.getCount();
     }
 
+    @Info(value = "Returns true if the modifier list is empty")
     public boolean isSimple() {
         return modifiers.isEmpty();
     }
 
+    @Info(value = "Returns the item stack's CompoundTag, may be null")
     @Nullable
     public CompoundTag getTag() {
         return stack.getTag();
     }
 
-    public void setTag(CompoundTag tag) {
+    @Info(value = "Sets the item stack's CompoundTag")
+    public ItemStackProviderJS setTag(CompoundTag tag) {
         stack.setTag(tag);
+        return this;
     }
 
-    public void mergeTag(CompoundTag tag) {
+    @Info(value = "Merges the provided CompoundTag into item stack's CompundTag")
+    public ItemStackProviderJS mergeTag(CompoundTag tag) {
         stack.getOrCreateTag().merge(tag);
+        return this;
     }
 
     public static ItemStackProviderJS of(ItemStack stack, @Nullable Object b) {
@@ -99,6 +110,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return modifiers;
     }
 
+    @Info(value = "Adds a simple modifier to the ISP with the type defined by the provided string")
     public ItemStackProviderJS simpleModifier(String s) {
         var obj = new JsonObject();
         obj.addProperty("type", s);
@@ -106,6 +118,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return this;
     }
 
+    @Info(value = "Adds the provided JsonObject to the modifier list")
     public ItemStackProviderJS jsonModifier(JsonObject json) {
         modifiers.add(json);
         return this;
@@ -113,13 +126,13 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
 
     public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
         final JsonObject obj = new JsonObject();
-        final String type = isAddingTrait ? "tfc:add_trait" : "tfc:remove_trait";
-        obj.addProperty("type", type);
+        obj.addProperty("type", isAddingTrait ? "tfc:add_trait" : "tfc:remove_trait");
         obj.addProperty("trait", foodTrait);
         modifiers.add(obj);
         return this;
     }
 
+    @Info(value = "Adds the 'tfc:dye_leather', modifier to the ISP with the provided color")
     public ItemStackProviderJS dyeLeather(String color) {
         var obj = new JsonObject();
         obj.addProperty("type", "tfc:dye_leather");
@@ -128,6 +141,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return this;
     }
 
+    @Info(value = "Returns the json representation of the ISP's item stack")
     public JsonObject getJsonStack() {
         return IngredientHelpers.itemStackToJson(stack);
     }
@@ -142,11 +156,12 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return false;
     }
 
-    @Generics(value = JsonObject.class) // Is this how you do it? Who knows
+    @Info(value = "Returns a list of JsonObjects consisting of the applied modifiers which match the request type")
+    @Generics(value = JsonObject.class)
     public List<JsonObject> getModifiersOfType(String type) {
         final List<JsonObject> list = new ArrayList<>();
         for (JsonElement element : modifiers) {
-            if (element.getAsJsonObject().has(type)) {
+            if (Objects.equals(element.getAsJsonObject().get("type").getAsString(), type)) {
                 list.add(element.getAsJsonObject());
             }
         }
@@ -163,6 +178,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return new ItemStackProviderJS(stack, modifiers);
     }
 
+    @Info(value = "Returns the json representation of this ISP")
     public JsonObject toJson() {
         if (stack.isEmpty()) {
             var obj = new JsonObject();
@@ -186,10 +202,12 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         }
     }
 
+    @Info(value = "Returns an object of the canon ItemStackProvider class matching the ISP this ItemStackProviderJS represents")
     public ItemStackProvider asCanonClass() {
         return ItemStackProvider.fromJson(toJson());
     }
 
+    @Info(value = "Returns true if the ISP depends on a recipe's input")
     public boolean dependsOnInput() {
         for (JsonElement element : modifiers) {
             if (ItemStackModifiers.fromJson(element).dependsOnInput()) {
@@ -199,6 +217,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return false;
     }
 
+    @Info(value = "Returns a copy of the ISP")
     public ItemStackProviderJS copy() {
         return new ItemStackProviderJS(stack.copy(), modifiers.deepCopy());
     }
@@ -208,6 +227,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return "TFC.itemStackProvider.of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")";
     }
 
+    @Info(value = "Adds a 'tfc:add_heat' modifier to the ISP", params = @Param(name = "temperature", value = "The °C to add to the item"))
     public ItemStackProviderJS addHeat(int temperature) {
         var obj = new JsonObject();
         obj.addProperty("type", "tfc:add_heat");
@@ -216,78 +236,99 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return this;
     }
 
-    public ItemStackProviderJS addTrait(String s) {
-        return this.trait(true, s);
+    @Info(value = "Adds a 'tfc:add_powder' modifier to the ISP")
+    public ItemStackProviderJS addPowder() {
+        return simpleModifier("tfc:add_powder");
     }
 
-    public ItemStackProviderJS removeTrait(String s) {
-        return this.trait(false, s);
+    @Info(value = "Adds a 'tfc:add_trait' modifier to the ISP", params = @Param(name = "trait", value = "The food trait to be added"))
+    public ItemStackProviderJS addTrait(String trait) {
+        return this.trait(true, trait);
     }
 
+    @Info(value = "Adds a 'tfc:remove_trait' modifier to the ISP", params = @Param(name = "trait", value = "The food trait to be removed"))
+    public ItemStackProviderJS removeTrait(String trait) {
+        return this.trait(false, trait);
+    }
+
+    @Info(value = "Adds a 'tfc:add_glass' modifier to the ISP, used as part of glassworking recipes")
     public ItemStackProviderJS addGlass() {
         return this.simpleModifier("tfc:add_glass");
     }
 
+    @Info(value = "Adds a 'tfc:copy_food' modifier to the ISP")
     public ItemStackProviderJS copyFood() {
         return this.simpleModifier("tfc:copy_food");
     }
 
+    @Info(value = "Adds a 'tfc:copy_forging_bonus' modifier to the ISP")
     public ItemStackProviderJS copyForgingBonus() {
         return this.simpleModifier("tfc:copy_forging_bonus");
     }
 
+    @Info(value = "Adds a 'tfc:copy_heat' modifier to the ISP")
     public ItemStackProviderJS copyHeat() {
         return this.simpleModifier("tfc:copy_heat");
     }
 
+    @Info(value = "Adds a 'tfc:copy_input' modifier to the ISP")
     public ItemStackProviderJS copyInput() {
         return this.simpleModifier("tfc:copy_input");
     }
 
+    @Info(value = "Adds a 'tfc:empty_bowl' modifier to the ISP. This is supported soup items")
     public ItemStackProviderJS emptyBowl() {
         return this.simpleModifier("tfc:empty_bowl");
     }
 
+    @Info(value = "Adds a 'tfc:reset_food' modifier to the ISP")
     public ItemStackProviderJS resetFood() {
         return this.simpleModifier("tfc:reset_food");
     }
 
+    @Info(value = "Adds a 'tfc:copy_oldest_food' modifier to the ISP")
     public ItemStackProviderJS copyOldestFood() {
         return this.simpleModifier("tfc:copy_oldest_food");
     }
 
+    @Info(value = "Adds a 'tfc:add_bait_to_rod' modifier to the ISP")
     public ItemStackProviderJS addBait() {
         return this.simpleModifier("tfc:add_bait_to_rod");
     }
 
-    public ItemStackProviderJS sandwich() {
-        return this.simpleModifier("tfc:sandwich");
+    // TODO: Make this a List<Consumer<BuildPortionData>> and have it work with @Generics
+    @SafeVarargs
+    @Info(value = "Adds a 'tfc:meal' modifier to the ISP", params = {
+            @Param(name = "food", value = "The base food data values for the meal modifier"),
+            @Param(name = "portions", value = "The portion data values for the meal modifier")
+    })
+    @Generics(value = {BuildFoodItemData.class, BuildPortionData.class})
+    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
+        final JsonObject obj = mealBase(food);
+        JsonArray portionArray = new JsonArray(portions.length);
+        for (Consumer<BuildPortionData> portion : portions) {
+            var portionData = new BuildPortionData();
+            portion.accept(portionData);
+            portionArray.add(portionData.toJson());
+        }
+        obj.add("portions", portionArray);
+        modifiers.add(obj);
+        return this;
     }
 
-    @SafeVarargs
-    @Generics(value = {BuildFoodItemData.class, BuildPortionData.class})
-    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, @Nullable Consumer<BuildPortionData>... portions) {
+    @Info(value = "Ads a 'tfc:meal' modifier to the ISP", params = @Param(name = "food", value = "The base food data values for the meal modifier"))
+    @Generics(value = BuildFoodItemData.class)
+    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
+        modifiers.add(mealBase(food));
+        return this;
+    }
+
+    private JsonObject mealBase(Consumer<BuildFoodItemData> food) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", "tfc:meal");
         var foodData = new BuildFoodItemData(null);
         food.accept(foodData);
         obj.add("food", foodData.toJson());
-        if (portions != null) {
-            JsonArray portionArray = new JsonArray();
-            for (Consumer<BuildPortionData> portion : portions) {
-                var portionData = new BuildPortionData();
-                assert portion != null;
-                portion.accept(portionData);
-                portionArray.add(portionData.toJson());
-            }
-            obj.add("portions", portionArray);
-        }
-        modifiers.add(obj);
-        return this;
-    }
-
-    @Generics(value = BuildFoodItemData.class)
-    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
-        return meal(food, (Consumer<BuildPortionData>) null);
+        return obj;
     }
 }

@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.RawRockBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,11 +27,13 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
         mirrorModel = newID("", "mirrored").toString();
     }
 
+    @Info(value = "Determines if the block is considered to be naturally supported for the purposes of spawning particles indicating unsupported regions")
     public RawRockBlockBuilder naturallySupported(boolean supported) {
         naturallySupported = supported;
         return this;
     }
 
+    @Info(value = "Sets the tooltip component indicating the block's rock type")
     public RawRockBlockBuilder rockTypeTooltip(Component comp) {
         rockTypeTooltip = comp;
         return this;

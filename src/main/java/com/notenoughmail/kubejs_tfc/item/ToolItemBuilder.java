@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.core.registries.Registries;
@@ -24,20 +25,9 @@ public class ToolItemBuilder extends HandheldItemBuilder {
         mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
     }
 
+    @Info(value = "sets the block tag that the tool can properly dig at full speed")
     public ToolItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
         this.mineableBlocks = TagKey.create(Registries.BLOCK, blockTag);
-        return this;
-    }
-
-    public ToolItemBuilder hammer() {
-        this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_HAMMER;
-        tag(TFCTags.Items.HAMMERS.location());
-        return this;
-    }
-
-    public ToolItemBuilder knife() {
-        this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
-        tag(TFCTags.Items.KNIVES.location());
         return this;
     }
 
