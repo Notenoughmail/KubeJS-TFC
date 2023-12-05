@@ -14,6 +14,12 @@ import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
 public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJS> {
 
     public static final RecipeComponent<ItemStackProviderJS> PROVIDER = new ItemProviderComponent();
+    public static final RecipeComponent<ItemStackProviderJS> INTERMEDIATE = new ItemProviderComponent() {
+        @Override
+        public ComponentRole role() {
+            return ComponentRole.OTHER;
+        }
+    };
 
     @Override
     public ComponentRole role() {

@@ -37,6 +37,7 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         canPlaceSource = false;
         capacity = 100;
         whitelist = TFCTags.Fluids.USABLE_IN_JUG;
+        filledTranslationKey = "";
         filledDisplayName = null;
         thisList.add(this);
     }

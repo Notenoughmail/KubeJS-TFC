@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -54,7 +53,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info(value = "Makes the block collide with entities")
+    @Info(value = "Makes the block collide blockStates entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
         return this;

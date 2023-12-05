@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ChiselItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +16,7 @@ public class ChiselItemBuilder extends HandheldItemBuilder {
 
     public ChiselItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
+        tag(TFCTags.Items.CHISELS.location());
     }
 
     @Override

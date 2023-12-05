@@ -3,10 +3,9 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 import com.notenoughmail.kubejs_tfc.recipe.schema.SimplePotSchema;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.OutputItem;
-import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.typings.Info;
 
-public class SimplePotRecipeJS extends RecipeJS {
+public class SimplePotRecipeJS extends TFCRecipeJS {
 
     @Info(value = "Sets the items that should be left in the pot after the recipe completes, accepts up to 5")
     public SimplePotRecipeJS itemOutput(OutputItem[] itemOutput) {

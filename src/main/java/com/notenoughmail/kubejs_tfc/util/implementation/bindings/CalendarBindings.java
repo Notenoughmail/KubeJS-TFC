@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.calendar.Month;
@@ -11,7 +10,6 @@ import net.minecraft.world.level.LevelReader;
 
 @SuppressWarnings("unused")
 public enum CalendarBindings {
-    @HideFromJS
     INSTANCE;
 
     @Info(value = "Returns the best guess on the appropriate calendar")

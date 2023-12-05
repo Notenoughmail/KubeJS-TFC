@@ -4,11 +4,9 @@ import com.google.gson.JsonArray;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.world.item.ItemStack;
 
 public enum ItemStackProviderBindings {
-    @HideFromJS
     INSTANCE;
 
     @Info(value = "Creates an item stack provider based on the provided item stack")

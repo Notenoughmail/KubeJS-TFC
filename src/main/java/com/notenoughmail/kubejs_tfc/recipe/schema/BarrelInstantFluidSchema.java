@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.FluidComponents;
@@ -15,5 +16,5 @@ public interface BarrelInstantFluidSchema {
     RecipeKey<OutputFluid> OUTPUT_FLUID = FluidComponents.OUTPUT.key("output_fluid").preferred("outputFluid");
     RecipeKey<String> SOUND = StringComponent.ID.key("sound").optional("minecraft:block.brewing_stand.brew");
 
-    RecipeSchema SCHEMA = new RecipeSchema(OUTPUT_FLUID, PRIMARY_FLUID, ADDED_FLUID, SOUND);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, OUTPUT_FLUID, PRIMARY_FLUID, ADDED_FLUID, SOUND);
 }

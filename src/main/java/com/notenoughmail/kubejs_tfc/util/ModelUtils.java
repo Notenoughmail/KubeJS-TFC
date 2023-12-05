@@ -24,7 +24,7 @@ public class ModelUtils {
         // TODO: Check if this is still how the models are
         public static JsonObject javelinItemModelJson(ResourceLocation id) {
             var javelin = new JsonObject();
-            javelin.addProperty("loader", "forge:separate-perspective");
+            javelin.addProperty("loader", "forge:separate_transforms");
             javelin.addProperty("gui_light", "front");
 
             var texture = newItemID(id).toString();

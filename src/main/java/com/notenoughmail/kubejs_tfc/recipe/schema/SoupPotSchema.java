@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
@@ -15,5 +16,5 @@ public interface SoupPotSchema {
     RecipeKey<Integer> DURATION = NumberComponent.INT.key("duration");
     RecipeKey<Float> TEMPERATURE = NumberComponent.FLOAT.key("temperature");
 
-    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE);
 }

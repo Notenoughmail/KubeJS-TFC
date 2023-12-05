@@ -1,9 +1,9 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
-import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.component.MapRecipeComponent;
@@ -23,6 +23,6 @@ public interface AdvancedCraftingSchema {
     RecipeKey<InputItem[]> INGREDIENTS = ItemComponents.UNWRAPPED_INPUT_ARRAY.key("ingredients");
     RecipeKey<InputItem> PRIMARY_INGREDIENT = ItemComponents.INPUT.key("primary_ingredient").optional(InputItem.EMPTY).preferred("primaryIngredient");
 
-    RecipeSchema SHAPED = new RecipeSchema(RESULT, PATTERN, KEY, ROW, COLUMN);
-    RecipeSchema SHAPELESS = new RecipeSchema(RESULT, INGREDIENTS, PRIMARY_INGREDIENT);
+    RecipeSchema SHAPED = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, PATTERN, KEY, ROW, COLUMN);
+    RecipeSchema SHAPELESS = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, INGREDIENTS, PRIMARY_INGREDIENT);
 }

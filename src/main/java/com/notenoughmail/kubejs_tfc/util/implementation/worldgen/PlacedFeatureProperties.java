@@ -3,10 +3,9 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.ListJS;
-import dev.latvian.mods.kubejs.util.MapJS;
-import dev.latvian.mods.rhino.NativeObject;
+import dev.latvian.mods.kubejs.typings.Param;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+// TODO: JSDoc
 @SuppressWarnings("unused")
 public class PlacedFeatureProperties {
 
@@ -24,6 +24,7 @@ public class PlacedFeatureProperties {
         feature = DataUtils.normalizeResourceLocation(name).toString();
     }
 
+    @Info(value = "Adds a placement with the provided type and no extra arguments")
     public PlacedFeatureProperties simplePlacement(String type) {
         final JsonObject json = new JsonObject();
         json.addProperty("type", type);
@@ -31,38 +32,42 @@ public class PlacedFeatureProperties {
         return this;
     }
 
+    @Info(value = "Adds the provided json object to the list of placement modifiers")
     public PlacedFeatureProperties jsonPlacement(JsonObject json) {
         placements.add(json);
         return this;
     }
 
+    @Info(value = "Adds the 'tfc:biome' placement modifier")
     public PlacedFeatureProperties tfcBiome() {
         return simplePlacement("tfc:biome");
     }
 
+    @Info(value = "Adds a 'tfc:climate' placement modifier", params = @Param(name = "climate", value = "The climate placement properties"))
+    @Generics(value = Climate.class)
     public PlacedFeatureProperties climate(Consumer<Climate> climate) {
         var placer = new Climate();
         climate.accept(placer);
         return jsonPlacement(placer.toJson());
     }
 
+    @Info(value = "Adds a 'tfc:flat_enough' placement modifier", params = @Param(name = "flatness", value = "The flatness placement properties"))
+    @Generics(value = Flatness.class)
     public PlacedFeatureProperties flatEnough(Consumer<Flatness> flatness) {
         var placer = new Flatness();
         flatness.accept(placer);
         return jsonPlacement(placer.toJson());
     }
 
-    public PlacedFeatureProperties nearWater(int i) {
+    @Info(value = "Adds a 'tfc:near_water' placement modifier", params = @Param(name = "radius", value = "The 'radius' property of the modifier"))
+    public PlacedFeatureProperties nearWater(int radius) {
         var json = new JsonObject();
         json.addProperty("type", "tfc:near_water");
-        json.addProperty("radius", i);
+        json.addProperty("radius", radius);
         return jsonPlacement(json);
     }
 
-    public PlacedFeatureProperties shallowWater() {
-        return shallowWater(3);
-    }
-
+    @Info(value = "Adds a 'tfc:shallow_water' placement modifier", params = @Param(name = "depth", value = "the 'max_depth' property of the modifier"))
     public PlacedFeatureProperties shallowWater(int depth) {
         var json = new JsonObject();
         json.addProperty("type", "tfc:shallow_water");
@@ -70,14 +75,15 @@ public class PlacedFeatureProperties {
         return jsonPlacement(json);
     }
 
+    @Info(value = "Adds a 'tfc:underground' placement modifier")
     public PlacedFeatureProperties underground() {
         return simplePlacement("tfc:underground");
     }
 
-    public PlacedFeatureProperties volcano(float distance) {
-        return volcano(false, distance);
-    }
-
+    @Info(value = "Adds a 'tfc:volcano' placement modifier", params = {
+            @Param(name = "center", value = "If true, the feature will be placed at the exact center of the volcano and disregard the 'distance' property"),
+            @Param(name = "distance", value = "Sets the distance, in the range [0, 1], from the center of a volcano needed to generate")
+    })
     public PlacedFeatureProperties volcano(boolean center, float distance) {
         var json = new JsonObject();
         json.addProperty("type", "tfc:volcano");
@@ -87,21 +93,24 @@ public class PlacedFeatureProperties {
     }
 
     // Some of the vanilla modifiers that I can make heads or tails of
+    @Info(value = "Adds a 'minecraft:in_square' placement modifier")
     public PlacedFeatureProperties inSquare() {
         return simplePlacement("minecraft:in_square");
     }
 
-    public PlacedFeatureProperties rarityFilter(int i) {
+    @Info(value = "Adds a 'minecraft:rarity_filter' placement modifier", params = @Param(name = "chance", value = "Sets the 'chance' property of the modifier"))
+    public PlacedFeatureProperties rarityFilter(int chance) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:rarity_filter");
-        json.addProperty("chance", i);
+        json.addProperty("chance", chance);
         return jsonPlacement(json);
     }
 
-    public PlacedFeatureProperties heightMap(String s) {
+    @Info(value = "Adds a 'minecraft:heightmap' placement modifier", params = @Param(name = "heightMap", value = "Sets t=the 'height_map' property of the modifier"))
+    public PlacedFeatureProperties heightMap(String heightMap) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:heightmap");
-        json.addProperty("height_map", s.toUpperCase(Locale.ROOT));
+        json.addProperty("heightmap", heightMap.toUpperCase(Locale.ROOT));
         return jsonPlacement(json);
     }
 

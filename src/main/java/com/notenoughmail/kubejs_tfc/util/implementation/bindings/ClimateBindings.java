@@ -4,7 +4,6 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.climate.BiomeBasedClimateModel;
 import net.dries007.tfc.util.climate.Climate;
@@ -13,14 +12,12 @@ import net.dries007.tfc.util.climate.ClimateModelType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
 
 @SuppressWarnings("unused")
 public enum ClimateBindings {
-    @HideFromJS
     INSTANCE;
 
     @Nullable

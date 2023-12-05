@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.recipes.ingredients.*;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +9,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 public enum TFCIngredientBindings {
-    @HideFromJS
     INSTANCE;
 
     @Info(value = "Creates an ingredient of type 'tfc:heatable'", params = {

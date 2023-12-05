@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.recipe.component;
 import com.google.gson.JsonElement;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
@@ -11,6 +12,11 @@ public class FluidIngredientComponent implements RecipeComponent<FluidIngredient
 
     public static final FluidIngredientComponent INGREDIENT = new FluidIngredientComponent();
     public static final FluidStackIngredientComponent STACK_INGREDIENT = new FluidStackIngredientComponent();
+
+    @Override
+    public ComponentRole role() {
+        return ComponentRole.INPUT;
+    }
 
     @Override
     public String componentType() {

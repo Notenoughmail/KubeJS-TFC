@@ -2,302 +2,203 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dev.latvian.mods.kubejs.util.MapJS;
+import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
+import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.function.Consumer;
-
-import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
 
 @SuppressWarnings("unused")
-public class BuildVeinProperties {
+public abstract class BuildVeinProperties {
 
     // Common values
-    private VeinType type = VeinType.CLUSTER;
-    private int rarity = 60;
-    private int size = 8;
-    private float density = 0.2f;
-    private JsonObject minY;
-    private JsonObject maxY;
+    private final List<WorldGenUtils.VeinReplacementMapEntry> blocks;
     @Nullable
     private JsonObject indicator;
+    private final int rarity;
+    private final float density;
+    private final int minY;
+    private final int maxY;
     @Nullable
-    private String biomeTag;
+    private Boolean project;
     @Nullable
-    private Integer salt;
-    private final JsonArray blocks = new JsonArray();
-    private final String name; // The wiki doesn't mention this, but the game freaks out when it doesn't have a 'random_name' value in the config
+    private Boolean projectOffset;
+    private final String random_name;
 
-    // Additional configs for disc and pipe veins
-    private int height = 6;
-    private int radius = 3;
-    private int minSkew = 0;
-    private int maxSkew = 0;
-    private int minSlant = 0;
-    private int maxSlant = 0;
-    private float sign = 0.5f;
+    @Nullable
+    private String biomes;
+    @Nullable
+    private Boolean nearLava;
 
-    public BuildVeinProperties(String name) {
-        this.name = name;
+    public BuildVeinProperties(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName) {
+        this.blocks = blocks;
+        this.rarity = rarity;
+        this.density = density;
+        this.minY = minY;
+        this.maxY = maxY;
+        random_name = randomName;
     }
 
-    public BuildVeinProperties type(String type) {
-        this.type = VeinType.valueOf(type.toUpperCase(Locale.ROOT));
+    @Info(value = "Adds the 'indicator' property to the vein", params = {
+            @Param(name = "depth", value = "Defines how many blocks above the top of the vein the indicators may spawn"),
+            @Param(name = "rarity", value = "Sets the rarity of the indicator blocks"),
+            @Param(name = "undergroundRarity", value = "Sets the rarity of the indicator blocks when underground"),
+            @Param(name = "indicators", value = "A list of string representations of weighted block states, the blocks to be used as indicators")
+    })
+    @Generics(value = String.class)
+    public BuildVeinProperties indicator(int depth, int rarity, int undergroundRarity, int undergroundCount, List<String> indicators) {
+        final JsonObject indicatorJson = new JsonObject();
+        indicatorJson.addProperty("depth", depth);
+        indicatorJson.addProperty("rarity", rarity);
+        indicatorJson.addProperty("underground_rarity", undergroundRarity);
+        indicatorJson.addProperty("underground_count", undergroundCount);
+        final JsonArray blocks = new JsonArray(indicators.size());
+        for (String s: indicators) {
+            blocks.add(WorldGenUtils.weightedBlockState(s, "block"));
+        }
+        indicatorJson.add("blocks", blocks);
+        indicator = indicatorJson;
         return this;
     }
 
-    public BuildVeinProperties rarity(int i) {
-        rarity = i;
+    // TODO: JSDoc, figure out what this actually does
+    public BuildVeinProperties project(boolean b) {
+        project = b;
         return this;
     }
 
-    public BuildVeinProperties size(int i) {
-        size = i;
+    // TODO: JSDoc, figure out what this actually does
+    public BuildVeinProperties projectOffset(boolean b) {
+        projectOffset = b;
         return this;
     }
 
-    public BuildVeinProperties density(float f) {
-        density = f;
-        return this;
-    }
-
-    public BuildVeinProperties minY(JsonObject json) {
-        minY = json;
-        return this;
-    }
-
-    public BuildVeinProperties absoluteMinY(int i) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("absolute", i);
-        minY = json;
-        return this;
-    }
-
-    public BuildVeinProperties maxY(JsonObject json) {
-        maxY = json;
-        return this;
-    }
-
-    public BuildVeinProperties absoluteMaxY(int i) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("absolute", i);
-        maxY = json;
-        return this;
-    }
-
-    public BuildVeinProperties indicator(Consumer<Indicator> indicatorConsumer) {
-        var indicator = new Indicator();
-        indicatorConsumer.accept(indicator);
-        this.indicator = indicator.toJson();
-        return this;
-    }
-
-    public BuildVeinProperties replacementMap(Consumer<BlockReplacementMap> map) {
-        var replacement = new BlockReplacementMap();
-        map.accept(replacement);
-        blocks.addAll(replacement.toJson());
-        return this;
-    }
-
-    public BuildVeinProperties salt(int i) {
-        salt = i;
-        return this;
-    }
-
-    // https://github.com/TerraFirmaCraft/TerraFirmaCraft/blob/1.18.x/src/main/resources/data/tfc/worldgen/configured_feature/vein/volcanic_sulfur.json#L87
-    // https://github.com/TerraFirmaCraft/TerraFirmaCraft/blob/1.18.x/src/main/java/net/dries007/tfc/world/feature/vein/VeinConfig.java#L63
-    // Optional<TagKey<Biome>>
-    public BuildVeinProperties biomeFilter(String biomeTag) {
+    @Info(value = "Determines which biomes the vein may spawn in", params = @Param(name = "biomeTag", value = "The biome tag the vein may spawn in"))
+    public BuildVeinProperties biomes(String biomeTag) {
         if (biomeTag.matches("#.+")) {
-            this.biomeTag = biomeTag;
+            this.biomes = biomeTag;
         } else {
-            this.biomeTag = "#".concat(biomeTag);
+            this.biomes = "#".concat(biomeTag);
         }
         return this;
     }
 
-    public BuildVeinProperties height(int i) {
-        height = i;
+    @Info(value = "Determines if the vein should be near lava in order to spawn")
+    public BuildVeinProperties nearLava(boolean b) {
+        nearLava = b;
         return this;
     }
 
-    public BuildVeinProperties radius(int i) {
-        radius = i;
-        return this;
-    }
-
-    public BuildVeinProperties minSkew(int i) {
-        minSkew = i;
-        return this;
-    }
-
-    public BuildVeinProperties maxSkew(int i) {
-        maxSkew = i;
-        return this;
-    }
-
-    public BuildVeinProperties minSlant(int i) {
-        minSlant = i;
-        return this;
-    }
-
-    public BuildVeinProperties maxSlant(int i) {
-        maxSlant = i;
-        return this;
-    }
-
-    public BuildVeinProperties sign(float f) {
-        sign = f;
-        return this;
-    }
-
-
-    public JsonObject toJson() {
-        var json = new JsonObject();
-        json.addProperty("type", switch (type) {
-            case DISC -> "tfc:disc_vein";
-            case PIPE -> "tfc:pipe_vein";
-            default -> "tfc:cluster_vein";
-        });
-        var config = new JsonObject();
+    protected JsonObject baseConfig() {
+        final JsonObject config = new JsonObject();
+        final JsonArray blocksArray = new JsonArray(blocks.size());
+        blocks.forEach(entry -> blocksArray.add(entry.toJson()));
+        config.add("blocks", blocksArray);
+        if (indicator != null) {
+            config.add("indicator", indicator);
+        }
         config.addProperty("rarity", rarity);
-        config.addProperty("size", size);
         config.addProperty("density", density);
-        config.add("min_y", minY);
-        config.add("max_y", maxY);
-        config.add("indicator", indicator);
-        config.add("blocks", blocks);
-        config.addProperty("random_name", name);
-        if (salt != null) {
-            config.addProperty("salt", salt);
+        config.addProperty("min_y", minY);
+        config.addProperty("max_y", maxY);
+        if (project != null) {
+            config.addProperty("project", project);
         }
-        if (biomeTag != null) {
-            config.addProperty("biomes", biomeTag);
+        if (projectOffset != null) {
+            config.addProperty("project_offset", projectOffset);
         }
-        if (type == VeinType.DISC) {
+        config.addProperty("random_name", random_name);
+        if (biomes != null) {
+            config.addProperty("biomes", biomes);
+        }
+        if (nearLava != null) {
+            config.addProperty("near_lava", nearLava);
+        }
+        return config;
+    }
+
+    public abstract JsonObject toJson();
+
+    public static class Cluster extends BuildVeinProperties {
+
+        private final int size;
+
+        public Cluster(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size) {
+            super(blocks, rarity, density, minY, maxY, randomName);
+            this.size = size;
+        }
+
+        @Override
+        public JsonObject toJson() {
+            final JsonObject json = new JsonObject();
+            json.addProperty("type", "tfc:cluster_vein");
+            final JsonObject config = baseConfig();
+            config.addProperty("size", size);
+            json.add("config", config);
+            return json;
+        }
+    }
+
+    public static class Pipe extends BuildVeinProperties {
+
+        private final int height;
+        private final int radius;
+        private final int minSkew;
+        private final int maxSkew;
+        private final int minSlant;
+        private final int maxSlant;
+        private final float sign;
+
+        public Pipe(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign) {
+            super(blocks, rarity, density, minY, maxY, randomName);
+            this.height = height;
+            this.radius = radius;
+            this.minSkew = minSkew;
+            this.maxSkew = maxSkew;
+            this.minSlant = minSlant;
+            this.maxSlant = maxSlant;
+            this.sign = sign;
+        }
+
+        @Override
+        public JsonObject toJson() {
+            final JsonObject json = new JsonObject();
+            json.addProperty("type", "tfc:pipe_vein");
+            final JsonObject config = baseConfig();
             config.addProperty("height", height);
-        }
-        if (type == VeinType.PIPE) {
             config.addProperty("radius", radius);
             config.addProperty("min_skew", minSkew);
             config.addProperty("max_skew", maxSkew);
             config.addProperty("min_slant", minSlant);
             config.addProperty("max_slant", maxSlant);
             config.addProperty("sign", sign);
+            json.add("config", config);
+            return json;
         }
-        json.add("config", config);
-        return json;
     }
 
-    private enum VeinType {
-        CLUSTER,
-        DISC,
-        PIPE
-    }
+    public static class Disc extends BuildVeinProperties {
 
-    public static class Indicator {
+        private final int size;
+        private final int height;
 
-        private int depth = 35;
-        private int spread = 15;
-        private int rarity = 10;
-        private final List<JsonObject> blocks = new ArrayList<>();
-
-        public Indicator depth(int i) {
-            depth = i;
-            return this;
+        public Disc(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size, int height) {
+            super(blocks, rarity, density, minY, maxY, randomName);
+            this.size = size;
+            this.height = height;
         }
 
-        public Indicator spread(int i) {
-            spread = i;
-            return this;
-        }
-
-        public Indicator rarity(int i) {
-            rarity = i;
-            return this;
-        }
-
-        public Indicator indicators(String... values) {
-            for (String value : values) {
-                var obj = new JsonObject();
-                if (value.matches("[0-9.]+ ?.+")) {
-                    var weight = value.split(" ");
-                    obj.addProperty("weight", Float.parseFloat(weight[0]));
-                    obj.add("block", blockStateToLenient(weight[1]));
-                } else {
-                    obj.add("block", blockStateToLenient(value));
-                }
-                blocks.add(obj);
-            }
-            return this;
-        }
-
+        @Override
         public JsonObject toJson() {
-            var json = new JsonObject();
-            json.addProperty("depth", depth);
-            json.addProperty("spread", spread);
-            json.addProperty("rarity", rarity);
-            var array = new JsonArray();
-            for (JsonObject obj : blocks) {
-                array.add(obj);
-            }
-            json.add("blocks", array);
+            final JsonObject json = new JsonObject();
+            json.addProperty("type", "tfc:disc_vein");
+            final JsonObject config = baseConfig();
+            config.addProperty("size", size);
+            config.addProperty("height", height);
+            json.add("config", config);
             return json;
-        }
-    }
-
-    public static class BlockReplacementMap {
-
-        private final List<JsonObject> blocks = new ArrayList<>();
-
-        public Replace replace(String... replace) {
-            return new Replace(this, replace);
-        }
-
-        public JsonArray toJson() {
-            var json = new JsonArray();
-            for (JsonObject block : blocks) {
-                json.add(block);
-            }
-            return json;
-        }
-
-        public static class Replace {
-
-            private final BlockReplacementMap map;
-            private final String[] replaceList;
-
-            public Replace(BlockReplacementMap map, String... replace) {
-                this.map = map;
-                this.replaceList = replace;
-            }
-
-            public BlockReplacementMap with(String... with) {
-                var obj = new JsonObject();
-                var replaceArray = new JsonArray();
-                for (String s : replaceList) {
-                    replaceArray.add(s);
-                }
-                obj.add("replace", replaceArray);
-                var withArray = new JsonArray();
-                for (String s : with) {
-                    var object = new JsonObject();
-                    if (s.matches("[0-9.]+ ?.+")) {
-                        var weight = s.split(" ");
-                        object.addProperty("weight", Float.parseFloat(weight[0]));
-                        object.add("block", blockStateToLenient(weight[1]));
-                    } else {
-                        object.add("block", blockStateToLenient(s));
-                    }
-                    withArray.add(object);
-                }
-                obj.add("with", withArray);
-                map.blocks.add(obj);
-                return map;
-            }
         }
     }
 }

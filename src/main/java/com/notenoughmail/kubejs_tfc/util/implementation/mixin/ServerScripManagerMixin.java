@@ -16,12 +16,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// This thing is so incredibly unstable
 /**
  * This is required because while {@link dev.latvian.mods.kubejs.KubeJSPlugin#generateDataJsons(DataJsonGenerator) KubeJSPlugin#generateDataJsons}
  * works for most cases, it does not for metal definitions and worldgen features.
  * This is due to its cached jsons not being made until after recipes and tags are processed.
- * Thus, alloy recipes cannot use metals made through the 'tfc.data' event and worldgen features made through the
- * 'tfc.worlgen.data' event cannot be added to the correct tags to actually place them in world.
+ * Thus, alloy recipes cannot use metals made through the 'TFCEvents.data' event and worldgen features made through the
+ * 'TFCEvents.worldgenData' event cannot be added to the correct tags to actually place them in world.
  */
 @Mixin(value = ServerScriptManager.class, remap = false)
 public abstract class ServerScripManagerMixin {
@@ -47,7 +48,7 @@ public abstract class ServerScripManagerMixin {
         return pack;
     }
 
-    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/util/ConsoleJS;info(Ljava/lang/Object;)V", shift = At.Shift.BEFORE, value = "INVOKE"), remap = false)
+    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/util/ConsoleJS;info(Ljava/lang/Object;)Ldev/latvian/mods/kubejs/script/ConsoleLine;", shift = At.Shift.BEFORE, value = "INVOKE"), remap = false)
     private void postDataEvents(CloseableResourceManager original, CallbackInfoReturnable<MultiPackResourceManager> cir) {
         EventHandlers.postDataEvents(kubeJS_TFC$VirtualDataPack, kubeJS_TFC$WrappedManager);
     }

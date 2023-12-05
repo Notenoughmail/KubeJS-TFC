@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -15,5 +16,5 @@ public interface BlastFurnaceSchema {
     RecipeKey<InputItem> CATALYST = ItemComponents.INPUT.key("catalyst");
     RecipeKey<OutputFluid> RESULT = FluidComponents.OUTPUT.key("result");
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, CATALYST, FLUID);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RESULT, CATALYST, FLUID);
 }

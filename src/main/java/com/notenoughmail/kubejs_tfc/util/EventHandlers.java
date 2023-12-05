@@ -1,8 +1,10 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
+import dev.latvian.mods.kubejs.CommonProperties;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -24,11 +26,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Basically everything mentioned here requires a massive refactor
 public class EventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
@@ -59,6 +61,7 @@ public class EventHandlers {
         bus.addListener(EventHandlers::onAnimalProduct);
         bus.addListener(EventHandlers::limitContainers);
         bus.addListener(EventHandlers::onCollapse);
+        bus.addListener(EventHandlers::loadComplete);
     }
 
     private static void setupEvents() {
@@ -184,6 +187,12 @@ public class EventHandlers {
                     slot.setChanged();
                 }
             }
+        }
+    }
+
+    private static void loadComplete(FMLLoadCompleteEvent event) {
+        if (CommonConfig.disableAsyncRecipes.get()) {
+            CommonProperties.get().allowAsyncStreams = false;
         }
     }
 }

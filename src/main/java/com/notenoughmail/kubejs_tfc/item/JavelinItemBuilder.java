@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.JavelinItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -32,6 +33,12 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     @Info(value = "Sets the javelin's thrown damage")
     public JavelinItemBuilder thrownDamage(float damage) {
         thrownDamage = damage;
+        return this;
+    }
+
+    @Info(value = "Adds this to the 'tfc:skeleton_weapons' tag")
+    public JavelinItemBuilder skeletonWeapon() {
+        tag(TFCTags.Items.SKELETON_WEAPONS.location());
         return this;
     }
 

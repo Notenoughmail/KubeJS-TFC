@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.item.OutputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -14,5 +15,5 @@ public interface GlassworkingSchema {
     RecipeKey<InputItem> BATCH = ItemComponents.INPUT.key("batch");
     RecipeKey<GlassOperation[]> OPERATIONS = new EnumComponent<>(GlassOperation.class).asArray().key("operations");
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, BATCH, OPERATIONS);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RESULT, BATCH, OPERATIONS);
 }

@@ -4,12 +4,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.util.MapJS;
 
 public class AlloyPartComponent implements RecipeComponent<AlloyPartComponent.AlloyPart> {
 
     public static RecipeComponent<AlloyPart[]> ALLOY = new AlloyPartComponent().asArray();
+
+    @Override
+    public ComponentRole role() {
+        return ComponentRole.INPUT;
+    }
 
     @Override
     public String componentType() {

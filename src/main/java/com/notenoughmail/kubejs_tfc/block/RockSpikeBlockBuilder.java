@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +68,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
      * This exists because when testing the cycling feature any spike blocks above the clicked one would pop off if it
      * was bigger than the new state, this allows devs to decide if that should happen... by eliminating the block update
      * that would usually be emitted, thus making it function like the debug stick. Surprisingly observers still detect
-     * it so oh well? And yet there are still strange interactions with state cycling—who would of guessed‽
+     * it so oh well? And yet there are still strange interactions blockStates state cycling—who would of guessed‽
      */
     public RockSpikeBlockBuilder dontUpdateWhenCycling() {
         updateWhenCycling = false;

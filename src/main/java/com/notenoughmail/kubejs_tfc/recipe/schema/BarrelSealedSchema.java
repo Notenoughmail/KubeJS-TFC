@@ -23,8 +23,8 @@ public interface BarrelSealedSchema {
     RecipeKey<FluidStackIngredient> INPUT_FLUID = FluidIngredientComponent.STACK_INGREDIENT.key("input_fluid").optional(FluidStackIngredient.EMPTY).preferred("inputFluid");
     RecipeKey<String> SOUND = StringComponent.ID.key("sound").optional("minecraft:block.brewing_stand.brew");
     RecipeKey<Integer> DURATION = NumberComponent.ANY_INT.key("duration");
-    RecipeKey<ItemStackProviderJS> ON_SEAL = ItemProviderComponent.PROVIDER.key("on_seal").optional(ItemStackProviderJS.EMPTY).preferred("onSeal");
-    RecipeKey<ItemStackProviderJS> ON_UNSEAL = ItemProviderComponent.PROVIDER.key("on_unseal").optional(ItemStackProviderJS.EMPTY).preferred("onUnseal");
+    RecipeKey<ItemStackProviderJS> ON_SEAL = ItemProviderComponent.INTERMEDIATE.key("on_seal").optional(ItemStackProviderJS.EMPTY).preferred("onSeal");
+    RecipeKey<ItemStackProviderJS> ON_UNSEAL = ItemProviderComponent.INTERMEDIATE.key("on_unseal").optional(ItemStackProviderJS.EMPTY).preferred("onUnseal");
 
     RecipeSchema SCHEMA = new RecipeSchema(SealedBarrelRecipeJS.class, SealedBarrelRecipeJS::new, DURATION, OUTPUT_ITEM, OUTPUT_FLUID, INPUT_ITEM, INPUT_FLUID, SOUND, ON_SEAL, ON_UNSEAL)
             .constructor(DURATION); // Everything is optional, delegate to methods

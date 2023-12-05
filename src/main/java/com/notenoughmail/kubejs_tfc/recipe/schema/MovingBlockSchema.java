@@ -1,11 +1,11 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.BlockIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.BlockStateComponent;
 import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +16,7 @@ public interface MovingBlockSchema {
     RecipeKey<BlockIngredient> INGREDIENT = BlockIngredientComponent.INGREDIENT.key("ingredient");
     RecipeKey<Boolean> COPY_INPUT = BooleanComponent.BOOLEAN.key("copy_input").optional(false);
 
-    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENT, RESULT, COPY_INPUT)
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, INGREDIENT, RESULT, COPY_INPUT)
             .constructor(RESULT, INGREDIENT)
             // Weird hack, but it seems to work
             .constructor((recipe, schemaType, keys, from) -> {

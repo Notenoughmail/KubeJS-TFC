@@ -1,11 +1,10 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.mojang.logging.LogUtils;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
-import dev.latvian.mods.kubejs.recipe.component.BlockStateComponent;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
+import dev.latvian.mods.kubejs.CommonProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -25,6 +24,7 @@ public class KubeJSTFC {
 
     public KubeJSTFC() {
         EventHandlers.init();
+        CommonConfig.register();
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientEventHandlers.init();

@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
+import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -15,6 +16,5 @@ public interface WeldingSchema {
     RecipeKey<Integer> TIER = NumberComponent.INT.key("tier").optional(-1);
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
 
-    RecipeSchema SCHEMA = new RecipeSchema(RESULT, FIRST_INPUT, SECOND_INPUT, TIER)
-            .constructor(RESULT, FIRST_INPUT, SECOND_INPUT);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, FIRST_INPUT, SECOND_INPUT, TIER);
 }

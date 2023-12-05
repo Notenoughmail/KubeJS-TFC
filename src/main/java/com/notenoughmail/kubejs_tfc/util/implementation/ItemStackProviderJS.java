@@ -3,12 +3,15 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
-import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
+import dev.latvian.mods.kubejs.item.OutputItem;
+import dev.latvian.mods.kubejs.recipe.OutputReplacement;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
+public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implements OutputReplacement {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));
 
@@ -48,6 +51,26 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         }
 
         return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());
+    }
+
+    @Override
+    public Object replaceOutput(RecipeJS recipe, ReplacementMatch match, OutputReplacement original) {
+        if (recipe instanceof ISupportProviderOutput) {
+            if (original instanceof ItemStackProviderJS originalProvider) {
+                final ItemStackProviderJS replacement = new ItemStackProviderJS(stack.copy(), originalProvider.modifiers);
+                replacement.withCount(originalProvider.getCount());
+                return replacement;
+            } else if (original instanceof OutputItem originalOutput) {
+                final ItemStackProviderJS replacement = new ItemStackProviderJS(stack.copy(), new JsonArray());
+                replacement.withCount(originalOutput.getCount());
+                return replacement;
+            }
+
+            return new ItemStackProviderJS(stack.copy(), new JsonArray());
+        } else {
+            // Uh... how?
+            return OutputItem.of(stack.copy());
+        }
     }
 
     @Info(value = "Returns true if this ISP's stack is empty and the modifier list is empty")
@@ -296,16 +319,14 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) {
         return this.simpleModifier("tfc:add_bait_to_rod");
     }
 
-    // TODO: Make this a List<Consumer<BuildPortionData>> and have it work with @Generics
-    @SafeVarargs
     @Info(value = "Adds a 'tfc:meal' modifier to the ISP", params = {
             @Param(name = "food", value = "The base food data values for the meal modifier"),
             @Param(name = "portions", value = "The portion data values for the meal modifier")
     })
-    @Generics(value = {BuildFoodItemData.class, BuildPortionData.class})
-    public final ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>... portions) {
+    @Generics(value = {BuildFoodItemData.class, Consumer.class, BuildPortionData.class})
+    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, List<Consumer<BuildPortionData>> portions) {
         final JsonObject obj = mealBase(food);
-        JsonArray portionArray = new JsonArray(portions.length);
+        JsonArray portionArray = new JsonArray(portions.size());
         for (Consumer<BuildPortionData> portion : portions) {
             var portionData = new BuildPortionData();
             portion.accept(portionData);

@@ -3,10 +3,10 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 import com.notenoughmail.kubejs_tfc.recipe.schema.ChiselSchema;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
-import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.typings.Info;
 
-public class ChiselRecipeJS extends RecipeJS {
+// Technically has an ISP output
+public class ChiselRecipeJS extends TFCProviderRecipeJS {
 
     @Info(value = "Specifies the chisel for the recipe, must be tagged 'tfc:chisels'")
     public ChiselRecipeJS itemIngredient(InputItem itemIngredient) {

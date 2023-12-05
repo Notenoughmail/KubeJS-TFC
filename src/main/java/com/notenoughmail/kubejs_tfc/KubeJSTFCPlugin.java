@@ -4,7 +4,11 @@ import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
+import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
+import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
+import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
@@ -15,6 +19,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
@@ -73,6 +78,7 @@ import net.minecraft.world.item.Tier;
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
+    // TODO: Test the mossy stuff
     @Override
     public void init() {
         for (var tier : TFCTiersJS.values()) {
@@ -150,6 +156,16 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 ;
     }
 
+    // Unfortunately, this is now part of the spec, can't wait for this to either cause problems or be used for jack shit
+    @Override
+    public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
+        event.register("outputItemStackProvider", ItemProviderComponent.PROVIDER);
+        event.register("otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
+        event.register("fluidIngredient", FluidIngredientComponent.INGREDIENT);
+        event.register("fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
+        event.register("alloyPart", AlloyPartComponent.ALLOY);
+    }
+
     @Override
     public void registerBindings(BindingsEvent event) {
         event.add("TFC", TFCBindings.class);
@@ -173,6 +189,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(RegistryUtils.class);
         filter.deny(EventHandlers.class);
         filter.deny(IngredientHelpers.class);
+        filter.deny(ClientEventHandlers.class);
         // TFC
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

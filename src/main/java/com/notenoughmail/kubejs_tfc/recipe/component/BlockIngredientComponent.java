@@ -3,12 +3,18 @@ package com.notenoughmail.kubejs_tfc.recipe.component;
 import com.google.gson.JsonElement;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 
 public class BlockIngredientComponent implements RecipeComponent<BlockIngredient> {
 
     public static final BlockIngredientComponent INGREDIENT = new BlockIngredientComponent();
+
+    @Override
+    public ComponentRole role() {
+        return ComponentRole.INPUT;
+    }
 
     @Override
     public String componentType() {
