@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // This thing is so incredibly unstable
-// TODO: This just doesn't in prod, I fear it may be a gradle problem
 /**
  * This is required because while {@link dev.latvian.mods.kubejs.KubeJSPlugin#generateDataJsons(DataJsonGenerator) KubeJSPlugin#generateDataJsons}
  * works for most cases, it does not for metal definitions and worldgen features.

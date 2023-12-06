@@ -22,6 +22,8 @@ public class CommonConfig {
                 Automatically disables KubeJS' async recipes as it occasionally breaks TFC's knapping and alloying recipe types
                 
                 This only applies at instance start, using commands to reload KubeJS' common.properties file will set the value back to whatever is defined in the file
+                
+                This option, and the functionality it possesses, will be removed after TFC releases a version which safeguards against this (theoretically 3.1.3-beta)
                 """)
                 .define("disableAsyncRecipes", true);
 

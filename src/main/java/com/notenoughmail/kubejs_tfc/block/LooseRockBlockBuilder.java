@@ -62,15 +62,15 @@ public class LooseRockBlockBuilder extends BlockBuilder {
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         final String texture = newID("block/", "").toString();
         generator.blockModel(newID("", "_pebble"), m -> {
-            m.parent("kubejs_tfc:block/groundcover/pebble");
+            m.parent("kubejs_tfc:block/groundc_over/pebble");
             m.texture("all", texture);
         });
         generator.blockModel(newID("", "_rubble"), m -> {
-            m.parent("kubejs_tfc:block/groundcover/rubble");
+            m.parent("kubejs_tfc:block/ground_cover/rubble");
             m.texture("all", texture);
         });
         generator.blockModel(newID("", "_boulder"), m -> {
-            m.parent("kubejs_tfc:block/groundcover/boulder");
+            m.parent("kubejs_tfc:block/ground_cover/boulder");
             m.texture("all", texture);
         });
     }

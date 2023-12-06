@@ -123,7 +123,6 @@ public class EventHandlers {
 
     public static void postDataEvents(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
         if (pack != null && manager != null) {
-            // TODO: FIX IN PROD
             if (CommonConfig.debugMode.get()) {
                 KubeJSTFC.LOGGER.info("Posting KubeJS TFC data events");
             }
