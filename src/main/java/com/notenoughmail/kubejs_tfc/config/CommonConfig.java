@@ -13,15 +13,23 @@ public class CommonConfig {
     }
 
     public static ForgeConfigSpec.BooleanValue disableAsyncRecipes;
+    public static ForgeConfigSpec.BooleanValue debugMode;
 
     private static void register(ForgeConfigSpec.Builder builder) {
         builder.comment("KubeJS TFC common configuration");
 
-        builder.comment("""
-                        Automatically disables KubeJS' async recipes as it occasionally breaks TFC's knapping and alloying recipe types
-                        
-                        This only applies at instance start, using commands to reload KubeJS' common config will set the value back to whatever is defined in the file
-                        """)
+        disableAsyncRecipes = builder.comment("""
+                Automatically disables KubeJS' async recipes as it occasionally breaks TFC's knapping and alloying recipe types
+                
+                This only applies at instance start, using commands to reload KubeJS' common.properties file will set the value back to whatever is defined in the file
+                """)
                 .define("disableAsyncRecipes", true);
+
+        debugMode = builder.comment("""
+                 If true:
+                    Virtual json files created in the 'TFCEvents.data' and 'TFCEvents.worldgenData' events will be printed to the log
+                    Important (and potentially unstable) events will be printed to the log
+                 """)
+                .define("debugMode", false);
     }
 }

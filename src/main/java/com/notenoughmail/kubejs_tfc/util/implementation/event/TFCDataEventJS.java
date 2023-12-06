@@ -3,6 +3,8 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildClimateRangeData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
@@ -44,7 +46,10 @@ public class TFCDataEventJS extends DataPackEventJS {
     @HideFromJS
     @Override
     public void addJson(ResourceLocation id, JsonElement json) {
-        // KubeJSTFC.LOGGER.info(id.toString() + " | " + json.toString());
+        if (CommonConfig.debugMode.get()) {
+            KubeJSTFC.LOGGER.warn(id.toString());
+            KubeJSTFC.LOGGER.info(json.toString());
+        }
         super.addJson(id, json);
     }
 
@@ -54,7 +59,7 @@ public class TFCDataEventJS extends DataPackEventJS {
             @Param(name = "slashing", value = "The slashing value of this resistance, may be null to not specify a value"),
             @Param(name = "crushing", value = "the crushing value of this resistance, may be null to not specify a value")
     })
-    public void itemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) { // "p=20, c=50"
+    public void itemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         DataUtils.handleResistances(json, piercing, slashing, crushing);

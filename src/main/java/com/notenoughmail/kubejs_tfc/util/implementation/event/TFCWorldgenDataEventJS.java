@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildVeinProperties;
@@ -40,7 +41,10 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     @HideFromJS
     @Override
     public void addJson(ResourceLocation id, JsonElement json) {
-        // KubeJSTFC.LOGGER.debug(id + " | " + json);
+        if (CommonConfig.debugMode.get()) {
+            KubeJSTFC.LOGGER.warn(id.toString());
+            KubeJSTFC.LOGGER.info(json.toString());
+        }
         super.addJson(id, json);
     }
 

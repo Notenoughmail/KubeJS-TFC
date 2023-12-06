@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
@@ -26,7 +27,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +64,10 @@ public class EventHandlers {
         bus.addListener(EventHandlers::onAnimalProduct);
         bus.addListener(EventHandlers::limitContainers);
         bus.addListener(EventHandlers::onCollapse);
-        bus.addListener(EventHandlers::loadComplete);
+
+        final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modBus.addListener(EventHandlers::loadComplete);
     }
 
     private static void setupEvents() {
@@ -117,12 +123,21 @@ public class EventHandlers {
 
     public static void postDataEvents(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
         if (pack != null && manager != null) {
+            // TODO: FIX IN PROD
+            if (CommonConfig.debugMode.get()) {
+                KubeJSTFC.LOGGER.info("Posting KubeJS TFC data events");
+            }
             if (data.hasListeners()) {
                 data.post(new TFCDataEventJS(pack, manager));
             }
             if (worldgenData.hasListeners()) {
                 worldgenData.post(new TFCWorldgenDataEventJS(pack, manager));
             }
+            if (CommonConfig.debugMode.get()) {
+                KubeJSTFC.LOGGER.info("KubeJS TFC data events successfully posted");
+            }
+        } else {
+            KubeJSTFC.LOGGER.warn("KubeJS TFC was unable to post its data events due to a failed mixin!");
         }
     }
 
@@ -190,9 +205,18 @@ public class EventHandlers {
         }
     }
 
-    private static void loadComplete(FMLLoadCompleteEvent event) {
-        if (CommonConfig.disableAsyncRecipes.get()) {
-            CommonProperties.get().allowAsyncStreams = false;
-        }
+    private static void loadComplete(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
+            KubeJSTFC.LOGGER.info("    Disable async recipes: {}", CommonConfig.disableAsyncRecipes.get());
+            KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
+
+            if (CommonConfig.disableAsyncRecipes.get()) {
+                CommonProperties.get().allowAsyncStreams = false;
+                if (CommonConfig.debugMode.get()) {
+                    KubeJSTFC.LOGGER.info("Automatically disabled KubeJS' async recipe parsing");
+                }
+            }
+        });
     }
 }

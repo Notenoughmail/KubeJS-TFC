@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // This thing is so incredibly unstable
+// TODO: This just doesn't in prod, I fear it may be a gradle problem
 /**
  * This is required because while {@link dev.latvian.mods.kubejs.KubeJSPlugin#generateDataJsons(DataJsonGenerator) KubeJSPlugin#generateDataJsons}
  * works for most cases, it does not for metal definitions and worldgen features.
@@ -37,18 +39,22 @@ public abstract class ServerScripManagerMixin {
         ((ServerScriptManager) (Object) this).reload(resourceManager);
         if (resourceManager instanceof MultiPackResourceManager multi) {
             kubeJS_TFC$WrappedManager = multi;
-            KubeJSTFC.LOGGER.debug("Successfully captured the resource manager");
+            if (CommonConfig.debugMode.get()) {
+                KubeJSTFC.LOGGER.info("Captured the resource manager {}", kubeJS_TFC$WrappedManager);
+            }
         }
     }
 
     @ModifyVariable(method = "wrapResourceManager", at = @At(value = "STORE", args = "class=dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack"), remap = false, ordinal = 1)
     private VirtualKubeJSDataPack captureVirtualDataPack(VirtualKubeJSDataPack pack) {
         kubeJS_TFC$VirtualDataPack = pack;
-        KubeJSTFC.LOGGER.debug("Successfully captured the virtual data pack");
+        if (CommonConfig.debugMode.get()) {
+            KubeJSTFC.LOGGER.info("Captured the virtual data pack {}", kubeJS_TFC$VirtualDataPack);
+        }
         return pack;
     }
 
-    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/util/ConsoleJS;info(Ljava/lang/Object;)Ldev/latvian/mods/kubejs/script/ConsoleLine;", shift = At.Shift.BEFORE, value = "INVOKE"), remap = false)
+    @Inject(method = "wrapResourceManager", at = @At(target = "Ldev/latvian/mods/kubejs/event/EventHandler;post(Ldev/latvian/mods/kubejs/script/ScriptTypeHolder;Ldev/latvian/mods/kubejs/event/EventJS;)Ldev/latvian/mods/kubejs/event/EventResult;", shift = At.Shift.AFTER, value = "INVOKE", ordinal = 1), remap = false)
     private void postDataEvents(CloseableResourceManager original, CallbackInfoReturnable<MultiPackResourceManager> cir) {
         EventHandlers.postDataEvents(kubeJS_TFC$VirtualDataPack, kubeJS_TFC$WrappedManager);
     }

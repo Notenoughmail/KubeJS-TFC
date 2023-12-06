@@ -16,7 +16,7 @@ import java.util.function.Function;
  */
 public class WorldGenUtils {
 
-    public static final String notANumber = "[^0-9.]";
+    public static final String notANumber = "[^0-9.-]";
 
     /**
      * Converts a string representation of a block state into an equivalent lenient block state json element

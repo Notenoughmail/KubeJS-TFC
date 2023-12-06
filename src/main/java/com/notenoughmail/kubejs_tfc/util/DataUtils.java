@@ -25,9 +25,6 @@ import java.util.Objects;
  */
 public class DataUtils {
 
-    private static final String notANumber = "[^0-9.-]";
-    private static final String splitters = "[,;:]";
-
     public static ResourceLocation dataID(ResourceLocation base, String mod, String category) {
         return dataID(base.getNamespace(), base.getPath(), mod, category);
     }

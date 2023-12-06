@@ -159,11 +159,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     // Unfortunately, this is now part of the spec, can't wait for this to either cause problems or be used for jack shit
     @Override
     public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
-        event.register("outputItemStackProvider", ItemProviderComponent.PROVIDER);
-        event.register("otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
-        event.register("fluidIngredient", FluidIngredientComponent.INGREDIENT);
-        event.register("fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
-        event.register("alloyPart", AlloyPartComponent.ALLOY);
+        event.register("tfc:outputItemStackProvider", ItemProviderComponent.PROVIDER);
+        event.register("tfc:otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
+        event.register("tfc:fluidIngredient", FluidIngredientComponent.INGREDIENT);
+        event.register("tfc:fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
+        event.register("tfc:alloyPart", AlloyPartComponent.ALLOY);
     }
 
     @Override

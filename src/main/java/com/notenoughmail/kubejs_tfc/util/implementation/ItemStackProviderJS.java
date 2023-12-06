@@ -69,7 +69,13 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
             return new ItemStackProviderJS(stack.copy(), new JsonArray());
         } else {
             // Uh... how?
-            return OutputItem.of(stack.copy());
+            final OutputItem replacement = OutputItem.of(stack.copy());
+            if (original instanceof OutputItem o) {
+                replacement.item.setCount(o.getCount());
+            } else if (original instanceof ItemStackProviderJS provider) {
+                replacement.item.setCount(provider.getCount());
+            }
+            return replacement;
         }
     }
 

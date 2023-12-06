@@ -15,6 +15,7 @@ public interface ScrapingSchema {
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
     RecipeKey<String> INPUT_TEXTURE = StringComponent.ID.key("input_texture").preferred("inputTexture");
     RecipeKey<String> OUTPUT_TEXTURE = StringComponent.ID.key("output_texture").preferred("outputTexture");
+    RecipeKey<ItemStackProviderJS> EXTRA_DROP = ItemProviderComponent.PROVIDER.key("extra_drop").preferred("extraDrop").optional(ItemStackProviderJS.EMPTY);
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, INGREDIENT, OUTPUT_TEXTURE, INPUT_TEXTURE);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, INGREDIENT, OUTPUT_TEXTURE, INPUT_TEXTURE, EXTRA_DROP);
 }

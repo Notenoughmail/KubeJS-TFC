@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-// TODO: JSDoc
 @SuppressWarnings("unused")
 public class PlacedFeatureProperties {
 
