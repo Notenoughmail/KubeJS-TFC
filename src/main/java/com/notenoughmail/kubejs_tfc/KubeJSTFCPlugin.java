@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -16,6 +17,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import dev.latvian.mods.kubejs.CommonProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -211,6 +213,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void generateLang(LangEventJS event) {
         event.addAll(KubeJSTFC.translations);
+    }
+
+    @Override
+    public void loadCommonProperties(CommonProperties properties) {
+        if (CommonConfig.disableAsyncRecipes.get()) {
+            properties.allowAsyncStreams = false;
+        }
     }
 
     private void addToolTier(Tier tier) {

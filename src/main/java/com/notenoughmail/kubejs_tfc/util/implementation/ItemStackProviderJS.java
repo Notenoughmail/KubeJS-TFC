@@ -253,7 +253,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Override
     public String toString() {
-        return "TFC.itemStackProvider.of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")";
+        return "TFC.itemStackProvider." + (isEmpty() ? "empty()" : "of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")");
     }
 
     @Info(value = "Adds a 'tfc:add_heat' modifier to the ISP", params = @Param(name = "temperature", value = "The °C to add to the item"))

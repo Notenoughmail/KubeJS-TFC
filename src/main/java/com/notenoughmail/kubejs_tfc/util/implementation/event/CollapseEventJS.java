@@ -1,14 +1,14 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
+import dev.latvian.mods.kubejs.level.LevelEventJS;
 import net.dries007.tfc.util.events.CollapseEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class CollapseEventJS extends EventJS {
+public class CollapseEventJS extends LevelEventJS {
 
     private final BlockContainerJS centerBlock;
     private final Level level;
@@ -28,6 +28,7 @@ public class CollapseEventJS extends EventJS {
         return centerBlock;
     }
 
+    @Override
     public Level getLevel() {
         return level;
     }

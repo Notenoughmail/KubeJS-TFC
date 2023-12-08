@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-// TODO: Redo this for new rock stuff
+@Info(value = "Define new rock layers which can be referenced in a world preset json")
 public class RockSettingsEventJS extends StartupEventJS {
 
     // @HideFromJS
@@ -24,24 +24,34 @@ public class RockSettingsEventJS extends StartupEventJS {
     // @HideFromJS
     // public static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
 
-    @Info(value = "Registers a new rock layer with the given properties to TFC", params = {
+    @Info(value = "Registers a new rock layer with the given properties to TFC. Does not add the layer to the world", params = {
             @Param(name = "id", value = "The name of the rock layer"),
             @Param(name = "settings", value = "Properties defining the layer's blocks")
     })
     @Generics(value = RockSettingsJS.class)
+    @Deprecated(forRemoval = true, since = "1.0.2")
     public void defineLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
         RockSettingsJS rockSettings = new RockSettingsJS(id);
         settings.accept(rockSettings);
         RockSettings.register(id, rockSettings.build());
     }
 
-    // Removed for now as it's a bit of a pain to get this working like it previously did
-    // public void removeDefaultLayer(ResourceLocation id) {
-    //     queuedRemovals.add(id);
-    // }
-    // public void modifyDefaultLayer(ResourceLocation id, Consumer<RockSettingsJS> settings) {
-    //     queuedModifications.put(id, settings);
-    // }
+    @Info(value = "Registers a new rock layer with the given blocks to TFC. Does not add it to the world. This can be used to override existing layers", params = {
+            @Param(name = "id", value = "The name of the the rock layer"),
+            @Param(name = "raw", value = "The registry name of the raw block of the rock layer"),
+            @Param(name = "hardened", value = "The registry name of the hardened block of the rock layer"),
+            @Param(name = "gravel", value = "The registry name of the gravel block of the rock layer"),
+            @Param(name = "cobble", value = "The registry name of the cobble block of the rock layer"),
+            @Param(name = "sand", value = "The registry name of the sand block of the rock layer"),
+            @Param(name = "sandstone", value = "The registry name of the sandstone block of the rock layer"),
+            @Param(name = "spike", value = "The registry name of the spike block of the rock layer, may be null to indicate no spike block"),
+            @Param(name = "loose", value = "The registry name of the loose block of the rock layer, may be null to indicate no loose block"),
+            @Param(name = "mossyLoose", value = "The registry name of the mossy loose block of the rock layer, may be null to indicate no mossy loose block")
+    })
+    public void definelLayer(ResourceLocation id, ResourceLocation raw, ResourceLocation hardened, ResourceLocation gravel, ResourceLocation cobble, ResourceLocation sand, ResourceLocation sandstone, @Nullable ResourceLocation spike, @Nullable ResourceLocation loose, @Nullable ResourceLocation mossyLoose) {
+        final RockSettingsJS rockSetting = new RockSettingsJS(id).raw(raw).hardened(hardened).gravel(gravel).cobble(cobble).sand(sand).sandstone(sandstone).spike(spike).loose(loose).mossyLoose(mossyLoose);
+        RockSettings.register(id, rockSetting.build());
+    }
 
     public static class RockSettingsJS {
 

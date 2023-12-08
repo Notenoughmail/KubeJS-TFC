@@ -11,13 +11,13 @@ import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 public class TFCBindings {
 
     @Info(value = "Provides access to all climate bindings")
-    public static ClimateBindings climate = ClimateBindings.INSTANCE;
+    public static final ClimateBindings climate = ClimateBindings.INSTANCE;
     @Info(value = "Provides access to all calendar bindings")
-    public static CalendarBindings calendar = CalendarBindings.INSTANCE;
+    public static final CalendarBindings calendar = CalendarBindings.INSTANCE;
     @Info(value = "Provides access to all ingredient bindings")
-    public static TFCIngredientBindings ingredient = TFCIngredientBindings.INSTANCE;
+    public static final TFCIngredientBindings ingredient = TFCIngredientBindings.INSTANCE;
     @Info(value = "Provides access to all item stack provider bindings")
-    public static ItemStackProviderBindings itemStackProvider = ItemStackProviderBindings.INSTANCE;
+    public static final ItemStackProviderBindings itemStackProvider = ItemStackProviderBindings.INSTANCE;
 
     // These look useless, but type wrappers and IngredientHelpers exist
     @Info(value = "Explicitly creates a block ingredient")

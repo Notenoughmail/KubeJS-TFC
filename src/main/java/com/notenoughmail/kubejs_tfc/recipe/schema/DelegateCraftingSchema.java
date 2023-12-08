@@ -11,6 +11,6 @@ public interface DelegateCraftingSchema {
     RecipeKey<RecipeJS> RECIPE = NestedRecipeComponent.RECIPE.key("recipe");
 
     static RecipeSchema schema(String type) {
-        return new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RECIPE).uniqueId(recipe -> type + "/" + recipe.getPath());
+        return new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RECIPE).uniqueId(recipe -> type + "/" + recipe.getValue(RECIPE).getPath());
     }
 }

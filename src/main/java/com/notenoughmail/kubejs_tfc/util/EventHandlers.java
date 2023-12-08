@@ -38,7 +38,7 @@ public class EventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
-    public static final EventHandler registerRocks = TFCEvents.startup("registerRockSettings", () -> RockSettingsEventJS.class);
+    public static final EventHandler registerRocks = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
     public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> SemiFunctionalContainerLimiterEventJS.class);
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
@@ -49,6 +49,7 @@ public class EventHandlers {
     public static final EventHandler log = TFCEvents.server("log", () -> LoggingEventJS.class);
     public static final EventHandler animalProduct = TFCEvents.server("animalProduct", () -> AnimalProductEventJS.class);
     public static final EventHandler collapse = TFCEvents.server("collapse", () -> CollapseEventJS.class);
+    public static final EventHandler douseFire = TFCEvents.server("douseFire", () -> DouseFireEventJS.class);
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
 
@@ -64,6 +65,7 @@ public class EventHandlers {
         bus.addListener(EventHandlers::onAnimalProduct);
         bus.addListener(EventHandlers::limitContainers);
         bus.addListener(EventHandlers::onCollapse);
+        bus.addListener(EventHandlers::onDouseFire);
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -118,6 +120,14 @@ public class EventHandlers {
     private static void onCollapse(CollapseEvent event) {
         if (collapse.hasListeners()) {
             collapse.post(new CollapseEventJS(event));
+        }
+    }
+
+    private static void onDouseFire(DouseFireEvent event) {
+        if (!event.getLevel().isClientSide() && douseFire.hasListeners()) {
+            if (douseFire.post(new DouseFireEventJS(event)).interruptFalse()) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -209,13 +219,6 @@ public class EventHandlers {
             KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
             KubeJSTFC.LOGGER.info("    Disable async recipes: {}", CommonConfig.disableAsyncRecipes.get());
             KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
-
-            if (CommonConfig.disableAsyncRecipes.get()) {
-                CommonProperties.get().allowAsyncStreams = false;
-                if (CommonConfig.debugMode.get()) {
-                    KubeJSTFC.LOGGER.info("Automatically disabled KubeJS' async recipe parsing");
-                }
-            }
         });
     }
 }
