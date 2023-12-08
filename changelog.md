@@ -1,3 +1,11 @@
+### 1.0.2
+- Fix an issue with delegate recipe types attempting to reference their id when generating their id
+- Add douse fire event
+- Rework how rock layers are defined
+  - The event has been renamed from `registerRockSettings` to just `rockSettings`
+  - The `defineLayer` method now takes each block individually instead of altogether as a consumer
+  - `defineLayer` now returns the `RockSettings` object created
+
 ### 1.0.1
 - Initial 1.20.1 port
   - Requires TFC 3.1.2-beta and KubeJS 2001.6.4-build.95

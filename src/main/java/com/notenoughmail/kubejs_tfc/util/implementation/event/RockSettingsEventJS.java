@@ -19,11 +19,6 @@ import java.util.function.Consumer;
 @Info(value = "Define new rock layers which can be referenced in a world preset json")
 public class RockSettingsEventJS extends StartupEventJS {
 
-    // @HideFromJS
-    // public static final List<ResourceLocation> queuedRemovals = new ArrayList<>();
-    // @HideFromJS
-    // public static final Map<ResourceLocation, Consumer<RockSettingsJS>> queuedModifications = new Object2ObjectOpenHashMap<>();
-
     @Info(value = "Registers a new rock layer with the given properties to TFC. Does not add the layer to the world", params = {
             @Param(name = "id", value = "The name of the rock layer"),
             @Param(name = "settings", value = "Properties defining the layer's blocks")
@@ -48,11 +43,12 @@ public class RockSettingsEventJS extends StartupEventJS {
             @Param(name = "loose", value = "The registry name of the loose block of the rock layer, may be null to indicate no loose block"),
             @Param(name = "mossyLoose", value = "The registry name of the mossy loose block of the rock layer, may be null to indicate no mossy loose block")
     })
-    public void definelLayer(ResourceLocation id, ResourceLocation raw, ResourceLocation hardened, ResourceLocation gravel, ResourceLocation cobble, ResourceLocation sand, ResourceLocation sandstone, @Nullable ResourceLocation spike, @Nullable ResourceLocation loose, @Nullable ResourceLocation mossyLoose) {
+    public RockSettings defineLayer(ResourceLocation id, ResourceLocation raw, ResourceLocation hardened, ResourceLocation gravel, ResourceLocation cobble, ResourceLocation sand, ResourceLocation sandstone, @Nullable ResourceLocation spike, @Nullable ResourceLocation loose, @Nullable ResourceLocation mossyLoose) {
         final RockSettingsJS rockSetting = new RockSettingsJS(id).raw(raw).hardened(hardened).gravel(gravel).cobble(cobble).sand(sand).sandstone(sandstone).spike(spike).loose(loose).mossyLoose(mossyLoose);
-        RockSettings.register(id, rockSetting.build());
+        return RockSettings.register(id, rockSetting.build());
     }
 
+    @Deprecated(forRemoval = true, since = "1.0.2")
     public static class RockSettingsJS {
 
         private final ResourceLocation id;

@@ -5,7 +5,6 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
-import dev.latvian.mods.kubejs.CommonProperties;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -28,7 +27,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class EventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
-    public static final EventHandler registerRocks = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
+    public static final EventHandler rockSettings = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
     public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> SemiFunctionalContainerLimiterEventJS.class);
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
@@ -73,7 +71,6 @@ public class EventHandlers {
     }
 
     private static void setupEvents() {
-        registerRocks.post(new RockSettingsEventJS());
         limitContainerSize.post(new SemiFunctionalContainerLimiterEventJS());
         registerClimateModel.post(new RegisterClimateModelEventJS());
         registerFoodTrait.post(new RegisterFoodTraitEventJS());
@@ -219,6 +216,7 @@ public class EventHandlers {
             KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
             KubeJSTFC.LOGGER.info("    Disable async recipes: {}", CommonConfig.disableAsyncRecipes.get());
             KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
+            rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
         });
     }
 }
