@@ -135,10 +135,10 @@ public class TFCDataEventJS extends DataPackEventJS {
             @Param(name = "phosphorous", value = "The phosphorous value of the fertilizer, may be null to not define a value, defaults to 0"),
             @Param(name = "potassium", value = "The potassium value of the fertilizer, amy be null to not define a value, defaults to 0")
     })
-    public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium) {
+    public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(json, nitrogen, phosphorous, potassium);
+        DataUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
         addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fertilizers"), json);
     }
 
@@ -149,10 +149,10 @@ public class TFCDataEventJS extends DataPackEventJS {
             @Param(name = "potassium", value = "The potassium value of the fertilizer, amy be null to not define a value, defaults to 0"),
             @Param(name = "name", value = "The name of the fertilizer data")
     })
-    public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium, ResourceLocation name) {
+    public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(json, nitrogen, phosphorous, potassium);
+        DataUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
         addJson(DataUtils.dataID(name, "tfc", "fertilizers"), json);
     }
 

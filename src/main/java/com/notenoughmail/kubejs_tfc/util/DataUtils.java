@@ -88,12 +88,12 @@ public class DataUtils {
         }
     }
 
-    public static void handleFertilizers(JsonObject json, @Nullable Number nitrogen, @Nullable Number phosphorous, @Nullable Number potassium) {
+    public static void handleFertilizers(JsonObject json, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium) {
         if (nitrogen != null) {
             json.addProperty("nitrogen", nitrogen);
         }
-        if (phosphorous != null) {
-            json.addProperty("phosphorus", phosphorous);
+        if (phosphorus != null) {
+            json.addProperty("phosphorus", phosphorus);
         }
         if (potassium != null) {
             json.addProperty("potassium", potassium);
