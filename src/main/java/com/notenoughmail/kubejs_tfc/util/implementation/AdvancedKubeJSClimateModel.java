@@ -1,5 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.minecraft.resources.ResourceLocation;
@@ -7,19 +9,24 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
+import java.util.function.Consumer;
+
 public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
 
-    private OnWorldLoadCallback onWorldLoad;
+    private Consumer<ServerLevel> onWorldLoad;
     private OnChunkLoadCallback onChunkLoad;
 
     public AdvancedKubeJSClimateModel(ResourceLocation name) {
         super(name);
     }
 
-    public void setOnWorldLoad(OnWorldLoadCallback callback) {
+    @Info(value = "Sets the model's behavior when loading into a world")
+    @Generics(value = ServerLevel.class)
+    public void setOnWorldLoad(Consumer<ServerLevel> callback) {
         onWorldLoad = callback;
     }
 
+    @Info(value = "Sets the model's behavior on chunk load")
     public void setOnChunkLoad(OnChunkLoadCallback callback) {
         onChunkLoad = callback;
     }
@@ -29,7 +36,7 @@ public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
     public void onWorldLoad(ServerLevel level) {
         super.onWorldLoad(level);
         if (onWorldLoad != null) {
-            onWorldLoad.apply(level);
+            onWorldLoad.accept(level);
         }
     }
 
@@ -39,11 +46,6 @@ public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
         if (onChunkLoad != null) {
             onChunkLoad.apply(level, chunk, chunkData);
         }
-    }
-
-    @FunctionalInterface
-    public interface OnWorldLoadCallback {
-        void apply(ServerLevel level);
     }
 
     @FunctionalInterface

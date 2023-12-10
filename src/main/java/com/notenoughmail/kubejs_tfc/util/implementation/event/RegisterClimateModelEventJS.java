@@ -50,10 +50,10 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
 
     @Info(value = "Creates a new Vec2 with the given x and y values, used for creating custom wind vectors in your models", params = {
             @Param(name = "x", value = "The x component"),
-            @Param(name = "y", value = "The y component")
+            @Param(name = "z", value = "The y component")
     })
-    public Vec2 newVec2(float x, float y) {
-        return new Vec2(x, y);
+    public Vec2 newVec2(float x, float z) {
+        return new Vec2(x, z);
     }
 
     @Info(value = "Returns the callback version of TFC's overworld current temperature calculation")

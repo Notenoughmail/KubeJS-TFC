@@ -210,18 +210,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         }
     }
 
-    @Override
-    public void generateLang(LangEventJS event) {
-        event.addAll(KubeJSTFC.translations);
-    }
-
-    @Override
-    public void loadCommonProperties(CommonProperties properties) {
-        if (CommonConfig.disableAsyncRecipes.get()) {
-            properties.allowAsyncStreams = false;
-        }
-    }
-
     private void addToolTier(Tier tier) {
         ItemBuilder.TOOL_TIERS.put(tier.toString().toLowerCase(), tier);
     }

@@ -214,7 +214,6 @@ public class EventHandlers {
     private static void loadComplete(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
-            KubeJSTFC.LOGGER.info("    Disable async recipes: {}", CommonConfig.disableAsyncRecipes.get());
             KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
             rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
         });

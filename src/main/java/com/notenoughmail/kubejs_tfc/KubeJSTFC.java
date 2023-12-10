@@ -20,8 +20,6 @@ public class KubeJSTFC {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
 
-    public static final Map<String, String> translations = new HashMap<>();
-
     public KubeJSTFC() {
         EventHandlers.init();
         CommonConfig.register();

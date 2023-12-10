@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.minecraft.resources.ResourceLocation;
@@ -14,12 +15,12 @@ public class SemiFunctionalContainerLimiterEventJS extends StartupEventJS {
     // Suck it Hunter Gratzner
     public static final Map<ResourceLocation, Pair<Size, List<Pair<Integer, Integer>>>> LIMITED_SIZES = new HashMap<>();
 
-    public void limitContainerSize(ResourceLocation containerName, String size) {
+    public void limitContainerSize(ResourceLocation containerName, Size size) {
         limitContainerSize(containerName, size, (Integer) null);
     }
 
     // /kubejs dump_registry minecraft:menu
-    public void limitContainerSize(ResourceLocation containerName, String size, @Nullable Integer... slotRanges) {
+    public void limitContainerSize(ResourceLocation containerName, Size size, @Nullable Integer... slotRanges) {
         if (slotRanges != null && slotRanges.length % 2 != 0) {
             KubeJSTFC.LOGGER.error("Provided slot ranges: '{}' are not provided in pairs! They will be ignored!", (Object) slotRanges);
             slotRanges = null;
@@ -31,18 +32,18 @@ public class SemiFunctionalContainerLimiterEventJS extends StartupEventJS {
                 ranges.add(Pair.of(slotRanges[i], slotRanges[i + 1] + 1)); // Modify input values so the provided slot values are treated as inclusive -> inclusive instead of inclusive -> exclusive
             }
         }
-        Size sizeValue = Size.valueOf(size.toUpperCase(Locale.ROOT));
-        LIMITED_SIZES.put(containerName, Pair.of(sizeValue, ranges));
+        LIMITED_SIZES.put(containerName, Pair.of(size, ranges));
 
-        List<String> rangeDescriptors = new ArrayList<>();
-        if (ranges.isEmpty()) {
-            rangeDescriptors.add("ALL");
-        } else {
-            for (Pair<Integer, Integer> range : ranges) {
-                rangeDescriptors.add("[" + range.getFirst() + ", " + (range.getSecond() - 1) + "]");
+        if (CommonConfig.debugMode.get()) {
+            List<String> rangeDescriptors = new ArrayList<>();
+            if (ranges.isEmpty()) {
+                rangeDescriptors.add("ALL");
+            } else {
+                for (Pair<Integer, Integer> range : ranges) {
+                    rangeDescriptors.add("[" + range.getFirst() + ", " + (range.getSecond() - 1) + "]");
+                }
             }
+            KubeJSTFC.LOGGER.info("Limited container menu {} to size {} for slots: {}", containerName, size, rangeDescriptors);
         }
-
-        KubeJSTFC.LOGGER.info("Limited container menu {} to size {} for slots: {}", containerName, sizeValue, rangeDescriptors);
     }
 }

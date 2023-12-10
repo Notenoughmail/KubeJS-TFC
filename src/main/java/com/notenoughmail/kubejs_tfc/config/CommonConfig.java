@@ -12,20 +12,10 @@ public class CommonConfig {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, builder.build(), "kubejs-tfc.toml");
     }
 
-    public static ForgeConfigSpec.BooleanValue disableAsyncRecipes;
     public static ForgeConfigSpec.BooleanValue debugMode;
 
     private static void register(ForgeConfigSpec.Builder builder) {
         builder.comment("KubeJS TFC common configuration");
-
-        disableAsyncRecipes = builder.comment("""
-                Automatically disables KubeJS' async recipes as it occasionally breaks TFC's knapping and alloying recipe types
-                
-                This only applies at instance start, using commands to reload KubeJS' common.properties file will set the value back to whatever is defined in the file
-                
-                This option, and the functionality it possesses, will be removed after TFC releases a version which safeguards against this (theoretically 3.1.3-beta)
-                """)
-                .define("disableAsyncRecipes", true);
 
         debugMode = builder.comment("""
                  If true:
