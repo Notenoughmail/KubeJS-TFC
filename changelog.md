@@ -1,3 +1,11 @@
+### 1.0.3
+- Update to TFC 3.1.3-beta
+- Remove config option to disable Kube's sync recipes (it didn't seem to work anyway)
+- Rework how custom food traits are made
+- the `tfc:raw_rock` block builder should now not complain about missing mirrored models
+- Fix fertilizers adding `phosphorous` instead of `phosphorus`
+- Add missing `use_durability` and `chance` parameters to heating recipes
+
 ### 1.0.2
 - Fix an issue with delegate recipe types attempting to reference their id when generating their id
 - Add douse fire event

@@ -93,7 +93,7 @@ public class DataUtils {
             json.addProperty("nitrogen", nitrogen);
         }
         if (phosphorous != null) {
-            json.addProperty("phosphorous", phosphorous);
+            json.addProperty("phosphorus", phosphorous);
         }
         if (potassium != null) {
             json.addProperty("potassium", potassium);

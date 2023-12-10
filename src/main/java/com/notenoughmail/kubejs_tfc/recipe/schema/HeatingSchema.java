@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.fluid.EmptyFluidStackJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
+import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
 import dev.latvian.mods.kubejs.recipe.component.FluidComponents;
 import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
@@ -18,7 +19,9 @@ public interface HeatingSchema {
     RecipeKey<OutputFluid> FLUID_RESULT = FluidComponents.OUTPUT.key("result_fluid").optional(EmptyFluidStackJS.INSTANCE).preferred("resultFluid");
     RecipeKey<InputItem> INGREDIENT = ItemComponents.INPUT.key("ingredient");
     RecipeKey<Float> TEMP = NumberComponent.FLOAT.key("temperature");
+    RecipeKey<Boolean> USE_DURABILITY = BooleanComponent.BOOLEAN.key("use_durability").preferred("useDurability").optional(false);
+    RecipeKey<Float> CHANCE = NumberComponent.floatRange(0F, 1F).key("chance").optional(1F);
 
-    RecipeSchema SCHEMA = new RecipeSchema(HeatingRecipeJS.class, HeatingRecipeJS::new, INGREDIENT, TEMP, ITEM_RESULT, FLUID_RESULT)
+    RecipeSchema SCHEMA = new RecipeSchema(HeatingRecipeJS.class, HeatingRecipeJS::new, INGREDIENT, TEMP, ITEM_RESULT, FLUID_RESULT, USE_DURABILITY, CHANCE)
             .constructor(INGREDIENT, TEMP);
 }

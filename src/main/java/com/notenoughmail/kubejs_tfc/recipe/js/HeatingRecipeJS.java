@@ -25,4 +25,16 @@ public class HeatingRecipeJS extends TFCProviderRecipeJS {
         setValue(HeatingSchema.FLUID_RESULT, resultFluid);
         return this;
     }
+
+    @Info(value = "Determines if the recipe will consider the durability of an item when melting into a fluid")
+    public HeatingRecipeJS useDurability(boolean useDurability) {
+        setValue(HeatingSchema.USE_DURABILITY, useDurability);
+        return this;
+    }
+
+    @Info(value = "Sets the item output's chance")
+    public HeatingRecipeJS chance(float chance) {
+        setValue(HeatingSchema.CHANCE, chance);
+        return this;
+    }
 }
