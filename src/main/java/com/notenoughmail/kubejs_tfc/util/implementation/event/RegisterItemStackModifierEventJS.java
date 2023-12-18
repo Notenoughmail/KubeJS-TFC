@@ -18,7 +18,7 @@ public class RegisterItemStackModifierEventJS extends EventJS {
             @Param(name = "dependsOnInput", value = "Sets if the modifier is dependent on the input item, should be true if the input stack of the applicator is used")
     })
     public void register(ResourceLocation id, ItemStackModifierJS.ModifierApplicator applicator, boolean dependsOnInput) {
-        ItemStackModifiers.register(id, ItemStackModifierJS.create(id.toString(), applicator, dependsOnInput));
+        ItemStackModifiers.register(id, new ItemStackModifierJS(applicator, dependsOnInput));
     }
 
     @Info(value = "Returns the current crafting container. Only available during advanced shaped and shapeless crafting recipes")

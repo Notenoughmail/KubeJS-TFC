@@ -4,18 +4,8 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.IExtensibleEnum;
 
-public enum ItemStackModifierJS implements ItemStackModifier.SingleInstance<ItemStackModifierJS>, IExtensibleEnum {
-    ;
-
-    private final ModifierApplicator applicator;
-    private final boolean dependsOnInput;
-
-    ItemStackModifierJS(ModifierApplicator applicator, boolean dependsOnInput) {
-        this.applicator = applicator;
-        this.dependsOnInput = dependsOnInput;
-    }
+public record ItemStackModifierJS(ModifierApplicator applicator, boolean dependsOnInput) implements ItemStackModifier.SingleInstance<ItemStackModifierJS> {
 
     @Override
     public ItemStackModifierJS instance() {
@@ -30,10 +20,6 @@ public enum ItemStackModifierJS implements ItemStackModifier.SingleInstance<Item
     @Override
     public boolean dependsOnInput() {
         return dependsOnInput;
-    }
-
-    public static ItemStackModifierJS create(String name, ModifierApplicator applicator, boolean dependsOnInput) {
-        throw new IllegalStateException("Enum not extended");
     }
 
     @FunctionalInterface
