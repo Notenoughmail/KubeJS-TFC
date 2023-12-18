@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
+import com.notenoughmail.kubejs_tfc.recipe.component.BlockIngredientComponent;
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
@@ -158,14 +159,14 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 ;
     }
 
-    // Unfortunately, this is now part of the spec, can't wait for this to either cause problems or be used for jack shit
     @Override
     public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
-        event.register("tfc:outputItemStackProvider", ItemProviderComponent.PROVIDER);
-        event.register("tfc:otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
-        event.register("tfc:fluidIngredient", FluidIngredientComponent.INGREDIENT);
-        event.register("tfc:fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
-        event.register("tfc:alloyPart", AlloyPartComponent.ALLOY);
+        event.register("tfc:output_item_stack_provider", ItemProviderComponent.PROVIDER);
+        event.register("tfc:other_item_stack_provider", ItemProviderComponent.INTERMEDIATE);
+        event.register("tfc:fluid_ingredient", FluidIngredientComponent.INGREDIENT);
+        event.register("tfc:fluid_stack_ingredient", FluidIngredientComponent.STACK_INGREDIENT);
+        event.register("tfc:alloy_part", AlloyPartComponent.ALLOY);
+        event.register("tfc:block_ingredient", BlockIngredientComponent.INGREDIENT);
     }
 
     @Override

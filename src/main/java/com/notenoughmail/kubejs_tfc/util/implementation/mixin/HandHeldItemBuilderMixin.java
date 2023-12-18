@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.IKubeJSTFCHandHeldItemBuilderExtension;
+import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IKubeJSTFCHandHeldItemBuilderExtension;
 import dev.latvian.mods.kubejs.item.MutableToolTier;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import org.spongepowered.asm.mixin.Mixin;

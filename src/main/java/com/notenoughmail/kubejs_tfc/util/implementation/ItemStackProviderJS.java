@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implements OutputReplacement {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));
@@ -122,7 +123,6 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return new ItemStackProviderJS(stack, parseModifierList(ListJS.orEmpty(b)));
     }
 
-    // TODO: Possibly rework how this handles stuff
     private static JsonArray parseModifierList(List<?> list) {
         var modifiers = new JsonArray();
         for (var element : list) {

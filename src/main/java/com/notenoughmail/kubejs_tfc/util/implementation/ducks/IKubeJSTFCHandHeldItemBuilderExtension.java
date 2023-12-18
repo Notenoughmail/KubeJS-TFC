@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.ducks;
 
 import dev.latvian.mods.kubejs.item.MutableToolTier;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;

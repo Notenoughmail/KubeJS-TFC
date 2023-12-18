@@ -6,7 +6,8 @@
   "mixins": [
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
-    "ServerScripManagerMixin"
+    "ServerScripManagerMixin",
+    "DayMixin"
   ],
   "client": [],
   "refmap": "kubejs_tfc.refmap.json"

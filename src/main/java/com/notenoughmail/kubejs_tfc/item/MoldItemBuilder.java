@@ -23,7 +23,7 @@ public class MoldItemBuilder extends ItemBuilder {
     public transient IntSupplier capacity;
     public transient TagKey<Fluid> acceptableFluids;
 
-    public static List<MoldItemBuilder> thisList = new ArrayList<>();
+    public static final List<MoldItemBuilder> thisList = new ArrayList<>();
 
     public MoldItemBuilder(ResourceLocation i) {
         super(i);

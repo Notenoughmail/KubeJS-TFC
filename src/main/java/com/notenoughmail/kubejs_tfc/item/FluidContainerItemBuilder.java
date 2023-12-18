@@ -31,7 +31,7 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     @Nullable
     public transient Component filledDisplayName;
 
-    public static List<FluidContainerItemBuilder> thisList = new ArrayList<>();
+    public static final List<FluidContainerItemBuilder> thisList = new ArrayList<>();
 
     public FluidContainerItemBuilder(ResourceLocation i) {
         super(i);

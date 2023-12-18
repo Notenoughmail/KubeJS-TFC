@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IOpenSimplex2dMixin;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterClimateModelEventJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.typings.Info;

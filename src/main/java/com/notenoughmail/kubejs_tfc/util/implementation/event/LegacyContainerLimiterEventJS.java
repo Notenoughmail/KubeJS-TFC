@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class SemiFunctionalContainerLimiterEventJS extends StartupEventJS {
+public class LegacyContainerLimiterEventJS extends StartupEventJS {
 
     // Suck it Hunter Gratzner
     public static final Map<ResourceLocation, Pair<Size, List<Pair<Integer, Integer>>>> LIMITED_SIZES = new HashMap<>();

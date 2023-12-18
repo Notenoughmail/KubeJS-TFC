@@ -1,15 +1,18 @@
 package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.OutputReplacement;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.typings.desc.DescriptionContext;
 import dev.latvian.mods.kubejs.typings.desc.GenericDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJS> {
 
@@ -49,18 +52,16 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
     // I think this is right
     @Override
     public TypeDescJS constructorDescription(DescriptionContext ctx) {
-        return TypeDescJS.any(TypeDescJS.STRING, TypeDescJS.MAP, TypeDescJS.MAP.asArray(), new GenericDescJS(TypeDescJS.STRING, TypeDescJS.MAP.asArray()));
+        return TypeDescJS.any(
+                TypeDescJS.STRING.or(ctx.javaType(ItemStack.class)),
+                TypeDescJS.MAP.withGenerics(TypeDescJS.STRING.or(ctx.javaType(JsonObject.class)))
+        );
     }
 
     // Will have to look into all this
     @Override
     public boolean isOutput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
         return RecipeComponent.super.isOutput(recipe, value, match);
-    }
-
-    @Override
-    public ItemStackProviderJS replaceOutput(RecipeJS recipe, ItemStackProviderJS original, ReplacementMatch match, OutputReplacement with) {
-        return RecipeComponent.super.replaceOutput(recipe, original, match, with);
     }
 
     @Override

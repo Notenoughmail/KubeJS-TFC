@@ -37,9 +37,11 @@ public class EventHandlers {
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
     public static final EventHandler rockSettings = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
-    public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> SemiFunctionalContainerLimiterEventJS.class);
+    public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> LegacyContainerLimiterEventJS.class);
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
+    public static final EventHandler birthdays = TFCEvents.startup("birthdays", () -> BirthdayEventJS.class);
+    public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifier", () -> RegisterItemStackModifierEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class);
@@ -71,9 +73,9 @@ public class EventHandlers {
     }
 
     private static void setupEvents() {
-        limitContainerSize.post(new SemiFunctionalContainerLimiterEventJS());
-        registerClimateModel.post(new RegisterClimateModelEventJS());
-        registerFoodTrait.post(new RegisterFoodTraitEventJS());
+        if (limitContainerSize.hasListeners()) {
+            limitContainerSize.post(new LegacyContainerLimiterEventJS());
+        }
     }
 
     // Guaranteed only server - provides a ServerLevel
@@ -164,8 +166,8 @@ public class EventHandlers {
 
         final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
 
-        if (event.getEntity() instanceof ServerPlayer player && SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
-            Pair<Size, List<Pair<Integer, Integer>>> function = SemiFunctionalContainerLimiterEventJS.LIMITED_SIZES.get(menuName);
+        if (event.getEntity() instanceof ServerPlayer player && LegacyContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
+            Pair<Size, List<Pair<Integer, Integer>>> function = LegacyContainerLimiterEventJS.LIMITED_SIZES.get(menuName);
 
             // Filter slots to only the ones that have items and (if present) within the ranges given
             List<Slot> sanitizedSlots = new ArrayList<>();
@@ -212,10 +214,24 @@ public class EventHandlers {
     }
 
     private static void loadComplete(FMLCommonSetupEvent event) {
+        if (registerFoodTrait.hasListeners()) {
+            registerFoodTrait.post(new RegisterFoodTraitEventJS());
+        }
+        if (registerClimateModel.hasListeners()) {
+            registerClimateModel.post(new RegisterClimateModelEventJS());
+        }
+        if (registerModifiers.hasListeners()) {
+            registerModifiers.post(new RegisterItemStackModifierEventJS());
+        }
         event.enqueueWork(() -> {
             KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
             KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
-            rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
+            if (rockSettings.hasListeners()) {
+                rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
+            }
+            if (birthdays.hasListeners()) {
+                birthdays.post(new BirthdayEventJS());
+            }
         });
     }
 }
