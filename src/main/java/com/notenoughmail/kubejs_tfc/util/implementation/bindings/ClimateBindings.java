@@ -49,11 +49,6 @@ public enum ClimateBindings {
         return Climate.getId(model);
     }
 
-    @Info(value = "Returns the current temperature at the current level and position")
-    public float getCurrentTemperature(BlockContainerJS block) {
-        return getCurrentTemperature(block.getLevel(), block.getPos());
-    }
-
     @Info(value = "Returns the current temperature at the current level and position", params = {
             @Param(name = "level", value = "The level"),
             @Param(name = "pos", value = "The position")
@@ -70,14 +65,6 @@ public enum ClimateBindings {
     })
     public float getCurrentTemperature(Level level, int x, int y, int z) {
         return getCurrentTemperature(level, new BlockPos(x, y, z));
-    }
-
-    @Info(value = "Returns the temperature at the given level, position, and tick", params = {
-            @Param(name = "block", value = "The BlockContainerJS of the level and position"),
-            @Param(name = "calendarTick", value = "The calendar tick")
-    })
-    public float getTemperature(BlockContainerJS block, long calendarTick) {
-        return getTemperature(block.getLevel(), block.getPos(), calendarTick);
     }
 
     @Info(value = "Returns the temperature at the given level, position, and tick", params = {
@@ -100,11 +87,6 @@ public enum ClimateBindings {
         return getTemperature(level, new BlockPos(x, y, z), calendarTicks);
     }
 
-    @Info(value = "Returns the yearly average temperature at the given level and position")
-    public float getAverageTemperature(BlockContainerJS block) {
-        return getAverageTemperature(block.getLevel(), block.getPos());
-    }
-
     @Info(value = "Returns the yearly average temperature at the given level and position", params = {
             @Param(name = "level", value = "The level"),
             @Param(name = "pos", value = "The position")
@@ -121,11 +103,6 @@ public enum ClimateBindings {
     })
     public float getAverageTemperature(Level level, int x, int y, int z) {
         return getAverageTemperature(level, new BlockPos(x, y, z));
-    }
-
-    @Info(value = "Returns the yearly average rainfall at the given level and position")
-    public float getAverageRainfall(BlockContainerJS block) {
-        return getAverageRainfall(block.getLevel(), block.getPos());
     }
 
     @Info(value = "Returns the yearly average rainfall at the given level and position", params = {
@@ -146,11 +123,6 @@ public enum ClimateBindings {
         return getAverageRainfall(level, new BlockPos(x, y, z));
     }
 
-    @Info(value = "Returns the current fogginess, in the range [0, 1], at the given level and position")
-    public float getFogginess(BlockContainerJS block) {
-        return getFogginess(block.getLevel(), block.getPos());
-    }
-
     @Info(value = "Returns the current fogginess, in the range [0, 1], at the given level and position", params = {
             @Param(name = "level", value = "The level"),
             @Param(name = "pos", value = "The position")
@@ -167,11 +139,6 @@ public enum ClimateBindings {
     })
     public float getFogginess(Level level, int x, int y, int z) {
         return getFogginess(level, new BlockPos(x, y, z));
-    }
-
-    @Info(value = "Returns the current water fogginess, in the range [0, 1], at the given level and position")
-    public float getWaterFogginess(BlockContainerJS block) {
-        return getWaterFogginess(block.getLevel(), block.getPos());
     }
 
     @Info(value = "Returns the current water fogginess, in the range [0, 1], at the given level and position", params = {
@@ -192,11 +159,6 @@ public enum ClimateBindings {
         return getWaterFogginess(level, new BlockPos(x, y, z));
     }
 
-    @Info(value = "Returns the Vec2 wind vector at the given level and position")
-    public Vec2 getWindVector(BlockContainerJS block) {
-        return getWindVector(block.getLevel(), block.getPos());
-    }
-
     @Info(value = "Returns the Vec2 wind vector at the given level and position", params = {
             @Param(name = "level", value = "The level"),
             @Param(name = "pos", value = "The position")
@@ -213,11 +175,6 @@ public enum ClimateBindings {
     })
     public Vec2 getWindVector(Level level, int x, int y, int z) {
         return getWindVector(level, new BlockPos(x, y, z));
-    }
-
-    @Info(value = "Returns true if the it is warm enough to rain at the given level and position")
-    public boolean isWarmEnoughToRain(BlockContainerJS block) {
-        return isWarmEnoughToRain(block.getLevel(), block.getPos());
     }
 
     @Info(value = "Returns true if the it is warm enough to rain at the given level and position", params = {

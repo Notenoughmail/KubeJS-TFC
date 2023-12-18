@@ -18,6 +18,8 @@ public class TFCBindings {
     public static final TFCIngredientBindings ingredient = TFCIngredientBindings.INSTANCE;
     @Info(value = "Provides access to all item stack provider bindings")
     public static final ItemStackProviderBindings itemStackProvider = ItemStackProviderBindings.INSTANCE;
+    @Info(value = "A collection of various un-categorized features and utilities")
+    public static final MiscBindings misc = MiscBindings.INSTANCE;
 
     // These look useless, but type wrappers and IngredientHelpers exist
     @Info(value = "Explicitly creates a block ingredient")

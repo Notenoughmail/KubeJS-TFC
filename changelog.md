@@ -1,3 +1,9 @@
+### 1.1.0
+- Add misc sub-binding
+  - Has methods for getting some of TFC's capability data from stacks
+  - Has maps for rocks, woods, heat levels, and nutrients
+- Events for custom birthdays and item stack modifiers
+
 ### 1.0.3
 - Update to TFC 3.1.3-beta
 - Remove config option to disable Kube's sync recipes (it didn't seem to work anyway)

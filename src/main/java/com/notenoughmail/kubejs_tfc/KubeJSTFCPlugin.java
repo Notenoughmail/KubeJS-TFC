@@ -16,6 +16,7 @@ import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
+import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import dev.latvian.mods.kubejs.CommonProperties;
@@ -35,6 +36,10 @@ import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
+import net.dries007.tfc.common.blocks.rock.Rock;
+import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.common.capabilities.food.Nutrient;
+import net.dries007.tfc.common.capabilities.heat.Heat;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
@@ -45,6 +50,8 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
+
+import java.util.Locale;
 
 // Mild Javadoc abuse
 
@@ -81,15 +88,10 @@ import net.minecraft.world.item.Tier;
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
-    // TODO: Test the mossy stuff
     @Override
     public void init() {
-        for (var tier : TFCTiersJS.values()) {
-            addToolTier(tier.getTier());
-        }
-        for (var material : TFCArmorMaterials.values()) {
-            addArmorMaterial(material);
-        }
+        addValues();
+
         RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
@@ -217,5 +219,23 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     private void addArmorMaterial(ArmorMaterial armorMaterial) {
         ItemBuilder.ARMOR_TIERS.put(armorMaterial.toString().toLowerCase(), armorMaterial);
+    }
+
+    private void addValues() {
+        for (var tier : TFCTiersJS.values()) {
+            addToolTier(tier.getTier());
+        }
+        for (var material : TFCArmorMaterials.values()) {
+            addArmorMaterial(material);
+        }
+        for (Rock rock : Rock.VALUES) {
+            MiscBindings.INSTANCE.rock.put(rock.getSerializedName(), rock);
+        }
+        for (Wood wood : Wood.VALUES) {
+            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), wood);
+        }
+        for (Heat heatLevel : Heat.values()) {
+            MiscBindings.INSTANCE.heatLevels.put(heatLevel.name().toLowerCase(Locale.ROOT), heatLevel);
+        }
     }
 }
