@@ -21,7 +21,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         super(i);
         type = Type.NONE;
         rotate = 0;
-        parent = "boulder";
+        parent = "loose/igneous_intrusive_2";
         noCollision = true;
     }
 
@@ -40,7 +40,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
     @Info(value = """
             Set's the block's parent model
             
-            Accepts anything under the 'kubejs_tfc:block/ground_cover/' namespace
+            Sets the parent model to 'kubejs_tfc:block/ground_cover/' + the given string
             """)
     public GroundCoverBlockBuilder groundCoverModelShape(String s) {
         parent = s;
@@ -53,7 +53,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info(value = "Makes the block collide blockStates entities")
+    @Info(value = "Makes the block collide with entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
         return this;

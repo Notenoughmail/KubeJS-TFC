@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.item;
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.MoldItem;
@@ -14,23 +15,30 @@ import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 public class MoldItemBuilder extends ItemBuilder {
 
-    public transient int capacity;
+    public transient IntSupplier capacity;
     public transient TagKey<Fluid> acceptableFluids;
 
     public static List<MoldItemBuilder> thisList = new ArrayList<>();
 
     public MoldItemBuilder(ResourceLocation i) {
         super(i);
-        this.capacity = 100;
+        this.capacity = () -> 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
         thisList.add(this);
     }
 
     @Info(value = "Sets the capacity, in mB, of the mold")
     public MoldItemBuilder capacity(int capacity) {
+        this.capacity = () -> capacity;
+        return this;
+    }
+    @Info(value = "Sets the capacity, in mB, supplier of the mold")
+    public MoldItemBuilder capacitySupplier(IntSupplier capacity) {
         this.capacity = capacity;
         return this;
     }
@@ -60,6 +68,6 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public Item createObject() {
-        return new MoldItem(() -> this.capacity, this.acceptableFluids, createItemProperties());
+        return new MoldItem(capacity, this.acceptableFluids, createItemProperties());
     }
 }

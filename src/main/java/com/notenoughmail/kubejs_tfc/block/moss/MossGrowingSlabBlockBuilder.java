@@ -27,8 +27,8 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
     public MossGrowingSlabBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_PLANKS);
-        mossGrowthFull = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
-        mossGrowthHalf = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
+        mossGrowthFull = MossGrowingCallback.ABOVE;
+        mossGrowthHalf = MossGrowingCallback.DEFAULT;
     }
 
     public MossGrowingSlabBlockBuilder mossySlab(ResourceLocation block) {

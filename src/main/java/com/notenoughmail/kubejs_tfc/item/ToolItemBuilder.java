@@ -25,6 +25,12 @@ public class ToolItemBuilder extends HandheldItemBuilder {
         mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
     }
 
+    public ToolItemBuilder knife() {
+        mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
+        tag(TFCTags.Items.KNIVES.location());
+        return this;
+    }
+
     @Info(value = "sets the block tag that the tool can properly dig at full speed")
     public ToolItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
         this.mineableBlocks = TagKey.create(Registries.BLOCK, blockTag);

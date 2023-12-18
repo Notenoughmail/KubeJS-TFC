@@ -36,7 +36,7 @@ public class HotWaterFluidBuilder extends FluidBuilder {
         return this;
     }
 
-    @Info(value = "Sets the amount of healt the liquid heals while a living entity is in it")
+    @Info(value = "Sets the amount of health the liquid heals while a living entity is in it")
     public HotWaterFluidBuilder healingAmount(float healing) {
         healingAmount = healing;
         return this;

@@ -22,22 +22,22 @@ public enum ItemStackProviderBindings {
         return ItemStackProviderJS.of(itemStack, modifiers);
     }
 
-    @Info(value = "Creates an empty item stack modifier with the given item stack modifiers")
+    @Info(value = "Creates an empty item stack provider with the given item stack modifiers")
     public ItemStackProviderJS empty(Object modifiers) {
         return ItemStackProviderJS.of(ItemStack.EMPTY, modifiers);
     }
 
-    @Info(value = "Creates an empty item stack modifier")
+    @Info(value = "Creates an empty item stack provider")
     public ItemStackProviderJS empty() {
         return ItemStackProviderJS.EMPTY.copy();
     }
 
-    @Info(value = "Creates an empty item stack modifier with the given item stack modifiers and with the 'tfc:copy_input' modifier automatically applied")
+    @Info(value = "Creates an empty item stack provider with the given item stack modifiers and with the 'tfc:copy_input' modifier automatically applied")
     public ItemStackProviderJS copyInput(Object modifiers) {
         return empty(modifiers).copyInput();
     }
 
-    @Info(value = "Creates an empty item stack modifier with the 'tfc:copy_input' modifier automatically applied")
+    @Info(value = "Creates an empty item stack provider with the 'tfc:copy_input' modifier automatically applied")
     public ItemStackProviderJS copyInput() {
         return empty().copyInput();
     }

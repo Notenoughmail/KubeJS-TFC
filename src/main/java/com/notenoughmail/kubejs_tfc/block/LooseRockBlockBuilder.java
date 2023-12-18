@@ -16,20 +16,23 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     private int rotate;
     public JsonObject itemTextures;
+    public String rockType;
 
     public LooseRockBlockBuilder(ResourceLocation i) {
         super(i);
         rotate = 0;
         noCollision = true;
         itemTextures = new JsonObject();
+        rockType = "metamorphic";
     }
 
+    @Info(value = "Rotates the models by the given amount")
     public LooseRockBlockBuilder rotateModel(int i) {
         rotate = i;
         return this;
     }
 
-    @Info(value = "Makes the block collide blockStates entities")
+    @Info(value = "Makes the block collide with entities")
     public LooseRockBlockBuilder collision() {
         noCollision = false;
         return this;
@@ -47,9 +50,15 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info("Directlys set the item's texture json.")
+    @Info("Directly set the item's texture json.")
     public LooseRockBlockBuilder itemTextureJson(JsonObject json) {
         itemTextures = json;
+        return this;
+    }
+
+    @Info("sets the rock type the block model should use")
+    public LooseRockBlockBuilder rockTypeModel(String s) {
+        rockType = s;
         return this;
     }
 
@@ -62,15 +71,15 @@ public class LooseRockBlockBuilder extends BlockBuilder {
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         final String texture = newID("block/", "").toString();
         generator.blockModel(newID("", "_pebble"), m -> {
-            m.parent("kubejs_tfc:block/groundc_over/pebble");
+            m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_1");
             m.texture("all", texture);
         });
         generator.blockModel(newID("", "_rubble"), m -> {
-            m.parent("kubejs_tfc:block/ground_cover/rubble");
+            m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_2");
             m.texture("all", texture);
         });
         generator.blockModel(newID("", "_boulder"), m -> {
-            m.parent("kubejs_tfc:block/ground_cover/boulder");
+            m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_3");
             m.texture("all", texture);
         });
     }

@@ -23,7 +23,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
     public MossGrowingBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.AIR);
-        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos().above()), Fluids.WATER)));
+        mossGrowth = MossGrowingCallback.ABOVE;
     }
 
     public MossGrowingBlockBuilder mossyBlock(ResourceLocation block) {

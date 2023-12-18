@@ -25,7 +25,7 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
     public MossGrowingWallBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.COBBLESTONE_WALL);
-        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
+        mossGrowth = MossGrowingCallback.DEFAULT;
     }
 
     public MossGrowingWallBlockBuilder mossyWall(ResourceLocation block) {
@@ -44,7 +44,6 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
 
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                state.toString();
                 Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof WallBlock)) {
                     mossBlock = Blocks.COBBLESTONE_WALL;

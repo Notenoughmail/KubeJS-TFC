@@ -2,6 +2,8 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
+import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.ThinSpikeBlock;
@@ -16,21 +18,14 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // TODO: JSDoc
 public class ThinSpikeBlockBuilder extends BlockBuilder {
@@ -44,9 +39,6 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     private ResourceLocation dripParticle;
     private FluidStack meltFluid;
     private String tipModel;
-    private final List<AABB> tipShape;
-    private VoxelShape cachedTipShape;
-    private VoxelShape cachedBaseShape;
 
     public ThinSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -59,7 +51,6 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         dripParticle = new ResourceLocation("minecraft", "dripping_dripstone_water");
         meltFluid = new FluidStack(Fluids.WATER, 100);
         tipModel = "";
-        tipShape = new ArrayList<>();
     }
 
     public ThinSpikeBlockBuilder drips() {
@@ -97,49 +88,14 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    public ThinSpikeBlockBuilder meltFluid(Object o) {
-        var archiFluidStack = FluidStackJS.of(o).getFluidStack();
-        meltFluid = new FluidStack(archiFluidStack.getFluid(), (int) archiFluidStack.getAmount());
+    public ThinSpikeBlockBuilder meltFluid(FluidStackJS fluid) {
+        meltFluid = new FluidStack(fluid.getFluid(), (int) fluid.getAmount());
         return this;
     }
 
     public ThinSpikeBlockBuilder tipModel(String s) {
         tipModel = s;
         return this;
-    }
-
-    public ThinSpikeBlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1, boolean scale16) {
-        if (scale16) {
-            tipShape.add(new AABB(x0 / 16D, y0 / 16D, z0 / 16D, x1 / 16D, y1 / 16D, z1 / 16D));
-        } else {
-            tipShape.add(new AABB(x0, y0, z0, x1, y1, z1));
-        }
-
-        return this;
-    }
-
-    public ThinSpikeBlockBuilder tipBox(double x0, double y0, double z0, double x1, double y1, double z1) {
-        return tipBox(x0, y0, z0, x1, y1, z1, true);
-    }
-
-    private VoxelShape getTipShape() {
-        if (tipShape.isEmpty()) {
-            return ThinSpikeBlock.TIP_SHAPE;
-        }
-        if (cachedTipShape == null) {
-            cachedTipShape = BlockBuilder.createShape(tipShape);
-        }
-        return cachedTipShape;
-    }
-
-    private VoxelShape getBaseShape() {
-        if (customShape.isEmpty()) {
-            return ThinSpikeBlock.PILLAR_SHAPE;
-        }
-        if (cachedBaseShape == null) {
-            cachedBaseShape = BlockBuilder.createShape(customShape);
-        }
-        return cachedBaseShape;
     }
 
     @Override
@@ -204,61 +160,52 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
                     }
                 }
             }
-
-
-            @Override
-            public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
-            {
-                return state.getValue(TIP) ? getTipShape() : getBaseShape();
-            }
         };
     }
 
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        if (blockstateJson != null) {
-            generator.json(newID("blockstates/", ""), blockstateJson);
+    protected void generateItemModelJson(ModelGenerator m) {
+        if (!model.isEmpty()) {
+            m.parent(model);
         } else {
-            var blockModelLoc = newID("block/", "").toString();
-            generator.blockState(id, m -> {
-                m.variant("tip=true", v -> v.model(blockModelLoc + "_tip"));
-                m.variant("tip=false", v -> v.model(blockModelLoc));
-            });
+            m.parent("item/generated");
         }
 
-        var texture = id.getNamespace() + ":block/" + id.getPath();
+        if (itemBuilder.textureJson.size() == 0) {
+            itemBuilder.texture(newID("item/", "").toString());
+        }
+        m.textures(itemBuilder.textureJson);
+    }
+
+    @Override
+    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         if (modelJson != null) {
             generator.json(newID("models/block", ""), modelJson);
         } else {
+            final String texture = id.getNamespace() + ":block/" + id.getPath();
             generator.blockModel(id, m -> {
                 m.parent("tfc:block/thin_spike");
                 m.texture("0", texture);
                 m.texture("particle", texture);
             });
         }
+
         if (!tipModel.isEmpty()) {
             generator.blockModel(newID("", "_tip"), m -> m.parent(tipModel));
         } else {
+            final String texture = id.getNamespace() + ":block/" + id.getPath();
             generator.blockModel(newID("", "_tip"), m -> {
                 m.parent("tfc:block/thin_spike_tip");
                 m.texture("0", texture);
                 m.texture("particle", texture);
             });
         }
+    }
 
-        if (itemBuilder != null) {
-            generator.itemModel(itemBuilder.id, m -> {
-                if (!model.isEmpty()) {
-                    m.parent(model);
-                } else {
-                    m.parent("item/generated");
-                }
-
-                if (itemBuilder.textureJson.size() == 0) {
-                    itemBuilder.texture(newID("item/", "").toString());
-                }
-                m.textures(itemBuilder.textureJson);
-            });
-        }
+    @Override
+    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+        final String blockModelLoc = newID("block/", "").toString();
+        bs.simpleVariant("tip=true", blockModelLoc + "_tip");
+        bs.simpleVariant("tip=false", blockModelLoc);
     }
 }

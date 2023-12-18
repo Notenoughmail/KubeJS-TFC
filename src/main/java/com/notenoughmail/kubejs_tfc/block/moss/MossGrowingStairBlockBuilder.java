@@ -25,7 +25,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
     public MossGrowingStairBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_STAIRS);
-        mossGrowth = ((container, needsWater) -> (!needsWater || FluidHelpers.isSame(container.minecraftLevel.getFluidState(container.getPos()), Fluids.WATER)));
+        mossGrowth = MossGrowingCallback.DEFAULT;
     }
 
     public MossGrowingStairBlockBuilder mossyStair(ResourceLocation block) {

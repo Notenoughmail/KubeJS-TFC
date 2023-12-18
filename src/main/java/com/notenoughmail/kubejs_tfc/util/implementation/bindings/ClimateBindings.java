@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -11,8 +12,10 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
+import org.openjdk.nashorn.internal.objects.NativeString;
 
 import javax.annotation.Nullable;
 
@@ -25,16 +28,18 @@ public enum ClimateBindings {
     public ClimateModel getModel(Object o) {
         if (o instanceof ClimateModel climate) {
             return climate;
-        } else if (o instanceof CharSequence || o instanceof ResourceLocation) {
+        } else if (o instanceof CharSequence || o instanceof ResourceLocation || o instanceof NativeString) {
             var model = Climate.create(new ResourceLocation(o.toString()));
-            if (model instanceof BiomeBasedClimateModel) {
-                KubeJSTFC.LOGGER.warn("Object {} of type {} returned a biome-based climate model, this may be intentional; if so, this can be safely ignored", o, o.getClass());
+            if (CommonConfig.debugMode.get() && model instanceof BiomeBasedClimateModel) {
+                KubeJSTFC.LOGGER.warn("Object {} of type {} returned a biome-based climate model, this may mean that {} is not a registered climate model", o, o.getClass(), o);
             }
             return model;
         } else if (o instanceof Level level) {
             return Climate.model(level);
         } else if (o instanceof ClimateModelType type) {
             return type.create();
+        } else if (o instanceof Player player) {
+            return Climate.model(player.level());
         }
         return null;
     }

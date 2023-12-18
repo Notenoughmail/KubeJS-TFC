@@ -4,6 +4,8 @@ import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.TFCTags;
@@ -18,16 +20,16 @@ import net.minecraft.world.level.material.Fluid;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class FluidContainerItemBuilder extends ItemBuilder {
 
     public transient boolean canPlaceLiquid;
     public transient boolean canPlaceSource;
-    public transient int capacity;
+    public transient Supplier<Integer> capacity;
     public transient TagKey<Fluid> whitelist;
     @Nullable
     public transient Component filledDisplayName;
-    public transient String filledTranslationKey;
 
     public static List<FluidContainerItemBuilder> thisList = new ArrayList<>();
 
@@ -35,9 +37,8 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         super(i);
         canPlaceLiquid = false;
         canPlaceSource = false;
-        capacity = 100;
+        capacity = () -> 100;
         whitelist = TFCTags.Fluids.USABLE_IN_JUG;
-        filledTranslationKey = "";
         filledDisplayName = null;
         thisList.add(this);
     }
@@ -56,7 +57,14 @@ public class FluidContainerItemBuilder extends ItemBuilder {
 
     @Info(value = "Sets the capacity, in mB, of the fluid container")
     public FluidContainerItemBuilder capacity(int i) {
-        capacity = i;
+        capacity = () -> i;
+        return this;
+    }
+
+    @Info(value = "Sets the capacity, in mB, supplier of the fluid container")
+    @Generics(value = Integer.class)
+    public FluidContainerItemBuilder capacitySupplier(Supplier<Integer> capacity) {
+        this.capacity = capacity;
         return this;
     }
 
@@ -66,20 +74,19 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         return this;
     }
 
-    @Info(value = "Sets the ")
+    @Info(value = """
+            Sets the display name for this object when filled
+            
+            This will be overridden by a lang file if it exists
+            """)
     public FluidContainerItemBuilder filledDisplayName(Component c) {
         filledDisplayName = c;
         return this;
     }
 
-    public FluidContainerItemBuilder filledTranslationKey(String s) {
-        filledTranslationKey = s;
-        return this;
-    }
-
     @Override
     public Item createObject() {
-        return new FluidContainerItem(createItemProperties(), () -> capacity, whitelist, canPlaceLiquid, canPlaceSource) {
+        return new FluidContainerItem(createItemProperties(), capacity, whitelist, canPlaceLiquid, canPlaceSource) {
 
             // Override so it's not effected by the config
             @Override
@@ -94,21 +101,13 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         generator.itemModel(id, m -> ModelUtils.ITEMS.fluidContainerModelJson(m, id));
     }
 
-    protected String getFilledTranslationKey() {
-        if (filledTranslationKey.isEmpty()) {
-            return getTranslationKeyGroup() + "." + id.getNamespace() + "." + id.getPath() + ".filled";
-        } else {
-            return filledTranslationKey;
-        }
-    }
-
     @Override
     public void generateLang(LangEventJS lang) {
         super.generateLang(lang);
         if (filledDisplayName != null) {
-            lang.add(id.getNamespace(), getFilledTranslationKey(), filledDisplayName.getString());
+            lang.add(id.getNamespace(), getBuilderTranslationKey() + ".filled", filledDisplayName.getString());
         } else {
-            lang.add(id.getNamespace(), getFilledTranslationKey(), "%s " + UtilsJS.snakeCaseToTitleCase(id.toString()));
+            lang.add(id.getNamespace(), getBuilderTranslationKey() + ".filled", "%s " + UtilsJS.snakeCaseToTitleCase(id.toString()));
         }
     }
 }

@@ -180,12 +180,14 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         if (obj instanceof ItemStackProviderJS provider) {
             return provider.stack().equals(this.stack()) && provider.modifiers.equals(this.modifiers);
         } else if (obj instanceof ItemStack itemStack) {
-            return this.modifiers.isEmpty() && itemStack.equals(this.stack);
+            return this.isSimple() && itemStack.equals(this.stack);
+        } else if (obj instanceof ItemStackProvider provider) {
+            return provider.equals(asCanonClass());
         }
         return false;
     }
 
-    @Info(value = "Returns a list of JsonObjects consisting of the applied modifiers which match the request type")
+    @Info(value = "Returns a list of JsonObjects consisting of the applied modifiers which match the requested type")
     @Generics(value = JsonObject.class)
     public List<JsonObject> getModifiersOfType(String type) {
         final List<JsonObject> list = new ArrayList<>();
@@ -257,7 +259,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
     }
 
     @Info(value = "Adds a 'tfc:add_heat' modifier to the ISP", params = @Param(name = "temperature", value = "The °C to add to the item"))
-    public ItemStackProviderJS addHeat(int temperature) {
+    public ItemStackProviderJS addHeat(float temperature) {
         var obj = new JsonObject();
         obj.addProperty("type", "tfc:add_heat");
         obj.addProperty("temperature", temperature);
@@ -305,7 +307,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return this.simpleModifier("tfc:copy_input");
     }
 
-    @Info(value = "Adds a 'tfc:empty_bowl' modifier to the ISP. This is supported soup items")
+    @Info(value = "Adds a 'tfc:empty_bowl' modifier to the ISP. This is supported by soup items")
     public ItemStackProviderJS emptyBowl() {
         return this.simpleModifier("tfc:empty_bowl");
     }
@@ -343,7 +345,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return this;
     }
 
-    @Info(value = "Ads a 'tfc:meal' modifier to the ISP", params = @Param(name = "food", value = "The base food data values for the meal modifier"))
+    @Info(value = "Adds a 'tfc:meal' modifier to the ISP", params = @Param(name = "food", value = "The base food data values for the meal modifier"))
     @Generics(value = BuildFoodItemData.class)
     public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
         modifiers.add(mealBase(food));

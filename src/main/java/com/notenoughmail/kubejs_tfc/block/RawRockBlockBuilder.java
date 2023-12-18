@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.RawRockBlock;
+import net.dries007.tfc.common.blocks.rock.RockDisplayCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,6 +38,46 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
     public RawRockBlockBuilder rockTypeTooltip(Component comp) {
         rockTypeTooltip = comp;
         return this;
+    }
+
+    @Info(value = "Sets the rock type component to that of felsic igneous extrusive rocks")
+    public RawRockBlockBuilder felsicIgneousExtrusive() {
+        return rockTypeTooltip(RockDisplayCategory.FELSIC_IGNEOUS_EXTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of intermediate igneous extrusive rocks")
+    public RawRockBlockBuilder intermediateIgneousExtrusive() {
+        return rockTypeTooltip(RockDisplayCategory.INTERMEDIATE_IGNEOUS_EXTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of mafic igneous extrusive rocks")
+    public RawRockBlockBuilder maficIgneousExtrusive() {
+        return rockTypeTooltip(RockDisplayCategory.MAFIC_IGNEOUS_EXTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of mafic igneous intrusive rocks")
+    public RawRockBlockBuilder maficIgneousIntrusive() {
+        return rockTypeTooltip(RockDisplayCategory.MAFIC_IGNEOUS_INTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of felsic igneous intrusive")
+    public RawRockBlockBuilder felsicIgneousIntrusive() {
+        return rockTypeTooltip(RockDisplayCategory.FELSIC_IGNEOUS_INTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of intermediate igneous intrusive rocks")
+    public RawRockBlockBuilder intermediateIgneousIntrusive() {
+        return rockTypeTooltip(RockDisplayCategory.INTERMEDIATE_IGNEOUS_INTRUSIVE.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of metamorphic rocks")
+    public RawRockBlockBuilder metamorphic() {
+        return rockTypeTooltip(RockDisplayCategory.METAMORPHIC.createTooltip());
+    }
+
+    @Info(value = "Sets the rock type component to that of sedimentary rocks")
+    public RawRockBlockBuilder sedimentary() {
+        return rockTypeTooltip(RockDisplayCategory.SEDIMENTARY.createTooltip());
     }
 
     @Override

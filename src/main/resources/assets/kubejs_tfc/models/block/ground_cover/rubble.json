@@ -1,6 +1,0 @@
-{
-  "parent": "tfc:block/groundcover/rubble",
-  "textures": {
-    "all": "#all"
-  }
-}

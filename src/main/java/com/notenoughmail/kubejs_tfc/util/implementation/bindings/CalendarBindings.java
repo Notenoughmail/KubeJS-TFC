@@ -6,6 +6,7 @@ import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.calendar.Month;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelReader;
 
 @SuppressWarnings("unused")
@@ -25,6 +26,11 @@ public enum CalendarBindings {
     @Info(value = "Returns the level's calendar")
     public ICalendar getCalendar(LevelReader level) {
         return Calendars.get(level);
+    }
+
+    @Info(value = "Returns the calendar of the entity's level")
+    public ICalendar getCalendar(Entity entity) {
+        return Calendars.get(entity.level());
     }
 
     @Info(value = "Returns the number of calendar ticks in a month based on the number of days in a month")
