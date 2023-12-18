@@ -20,24 +20,9 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        if (blockstateJson != null) {
-            generator.json(newID("blockstates/", ""), blockstateJson);
-        } else {
-
-        }
-
-        if (itemBuilder != null) {
-            generator.itemModel(itemBuilder.id, m -> {
-                m.parent(newID("block/", "_base").toString());
-                m.textures(itemBuilder.textureJson);
-            });
-        }
-    }
-
-    @Override
     protected void generateItemModelJson(ModelGenerator m) {
-        super.generateItemModelJson(m);
+        m.parent(newID("block/", "_base").toString());
+        m.textures(itemBuilder.textureJson);
     }
 
     @Override

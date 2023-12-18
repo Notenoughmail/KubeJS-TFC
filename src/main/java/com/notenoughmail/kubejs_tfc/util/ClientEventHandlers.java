@@ -3,10 +3,13 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
 import net.dries007.tfc.client.model.ContainedFluidModel;
+import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,10 +32,21 @@ public class ClientEventHandlers {
 
     // TODO: Try fishing rods again, see if this fixes the issues I had
     private static void clientSetup(FMLClientSetupEvent event) {
-        JavelinItemBuilder.thisList.forEach(builder -> {
+        JavelinItemBuilder.thisList.forEach(builder ->
             ItemProperties.register(builder.get(), Helpers.identifier("throwing"), (stack, level, entity, unused) ->
-                    entity != null && ((entity.isUsingItem() && entity.getUseItem() == stack) || (entity instanceof Monster monster && monster.isAggressive())) ? 1.0F : 0.0F
-            );
-        });
+                entity != null && ((entity.isUsingItem() && entity.getUseItem() == stack) || (entity instanceof Monster monster && monster.isAggressive())) ? 1.0F : 0.0F
+        ));
+        TFCFishingRodItemBuilder.thisList.forEach(builder ->
+            ItemProperties.register(builder.get(), Helpers.identifier("cast"), (stack, level, entity, unused) -> {
+                if (entity == null)
+                {
+                    return 0.0F;
+                }
+                else
+                {
+                    return entity instanceof Player player && TFCFishingRodItem.isThisTheHeldRod(player, stack) && player.fishing != null ? 1.0F : 0.0F;
+                }
+            })
+        );
     }
 }

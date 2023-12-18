@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
+import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.minecraft.resources.ResourceLocation;
 
 public class ModelUtils {
@@ -58,6 +59,35 @@ public class ModelUtils {
             javelin.add("perspectives", perspectives);
 
             return javelin;
+        }
+
+        public static void fishingRod(ResourceLocation id, AssetJsonGenerator generator, String customCastModel) {
+
+            final JsonObject rod = new JsonObject();
+            rod.addProperty("parent", "minecraft:item/handheld_rod");
+            final JsonObject rodTextures = new JsonObject();
+            rodTextures.addProperty("layer0", newItemID(id).toString());
+            rod.add("textures", rodTextures);
+            final JsonObject predicate = new JsonObject();
+            final JsonObject castPredicate = new JsonObject();
+            castPredicate.addProperty("tfc:cast", 1);
+            predicate.add("predicate", castPredicate);
+            predicate.addProperty("model", customCastModel.isEmpty() ? newItemID(id) + "_cast" : customCastModel);
+            final JsonArray overrides = new JsonArray(1);
+            overrides.add(predicate);
+            rod.add("overrides", overrides);
+
+            generator.json(AssetJsonGenerator.asItemModelLocation(id), rod);
+
+            if (customCastModel.isEmpty()) {
+                final JsonObject cast = new JsonObject();
+                cast.addProperty("parent", "item/fishing_rod");
+                final JsonObject castTextures = new JsonObject();
+                castTextures.addProperty("layer0", newItemID(id) + "_cast");
+                cast.add("textures", castTextures);
+
+                generator.json(AssetJsonGenerator.asItemModelLocation(newID(id, "", "_cast")), cast);
+            }
         }
 
         private static ResourceLocation newItemID(ResourceLocation id) {

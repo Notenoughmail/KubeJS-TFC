@@ -22,7 +22,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     public float thrownDamage;
 
-    public static List<JavelinItemBuilder> thisList = new ArrayList<>();
+    public static final List<JavelinItemBuilder> thisList = new ArrayList<>();
 
     public JavelinItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
