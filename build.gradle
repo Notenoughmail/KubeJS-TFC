@@ -111,13 +111,12 @@ dependencies {
 
     implementation fg.deobf("curse.maven:terrafirmacraft-302973:${tfc_identifier}")
         runtimeOnly fg.deobf(("curse.maven:cyanide-541676:${cyanide_identifier}"))
-    // implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
+    implementation fg.deobf("curse.maven:firmalife-453394:${firmalife_identifier}")
     // implementation fg.deobf("curse.maven:rosia-856122:${rosia_identifier}")
     // implementation fg.deobf("curse.maven:tfccc-820815:${tfccc_identifer}")
     // implementation fg.deobf("curse.maven:arborfirmacraft-877545:${arbor_identifier}")
+    implementation fg.deobf("curse.maven:precision-prospecting-700638:${precpros_identifier}")
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")  // Do I need this?
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}") // Do I need this?
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}:api")

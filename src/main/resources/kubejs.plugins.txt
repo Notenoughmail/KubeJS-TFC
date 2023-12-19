@@ -1,1 +1,3 @@
 com.notenoughmail.kubejs_tfc.KubeJSTFCPlugin
+com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin firmalife
+com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin precisionprospecting

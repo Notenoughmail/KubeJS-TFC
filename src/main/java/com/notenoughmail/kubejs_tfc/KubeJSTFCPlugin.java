@@ -1,5 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
+import com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin;
+import com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
@@ -196,6 +198,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(EventHandlers.class);
         filter.deny(IngredientHelpers.class);
         filter.deny(ClientEventHandlers.class);
+        filter.deny(PrecProsPlugin.class);
+        filter.deny(FirmaLifePlugin.class);
         // TFC
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

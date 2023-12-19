@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackModifierJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSItemStackModifier;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -17,8 +17,8 @@ public class RegisterItemStackModifierEventJS extends EventJS {
             @Param(name = "applicator", value = "The function which will be applied when the modifier is applied to the stack"),
             @Param(name = "dependsOnInput", value = "Sets if the modifier is dependent on the input item, should be true if the input stack of the applicator is used")
     })
-    public void register(ResourceLocation id, ItemStackModifierJS.ModifierApplicator applicator, boolean dependsOnInput) {
-        ItemStackModifiers.register(id, new ItemStackModifierJS(id, applicator, dependsOnInput));
+    public void register(ResourceLocation id, KubeJSItemStackModifier.ModifierApplicator applicator, boolean dependsOnInput) {
+        ItemStackModifiers.register(id, new KubeJSItemStackModifier(id, applicator, dependsOnInput));
     }
 
     @Info(value = "Returns the current crafting container. Only available during advanced shaped and shapeless crafting recipes")

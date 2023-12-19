@@ -7,10 +7,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 // Include id so #toString() returns something helpful
-public record ItemStackModifierJS(ResourceLocation id, ModifierApplicator applicator, boolean dependsOnInput) implements ItemStackModifier.SingleInstance<ItemStackModifierJS> {
+public record KubeJSItemStackModifier(ResourceLocation id, ModifierApplicator applicator, boolean dependsOnInput) implements ItemStackModifier.SingleInstance<KubeJSItemStackModifier> {
 
     @Override
-    public ItemStackModifierJS instance() {
+    public KubeJSItemStackModifier instance() {
         return this;
     }
 

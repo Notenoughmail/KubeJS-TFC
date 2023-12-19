@@ -9,7 +9,7 @@ import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-// TODO: Allow custom vanilla items for these?
+// TODO: Allow custom vanilla items for these? Fix item model
 public class GroundCoverBlockBuilder extends BlockBuilder {
 
     private transient Type type;
