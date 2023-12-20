@@ -24,8 +24,8 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
         super(i);
         naturallySupported = false;
         rockTypeTooltip = null;
-        model = id.toString();
-        mirrorModel = newID("", "_mirrored").toString();
+        model = newID("block/", "").toString();
+        mirrorModel = newID("block/", "_mirrored").toString();
     }
 
     @Info(value = "Determines if the block is considered to be naturally supported for the purposes of spawning particles indicating unsupported regions")

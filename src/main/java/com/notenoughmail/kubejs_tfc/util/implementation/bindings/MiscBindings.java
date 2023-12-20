@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.capabilities.food.IFood;
@@ -10,10 +11,14 @@ import net.dries007.tfc.common.capabilities.heat.*;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
+import net.dries007.tfc.common.recipes.CollapseRecipe;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.dries007.tfc.util.registry.RegistryWood;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -85,5 +90,29 @@ public enum MiscBindings {
     @Info(value = "Returns the Weight value of the provided stack")
     public Weight getWeight(ItemStack stack) {
         return ItemSizeManager.get(stack).getWeight(stack);
+    }
+
+    @Info(value = "Returns true if the given block can start a collapse", params = {
+            @Param(name = "level", value = "The level to check in"),
+            @Param(name = "pos", value = "The position to check at")
+    })
+    public boolean canStartCollapse(LevelAccessor level, BlockPos pos) {
+        return CollapseRecipe.canStartCollapse(level, pos);
+    }
+
+    @Info(value = "Attempts to trigger a collapse, returns false if no collapse or a fake collapse occurred", params = {
+            @Param(name = "level", value = "The level to attempt collapse in"),
+            @Param(name = "pos", value = "The center position of the attempted collapse")
+    })
+    public boolean tryCollapse(Level level, BlockPos pos) {
+        return CollapseRecipe.tryTriggerCollapse(level, pos);
+    }
+
+    @Info(value = "Forces a collapse to happen at a position, returns true if any blocks started collapsing", params = {
+            @Param(name = "level", value = "The level to collapse in"),
+            @Param(name = "pos", value = "The center position of the collapse")
+    })
+    public boolean forceCollapse(Level level, BlockPos pos) {
+        return CollapseRecipe.startCollapse(level, pos);
     }
 }

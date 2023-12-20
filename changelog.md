@@ -3,7 +3,10 @@
   - Has methods for getting some of TFC's capability data from stacks
   - Has maps for rocks, woods, heat levels, and nutrients
 - Events for custom birthdays and item stack modifiers
-- Add item builder for TFC's fishing rod 
+- Add item builder for TFC's fishing rod
+- Add support for FirmaLife recipes
+- Add support for Precision Prospecting item types
+- Rework container limiting functionality
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

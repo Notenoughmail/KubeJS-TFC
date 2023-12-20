@@ -7,8 +7,10 @@ import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.event.Extra;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.util.events.*;
@@ -37,6 +39,7 @@ public class EventHandlers {
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
     public static final EventHandler rockSettings = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> LegacyContainerLimiterEventJS.class);
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
@@ -52,6 +55,7 @@ public class EventHandlers {
     public static final EventHandler douseFire = TFCEvents.server("douseFire", () -> DouseFireEventJS.class);
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
+    public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(Extra.REQUIRES_ID);
 
     public static void init() {
         LifecycleEvent.SETUP.register(EventHandlers::setupEvents);
@@ -72,8 +76,12 @@ public class EventHandlers {
         modBus.addListener(EventHandlers::loadComplete);
     }
 
+    @Deprecated(forRemoval = true, since = "1.1.0")
     private static void setupEvents() {
         if (limitContainerSize.hasListeners()) {
+            final String warning = "Usage of the legacy container limiter is deprecated! Please use the server TFCEvents.limitContainer event instead!";
+            KubeJSTFC.LOGGER.warn(warning);
+            ConsoleJS.STARTUP.warn(warning);
             limitContainerSize.post(new LegacyContainerLimiterEventJS());
         }
     }
@@ -150,13 +158,12 @@ public class EventHandlers {
     }
 
     /**
-     * The majority of this event's handling is based off of <i><a href="https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea">Oversized Item in Storage Area</a></i><br>
+     * The majority of this event's legacy handling is based off of <i><a href="https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea">Oversized Item in Storage Area</a></i><br>
      * <i>Oversized Item in Storage Area</i> is licenced under the <a href="https://www.curseforge.com/minecraft/mc-mods/oversized-item-in-storage-area/comments#license">BSD Licence</a>
      */
-    // TODO: Investigate if there is a better way to do this now
     private static void limitContainers(PlayerContainerEvent.Close event) {
-        AbstractContainerMenu container = event.getContainer();
-        MenuType<?> menuType;
+        final AbstractContainerMenu container = event.getContainer();
+        final MenuType<?> menuType;
         try {
             menuType = container.getType();
         } catch (UnsupportedOperationException ignored) {
@@ -166,7 +173,20 @@ public class EventHandlers {
 
         final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
 
+        if (limitContainer.hasListeners()) {
+            final List<Slot> slotsToHandle = new ArrayList<>();
+            for (Slot slot : container.slots) {
+                if (!(slot.container instanceof Inventory)) {
+                    slotsToHandle.add(slot);
+                }
+            }
+
+            limitContainer.post(new ContainerLimiterEventJS(slotsToHandle, event.getEntity().level(), event.getEntity().getOnPos().above()), menuName);
+        }
+
+        // TODO: Deprecated for removal
         if (event.getEntity() instanceof ServerPlayer player && LegacyContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
+            ConsoleJS.SERVER.warn("KubeJS TFC: A legacy container limiter was used to limit a container! This form of limiting is deprecated, please use the new system"); // Dirty, but this implementation is actually awful
             Pair<Size, List<Pair<Integer, Integer>>> function = LegacyContainerLimiterEventJS.LIMITED_SIZES.get(menuName);
 
             // Filter slots to only the ones that have items and (if present) within the ranges given

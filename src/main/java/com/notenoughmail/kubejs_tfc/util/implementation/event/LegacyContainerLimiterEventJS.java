@@ -10,16 +10,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+// Not marked for removal because that causes big warnings in EventHandlers, but will be removed
+@Deprecated(since = "1.1.0")
 public class LegacyContainerLimiterEventJS extends StartupEventJS {
 
     // Suck it Hunter Gratzner
     public static final Map<ResourceLocation, Pair<Size, List<Pair<Integer, Integer>>>> LIMITED_SIZES = new HashMap<>();
 
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public void limitContainerSize(ResourceLocation containerName, Size size) {
         limitContainerSize(containerName, size, (Integer) null);
     }
 
     // /kubejs dump_registry minecraft:menu
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public void limitContainerSize(ResourceLocation containerName, Size size, @Nullable Integer... slotRanges) {
         if (slotRanges != null && slotRanges.length % 2 != 0) {
             KubeJSTFC.LOGGER.error("Provided slot ranges: '{}' are not provided in pairs! They will be ignored!", (Object) slotRanges);
