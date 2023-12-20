@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.AdvancedKubeJSClimateModel;
-import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSClimateModel;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.climate.AdvancedKubeJSClimateModel;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.climate.KubeJSClimateModel;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -32,7 +32,7 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
     })
     @Generics(value = KubeJSClimateModel.class)
     public void registerClimateModel(ResourceLocation name, Consumer<KubeJSClimateModel> model) {
-        var climate = new KubeJSClimateModel(name);
+        var climate = new KubeJSClimateModel(name, overworld);
         model.accept(climate);
         CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
     }
@@ -43,7 +43,7 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
     })
     @Generics(value = AdvancedKubeJSClimateModel.class)
     public void registerAdvancedClimateModel(ResourceLocation name, Consumer<AdvancedKubeJSClimateModel> model) {
-        var climate = new AdvancedKubeJSClimateModel(name);
+        var climate = new AdvancedKubeJSClimateModel(name, overworld);
         model.accept(climate);
         CUSTOM_MODELS.put(name, Climate.register(name, () -> climate));
     }

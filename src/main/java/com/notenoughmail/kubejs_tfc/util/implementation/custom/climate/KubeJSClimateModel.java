@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.custom.climate;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IOpenSimplex2dMixin;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterClimateModelEventJS;
@@ -26,18 +26,24 @@ import java.util.List;
 public class KubeJSClimateModel implements ClimateModel {
 
     protected final ResourceLocation name;
-    public LevelPos2FloatCallback averageTemperature = (level, pos) -> 0.0F;
-    public LevelPos2FloatCallback averageRainfall = (level, pos) -> 0.0F;
-    public TemperatureCallback currentTemperature = (level, pos, ticks, days) -> 0.0F;
-    public LevelPosLong2FloatCallback airFog = (level, pos, ticks) -> 0.0F;
-    public LevelPosLong2FloatCallback waterFog = (level, pos, ticks) -> 1.0F;
-    public WindVectorCallback windVector = (block, calendarTick) -> Vec2.ZERO;
+    public LevelPos2FloatCallback averageTemperature;
+    public LevelPos2FloatCallback averageRainfall;
+    public TemperatureCallback currentTemperature;
+    public LevelPosLong2FloatCallback airFog;
+    public LevelPosLong2FloatCallback waterFog;
+    public WindVectorCallback windVector;
     protected long climateSeed = 0L;
     private final List<OpenSimplex2D> noises = new ArrayList<>();
 
 
-    public KubeJSClimateModel(ResourceLocation name) {
+    public KubeJSClimateModel(ResourceLocation name, ClimateModel defaults) {
         this.name = name;
+        averageTemperature = defaults::getAverageTemperature;
+        averageRainfall = defaults::getRainfall;
+        currentTemperature = defaults::getTemperature;
+        airFog = defaults::getFogginess;
+        waterFog = defaults::getWaterFogginess;
+        windVector = (block, calendarTicks) -> defaults.getWindVector(block.getLevel(), block.getPos(), calendarTicks);
     }
 
     @Info(value = "Sets how the model will determine the current temperature at a given position and time")

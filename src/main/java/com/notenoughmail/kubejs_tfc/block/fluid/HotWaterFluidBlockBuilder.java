@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block.fluid;
 
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
-import com.notenoughmail.kubejs_tfc.util.implementation.HotWaterBlockJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.HotWaterBlockJS;
 import dev.latvian.mods.kubejs.fluid.FluidBlockBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

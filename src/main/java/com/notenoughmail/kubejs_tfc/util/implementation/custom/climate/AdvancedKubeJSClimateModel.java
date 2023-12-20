@@ -1,8 +1,9 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.custom.climate;
 
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -16,8 +17,8 @@ public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
     private Consumer<ServerLevel> onWorldLoad;
     private OnChunkLoadCallback onChunkLoad;
 
-    public AdvancedKubeJSClimateModel(ResourceLocation name) {
-        super(name);
+    public AdvancedKubeJSClimateModel(ResourceLocation name, ClimateModel defaults) {
+        super(name, defaults);
     }
 
     @Info(value = "Sets the model's behavior when loading into a world")
