@@ -7,6 +7,9 @@
 - Add support for FirmaLife recipes
 - Add support for Precision Prospecting item types
 - Rework container limiting functionality
+- Add firmalife cheese wheel block and watering can item builders
+- Add jar and glassworking item and lamp block builder types
+- Add event to register prospecting representative blocks
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

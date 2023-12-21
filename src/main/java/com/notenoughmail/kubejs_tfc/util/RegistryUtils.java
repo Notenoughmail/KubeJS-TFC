@@ -39,8 +39,6 @@ public class RegistryUtils {
         return tickCounterBuilder;
     }
 
-    // This assists block builders in not creating a block entity type per block made as its really not needed for something so simple
-
     /**
      * Adds/creates a simple {@link TickCounterBlockEntityBuilder} to kube's builder list if not already present and adds the builder to its list of valid blocks, use {@link #getTickCounter()} to retrieve the tick counter
      * @param builder The block builder whose block will be added to the tick counter's valid blocks

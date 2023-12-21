@@ -2,7 +2,9 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.event.EventGroup;
@@ -11,6 +13,7 @@ import dev.latvian.mods.kubejs.event.Extra;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
+import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.util.events.*;
@@ -25,6 +28,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -45,6 +50,7 @@ public class EventHandlers {
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
     public static final EventHandler birthdays = TFCEvents.startup("birthdays", () -> BirthdayEventJS.class);
     public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifier", () -> RegisterItemStackModifierEventJS.class);
+    public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class);
@@ -96,6 +102,24 @@ public class EventHandlers {
     private static void onFireStart(StartFireEvent event) {
         if (!event.getLevel().isClientSide() && startFire.hasListeners()) {
             if (startFire.post(new StartFireEventJS(event)).interruptFalse()) {
+                event.setCanceled(true);
+            }
+        }
+
+        // Handle custom lamps and possibly future implementations
+        final Level level = event.getLevel();
+        final BlockPos pos = event.getPos();
+        final BlockState state = level.getBlockState(pos);
+        final Block block = state.getBlock();
+
+        if (LampBlockBuilder.be != null) {
+            if (block instanceof LampBlockJS) {
+                level.getBlockEntity(pos, LampBlockBuilder.be.get()).ifPresent(lamp -> {
+                    if (lamp.getFuel() != null) {
+                        level.setBlock(pos, state.setValue(LampBlock.LIT, true), 3);
+                        lamp.resetCounter();
+                    }
+                });
                 event.setCanceled(true);
             }
         }
@@ -242,6 +266,9 @@ public class EventHandlers {
         }
         if (registerModifiers.hasListeners()) {
             registerModifiers.post(new RegisterItemStackModifierEventJS());
+        }
+        if (representatives.hasListeners()) {
+            representatives.post(new RegisterRepresentativeBlocksEventJS());
         }
         event.enqueueWork(() -> {
             KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");

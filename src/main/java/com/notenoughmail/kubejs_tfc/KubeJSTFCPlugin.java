@@ -4,7 +4,6 @@ import com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin;
 import com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -21,9 +20,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
-import dev.latvian.mods.kubejs.CommonProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
-import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
@@ -40,7 +37,6 @@ import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
-import net.dries007.tfc.common.capabilities.food.Nutrient;
 import net.dries007.tfc.common.capabilities.heat.Heat;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -105,6 +101,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.ITEM.addType("tfc:tool", ToolItemBuilder.class, ToolItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:hammer", HammerItemBuilder.class, HammerItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:jar", JarItemBuilder.class, JarItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:glassworking", GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
@@ -120,6 +118,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:raw_rock", RawRockBlockBuilder.class, RawRockBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:lamp", LampBlockBuilder.class, LampBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }

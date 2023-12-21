@@ -113,65 +113,63 @@ public class LooseRockBlockBuilder extends BlockBuilder {
             m.parent(model);
         } else {
             m.parent("item/generated");
-        }
 
-        if (itemTextures.size() == 0) {
-            itemTexture(newID("item/", "").toString());
+            if (itemTextures.size() == 0) {
+                itemTexture(newID("item/", "").toString());
+            }
+            m.textures(itemTextures);
         }
-        m.textures(itemTextures);
     }
 
     // TODO: Make this work in general?
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        // Did this ever work...
-        if (lootTable != null && itemBuilder != null) {
-            var lootbuilder = new LootBuilder(null);
-            lootbuilder.type = "minecraft:block";
+        if (itemBuilder != null) {
+            final LootBuilder lootBuilder = new LootBuilder(null);
+            lootBuilder.type = "minecraft:block";
 
-            // Come Hell and see thine madness
-            var lootPools = new JsonArray();
-             var poolObj = new JsonObject();
-             poolObj.addProperty("name", "loot_pool");
-             poolObj.addProperty("rolls", 1);
-              var entries = new JsonArray();
-               var entry = new JsonObject();
-                entry.addProperty("type", "minecraft:item");
-                entry.addProperty("name", itemBuilder.id.toString());
-                var functions = new JsonArray();
-                 var func_2 = new JsonObject();
-                 func_2.addProperty("function", "minecraft:set_count");
-                 func_2.addProperty("count", 2);
-                  var conditions_2 = new JsonArray();
-                   var condition_2 = new JsonObject();
-                   condition_2.addProperty("condition", "minecraft:block_state_property");
-                   condition_2.addProperty("block", id.toString());
-                    var properties_2 = new JsonObject();
-                    properties_2.addProperty("count", 2);
-                   condition_2.add("properties", properties_2);
-                  conditions_2.add(condition_2);
-                 func_2.add("conditions", conditions_2);
-                functions.add(func_2);
-                 var func_3 = new JsonObject();
-                 func_3.addProperty("function", "minecraft:set_count");
-                 func_3.addProperty("count", 3);
-                  var conditions_3 = new JsonArray();
-                   var condition_3 = new JsonObject();
-                   condition_3.addProperty("condition", "minecraft:block_state_property");
-                   condition_3.addProperty("block", id.toString());
-                    var properties_3 = new JsonObject();
-                    properties_3.addProperty("count", 3);
-                   condition_3.add("properties", properties_3);
-                  conditions_3.add(condition_3);
-                 func_3.add("conditions", conditions_3);
-                functions.add(func_3);
-               entry.add("functions", functions);
-              entries.add(entry);
-             poolObj.add("entries", entries);
-            lootPools.add(poolObj);
-            lootbuilder.pools = lootPools;
+            if (lootTable != null) {
+                lootTable.accept(lootBuilder);
+            } else {
+                lootBuilder.addPool(p -> {
+                    p.survivesExplosion();
 
-            generator.json(newID("loot_tables/blocks/", ""), lootbuilder.toJson());
+                    final JsonObject entry = new JsonObject();
+                    entry.addProperty("type", "minecraft:item");
+                    entry.addProperty("name", itemBuilder.id.toString());
+
+                    final JsonArray functions = new JsonArray();
+                    functions.add(setCountFunction(2));
+                    functions.add(setCountFunction(3));
+
+                    final JsonObject decay = new JsonObject();
+                    decay.addProperty("function", "minecraft:explosion_decay");
+                    functions.add(decay);
+
+                    entry.add("functions", functions);
+                    p.addEntry(entry);
+                });
+            }
+
+            generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
         }
+    }
+
+    private JsonObject setCountFunction(int count) {
+        final JsonObject function = new JsonObject();
+        function.addProperty("function", "minecraft:set_count");
+        function.addProperty("count", count);
+
+        final JsonArray conditions = new JsonArray();
+        final JsonObject condition = new JsonObject();
+        condition.addProperty("condition", "minecraft:block_state_property");
+        condition.addProperty("block", id.toString());
+
+        final JsonObject properties = new JsonObject();
+        properties.addProperty("count", String.valueOf(count)); // This should be a string
+        condition.add("properties", properties);
+        conditions.add(condition);
+        function.add("conditions", conditions);
+        return function;
     }
 }
