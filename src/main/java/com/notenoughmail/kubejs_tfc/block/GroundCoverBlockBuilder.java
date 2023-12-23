@@ -9,13 +9,16 @@ import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.function.Consumer;
+
 // TODO: Allow custom vanilla items for these? Fix item model InteractionManager#382
-public class GroundCoverBlockBuilder extends BlockBuilder {
+public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties<GroundCoverBlockBuilder> {
 
     private transient Type type;
-    private transient int rotate;
-    private transient String parent;
-    private VoxelShape cachedShape;
+    public transient int rotate;
+    public transient String parent;
+    public transient VoxelShape cachedShape;
+    public transient Consumer<ExtendedPropertiesJS> props;
 
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
@@ -23,6 +26,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
         rotate = 0;
         parent = "loose/igneous_intrusive_2";
         noCollision = true;
+        props = p -> {};
     }
 
     @Info(value = "Sets the block to have the same bounding box as TFC's ore pieces")
@@ -74,8 +78,8 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
     public GroundcoverBlock createObject() {
         return switch (type) {
             case ORE -> GroundcoverBlock.looseOre(createProperties());
-            case TWIG -> GroundcoverBlock.twig(ExtendedProperties.of(createProperties()));
-            default -> new GroundcoverBlock(ExtendedProperties.of(createProperties()), getShape(), itemBuilder == null ? null : () -> itemBuilder.get());
+            case TWIG -> GroundcoverBlock.twig(createExtendedProperties());
+            default -> new GroundcoverBlock(createExtendedProperties(), getShape(), itemBuilder);
         };
     }
 
@@ -96,6 +100,19 @@ public class GroundCoverBlockBuilder extends BlockBuilder {
             v.model(blockModelLoc).y(180 + rotate);
             v.model(blockModelLoc).y(270 + rotate);
         });
+    }
+
+    @Override
+    public ExtendedProperties createExtendedProperties() {
+        final ExtendedPropertiesJS propsJs = new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
+        props.accept(propsJs);
+        return propsJs.delegate();
+    }
+
+    @Override
+    public GroundCoverBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+        props = extendedProperties;
+        return this;
     }
 
     private enum Type {

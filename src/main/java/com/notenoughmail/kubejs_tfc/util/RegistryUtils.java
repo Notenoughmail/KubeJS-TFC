@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.block.entity.BerryBushBlockEntityBuilder;
 import com.notenoughmail.kubejs_tfc.block.entity.TickCounterBlockEntityBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -14,8 +15,10 @@ import java.util.function.Supplier;
 
 public class RegistryUtils {
 
-    private static final ResourceLocation tickCounterId = new ResourceLocation(KubeJSTFC.MODID, "tick_counter");
+    private static final ResourceLocation tickCounterId = KubeJSTFC.identifier("tick_counter");
     private static TickCounterBlockEntityBuilder tickCounterBuilder;
+    private static final ResourceLocation berryBushId = KubeJSTFC.identifier("berry_bush");
+    private static BerryBushBlockEntityBuilder berryBushBuilder;
 
     public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
@@ -51,5 +54,20 @@ public class RegistryUtils {
             RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(tickCounterBuilder);
         }
         tickCounterBuilder.addBlock(builder);
+    }
+
+    public static Supplier<? extends BlockEntityType<?>> getBerryBush() {
+        assert berryBushBuilder != null;
+        return berryBushBuilder;
+    }
+
+    public static void addBerryBush(BlockBuilder builder) {
+        if (berryBushBuilder == null) {
+            berryBushBuilder = new BerryBushBlockEntityBuilder(berryBushId);
+        }
+        if (!RegistryInfo.BLOCK_ENTITY_TYPE.objects.containsKey(berryBushId)) {
+            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(berryBushBuilder);
+        }
+        berryBushBuilder.addBlock(builder);
     }
 }

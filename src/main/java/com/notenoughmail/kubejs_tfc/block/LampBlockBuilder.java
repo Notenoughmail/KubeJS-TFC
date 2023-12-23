@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.block.entity.LampBlockEntityBuilder;
-import com.notenoughmail.kubejs_tfc.item.LampBlockItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.internal.LampBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -11,38 +11,22 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blockentities.LampBlockEntity;
-import net.dries007.tfc.common.blockentities.TickCounterBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
-import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.Helpers;
-import net.dries007.tfc.util.advancements.TFCAdvancements;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
-public class LampBlockBuilder extends BlockBuilder {
+import java.util.function.Consumer;
+
+public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedProperties<LampBlockBuilder> {
 
     public static LampBlockEntityBuilder be;
-    public static final ResourceLocation beId = new ResourceLocation(KubeJSTFC.MODID, "lamp");
+    public static final ResourceLocation beId = KubeJSTFC.identifier("lamp");
     public transient int lightLevel;
     public transient String chainTexture;
+    public transient Consumer<ExtendedPropertiesJS> props;
 
     public LampBlockBuilder(ResourceLocation i) {
         super(i);
@@ -54,6 +38,8 @@ public class LampBlockBuilder extends BlockBuilder {
         itemBuilder = new LampBlockItemBuilder(id, this);
         chainTexture = "";
         tag(Helpers.identifier("lamps"));
+        renderType = "cutout";
+        props = p -> {};
     }
 
     @Info(value = "Sets the light level the lamp gives off when it is lit")
@@ -68,12 +54,20 @@ public class LampBlockBuilder extends BlockBuilder {
     }
 
     public ExtendedProperties createExtendedProperties() {
-        return ExtendedProperties.of(createProperties())
+        final ExtendedPropertiesJS propsJs = new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
+        props.accept(propsJs);
+        return propsJs.delegate()
                 .noOcclusion()
                 .randomTicks()
                 .pushReaction(PushReaction.DESTROY)
                 .lightLevel(state -> state.getValue(LampBlock.LIT) ? lightLevel : 0)
                 .blockEntity(be);
+    }
+
+    @Override
+    public LampBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+        props = extendedProperties;
+        return this;
     }
 
     @Override

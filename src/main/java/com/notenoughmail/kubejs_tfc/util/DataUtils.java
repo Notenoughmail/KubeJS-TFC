@@ -192,6 +192,6 @@ public class DataUtils {
         if (resourceLocation.lastIndexOf(":") != -1) {
             return new ResourceLocation(resourceLocation);
         }
-        return new ResourceLocation(KubeJSTFC.MODID, resourceLocation);
+        return KubeJSTFC.identifier(resourceLocation);
     }
 }

@@ -1,15 +1,21 @@
 ### 1.1.0
 - Add misc sub-binding
   - Has methods for getting some of TFC's capability data from stacks
-  - Has maps for rocks, woods, heat levels, and nutrients
-- Events for custom birthdays and item stack modifiers
-- Add item builder for TFC's fishing rod
+  - Has maps for rocks, woods, and heat levels
+- Events for custom birthdays, item stack modifiers, and adding prospecting representative blocks
+- Add item builders
+  - TFC fishing rod
+  - Precision Prospecting's item types
+  - Jars
+  - Glassworking items
+  - FirmaLife's watering can
+- Add block builders
+  - Lamp
+  - FirmaLife's cheese wheel
+  - Stationary berry bushes
+  - Spreading berry bushes
 - Add support for FirmaLife recipes
-- Add support for Precision Prospecting item types
 - Rework container limiting functionality
-- Add firmalife cheese wheel block and watering can item builders
-- Add jar and glassworking item and lamp block builder types
-- Add event to register prospecting representative blocks
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

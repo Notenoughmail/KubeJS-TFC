@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.item;
+package com.notenoughmail.kubejs_tfc.item.internal;
 
 import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
