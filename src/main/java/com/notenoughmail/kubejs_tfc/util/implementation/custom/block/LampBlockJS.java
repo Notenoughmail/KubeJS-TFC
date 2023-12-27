@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.custom.block;
 
 import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import net.dries007.tfc.common.blockentities.LampBlockEntity;
 import net.dries007.tfc.common.blockentities.TickCounterBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -32,19 +33,19 @@ public class LampBlockJS extends LampBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
-        level.getBlockEntity(pos, LampBlockBuilder.be.get()).ifPresent(LampBlockEntity::checkHasRanOut);
+        level.getBlockEntity(pos, RegistryUtils.getLamp().get()).ifPresent(LampBlockEntity::checkHasRanOut);
     }
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        level.getBlockEntity(pos, LampBlockBuilder.be.get()).ifPresent(TickCounterBlockEntity::resetCounter);
+        level.getBlockEntity(pos, RegistryUtils.getLamp().get()).ifPresent(TickCounterBlockEntity::resetCounter);
         super.setPlacedBy(level, pos, state, placer, stack);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result)
     {
-        return level.getBlockEntity(pos, LampBlockBuilder.be.get()).map(lamp -> {
+        return level.getBlockEntity(pos, RegistryUtils.getLamp().get()).map(lamp -> {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.isEmpty() && player.isShiftKeyDown() && state.getValue(LIT))
             {

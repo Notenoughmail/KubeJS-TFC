@@ -1,15 +1,13 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.block.entity.LampBlockEntityBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.LampBlockItemBuilder;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
@@ -20,20 +18,14 @@ import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.Consumer;
 
-public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedProperties<LampBlockBuilder> {
+public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
-    public static LampBlockEntityBuilder be;
-    public static final ResourceLocation beId = KubeJSTFC.identifier("lamp");
     public transient int lightLevel;
     public transient String chainTexture;
     public transient Consumer<ExtendedPropertiesJS> props;
 
     public LampBlockBuilder(ResourceLocation i) {
         super(i);
-        if (be == null) {
-            be = new LampBlockEntityBuilder(beId);
-        }
-        be.addBlock(this);
         lightLevel = 15;
         itemBuilder = new LampBlockItemBuilder(id, this);
         chainTexture = "";
@@ -61,7 +53,7 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
                 .randomTicks()
                 .pushReaction(PushReaction.DESTROY)
                 .lightLevel(state -> state.getValue(LampBlock.LIT) ? lightLevel : 0)
-                .blockEntity(be);
+                .blockEntity(RegistryUtils.getLamp());
     }
 
     @Override
@@ -73,9 +65,7 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        if (!RegistryInfo.BLOCK_ENTITY_TYPE.objects.containsKey(beId)) {
-            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(be);
-        }
+        RegistryUtils.addLamp(this);
     }
 
     @Override

@@ -12,7 +12,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.function.Consumer;
 
 // TODO: Allow custom vanilla items for these? Fix item model InteractionManager#382
-public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties<GroundCoverBlockBuilder> {
+public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     private transient Type type;
     public transient int rotate;

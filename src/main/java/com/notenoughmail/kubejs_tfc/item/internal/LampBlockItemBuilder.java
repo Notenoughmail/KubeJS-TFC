@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.item.internal;
 
 import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
@@ -29,7 +30,7 @@ public class LampBlockItemBuilder extends BlockItemBuilder {
         return new LampBlockItem(blockBuilder.get(), createItemProperties()) {
             @Override
             protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
-                CopyFluidFunction.copyFromItem(stack, level.getBlockEntity(pos, LampBlockBuilder.be.get()).orElse(null));
+                CopyFluidFunction.copyFromItem(stack, level.getBlockEntity(pos, RegistryUtils.getLamp().get()).orElse(null));
                 return super.updateCustomBlockEntityTag(pos, level, player, stack, state);
             }
         };

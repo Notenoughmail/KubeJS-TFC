@@ -112,9 +112,9 @@ public class EventHandlers {
         final BlockState state = level.getBlockState(pos);
         final Block block = state.getBlock();
 
-        if (LampBlockBuilder.be != null) {
+        if (RegistryUtils.getLamp() != null) {
             if (block instanceof LampBlockJS) {
-                level.getBlockEntity(pos, LampBlockBuilder.be.get()).ifPresent(lamp -> {
+                level.getBlockEntity(pos, RegistryUtils.getLamp().get()).ifPresent(lamp -> {
                     if (lamp.getFuel() != null) {
                         level.setBlock(pos, state.setValue(LampBlock.LIT, true), 3);
                         lamp.resetCounter();

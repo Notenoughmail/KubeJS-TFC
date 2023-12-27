@@ -1,4 +1,4 @@
-### 1.1.0
+### 1.1.0 (WIP)
 - Add misc sub-binding
   - Has methods for getting some of TFC's capability data from stacks
   - Has maps for rocks, woods, and heat levels
@@ -14,6 +14,7 @@
   - FirmaLife's cheese wheel
   - Stationary berry bushes
   - Spreading berry bushes
+  - Dirt blocks which will also create a grass block and optionally a path, farmland, and rooted dirt variant
 - Add support for FirmaLife recipes
 - Rework container limiting functionality
 

@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.Consumer;
 
 // TODO: Loot table
-public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISupportExtendedProperties<StationaryBerryBushBlockBuilder> {
+public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient final Lifecycle[] lifecycles;
     public transient final ItemBuilder productItem;

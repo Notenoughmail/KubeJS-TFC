@@ -2,6 +2,8 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.block.entity.BerryBushBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.FarmlandBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.LampBlockEntityBuilder;
 import com.notenoughmail.kubejs_tfc.block.entity.TickCounterBlockEntityBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -17,8 +19,12 @@ public class RegistryUtils {
 
     private static final ResourceLocation tickCounterId = KubeJSTFC.identifier("tick_counter");
     private static TickCounterBlockEntityBuilder tickCounterBuilder;
+    private static final ResourceLocation lampId = KubeJSTFC.identifier("lamp");
+    private static LampBlockEntityBuilder lampBuilder;
     private static final ResourceLocation berryBushId = KubeJSTFC.identifier("berry_bush");
     private static BerryBushBlockEntityBuilder berryBushBuilder;
+    private static final ResourceLocation farmlandId = KubeJSTFC.identifier("farmland");
+    private static FarmlandBlockEntityBuilder farmlandBuilder;
 
     public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
@@ -37,7 +43,7 @@ public class RegistryUtils {
      * Only use this for blocks which use the simple tick counter and call {@link #addTickCounter(BlockBuilder)} in {@link dev.latvian.mods.kubejs.registry.BuilderBase#createAdditionalObjects() createAdditionalObjects()}
      * @return The {@link TickCounterBlockEntityBuilder} which can be passed to {@link net.dries007.tfc.common.blocks.ExtendedProperties#blockEntity(Supplier) ExtendedProperties#blockEntity(Supplier)}
      */
-    public static Supplier<? extends BlockEntityType<?>> getTickCounter() {
+    public static TickCounterBlockEntityBuilder getTickCounter() {
         assert tickCounterBuilder != null;
         return tickCounterBuilder;
     }
@@ -49,14 +55,25 @@ public class RegistryUtils {
     public static void addTickCounter(BlockBuilder builder) {
         if  (tickCounterBuilder == null) {
             tickCounterBuilder = new TickCounterBlockEntityBuilder(tickCounterId);
-        }
-        if (!RegistryInfo.BLOCK_ENTITY_TYPE.objects.containsKey(tickCounterId)) {
             RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(tickCounterBuilder);
         }
         tickCounterBuilder.addBlock(builder);
     }
 
-    public static Supplier<? extends BlockEntityType<?>> getBerryBush() {
+    public static LampBlockEntityBuilder getLamp() {
+        assert lampBuilder != null;
+        return lampBuilder;
+    }
+
+    public static void addLamp(BlockBuilder builder) {
+        if (lampBuilder == null) {
+            lampBuilder = new LampBlockEntityBuilder(lampId);
+            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(lampBuilder);
+        }
+        lampBuilder.addBlock(builder);
+    }
+
+    public static BerryBushBlockEntityBuilder getBerryBush() {
         assert berryBushBuilder != null;
         return berryBushBuilder;
     }
@@ -64,10 +81,21 @@ public class RegistryUtils {
     public static void addBerryBush(BlockBuilder builder) {
         if (berryBushBuilder == null) {
             berryBushBuilder = new BerryBushBlockEntityBuilder(berryBushId);
-        }
-        if (!RegistryInfo.BLOCK_ENTITY_TYPE.objects.containsKey(berryBushId)) {
             RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(berryBushBuilder);
         }
         berryBushBuilder.addBlock(builder);
+    }
+
+    public static FarmlandBlockEntityBuilder getFarmland() {
+        assert farmlandBuilder != null;
+        return farmlandBuilder;
+    }
+
+    public static void addFarmland(BlockBuilder builder) {
+        if (farmlandBuilder == null) {
+            farmlandBuilder = new FarmlandBlockEntityBuilder(farmlandId);
+            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(farmlandBuilder);
+        }
+        farmlandBuilder.addBlock(builder);
     }
 }

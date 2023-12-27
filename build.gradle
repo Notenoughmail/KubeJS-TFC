@@ -29,7 +29,6 @@ minecraft {
             workingDirectory project.file('run')
             args '-mixin.config=kubejs_tfc.mixins.json', '--debug'
 
-            property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
             property("mixin.env.remapRefMap", "true")

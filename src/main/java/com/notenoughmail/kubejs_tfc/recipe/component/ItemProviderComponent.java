@@ -12,6 +12,7 @@ import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.typings.desc.DescriptionContext;
 import dev.latvian.mods.kubejs.typings.desc.GenericDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJS> {
@@ -49,13 +50,15 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
         return ItemStackProviderJS.of(from);
     }
 
-    // I think this is right
     @Override
     public TypeDescJS constructorDescription(DescriptionContext ctx) {
         return TypeDescJS.any(
-                TypeDescJS.STRING.or(ctx.javaType(ItemStack.class)),
-                TypeDescJS.MAP.withGenerics(TypeDescJS.STRING.or(ctx.javaType(JsonObject.class)))
-        );
+                TypeDescJS.STRING,
+                ctx.javaType(ItemStack.class),
+                TypeDescJS.fixedArray(
+                        TypeDescJS.STRING,
+                        ctx.javaType(JsonObject.class)
+                ));
     }
 
     // Will have to look into all this

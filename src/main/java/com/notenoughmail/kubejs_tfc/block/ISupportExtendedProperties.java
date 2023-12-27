@@ -11,13 +11,13 @@ import java.util.function.Consumer;
 import java.util.function.ToDoubleFunction;
 
 // The generics make it a bit ugly, but oh well
-public interface ISupportExtendedProperties<T> {
+public interface ISupportExtendedProperties {
 
     @HideFromJS
     ExtendedProperties createExtendedProperties();
 
-    @Generics(value = {BlockBuilder.class, ExtendedPropertiesJS.class})
-    T extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties);
+    @Generics(value = ExtendedPropertiesJS.class)
+    BlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties);
 
     record ExtendedPropertiesJS(ExtendedProperties delegate) {
 
