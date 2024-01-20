@@ -1,10 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.block.entity.BerryBushBlockEntityBuilder;
-import com.notenoughmail.kubejs_tfc.block.entity.FarmlandBlockEntityBuilder;
-import com.notenoughmail.kubejs_tfc.block.entity.LampBlockEntityBuilder;
-import com.notenoughmail.kubejs_tfc.block.entity.TickCounterBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.*;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.minecraft.core.particles.ParticleOptions;
@@ -25,6 +22,8 @@ public class RegistryUtils {
     private static BerryBushBlockEntityBuilder berryBushBuilder;
     private static final ResourceLocation farmlandId = KubeJSTFC.identifier("farmland");
     private static FarmlandBlockEntityBuilder farmlandBuilder;
+    private static final ResourceLocation cropId = KubeJSTFC.identifier("crop");
+    private static CropBlockEntityBuilder cropBuilder;
 
     public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
@@ -97,5 +96,18 @@ public class RegistryUtils {
             RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(farmlandBuilder);
         }
         farmlandBuilder.addBlock(builder);
+    }
+
+    public static CropBlockEntityBuilder getCrop() {
+        assert cropBuilder != null;
+        return cropBuilder;
+    }
+
+    public static void addCrop(BlockBuilder builder) {
+        if (cropBuilder == null) {
+            cropBuilder = new CropBlockEntityBuilder(cropId);
+            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(cropBuilder);
+        }
+        cropBuilder.addBlock(builder);
     }
 }

@@ -46,7 +46,7 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
     }
 
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
+        final ExtendedPropertiesJS propsJs = extendedPropsJS();
         props.accept(propsJs);
         return propsJs.delegate()
                 .noOcclusion()

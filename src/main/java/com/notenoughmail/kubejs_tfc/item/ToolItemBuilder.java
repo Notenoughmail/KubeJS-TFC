@@ -25,6 +25,7 @@ public class ToolItemBuilder extends HandheldItemBuilder {
         mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
     }
 
+    @Info(value = "Adds this item to the `tfc:knives` tag and sets its mineable blocks tag to `tfc:mineable_with_knife`")
     public ToolItemBuilder knife() {
         mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
         tag(TFCTags.Items.KNIVES.location());

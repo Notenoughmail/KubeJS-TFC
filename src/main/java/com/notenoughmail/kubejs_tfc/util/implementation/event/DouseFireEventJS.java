@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.level.LevelEventJS;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.util.events.DouseFireEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -32,6 +33,7 @@ public class DouseFireEventJS extends LevelEventJS {
         return block;
     }
 
+    @Info(value = "Returns the bounds of the dousing action")
     public AABB getBounds() {
         return bounds;
     }

@@ -104,7 +104,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
+        final ExtendedPropertiesJS propsJs = extendedPropsJS();
         props.accept(propsJs);
         return propsJs.delegate();
     }

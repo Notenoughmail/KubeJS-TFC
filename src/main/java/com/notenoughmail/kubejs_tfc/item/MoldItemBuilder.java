@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.item;
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.MoldItem;
@@ -38,8 +37,8 @@ public class MoldItemBuilder extends ItemBuilder {
         return this;
     }
     @Info(value = "Sets the capacity, in mB, supplier of the mold")
-    public MoldItemBuilder capacitySupplier(IntSupplier capacity) {
-        this.capacity = capacity;
+    public MoldItemBuilder capacitySupplier(Supplier<Integer> capacity) {
+        this.capacity = capacity::get;
         return this;
     }
 

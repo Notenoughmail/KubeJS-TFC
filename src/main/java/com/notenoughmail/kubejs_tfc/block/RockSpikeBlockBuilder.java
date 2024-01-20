@@ -7,7 +7,6 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
 
-// TODO: JSDoc
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
     public RockSpikeBlockBuilder(ResourceLocation i) {

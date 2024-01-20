@@ -1,6 +1,6 @@
 ### 1.1.0 (WIP)
 - Add misc sub-binding
-  - Has methods for getting some of TFC's capability data from stacks
+  - Has methods for getting some of TFC's capability data from item stacks
   - Has maps for rocks, woods, and heat levels
 - Events for custom birthdays, item stack modifiers, and adding prospecting representative blocks
 - Add item builders
@@ -15,8 +15,17 @@
   - Stationary berry bushes
   - Spreading berry bushes
   - Dirt blocks which will also create a grass block and optionally a path, farmland, and rooted dirt variant
+  - Crops
+    - Wild
+    - Spreading
+    - Double
+    - Default
+    - Flooded
+    - Pickable
 - Add support for FirmaLife recipes
 - Rework container limiting functionality
+- Fix type description for isp components
+- Update to KubeJS version `2001.6.4-build.118`+, fix collapse and landslide recipes being broken with said kube versions
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

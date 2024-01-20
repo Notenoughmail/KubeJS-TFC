@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface MovingBlockSchema {
 
-    RecipeKey<BlockState> RESULT = BlockStateComponent.OUTPUT.key("result").optional(Blocks.AIR.defaultBlockState()).allowEmpty();
+    RecipeKey<BlockState> RESULT = BlockStateComponent.OUTPUT_STRING.key("result").optional(Blocks.AIR.defaultBlockState()).allowEmpty();
     RecipeKey<BlockIngredient> INGREDIENT = BlockIngredientComponent.INGREDIENT.key("ingredient");
     RecipeKey<Boolean> COPY_INPUT = BooleanComponent.BOOLEAN.key("copy_input").optional(false);
 

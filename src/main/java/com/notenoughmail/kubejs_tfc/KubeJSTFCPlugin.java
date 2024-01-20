@@ -122,6 +122,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:stationary_berry_bush", StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:spreading_berry_bush", SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:dirt", TFCDirtBlockBuilder.class, TFCDirtBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:crop", DefaultCropBlockBuilder.class, DefaultCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:flooded_crop", FloodedCropBlockBuilder.class, FloodedCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:pickable_crop", PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:spreading_crop", SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -168,12 +174,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
-        event.register("tfc:output_item_stack_provider", ItemProviderComponent.PROVIDER);
-        event.register("tfc:other_item_stack_provider", ItemProviderComponent.INTERMEDIATE);
-        event.register("tfc:fluid_ingredient", FluidIngredientComponent.INGREDIENT);
-        event.register("tfc:fluid_stack_ingredient", FluidIngredientComponent.STACK_INGREDIENT);
-        event.register("tfc:alloy_part", AlloyPartComponent.ALLOY);
-        event.register("tfc:block_ingredient", BlockIngredientComponent.INGREDIENT);
+        event.register("tfc:outputItemStackProvider", ItemProviderComponent.PROVIDER);
+        event.register("tfc:otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
+        event.register("tfc:fluidIngredient", FluidIngredientComponent.INGREDIENT);
+        event.register("tfc:fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
+        event.register("tfc:alloyPart", AlloyPartComponent.ALLOY);
+        event.register("tfc:blockIngredient", BlockIngredientComponent.INGREDIENT);
     }
 
     @Override

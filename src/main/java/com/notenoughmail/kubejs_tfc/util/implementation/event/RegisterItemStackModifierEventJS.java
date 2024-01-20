@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class RegisterItemStackModifierEventJS extends EventJS {
 
     @Info(value = "Creates a new item stack modifier with the given id and function", params = {
@@ -21,9 +23,8 @@ public class RegisterItemStackModifierEventJS extends EventJS {
         ItemStackModifiers.register(id, new KubeJSItemStackModifier(id, applicator, dependsOnInput));
     }
 
-    @Info(value = "Returns the current crafting container. Only available during advanced shaped and shapeless crafting recipes")
-    @Nullable
-    public CraftingContainer getCraftingContainer() {
-        return RecipeHelpers.getCraftingContainer();
+    @Info(value = "Returns a supplier for the current crafting container. Only available during advanced shaped and shapeless crafting recipes")
+    public Supplier<@Nullable CraftingContainer> getCraftingContainer() {
+        return RecipeHelpers::getCraftingContainer;
     }
 }

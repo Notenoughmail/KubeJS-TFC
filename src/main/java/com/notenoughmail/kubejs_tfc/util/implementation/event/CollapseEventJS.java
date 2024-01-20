@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.level.LevelEventJS;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.util.events.CollapseEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -33,10 +34,12 @@ public class CollapseEventJS extends LevelEventJS {
         return level;
     }
 
+    @Info(value = "Returns the maximum distance from the center block of collapsing blocks, or 0 if the collapse is fake")
     public double getRadiusSquared() {
         return radiusSquared;
     }
 
+    @Info(value = "Returns a list of `BlockPos`es where a block collapses or, if the collapse is fake, particles spawn")
     public List<BlockPos> getSecondaryPositions() {
         return secondaries;
     }

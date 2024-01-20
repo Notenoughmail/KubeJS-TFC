@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.recipe.OutputReplacement;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
@@ -53,22 +54,23 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
     @Override
     public TypeDescJS constructorDescription(DescriptionContext ctx) {
         return TypeDescJS.any(
+                ctx.javaType(ItemStackProviderJS.class),
                 TypeDescJS.STRING,
                 ctx.javaType(ItemStack.class),
-                TypeDescJS.fixedArray(
+                TypeDescJS.fixedArray(TypeDescJS.any(
                         TypeDescJS.STRING,
                         ctx.javaType(JsonObject.class)
-                ));
+                )));
     }
 
-    // Will have to look into all this
+    // TODO: Handle match?
     @Override
     public boolean isOutput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
-        return RecipeComponent.super.isOutput(recipe, value, match);
+        return recipe instanceof ISupportProviderOutput;
     }
 
     @Override
     public boolean isInput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
-        return RecipeComponent.super.isInput(recipe, value, match);
+        return recipe instanceof ISupportProviderOutput;
     }
 }

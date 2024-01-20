@@ -121,7 +121,6 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         }
     }
 
-    // TODO: Make this work in general?
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
         if (itemBuilder != null) {

@@ -1,33 +1,33 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
-import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
 
+    public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
+
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
+        thisList.add(this);
+        renderType("cutout_mipped");
     }
 
     @Override
     public Block createObject() {
-        return new ConnectedGrassBlock(createProperties(), parent, parent.path, parent.farmland);
+        return new ConnectedGrassBlock(createProperties().randomTicks(), parent, parent.path, parent.farmland);
     }
 
     @Override
