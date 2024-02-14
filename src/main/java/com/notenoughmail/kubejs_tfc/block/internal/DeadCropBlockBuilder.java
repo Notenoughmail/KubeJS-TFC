@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.crop.DeadClimbingCropBlock;

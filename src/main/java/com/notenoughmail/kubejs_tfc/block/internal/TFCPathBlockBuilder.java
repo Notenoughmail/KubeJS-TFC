@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import net.dries007.tfc.common.blocks.soil.PathBlock;

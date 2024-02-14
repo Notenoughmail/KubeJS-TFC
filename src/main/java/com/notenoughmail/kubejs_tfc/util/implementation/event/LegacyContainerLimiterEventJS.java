@@ -8,7 +8,10 @@ import net.dries007.tfc.common.capabilities.size.Size;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // Not marked for removal because that causes big warnings in EventHandlers, but will be removed
 @Deprecated(since = "1.1.0")

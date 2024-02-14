@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -18,7 +19,7 @@ public interface ISupportExtendedProperties {
 
     BlockBehaviour.Properties createProperties();
 
-    // TODO: JSDoc
+    @Info(value = "Allows editing some of TFC's extended block properties")
     @Generics(value = ExtendedPropertiesJS.class)
     BlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties);
 
@@ -27,7 +28,7 @@ public interface ISupportExtendedProperties {
         return new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
     }
 
-    record ExtendedPropertiesJS(ExtendedProperties delegate) {
+    record ExtendedPropertiesJS(@HideFromJS ExtendedProperties delegate) {
 
         public ExtendedPropertiesJS flammable(int flammability, int fireSpreadSpeed) {
             delegate.flammable(flammability, fireSpreadSpeed);

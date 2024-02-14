@@ -6,8 +6,9 @@ import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.capabilities.food.IFood;
-import net.dries007.tfc.common.capabilities.food.Nutrient;
-import net.dries007.tfc.common.capabilities.heat.*;
+import net.dries007.tfc.common.capabilities.heat.Heat;
+import net.dries007.tfc.common.capabilities.heat.HeatCapability;
+import net.dries007.tfc.common.capabilities.heat.IHeat;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
@@ -31,7 +32,7 @@ public enum MiscBindings {
     @Info(value = "A map associating the name of a rock to its RegistryRock")
     @Generics(value = {String.class, RegistryRock.class})
     public final Map<String, RegistryRock> rock = new HashMap<>(20);
-    @Info(value = "A map associating the name of a wood to its RegistryWood")
+    @Info(value = "A map associating the name of a wood to its RegistryWood, includes AFC woods if it is present")
     @Generics(value = {String.class, RegistryWood.class})
     public final Map<String, RegistryWood> wood = new HashMap<>(19);
 

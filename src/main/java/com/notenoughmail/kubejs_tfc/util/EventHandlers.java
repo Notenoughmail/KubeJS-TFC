@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;

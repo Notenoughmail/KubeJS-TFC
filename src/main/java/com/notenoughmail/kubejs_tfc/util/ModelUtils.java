@@ -11,10 +11,10 @@ public class ModelUtils {
     public static class ITEMS {
         public static void fluidContainerModelJson(ModelGenerator m, ResourceLocation id) {
             m.parent("kubejs_tfc:item/generated_fluid_container");
-            m.textures(moldTextures(id));
+            m.textures(fluidContainerTextures(id));
         }
 
-        private static JsonObject moldTextures(ResourceLocation id) {
+        private static JsonObject fluidContainerTextures(ResourceLocation id) {
             var json = new JsonObject();
             var nameSpace = newItemID(id).toString();
             json.addProperty("base", nameSpace);

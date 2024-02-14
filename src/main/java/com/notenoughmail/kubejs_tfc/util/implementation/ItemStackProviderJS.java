@@ -161,7 +161,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return this;
     }
 
-    @Info(value = "Adds the 'tfc:dye_leather', modifier to the ISP with the provided color")
+    @Info(value = "Adds a 'tfc:dye_leather' modifier to the ISP with the provided color")
     public ItemStackProviderJS dyeLeather(String color) {
         var obj = new JsonObject();
         obj.addProperty("type", "tfc:dye_leather");

@@ -50,7 +50,6 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        generator.itemModel(id, m -> ModelUtils.ITEMS.fluidContainerModelJson(m, id));
         if (modelJson != null) {
             generator.json(AssetJsonGenerator.asItemModelLocation(id), modelJson);
             return;

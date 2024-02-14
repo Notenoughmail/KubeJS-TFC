@@ -4,17 +4,12 @@ import com.mojang.logging.LogUtils;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
-import dev.latvian.mods.kubejs.CommonProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-
-// TODO: AFC, TFCCC compat
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {
 

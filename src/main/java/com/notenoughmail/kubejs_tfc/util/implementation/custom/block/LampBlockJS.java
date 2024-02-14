@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.custom.block;
 
-import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import net.dries007.tfc.common.blockentities.LampBlockEntity;
 import net.dries007.tfc.common.blockentities.TickCounterBlockEntity;

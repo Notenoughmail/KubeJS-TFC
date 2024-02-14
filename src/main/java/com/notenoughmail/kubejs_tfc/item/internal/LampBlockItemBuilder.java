@@ -3,8 +3,6 @@ package com.notenoughmail.kubejs_tfc.item.internal;
 import com.notenoughmail.kubejs_tfc.block.LampBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
-import dev.latvian.mods.kubejs.item.ItemBuilder;
-import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.items.LampBlockItem;
 import net.dries007.tfc.util.loot.CopyFluidFunction;
 import net.minecraft.core.BlockPos;

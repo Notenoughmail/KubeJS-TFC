@@ -1,7 +1,5 @@
 package com.notenoughmail.kubejs_tfc;
 
-import com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin;
-import com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
@@ -59,30 +57,10 @@ import java.util.Locale;
  *    - Supports?
  *     - {@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}
  *     - {@link net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock Horizontal}
- *  - Soil? No block entities. Gen a whole 'suite' of TFC-like blocks? Sand not necessary really(?)
- *    - {@link net.dries007.tfc.common.blocks.soil.DirtBlock Dirt}
- *      - Possibly use {@link net.dries007.tfc.common.blocks.soil.TFCRootedDirtBlock Rooted Dirt} as a method to make it not grass-able
- *    - {@link net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock Grass}
- *    - {@link net.dries007.tfc.common.blocks.soil.FarmlandBlock Soil}
- *       - These are block entities
- *    - {@link net.dries007.tfc.common.blocks.soil.PathBlock Path}
- *  - {@link net.dries007.tfc.common.blocks.crop.CropBlock Crops?}
- *    - These are block entities
- *    - Would need:
- *      - Nutrient, growing time, temperature, hydration, etc. methods
- *      - Dead, wild, flooded, double tall versions <br> <br>
- *  - Recipes <br>
- *    - {@link net.dries007.tfc.common.recipes.KnappingRecipe Kanpping} [Y]
- *      - Specify type (rock, leather, clay) [1.20+] <br> <br>
  *  - Misc. <br>
  *    - TFC Worldgen features?
- *      - Climate settings? (preset-only?)
- *        - So little to change and may change at some point so not worth doing currently(?)
  *      - Wild crop (conditional on getting crops working)
- *      - Ore deposits
  *      - Soil discs
- *   - Data
- *     - Some way of not having the half-dozen Build[Thing]Data classes?
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
@@ -206,8 +184,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(EventHandlers.class);
         filter.deny(IngredientHelpers.class);
         filter.deny(ClientEventHandlers.class);
-        filter.deny(PrecProsPlugin.class);
-        filter.deny(FirmaLifePlugin.class);
+        filter.deny("com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin");
+        filter.deny("com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin");
+        filter.deny("com.notenoughmail.kubejs_tfc.addons.afc.AFCPlugin");
+        filter.deny("com.notenoughmail.kubejs_tfc.addons.tfccc.TFCCCPlugin");
         // TFC
         filter.allow("net.dries007.tfc");
         filter.deny("net.dries007.tfc.mixin");

@@ -7,8 +7,6 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.Supplier;
 

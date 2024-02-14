@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
-import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.util.calendar.Calendars;

@@ -13,7 +13,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-// TODO: JSDoc
 @Info(value = """
         This event is fired whenever a player closes a menu that is not the player's own inventory
         
