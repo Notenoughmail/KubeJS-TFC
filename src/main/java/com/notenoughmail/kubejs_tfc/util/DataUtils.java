@@ -194,4 +194,13 @@ public class DataUtils {
         }
         return KubeJSTFC.identifier(resourceLocation);
     }
+
+    public static JsonObject sharpToolsCondition() {
+        final JsonObject json = new JsonObject();
+        json.addProperty("condition", "minecraft:match_tool");
+        final JsonObject predicate = new JsonObject();
+        predicate.addProperty("tag", "tfc:sharp_tools");
+        json.add("predicate", predicate);
+        return json;
+    }
 }

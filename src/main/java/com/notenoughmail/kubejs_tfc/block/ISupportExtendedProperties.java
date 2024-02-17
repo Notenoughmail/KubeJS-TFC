@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,21 +31,34 @@ public interface ISupportExtendedProperties {
 
     record ExtendedPropertiesJS(@HideFromJS ExtendedProperties delegate) {
 
+        @Info(value = "Sets the flammability and fire spread speed of the block", params = {
+                @Param(name = "flammability", value = "The flammability of the block"),
+                @Param(name = "fireSpreadSpeed", value = "The fire spread speed of the block")
+        })
         public ExtendedPropertiesJS flammable(int flammability, int fireSpreadSpeed) {
             delegate.flammable(flammability, fireSpreadSpeed);
             return this;
         }
 
+        @Info(value = "Sets the pathing type of the block", params = {
+                @Param(name = "pathtype", value = "The path type of the block")
+        })
         public ExtendedPropertiesJS pathType(BlockPathTypes pathType) {
             delegate.pathType(pathType);
             return this;
         }
 
+        @Info(value = "Sets the enchantment power of the block", params = {
+                @Param(name = "power", value = "The enchantment power")
+        })
         public ExtendedPropertiesJS enchantPower(float power) {
             delegate.enchantPower(power);
             return this;
         }
 
+        @Info(value = "Sets the enchantment power of the block based off of its block state", params = {
+                @Param(name = "function", value = "A BlockState to number function")
+        })
         @Generics(value = BlockState.class)
         public ExtendedPropertiesJS enchantPowerFunction(ToDoubleFunction<BlockState> function) {
             delegate.enchantPower(function);

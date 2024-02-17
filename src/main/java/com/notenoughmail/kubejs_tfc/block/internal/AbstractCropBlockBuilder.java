@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// TODO: Loot tables, JSDoc
+// TODO: JSDoc
 public abstract class AbstractCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient int stages;
@@ -76,7 +76,6 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         return this;
     }
 
-    // TODO: Override this in double crops to use CropBlockEntity::serverTickBottomPartOnly
     @Override
     public ExtendedProperties createExtendedProperties() {
         final ExtendedPropertiesJS propsJs = extendedPropsJS();
@@ -107,39 +106,34 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         var lootBuilder = new LootBuilder(null);
         lootBuilder.type = "minecraft:block";
 
-        final JsonObject condition = new JsonObject();
-        condition.addProperty("condition", "minecraft:survives_explosion");
-
         lootBuilder.addPool(p -> {
-            p.addCondition(condition);
+            p.survivesExplosion();
             p.addItem(new ItemStack(seeds.get()));
         });
 
         lootBuilder.addPool(p -> {
-            p.addCondition(condition);
-            p.addEntry(singleCropLootEntry());
+            p.survivesExplosion();
+            p.addItem(new ItemStack(product.get()))
+                    .addCondition(condition())
+                    .addFunction(function());
         });
 
-        var json = lootBuilder.toJson();
-        generator.json(newID("loot_tables/blocks/", ""), json);
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
-    protected JsonObject singleCropLootEntry() {
-        final JsonObject entry = new JsonObject();
-        entry.addProperty("type", "minecraft:item");
-        entry.addProperty("name", product.id.toString());
-        final JsonObject innerCondition = new JsonObject();
-        innerCondition.addProperty("condition", "minecraft:block_state_property");
-        innerCondition.addProperty("block", id.toString());
+    private JsonObject condition() {
+        final JsonObject json = new JsonObject();
+        json.addProperty("condition", "minecraft:block_state_property");
+        json.addProperty("block", id.toString());
         final JsonObject properties = new JsonObject();
         properties.addProperty("age", String.valueOf(stages - 1));
-        innerCondition.add("properties", properties);
-        final JsonArray array = new JsonArray(1);
-        array.add(innerCondition);
-        entry.add("conditions", array);
+        json.add("properties", properties);
+        return json;
+    }
 
-        final JsonObject function = new JsonObject();
-        function.addProperty("function", "minecraft:set_count");
+    private JsonObject function() {
+        final JsonObject json = new JsonObject();
+        json.addProperty("function", "minecraft:set_count");
         final JsonObject count = new JsonObject();
         count.addProperty("type", "tfc:crop_yield_uniform");
         count.addProperty("min", 0);
@@ -148,12 +142,8 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         max.addProperty("min", 6);
         max.addProperty("max", 10);
         count.add("max", max);
-
-        function.add("count", count);
-        final JsonArray functionArray = new JsonArray(1);
-        functionArray.add(function);
-        entry.add("functions", functionArray);
-        return entry;
+        json.add("count", count);
+        return json;
     }
 
     // TODO: Fix for double, spreading crops

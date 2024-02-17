@@ -22,13 +22,12 @@
     - Default
     - Flooded
     - Pickable
-- Add support for FirmaLife recipes
 - Rework container limiting functionality
 - Fix type description for isp components
 - Update to KubeJS version `2001.6.4-build.118`+, fix collapse and landslide recipes being broken with said kube versions
 - `TFC.isp` can now be used in place of `TFC.itemStackProvider` to access item stack provider bindings
 - Add methods for FirmaLife's isp modifiers to `ItemStackProviderJS` if FL is present
-- Add methods to add custom molds to TFC Cast With Channel's mold table if TFCCC is present
+- Add methods to add custom molds to TFC Casting With Channels' mold table if TFCCC is present
 - Add recipe handlers for FirmaLife and ArborFirmaCraft if they are present
 
 ### 1.0.3

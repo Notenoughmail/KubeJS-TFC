@@ -60,7 +60,6 @@ import java.util.Locale;
  *  - Misc. <br>
  *    - TFC Worldgen features?
  *      - Wild crop (conditional on getting crops working)
- *      - Soil discs
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 

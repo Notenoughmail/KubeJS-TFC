@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class LooseRockBlockBuilder extends BlockBuilder {
 
@@ -123,35 +124,24 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        if (itemBuilder != null) {
-            final LootBuilder lootBuilder = new LootBuilder(null);
-            lootBuilder.type = "minecraft:block";
+        final LootBuilder lootBuilder = new LootBuilder(null);
+        lootBuilder.type = "minecraft:block";
 
-            if (lootTable != null) {
-                lootTable.accept(lootBuilder);
-            } else {
-                lootBuilder.addPool(p -> {
-                    p.survivesExplosion();
-
-                    final JsonObject entry = new JsonObject();
-                    entry.addProperty("type", "minecraft:item");
-                    entry.addProperty("name", itemBuilder.id.toString());
-
-                    final JsonArray functions = new JsonArray();
-                    functions.add(setCountFunction(2));
-                    functions.add(setCountFunction(3));
-
-                    final JsonObject decay = new JsonObject();
-                    decay.addProperty("function", "minecraft:explosion_decay");
-                    functions.add(decay);
-
-                    entry.add("functions", functions);
-                    p.addEntry(entry);
-                });
-            }
-
-            generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        if (lootTable != null) {
+            lootTable.accept(lootBuilder);
+        } else if (itemBuilder != null) {
+            final JsonObject decay = new JsonObject();
+            decay.addProperty("function", "minecraft:explosion_decay");
+            lootBuilder.addPool(p -> {
+                p.survivesExplosion();
+                p.addItem(new ItemStack(itemBuilder.get()))
+                        .addFunction(setCountFunction(2))
+                        .addFunction(setCountFunction(3))
+                        .addFunction(decay);
+            });
         }
+
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     private JsonObject setCountFunction(int count) {

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ThinSpikeBlock;
 import net.dries007.tfc.common.capabilities.Capabilities;
 import net.dries007.tfc.util.Helpers;
@@ -27,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-// TODO: JSDoc
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     private float dripChance;
@@ -53,46 +53,55 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         tipModel = "";
     }
 
+    @Info(value = "Makes the block drip particles")
     public ThinSpikeBlockBuilder drips() {
         drips = true;
         return this;
     }
 
+    @Info(value = "Sets the chance, in the range [0, 1], the block will drip per tick")
     public ThinSpikeBlockBuilder dripChance(float chance) {
         dripChance = chance;
         return this;
     }
 
+    @Info(value = "Sets the temperature above which the block must be to begin dripping")
     public ThinSpikeBlockBuilder dripTemp(float temp) {
         dripTemp = temp;
         return this;
     }
 
+    @Info(value = "Allows the block to melt under certain situations")
     public ThinSpikeBlockBuilder melts() {
         melts = true;
         return this;
     }
 
+    @Info(value = "Sets the chance, in the range [0, 1], that the bloc kwill drip per random tick")
     public ThinSpikeBlockBuilder meltChance(float chance) {
         meltChance = chance;
         return this;
     }
 
+    @Info(value = "Sets the temperature above which the block can melt")
     public ThinSpikeBlockBuilder meltTemp(float temp) {
         meltTemp = temp;
         return this;
     }
 
+    @Info(value = "The registry name of a particle that will drip from the block")
     public ThinSpikeBlockBuilder dripParticle(ResourceLocation particle) {
         dripParticle = particle;
         return this;
     }
 
+    @Info(value = "The fluid the block melts into")
     public ThinSpikeBlockBuilder meltFluid(FluidStackJS fluid) {
         meltFluid = new FluidStack(fluid.getFluid(), (int) fluid.getAmount());
         return this;
     }
 
+    @Info(value = "Sets the model of the tip state")
     public ThinSpikeBlockBuilder tipModel(String s) {
         tipModel = s;
         return this;

@@ -90,4 +90,14 @@ public class WorldGenUtils {
             return json;
         }
     }
+
+    public record SoilDiscReplacmentMapEntry(String block, String state) {
+
+        public JsonObject toJson() {
+            final JsonObject json = new JsonObject();
+            json.addProperty("replace", block);
+            json.add("with", blockStateToLenient(state));
+            return json;
+        }
+    }
 }

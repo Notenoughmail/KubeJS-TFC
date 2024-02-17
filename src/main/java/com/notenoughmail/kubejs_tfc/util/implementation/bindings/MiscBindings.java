@@ -15,11 +15,16 @@ import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.dries007.tfc.util.registry.RegistryWood;
+import net.dries007.tfc.world.chunkdata.ChunkData;
+import net.dries007.tfc.world.chunkdata.ForestType;
+import net.dries007.tfc.world.chunkdata.RockData;
+import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -115,5 +120,47 @@ public enum MiscBindings {
     })
     public boolean forceCollapse(Level level, BlockPos pos) {
         return CollapseRecipe.startCollapse(level, pos);
+    }
+
+    @Info(value = "Returns TFC's ChunkData object for the given level and position", params = {
+            @Param(name = "level", value = "The level to get the data from"),
+            @Param(name = "pos", value = "The position to get the data from")
+    })
+    public ChunkData getChunkData(LevelReader level, BlockPos pos) {
+        return ChunkData.get(level, pos);
+    }
+
+    @Info(value = "Returns TFC's RockData object for the given level and position, may be null", params = {
+            @Param(name = "level", value = "The level to get the data from"),
+            @Param(name = "pos", value = "The position to get the data from")
+    })
+    @Nullable
+    public RockData getRockData(LevelReader level, BlockPos pos) {
+        try {
+            return getChunkData(level, pos).getRockData();
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    @Info(value = "Returns TFC's RockSettings object for the given level and position, may be null", params = {
+            @Param(name = "level", value = "The level to get the settings from"),
+            @Param(name = "pos", value = "The position to get the settings from")
+    })
+    @Nullable
+    public RockSettings getRockSettings(LevelReader level, BlockPos pos) {
+        final RockData data = getRockData(level, pos);
+        if (data != null) {
+            return data.getRock(pos);
+        }
+        return null;
+    }
+
+    @Info(value = "Returns the forest type at the given level and position", params = {
+            @Param(name = "level", value = "The level to get the type from"),
+            @Param(name = "pos", value = "The position to get the type from")
+    })
+    public ForestType getForestType(LevelReader level, BlockPos pos) {
+        return getChunkData(level, pos).getForestType();
     }
 }

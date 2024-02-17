@@ -17,6 +17,7 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -69,9 +70,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         config.add("inner", innerArray);
         json.add("config", config);
         addJson(DataUtils.configuredFeatureName(name), json);
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     // Baby boulder is identical to this, make sure this is actually correct
@@ -104,9 +103,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         config.add("states", statesArray);
         json.add("config", config);
         addJson(DataUtils.configuredFeatureName(name), json);
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a thin spike configured feature and the matching placed feature", params = {
@@ -130,9 +127,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         config.addProperty("max_height", maxHeight);
         json.add("config", config);
         addJson(DataUtils.configuredFeatureName(name), json);
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a 'tfc:cluster_vein' configured feature and the matching placed feature", params = {
@@ -151,9 +146,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         final BuildVeinProperties.Cluster cluster = new BuildVeinProperties.Cluster(replacementMap, rarity, density, minY, maxY, name, size);
         optionals.accept(cluster);
         addJson(DataUtils.configuredFeatureName(name), cluster.toJson());
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a 'tfc:pipe_vein' configured feature and the matching placed feature", params = {
@@ -178,9 +171,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         final BuildVeinProperties.Pipe pipe = new BuildVeinProperties.Pipe(replacementMap, rarity, density, minY, maxY, name, height, radius, minSkew, maxSkew, minSlant, maxSlant, sign);
         optionals.accept(pipe);
         addJson(DataUtils.configuredFeatureName(name), pipe.toJson());
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a 'tfc:cluster_vein' configured feature and the matching placed feature", params = {
@@ -200,9 +191,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         final BuildVeinProperties.Disc disc = new BuildVeinProperties.Disc(replacementMap, rarity, density, minY, maxY, name, size, height);
         optionals.accept(disc);
         addJson(DataUtils.configuredFeatureName(name), disc.toJson());
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a 'tfc:if_then' configured feature and the matching placed feature", params = {
@@ -220,9 +209,35 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         config.addProperty("then", then);
         json.add("config", config);
         addJson(DataUtils.configuredFeatureName(name), json);
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        handlePlacedFeature(name, placement);
+    }
+
+    @Info(value = "Creates a 'tfc:soil_disc' configured feature and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "A list of {block -> block state} objects in string form the define the disc's replacement map"),
+            @Param(name = "minRadius", value = "The minimum radius of the soil disc"),
+            @Param(name = "maxRadius", value = "The maximum radius of the soil disc"),
+            @Param(name = "height", value = "How tall the soil disc should be"),
+            @Param(name = "integrity", value = "A number, in the range [0, 1], the specifies the probability of any given block will place, may be null to specify the default value of 1"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = {WorldGenUtils.SoilDiscReplacmentMapEntry.class, PlacedFeatureProperties.class})
+    public void soilDisc(String name, List<WorldGenUtils.SoilDiscReplacmentMapEntry> replacementMap, int minRadius, int maxRadius, int height, @Nullable Float integrity, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:soil_disc");
+        final JsonObject config = new JsonObject();
+        config.addProperty("min_radius", minRadius);
+        config.addProperty("max_radius", maxRadius);
+        config.addProperty("height", height);
+        if (integrity != null) {
+            config.addProperty("integrity", integrity);
+        }
+        final JsonArray states = new JsonArray(replacementMap.size());
+        replacementMap.forEach(entry -> states.add(entry.toJson()));
+        config.add("states", states);
+        json.add("config", config);
+        addJson(DataUtils.configuredFeatureName(name), json);
+        handlePlacedFeature(name, placement);
     }
 
     @Info(value = "Creates a new block to block state list map entry for use in boulder configured features", params = {
@@ -241,5 +256,19 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     @Generics(value = {String.class, String.class})
     public WorldGenUtils.VeinReplacementMapEntry veinReplacement(List<String> replace, List<String> with) {
         return new WorldGenUtils.VeinReplacementMapEntry(replace, with);
+    }
+
+    @Info(value = "Creates a new block to block state map entry for use in soil disc configured features", params = {
+            @Param(name = "block", value = "The registry name of a block to be replaced"),
+            @Param(name = "state", value = "A string representation of a block state")
+    })
+    public WorldGenUtils.SoilDiscReplacmentMapEntry soilDiscReplacement(String block, String state) {
+        return new WorldGenUtils.SoilDiscReplacmentMapEntry(block, state);
+    }
+
+    private void handlePlacedFeature(String name, Consumer<PlacedFeatureProperties> placement) {
+        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
+        placement.accept(place);
+        addJson(DataUtils.placedFeatureName(name), place.toJson());
     }
 }
