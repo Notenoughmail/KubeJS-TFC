@@ -136,10 +136,11 @@ public enum MiscBindings {
     })
     @Nullable
     public RockData getRockData(LevelReader level, BlockPos pos) {
-        try {
-            return getChunkData(level, pos).getRockData();
-        } catch (Exception ignored) {
-            return null;
+        final ChunkData data = getChunkData(level, pos);
+        if (data.status() == ChunkData.Status.EMPTY || data.status() == ChunkData.Status.CLIENT) {
+            return null; // #getRockData() throws when the status is CLIENT or EMPTY
+        } else {
+            return data.getRockData();
         }
     }
 

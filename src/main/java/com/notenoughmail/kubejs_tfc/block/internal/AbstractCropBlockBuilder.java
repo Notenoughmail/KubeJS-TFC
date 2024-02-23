@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;

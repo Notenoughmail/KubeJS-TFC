@@ -29,6 +29,13 @@
 - Add methods for FirmaLife's isp modifiers to `ItemStackProviderJS` if FL is present
 - Add methods to add custom molds to TFC Casting With Channels' mold table if TFCCC is present
 - Add recipe handlers for FirmaLife and ArborFirmaCraft if they are present
+- Update custom javelin models
+- Add support for more of TFC's feature types in the wroldgen data event
+  - Soil disc
+  - Hot spring
+  - Simple block
+  - Random patch
+  - Tall wild crop
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

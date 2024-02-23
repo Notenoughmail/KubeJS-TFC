@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class BuildVeinProperties {
 
     // Common values
-    private final List<WorldGenUtils.VeinReplacementMapEntry> blocks;
+    private final List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks;
     @Nullable
     private JsonObject indicator;
     private final int rarity;
@@ -32,7 +32,7 @@ public abstract class BuildVeinProperties {
     @Nullable
     private Boolean nearLava;
 
-    public BuildVeinProperties(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName) {
+    public BuildVeinProperties(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName) {
         this.blocks = blocks;
         this.rarity = rarity;
         this.density = density;
@@ -77,7 +77,7 @@ public abstract class BuildVeinProperties {
 
     @Info(value = "Determines which biomes the vein may spawn in", params = @Param(name = "biomeTag", value = "The biome tag the vein may spawn in"))
     public BuildVeinProperties biomes(String biomeTag) {
-        if (biomeTag.matches("#.+")) {
+        if (biomeTag.charAt(0) == '#') {
             this.biomes = biomeTag;
         } else {
             this.biomes = "#".concat(biomeTag);
@@ -125,7 +125,7 @@ public abstract class BuildVeinProperties {
 
         private final int size;
 
-        public Cluster(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size) {
+        public Cluster(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.size = size;
         }
@@ -151,7 +151,7 @@ public abstract class BuildVeinProperties {
         private final int maxSlant;
         private final float sign;
 
-        public Pipe(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign) {
+        public Pipe(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.height = height;
             this.radius = radius;
@@ -184,7 +184,7 @@ public abstract class BuildVeinProperties {
         private final int size;
         private final int height;
 
-        public Disc(List<WorldGenUtils.VeinReplacementMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size, int height) {
+        public Disc(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size, int height) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.size = size;
             this.height = height;

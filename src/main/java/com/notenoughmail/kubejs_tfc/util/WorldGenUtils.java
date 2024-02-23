@@ -63,8 +63,12 @@ public class WorldGenUtils {
         return json;
     }
 
+    /**
+     * Used by:
+     * - Boulders
+     */
     @Generics(value = String.class)
-    public record BoulderState(String block, List<String> blockStates) {
+    public record BlockToBlockStatesMapEntry(String block, List<String> blockStates) {
 
         public JsonObject toJson() {
             final JsonObject json = new JsonObject();
@@ -76,8 +80,13 @@ public class WorldGenUtils {
         }
     }
 
+    /**
+     * Used by:
+     * - Veins
+     * - Hot springs
+     */
     @Generics(value = {String.class, String.class})
-    public record VeinReplacementMapEntry(List<String> blocks, List<String> blockStates) {
+    public record BlockToWeightedBlockStateMapEntry(List<String> blocks, List<String> blockStates) {
 
         public JsonObject toJson() {
             final JsonObject json = new JsonObject();
@@ -91,12 +100,34 @@ public class WorldGenUtils {
         }
     }
 
-    public record SoilDiscReplacmentMapEntry(String block, String state) {
+    /**
+     * Used by:
+     * - Soil discs
+     */
+    public record BlockToBlockStateMapEntry(String block, String state) {
 
         public JsonObject toJson() {
             final JsonObject json = new JsonObject();
             json.addProperty("replace", block);
             json.add("with", blockStateToLenient(state));
+            return json;
+        }
+    }
+
+    /**
+     * Used by:
+     * - Hot springs
+     */
+    public record FissureDecoration(List<BlockToWeightedBlockStateMapEntry> blocks, int rarity, int radius, int count) {
+
+        public JsonObject toJson() {
+            final JsonObject json = new JsonObject();
+            final JsonArray blocksArray = new JsonArray(blocks.size());
+            blocks.forEach(entry -> blocksArray.add(entry.toJson()));
+            json.add("blocks", blocksArray);
+            json.addProperty("rarity", rarity);
+            json.addProperty("radius", radius);
+            json.addProperty("count", count);
             return json;
         }
     }

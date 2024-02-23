@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -38,27 +39,27 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String texture = textures.get("texture").getAsString();
+        final JsonObject textureJson = ModelUtils.BLOCKS.addTextureAndParticle(textures.get("texture").getAsString());
 
         generator.blockModel(newID("", "/base"), m -> {
             m.parent("tfc:block/aqueduct/base");
-            m.textures(ModelUtils.BLOCKS.addTextureAndParticle(texture));
+            m.textures(textureJson);
         });
         generator.blockModel(newID("", "/east"), m -> {
             m.parent("tfc:block/aqueduct/east");
-            m.textures(ModelUtils.BLOCKS.addTextureAndParticle(texture));
+            m.textures(textureJson);
         });
         generator.blockModel(newID("", "/west"), m -> {
             m.parent("tfc:block/aqueduct/west");
-            m.textures(ModelUtils.BLOCKS.addTextureAndParticle(texture));
+            m.textures(textureJson);
         });
         generator.blockModel(newID("", "/north"), m -> {
             m.parent("tfc:block/aqueduct/north");
-            m.textures(ModelUtils.BLOCKS.addTextureAndParticle(texture));
+            m.textures(textureJson);
         });
         generator.blockModel(newID("", "/south"), m -> {
             m.parent("tfc:block/aqueduct/south");
-            m.textures(ModelUtils.BLOCKS.addTextureAndParticle(texture));
+            m.textures(textureJson);
         });
     }
 

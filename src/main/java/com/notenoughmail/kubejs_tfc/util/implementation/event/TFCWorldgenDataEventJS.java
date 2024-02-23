@@ -25,7 +25,15 @@ import java.util.function.Consumer;
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState;
 
-// TODO: More of TFC's types
+/**
+ * TODO: more of TFC's types
+ * {@link net.dries007.tfc.world.feature.TFCFeatures#TALL_WILD_CROP}
+ * {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_CROP}
+ * {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_BUSH}
+ * {@link net.dries007.tfc.world.feature.TFCFeatures#FISSURE}
+ * {@link net.dries007.tfc.world.feature.TFCFeatures#FOREST} & 'children'
+ * More?
+ */
 @SuppressWarnings("unused")
 public class TFCWorldgenDataEventJS extends DataPackEventJS {
 
@@ -58,8 +66,6 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     })
     @Generics(value = {String.class, PlacedFeatureProperties.class})
     public void geode(String name, String outer, String middle, List<String> innerValues, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:geode");
         final JsonObject config = new JsonObject();
         config.add("outer", blockStateToLenient(outer));
         config.add("middle", blockStateToLenient(middle));
@@ -68,19 +74,17 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             innerArray.add(weightedBlockState(inner, "data"));
         }
         config.add("inner", innerArray);
-        json.add("config", config);
-        addJson(DataUtils.configuredFeatureName(name), json);
-        handlePlacedFeature(name, placement);
+
+        finishFeature("tfc:geode", name, config, placement);
     }
 
-    // Baby boulder is identical to this, make sure this is actually correct
     @Info(value = "Creates a boulder configured feature and the matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
             @Param(name = "states", value = "A list of {Block -> BlockState[]} objects in string form that define the boulder's state property"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BoulderState.class, PlacedFeatureProperties.class})
-    public void boulder(String name, List<WorldGenUtils.BoulderState> states, Consumer<PlacedFeatureProperties> placement) {
+    @Generics(value = {WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
+    public void boulder(String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
         boulder("tfc:boulder", name, states, placement);
     }
 
@@ -89,21 +93,18 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "states", value = "A list of {Block -> BlockState[]} objects in string form that define the baby boulder's state property"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BoulderState.class, PlacedFeatureProperties.class})
-    public void babyBoulder(String name, List<WorldGenUtils.BoulderState> states, Consumer<PlacedFeatureProperties> placement) {
+    @Generics(value = {WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
+    public void babyBoulder(String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
         boulder("tfc:baby_boulder", name, states, placement);
     }
 
-    private void boulder(String type, String name, List<WorldGenUtils.BoulderState> states, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", type);
+    private void boulder(String type, String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
         final JsonArray statesArray = new JsonArray(states.size());
         states.forEach(entry -> statesArray.add(entry.toJson()));
         final JsonObject config = new JsonObject();
         config.add("states", statesArray);
-        json.add("config", config);
-        addJson(DataUtils.configuredFeatureName(name), json);
-        handlePlacedFeature(name, placement);
+
+        finishFeature(type, name, config, placement);
     }
 
     @Info(value = "Creates a thin spike configured feature and the matching placed feature", params = {
@@ -117,17 +118,14 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void thinSpike(String name, String state, int radius, int tries, int minHeight, int maxHeight, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:thin_spike");
         final JsonObject config = new JsonObject();
         config.add("state", blockStateToLenient(state));
         config.addProperty("radius", radius);
         config.addProperty("tries", tries);
         config.addProperty("min_height", minHeight);
         config.addProperty("max_height", maxHeight);
-        json.add("config", config);
-        addJson(DataUtils.configuredFeatureName(name), json);
-        handlePlacedFeature(name, placement);
+
+        finishFeature("tfc:thin_spike", name, config, placement);
     }
 
     @Info(value = "Creates a 'tfc:cluster_vein' configured feature and the matching placed feature", params = {
@@ -141,12 +139,12 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.VeinReplacementMapEntry.class, BuildVeinProperties.Cluster.class, PlacedFeatureProperties.class})
-    public void clusterVein(String name, List<WorldGenUtils.VeinReplacementMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, Consumer<BuildVeinProperties.Cluster> optionals, Consumer<PlacedFeatureProperties> placement) {
+    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Cluster.class, PlacedFeatureProperties.class})
+    public void clusterVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, Consumer<BuildVeinProperties.Cluster> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Cluster cluster = new BuildVeinProperties.Cluster(replacementMap, rarity, density, minY, maxY, name, size);
         optionals.accept(cluster);
-        addJson(DataUtils.configuredFeatureName(name), cluster.toJson());
-        handlePlacedFeature(name, placement);
+
+        finishFeature(name, cluster.toJson(), placement);
     }
 
     @Info(value = "Creates a 'tfc:pipe_vein' configured feature and the matching placed feature", params = {
@@ -166,12 +164,12 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.VeinReplacementMapEntry.class, BuildVeinProperties.Pipe.class, PlacedFeatureProperties.class})
-    public void pipeVein(String name, List<WorldGenUtils.VeinReplacementMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign, Consumer<BuildVeinProperties.Pipe> optionals, Consumer<PlacedFeatureProperties> placement) {
+    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Pipe.class, PlacedFeatureProperties.class})
+    public void pipeVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign, Consumer<BuildVeinProperties.Pipe> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Pipe pipe = new BuildVeinProperties.Pipe(replacementMap, rarity, density, minY, maxY, name, height, radius, minSkew, maxSkew, minSlant, maxSlant, sign);
         optionals.accept(pipe);
-        addJson(DataUtils.configuredFeatureName(name), pipe.toJson());
-        handlePlacedFeature(name, placement);
+
+        finishFeature(name, pipe.toJson(), placement);
     }
 
     @Info(value = "Creates a 'tfc:cluster_vein' configured feature and the matching placed feature", params = {
@@ -186,12 +184,12 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.VeinReplacementMapEntry.class, BuildVeinProperties.Disc.class, PlacedFeatureProperties.class})
-    public void discVein(String name, List<WorldGenUtils.VeinReplacementMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, int height, Consumer<BuildVeinProperties.Disc> optionals, Consumer<PlacedFeatureProperties> placement) {
+    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Disc.class, PlacedFeatureProperties.class})
+    public void discVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, int height, Consumer<BuildVeinProperties.Disc> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Disc disc = new BuildVeinProperties.Disc(replacementMap, rarity, density, minY, maxY, name, size, height);
         optionals.accept(disc);
-        addJson(DataUtils.configuredFeatureName(name), disc.toJson());
-        handlePlacedFeature(name, placement);
+
+        finishFeature(name, disc.toJson(), placement);
     }
 
     @Info(value = "Creates a 'tfc:if_then' configured feature and the matching placed feature", params = {
@@ -202,14 +200,11 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void ifThen(String name, String if_, String then, Consumer<PlacedFeatureProperties> placement) {
-        var json = new JsonObject();
-        json.addProperty("type", "tfc:if_then");
-        var config = new JsonObject();
+        final JsonObject config = new JsonObject();
         config.addProperty("if", if_);
         config.addProperty("then", then);
-        json.add("config", config);
-        addJson(DataUtils.configuredFeatureName(name), json);
-        handlePlacedFeature(name, placement);
+
+        finishFeature("tfc:if_then", name, config, placement);
     }
 
     @Info(value = "Creates a 'tfc:soil_disc' configured feature and the matching placed feature", params = {
@@ -221,10 +216,8 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "integrity", value = "A number, in the range [0, 1], the specifies the probability of any given block will place, may be null to specify the default value of 1"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.SoilDiscReplacmentMapEntry.class, PlacedFeatureProperties.class})
-    public void soilDisc(String name, List<WorldGenUtils.SoilDiscReplacmentMapEntry> replacementMap, int minRadius, int maxRadius, int height, @Nullable Float integrity, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:soil_disc");
+    @Generics(value = {WorldGenUtils.BlockToBlockStateMapEntry.class, PlacedFeatureProperties.class})
+    public void soilDisc(String name, List<WorldGenUtils.BlockToBlockStateMapEntry> replacementMap, int minRadius, int maxRadius, int height, @Nullable Float integrity, Consumer<PlacedFeatureProperties> placement) {
         final JsonObject config = new JsonObject();
         config.addProperty("min_radius", minRadius);
         config.addProperty("max_radius", maxRadius);
@@ -235,9 +228,93 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         final JsonArray states = new JsonArray(replacementMap.size());
         replacementMap.forEach(entry -> states.add(entry.toJson()));
         config.add("states", states);
-        json.add("config", config);
-        addJson(DataUtils.configuredFeatureName(name), json);
-        handlePlacedFeature(name, placement);
+
+        finishFeature("tfc:soil_disc", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'tfc:hot_spring' configured feature and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "wallState", value = "The block state to use for the hot spring, may be null to use the lowest rock layer rock"),
+            @Param(name = "fluidState", value = "The fluid to fill the spring with, may be air"),
+            @Param(name = "radius", value = "The approximate radius of the hot spring, in the range [1, 16]"),
+            @Param(name = "allowUnderwater", value = "If the hot spring can generate underwater"),
+            @Param(name = "replacesOnFluidContact", value = "A list of {block[] -> weighted blockstate[]} objects, the blocks to place if placed underwater, may be null"),
+            @Param(name = "decoration", value = "A fissure decoration object, may be null to not have one present"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, PlacedFeatureProperties.class})
+    public void hotSpring(String name, @Nullable String wallState, String fluidState, int radius, boolean allowUnderwater, @Nullable List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacesOnFluidContact, @Nullable WorldGenUtils.FissureDecoration decoration, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        if (wallState != null) {
+            config.add("wall_state", WorldGenUtils.blockStateToLenient(wallState));
+        }
+        config.add("fluid_state", WorldGenUtils.blockStateToLenient(fluidState));
+        config.addProperty("radius", radius);
+        config.addProperty("allow_underwater", allowUnderwater);
+        if (replacesOnFluidContact != null) {
+            final JsonArray fluidReplacementArray = new JsonArray(replacesOnFluidContact.size());
+            replacesOnFluidContact.forEach(entry -> fluidReplacementArray.add(entry.toJson()));
+            config.add("replaces_on_fluid_contact", fluidReplacementArray);
+        }
+        if (decoration != null) {
+            config.add("decoration", decoration.toJson());
+        }
+
+        finishFeature("tfc:hot_spring", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'minecraft:simple_block' configured feature and the matching placed feature, uses a SimpleStateProvider", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "blockState", value = "The string representation of a block state, the state to be placed"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = PlacedFeatureProperties.class)
+    public void simpleBlockState(String name, String blockState, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        final JsonObject toPlace = new JsonObject();
+        toPlace.addProperty("type", "minecraft:simple_state_provider");
+        toPlace.add("state", WorldGenUtils.blockStateToLenient(blockState));
+        config.add("to_place", toPlace);
+
+        finishFeature("minecraft:simple_block", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'minecraft:random_patch' configured feature and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "tries", value = "How many times the feature should attempt to place, may be null to default to 128"),
+            @Param(name = "xzSpread", value = "The horizontal spread of the patch, may be null to default to 7"),
+            @Param(name = "ySpread", value = "The vertical spread of the patch, may be null to default to 3"),
+            @Param(name = "feature", value = "The feature to attempt to place for the patch"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = PlacedFeatureProperties.class)
+    public void randomPatch(String name, @Nullable Integer tries, @Nullable Integer xzSpread, @Nullable Integer ySpread, String feature, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        if (tries != null) {
+            config.addProperty("tries", tries);
+        }
+        if (xzSpread != null) {
+            config.addProperty("xz_spread", xzSpread);
+        }
+        if (ySpread != null) {
+            config.addProperty("y_spread", ySpread);
+        }
+        config.addProperty("feature", feature);
+
+        finishFeature("minecraft:random_patch", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'tfc:tall_wild_crop' configured feature adn the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "block", value = "The block to placed, must be an instanceof WildDoubleCropBlock"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = PlacedFeatureProperties.class)
+    public void tallWildCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        config.addProperty("block", block);
+
+        finishFeature("tfc:tall_wild_crop", name, config, placement);
     }
 
     @Info(value = "Creates a new block to block state list map entry for use in boulder configured features", params = {
@@ -245,30 +322,65 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
             @Param(name = "blockStates", value = "A list of string representations of a block state")
     })
     @Generics(value = String.class)
-    public WorldGenUtils.BoulderState boulderState(String rock, List<String> blockStates) {
-        return new WorldGenUtils.BoulderState(rock, blockStates);
+    public WorldGenUtils.BlockToBlockStatesMapEntry boulderState(String rock, List<String> blockStates) {
+        return new WorldGenUtils.BlockToBlockStatesMapEntry(rock, blockStates);
     }
 
-    @Info(value = "Creates a new block list to weighted block state list map entry for use in vein configured features", params = {
+    @Info(value = """
+            Creates a new block list to weighted block state list map entry for use in vein configured features
+            
+            Deprecated in favor of the generic blockToWeightedBlockState method
+            """, params = {
             @Param(name = "blocks", value = "A list of strings, the registry names of blocks to be replaced"),
-            @Param(name = "blockStates", value = "A list of string representations of a weighted block state")
+            @Param(name = "blockStates", value = "A list of string representations of weighted block states")
     })
     @Generics(value = {String.class, String.class})
-    public WorldGenUtils.VeinReplacementMapEntry veinReplacement(List<String> replace, List<String> with) {
-        return new WorldGenUtils.VeinReplacementMapEntry(replace, with);
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    public WorldGenUtils.BlockToWeightedBlockStateMapEntry veinReplacement(List<String> replace, List<String> with) {
+        return blockToWeightedBlockState(replace, with);
+    }
+
+    @Info(value = "Creates a new block list to weighted block state list map entry for use several configured features", params = {
+            @Param(name = "blocks", value = "A list of strings, the registry names of blocks to be replaced"),
+            @Param(name = "blockStates", value = "A list of string representations of weighted block states")
+    })
+    @Generics(value = {String.class, String.class})
+    public WorldGenUtils.BlockToWeightedBlockStateMapEntry blockToWeightedBlockState(List<String> replace, List<String> with) {
+        return new WorldGenUtils.BlockToWeightedBlockStateMapEntry(replace, with);
     }
 
     @Info(value = "Creates a new block to block state map entry for use in soil disc configured features", params = {
             @Param(name = "block", value = "The registry name of a block to be replaced"),
             @Param(name = "state", value = "A string representation of a block state")
     })
-    public WorldGenUtils.SoilDiscReplacmentMapEntry soilDiscReplacement(String block, String state) {
-        return new WorldGenUtils.SoilDiscReplacmentMapEntry(block, state);
+    public WorldGenUtils.BlockToBlockStateMapEntry blockToBlockState(String block, String state) {
+        return new WorldGenUtils.BlockToBlockStateMapEntry(block, state);
     }
 
-    private void handlePlacedFeature(String name, Consumer<PlacedFeatureProperties> placement) {
+    @Info(value = "Creates a new fissure decoration object", params = {
+            @Param(name = "replacementMap", value = "A list of {block[] -> weighted blockstate[]} objects, the additional 'ores' that should spawn around the fissure"),
+            @Param(name = "rarity", value = "The rarity that blocks should be replaced with decoration blocks"),
+            @Param(name = "radius", value = "The radius around the fissure that blocks should be replaced"),
+            @Param(name = "count", value = "The number of blocks that should be placed, actual amount will be `count / rarity`")
+    })
+    @Generics(WorldGenUtils.BlockToWeightedBlockStateMapEntry.class)
+    public WorldGenUtils.FissureDecoration fissureDecoration(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, int radius, int count) {
+        return new WorldGenUtils.FissureDecoration(replacementMap, rarity, rarity, count);
+    }
+
+    private void finishFeature(String name, JsonObject configuredFeature, Consumer<PlacedFeatureProperties> placement) {
+        addJson(DataUtils.configuredFeatureName(name), configuredFeature);
+
         final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
         placement.accept(place);
         addJson(DataUtils.placedFeatureName(name), place.toJson());
+    }
+
+    private void finishFeature(String type, String name, JsonObject config, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("type", type);
+        json.add("config", config);
+
+        finishFeature(name, json, placement);
     }
 }

@@ -64,6 +64,6 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        generator.json(AssetJsonGenerator.asItemModelLocation(id), ModelUtils.ITEMS.javelinItemModelJson(id));
+        ModelUtils.ITEMS.javelin(id, generator);
     }
 }

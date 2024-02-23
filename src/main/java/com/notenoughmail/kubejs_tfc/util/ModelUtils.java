@@ -22,43 +22,83 @@ public class ModelUtils {
             return json;
         }
 
-        // TODO: Check if this is still how the models are
-        public static JsonObject javelinItemModelJson(ResourceLocation id) {
-            var javelin = new JsonObject();
-            javelin.addProperty("loader", "forge:separate_transforms");
-            javelin.addProperty("gui_light", "front");
+        private static final String[] javelinPerspectives = {"none", "fixed", "ground", "gui"};
 
-            var texture = newItemID(id).toString();
-            var textures = new JsonObject();
-            textures.addProperty("particle", texture);
-            textures.addProperty("layer0", texture);
+        public static void javelin(ResourceLocation id, AssetJsonGenerator generator) {
+            final String baseModelLocation = newItemID(id).toString();
+            final String throwing = baseModelLocation + "_throwing";
+            final String throwingBase = throwing + "_base";
+            final String inHand = baseModelLocation + "_in_hand";
+            final String gui = baseModelLocation + "_gui";
 
-            var overrides = new JsonArray();
-            var predicates = new JsonObject();
-            var predicate = new JsonObject();
-            predicate.addProperty("tfc:throwing", 1);
-            predicates.add("predicate", predicate);
-            predicates.addProperty("model", "item/trident_throwing");
-            predicates.add("textures", textures);
-            overrides.add(predicates);
-            javelin.add("overrides", overrides);
+            final JsonObject guiPerspective = new JsonObject();
+            guiPerspective.addProperty("parent", gui);
 
-            var base = new JsonObject();
-            base.addProperty("parent", "item/trident_in_hand");
-            base.add("textures", textures);
-            javelin.add("base", base);
+            // Base model
+            {
+                final JsonObject model = new JsonObject();
+                model.addProperty("loader", "forge:separate_transforms");
+                model.addProperty("gui_light", "front");
 
-            var perspectives = new JsonObject();
-            var gui = new JsonObject();
-            gui.addProperty("parent", "item/generated");
-            gui.add("textures", textures);
-            perspectives.add("none", gui);
-            perspectives.add("fixed", gui);
-            perspectives.add("ground", gui);
-            perspectives.add("gui", gui);
-            javelin.add("perspectives", perspectives);
+                final JsonArray overrides = new JsonArray(1);
+                final JsonObject override = new JsonObject();
+                final JsonObject predicate = new JsonObject();
+                predicate.addProperty("tfc:throwing", 1);
+                override.add("predicate", predicate);
+                override.addProperty("model", throwing);
+                overrides.add(override);
+                model.add("overrides", overrides);
 
-            return javelin;
+                final JsonObject base = new JsonObject();
+                base.addProperty("parent", inHand);
+                model.add("base", base);
+
+                final JsonObject perspectives = new JsonObject();
+                for (String s : javelinPerspectives) {
+                    perspectives.add(s, guiPerspective);
+                }
+                model.add("perspectives", perspectives);
+
+                generator.json(AssetJsonGenerator.asItemModelLocation(id), model);
+            }
+
+            // Throwing model
+            {
+                final JsonObject model = new JsonObject();
+                model.addProperty("loader", "forge:separate_transforms");
+                model.addProperty("gui_light", "front");
+
+                final JsonObject base = new JsonObject();
+                base.addProperty("parent", throwingBase);
+                model.add("base", base);
+
+                final JsonObject perspectives = new JsonObject();
+                for (String s : javelinPerspectives) {
+                    perspectives.add(s, guiPerspective);
+                }
+                model.add("perspectives", perspectives);
+
+                generator.json(newID(AssetJsonGenerator.asItemModelLocation(id), "", "_throwing"), model);
+            }
+
+            // Throwing base
+            generator.itemModel(newID(id, "", "_throwing_base"), m -> {
+                m.parent("item/trident_throwing");
+                m.texture("particle", baseModelLocation);
+            });
+
+            // In hand model
+            generator.itemModel(newID(id, "", "_in_hand"), m -> {
+                m.parent("item/trident_in_hand");
+                m.texture("particle", baseModelLocation);
+            });
+
+
+            // Gui model
+            generator.itemModel(newID(id, "", "_gui"), m -> {
+                m.parent("item/generated");
+                m.texture("layer0", baseModelLocation);
+            });
         }
 
         public static void fishingRod(ResourceLocation id, AssetJsonGenerator generator, String customCastModel) {
