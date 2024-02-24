@@ -6,6 +6,8 @@ import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import net.dries007.tfc.world.chunkdata.ForestType;
+import net.minecraft.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,17 +47,13 @@ public class PlacedFeatureProperties {
     @Info(value = "Adds a 'tfc:climate' placement modifier", params = @Param(name = "climate", value = "The climate placement properties"))
     @Generics(value = Climate.class)
     public PlacedFeatureProperties climate(Consumer<Climate> climate) {
-        var placer = new Climate();
-        climate.accept(placer);
-        return jsonPlacement(placer.toJson());
+        return jsonPlacement(Util.make(new Climate(), climate).toJson());
     }
 
     @Info(value = "Adds a 'tfc:flat_enough' placement modifier", params = @Param(name = "flatness", value = "The flatness placement properties"))
     @Generics(value = Flatness.class)
     public PlacedFeatureProperties flatEnough(Consumer<Flatness> flatness) {
-        var placer = new Flatness();
-        flatness.accept(placer);
-        return jsonPlacement(placer.toJson());
+        return jsonPlacement(Util.make(new Flatness(), flatness).toJson());
     }
 
     @Info(value = "Adds a 'tfc:near_water' placement modifier", params = @Param(name = "radius", value = "The 'radius' property of the modifier"))
@@ -126,84 +124,59 @@ public class PlacedFeatureProperties {
 
     public static class Climate {
 
-        @Nullable
-        private Float minTemp;
-        @Nullable
-        private Float maxTemp;
-        @Nullable
-        private Float minRain;
-        @Nullable
-        private Float maxRain;
-        @Nullable
-        private String minForest;
-        @Nullable
-        private String maxForest;
-        private boolean fuzzy = false;
+        private final JsonObject json;
+
+        public Climate() {
+            json = new JsonObject();
+            json.addProperty("type", "tfc:climate");
+        }
 
         @Info(value = "Sets the minimum temperature of the climate decorator")
         public Climate minTemp(float f) {
-            minTemp = f;
+            json.addProperty("min_temperature", f);
             return this;
         }
 
         @Info(value = "Sets the maximum temperature of the climate decorator")
         public Climate maxTemp(float f) {
-            maxTemp = f;
+            json.addProperty("max_temperature", f);
             return this;
         }
 
         @Info(value = "Sets the minimum rainfall of the climate decorator")
         public Climate minRain(float f) {
-            minRain = f;
+            json.addProperty("min_rainfall", f);
             return this;
         }
 
         @Info(value = "Sets the maximum rainfall of the climate decorator")
         public Climate maxRain(float f) {
-            maxRain = f;
+            json.addProperty("max_rainfall", f);
             return this;
         }
 
         @Info(value = "Sets the minimum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
-        public Climate minForest(String s) {
-            minForest = s;
+        public Climate minForest(ForestType type) {
+            json.addProperty("min_forest", type.getSerializedName());
             return this;
         }
 
         @Info(value = "Sets the maximum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
-        public Climate maxForest(String s) {
-            maxForest = s;
+        public Climate maxForest(ForestType type) {
+            json.addProperty("max_forest", type.getSerializedName());
             return this;
         }
 
         @Info(value = "Determines if the temperature and rainfall requirements will be probabilistic relative to the center point")
         public Climate fuzzy(boolean b) {
-            fuzzy = b;
+            json.addProperty("fuzzy", b);
             return this;
         }
 
         public JsonObject toJson() {
-            var json = new JsonObject();
-            json.addProperty("type", "tfc:climate");
-            if (minTemp != null) {
-                json.addProperty("min_temperature", minTemp);
+            if (!json.has("fuzzy")) {
+                json.addProperty("fuzzy", false);
             }
-            if (maxTemp != null) {
-                json.addProperty("max_temperature", maxTemp);
-            }
-            if (minRain != null) {
-                json.addProperty("min_rainfall", minRain);
-            }
-            if (maxRain != null) {
-                json.addProperty("max_rainfall", maxRain);
-            }
-            if (minForest != null) {
-                json.addProperty("min_forest", minForest);
-            }
-            if (maxForest != null) {
-                json.addProperty("max_forest", maxForest);
-            }
-            json.addProperty("fuzzy", fuzzy);
             return json;
         }
     }

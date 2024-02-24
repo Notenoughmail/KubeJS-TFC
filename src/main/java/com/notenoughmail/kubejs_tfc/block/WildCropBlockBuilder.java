@@ -1,10 +1,13 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -12,25 +15,30 @@ import net.dries007.tfc.common.blocks.crop.FloodedWildCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildDoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildSpreadingCropBlock;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// TODO: Loot tables
 public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient Consumer<ExtendedPropertiesJS> props;
     public transient Type type;
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;
+    @Nullable
+    public transient ResourceLocation seedItem, foodItem;
 
     public WildCropBlockBuilder(ResourceLocation i) {
         super(i);
         props = p -> {};
         spreadingFruitBlock = () -> () -> Blocks.HONEY_BLOCK;
         type = Type.DEFAULT;
+        seedItem = null;
     }
 
     @Override
@@ -59,6 +67,18 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
         return this;
     }
 
+    @Info(value = "Sets the seeds that the crop drops when broken")
+    public WildCropBlockBuilder seeds(ResourceLocation seedId) {
+        seedItem = seedId;
+        return this;
+    }
+
+    @Info(value = "Sets the food item that the crop drops when broken")
+    public WildCropBlockBuilder food(ResourceLocation foodId) {
+        foodItem = foodId;
+        return this;
+    }
+
     @Override
     public Block createObject() {
         return switch (type) {
@@ -72,14 +92,89 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
         if (blockstateJson == null && type == Type.SPREADING) {
-            generator.multipartState(id, this::spreadingBlockState);
+            blockstateJson = Util.make(new MultipartBlockStateGenerator(), this::spreadingBlockState).toJson();
         }
         super.generateAssetJsons(generator);
     }
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        super.generateDataJsons(generator);
+        final LootBuilder lootBuilder = new LootBuilder(null);
+        lootBuilder.type = "minecraft:block";
+
+        if (lootTable != null) {
+            lootTable.accept(lootBuilder);
+        } else {
+            switch (type) {
+                case DEFAULT, FLOODED -> {
+                    if (seedItem != null) {
+                        lootBuilder.addPool(p -> {
+                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
+                            p.survivesExplosion();
+                        });
+                    }
+                    if (foodItem != null) {
+                        lootBuilder.addPool(p -> {
+                            p.survivesExplosion();
+                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
+                                    .addCondition(defaultFoodCondition())
+                                    .addFunction(setFoodCount());
+                        });
+                    }
+                }
+                case DOUBLE -> {
+                    if (seedItem != null) {
+                        lootBuilder.addPool(p -> {
+                            p.survivesExplosion();
+                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)))
+                                    .addCondition(doubleSeedCondition());
+                        });
+                    }
+                    if (foodItem != null) {
+                        lootBuilder.addPool(p -> {
+                            p.survivesExplosion();
+                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
+                                    .addCondition(doubleFoodCondition())
+                                    .addFunction(setFoodCount());
+                        });
+                    }
+                }
+                case SPREADING -> {
+                    if (seedItem != null) {
+                        lootBuilder.addPool(p -> {
+                            p.survivesExplosion();
+                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    private JsonObject defaultFoodCondition() {
+        return DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("mature", "true"));
+    }
+
+    private JsonObject doubleSeedCondition() {
+        return DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom"));
+    }
+
+    private JsonObject doubleFoodCondition() {
+        return DataUtils.blockStatePropertyCondition(id.toString(), j -> {
+            j.addProperty("part", "bottom");
+            j.addProperty("mature", "true");
+        });
+    }
+
+    private JsonObject setFoodCount() {
+        final JsonObject json = new JsonObject();
+        json.addProperty("function", "minecraft:set_count");
+        final JsonObject count = new JsonObject();
+        count.addProperty("min", 1);
+        count.addProperty("max", 3);
+        count.addProperty("type", "minecraft:uniform");
+        json.add("count", count);
+        return json;
     }
 
     @Override

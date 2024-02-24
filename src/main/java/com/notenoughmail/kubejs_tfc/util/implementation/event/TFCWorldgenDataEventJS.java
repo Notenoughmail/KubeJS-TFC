@@ -15,6 +15,7 @@ import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import org.jetbrains.annotations.Nullable;
@@ -304,7 +305,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         finishFeature("minecraft:random_patch", name, config, placement);
     }
 
-    @Info(value = "Creates a 'tfc:tall_wild_crop' configured feature adn the matching placed feature", params = {
+    @Info(value = "Creates a 'tfc:tall_wild_crop' configured feature and the matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
             @Param(name = "block", value = "The block to placed, must be an instanceof WildDoubleCropBlock"),
             @Param(name = "placement", value = "The placement properties")
@@ -315,6 +316,17 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
         config.addProperty("block", block);
 
         finishFeature("tfc:tall_wild_crop", name, config, placement);
+    }
+
+    @Info(value = "Creates a configured feature of the given type with the given config and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "type", value = "The type of configured feature to create"),
+            @Param(name = "featureConfig", value = "The config json object for the feature"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = PlacedFeatureProperties.class)
+    public void generic(String name, String type, JsonObject featureConfig, Consumer<PlacedFeatureProperties> placement) {
+        finishFeature(type, name, featureConfig, placement);
     }
 
     @Info(value = "Creates a new block to block state list map entry for use in boulder configured features", params = {
@@ -371,9 +383,7 @@ public class TFCWorldgenDataEventJS extends DataPackEventJS {
     private void finishFeature(String name, JsonObject configuredFeature, Consumer<PlacedFeatureProperties> placement) {
         addJson(DataUtils.configuredFeatureName(name), configuredFeature);
 
-        final PlacedFeatureProperties place = new PlacedFeatureProperties(name);
-        placement.accept(place);
-        addJson(DataUtils.placedFeatureName(name), place.toJson());
+        addJson(DataUtils.placedFeatureName(name), Util.make(new PlacedFeatureProperties(name), placement).toJson());
     }
 
     private void finishFeature(String type, String name, JsonObject config, Consumer<PlacedFeatureProperties> placement) {

@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 import java.util.HexFormat;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS}
@@ -201,6 +202,16 @@ public class DataUtils {
         final JsonObject predicate = new JsonObject();
         predicate.addProperty("tag", "tfc:sharp_tools");
         json.add("predicate", predicate);
+        return json;
+    }
+
+    public static JsonObject blockStatePropertyCondition(String block, Consumer<JsonObject> properties) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("condition", "minecraft:block_state_property");
+        json.addProperty("block", block);
+        final JsonObject propertiesJson = new JsonObject();
+        properties.accept(propertiesJson);
+        json.add("properties", propertiesJson);
         return json;
     }
 }
