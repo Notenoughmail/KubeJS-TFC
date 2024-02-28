@@ -3,12 +3,14 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.crop.FloodedWildCropBlock;
@@ -39,6 +41,19 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
         spreadingFruitBlock = () -> () -> Blocks.HONEY_BLOCK;
         type = Type.DEFAULT;
         seedItem = null;
+        foodItem = null;
+    }
+
+    @Override
+    @Generics(value = BlockItemBuilder.class)
+    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
+        if (i == null) {
+            itemBuilder = null;
+        } else {
+            i.accept(getOrCreateItemBuilder());
+        }
+
+        return this;
     }
 
     @Override
@@ -105,50 +120,26 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
         if (lootTable != null) {
             lootTable.accept(lootBuilder);
         } else {
-            switch (type) {
-                case DEFAULT, FLOODED -> {
-                    if (seedItem != null) {
-                        lootBuilder.addPool(p -> {
-                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
-                            p.survivesExplosion();
-                        });
+            if (seedItem != null) {
+                lootBuilder.addPool(p -> {
+                    p.survivesExplosion();
+                    var item = p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
+                    if (type == Type.DOUBLE || type == Type.SPREADING) {
+                        item.addCondition(doubleSeedCondition());
                     }
-                    if (foodItem != null) {
-                        lootBuilder.addPool(p -> {
-                            p.survivesExplosion();
-                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
-                                    .addCondition(defaultFoodCondition())
-                                    .addFunction(setFoodCount());
-                        });
-                    }
-                }
-                case DOUBLE -> {
-                    if (seedItem != null) {
-                        lootBuilder.addPool(p -> {
-                            p.survivesExplosion();
-                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)))
-                                    .addCondition(doubleSeedCondition());
-                        });
-                    }
-                    if (foodItem != null) {
-                        lootBuilder.addPool(p -> {
-                            p.survivesExplosion();
-                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
-                                    .addCondition(doubleFoodCondition())
-                                    .addFunction(setFoodCount());
-                        });
-                    }
-                }
-                case SPREADING -> {
-                    if (seedItem != null) {
-                        lootBuilder.addPool(p -> {
-                            p.survivesExplosion();
-                            p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
-                        });
-                    }
-                }
+                });
+            }
+            if (foodItem != null) {
+                lootBuilder.addPool(p -> {
+                    p.survivesExplosion();
+                    p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
+                            .addCondition((type == Type.DOUBLE || type == Type.SPREADING) ? doubleFoodCondition() : defaultFoodCondition())
+                            .addFunction(DataUtils.simpleSetCountFunction(1, 3));
+                });
             }
         }
+
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     private JsonObject defaultFoodCondition() {
@@ -164,17 +155,6 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
             j.addProperty("part", "bottom");
             j.addProperty("mature", "true");
         });
-    }
-
-    private JsonObject setFoodCount() {
-        final JsonObject json = new JsonObject();
-        json.addProperty("function", "minecraft:set_count");
-        final JsonObject count = new JsonObject();
-        count.addProperty("min", 1);
-        count.addProperty("max", 3);
-        count.addProperty("type", "minecraft:uniform");
-        json.add("count", count);
-        return json;
     }
 
     @Override

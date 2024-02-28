@@ -63,13 +63,13 @@ public abstract class BuildVeinProperties {
         return this;
     }
 
-    // TODO: JSDoc, figure out what this actually does
+    // TODO: 1.1.0~[Future] JSDoc, figure out what this actually does
     public BuildVeinProperties project(boolean b) {
         project = b;
         return this;
     }
 
-    // TODO: JSDoc, figure out what this actually does
+    // TODO: 1.1.0~[Future] JSDoc, figure out what this actually does
     public BuildVeinProperties projectOffset(boolean b) {
         projectOffset = b;
         return this;

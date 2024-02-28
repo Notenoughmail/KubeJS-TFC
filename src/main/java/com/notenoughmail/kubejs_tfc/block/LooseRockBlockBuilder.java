@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -13,6 +14,7 @@ import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+// NOTICE: It's fine to not override #item as it's properly handled in the datagen code well enough
 public class LooseRockBlockBuilder extends BlockBuilder {
 
     private int rotate;
@@ -150,14 +152,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         function.addProperty("count", count);
 
         final JsonArray conditions = new JsonArray();
-        final JsonObject condition = new JsonObject();
-        condition.addProperty("condition", "minecraft:block_state_property");
-        condition.addProperty("block", id.toString());
-
-        final JsonObject properties = new JsonObject();
-        properties.addProperty("count", String.valueOf(count)); // This should be a string
-        condition.add("properties", properties);
-        conditions.add(condition);
+        conditions.add(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", Integer.toString(count))));
         function.add("conditions", conditions);
         return function;
     }

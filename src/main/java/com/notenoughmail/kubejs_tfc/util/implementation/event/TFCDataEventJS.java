@@ -11,8 +11,8 @@ import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFaunaData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
+import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -22,7 +22,6 @@ import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -31,26 +30,21 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class TFCDataEventJS extends DataPackEventJS {
+public class TFCDataEventJS extends EventJS {
 
-    public TFCDataEventJS(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
-        super(pack, manager);
+    private final DataPackEventJS wrappedEvent;
+
+    public TFCDataEventJS(DataPackEventJS wrapped) {
+        wrappedEvent = wrapped;
     }
 
     @HideFromJS
-    @Override
-    public void add(ResourceLocation id, String content) {
-        super.add(id, content);
-    }
-
-    @HideFromJS
-    @Override
     public void addJson(ResourceLocation id, JsonElement json) {
         if (CommonConfig.debugMode.get()) {
             KubeJSTFC.LOGGER.warn(id.toString());
             KubeJSTFC.LOGGER.info(json.toString());
         }
-        super.addJson(id, json);
+        wrappedEvent.addJson(id, json);
     }
 
     @Info(value = "Adds an item damage resistance to the specified ingredient", params = {

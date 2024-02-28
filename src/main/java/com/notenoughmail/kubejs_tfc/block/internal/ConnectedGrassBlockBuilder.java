@@ -67,7 +67,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         super.generateAssetJsons(generator);
     }
 
-    // This just doesn't work correctly. TODO: Fix
+    // This just doesn't work correctly. TODO: 1.1.0 | Fix
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
         final String bottom = newID("block/", "_bottom").toString();

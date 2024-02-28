@@ -2,16 +2,17 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.SpreadingBushBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.StationaryBerryBushBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.ModelUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.common.blocks.plant.fruit.SpreadingCaneBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +21,6 @@ import java.util.function.Consumer;
 public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     private final SpreadingBushBlockBuilder parent;
-    private static final String[] dirs = {"north", "east", "south", "west"};
 
     public SpreadingCaneBlockBuilder(ResourceLocation i, SpreadingBushBlockBuilder parent) {
         super(i);
@@ -29,6 +29,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
     }
 
     @Override
+    @Generics(value = BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;
@@ -61,9 +62,9 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        for (String lifecycle: StationaryBerryBushBlockBuilder.lc) {
+        for (String lifecycle : StationaryBerryBushBlockBuilder.lc) {
             for (int i = 0 ; i < 4 ; i++) {
-                final String dir = dirs[i];
+                final String dir = ModelUtils.cardinalDirections[i];
                 final int finalI = i;
                 for (int j = 0 ; j < 3 ; j++) {
                     final int finalJ = j; // Lambda stuff
@@ -85,7 +86,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(Items.STICK));
+                p.addItem(DataUtils.STICK_STACK);
             });
         }
 

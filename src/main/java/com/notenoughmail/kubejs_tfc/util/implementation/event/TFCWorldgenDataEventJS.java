@@ -9,15 +9,14 @@ import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildVeinProperties;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
+import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -27,35 +26,32 @@ import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenien
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState;
 
 /**
- * TODO: more of TFC's types
- * {@link net.dries007.tfc.world.feature.TFCFeatures#TALL_WILD_CROP}
- * {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_CROP}
- * {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_BUSH}
- * {@link net.dries007.tfc.world.feature.TFCFeatures#FISSURE}
- * {@link net.dries007.tfc.world.feature.TFCFeatures#FOREST} & 'children'
- * More?
+ * TODO: 1.1.0~[Future] more of TFC's types
+ * <ul>
+ *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#TALL_WILD_CROP}</li>
+ *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_CROP}</li>
+ *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_BUSH}</li>
+ *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FISSURE}</li>
+ *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FOREST} & 'children'</li>
+ *     <li>More?</li>
+ * </ul>
  */
 @SuppressWarnings("unused")
-public class TFCWorldgenDataEventJS extends DataPackEventJS {
+public class TFCWorldgenDataEventJS extends EventJS {
 
-    public TFCWorldgenDataEventJS(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
-        super(pack, manager);
+    private final DataPackEventJS wrappedEvent;
+
+    public TFCWorldgenDataEventJS(DataPackEventJS wrapped) {
+        wrappedEvent = wrapped;
     }
 
     @HideFromJS
-    @Override
-    public void add(ResourceLocation id, String content) {
-        super.add(id, content);
-    }
-
-    @HideFromJS
-    @Override
     public void addJson(ResourceLocation id, JsonElement json) {
         if (CommonConfig.debugMode.get()) {
             KubeJSTFC.LOGGER.warn(id.toString());
             KubeJSTFC.LOGGER.info(json.toString());
         }
-        super.addJson(id, json);
+        wrappedEvent.addJson(id, json);
     }
 
     @Info(value = "Creates a geode configured feature and the matching placed feature", params = {

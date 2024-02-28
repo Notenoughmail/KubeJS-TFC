@@ -4,10 +4,13 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
+import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
@@ -22,7 +25,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS}
+ * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS},
+ * {@link com.notenoughmail.kubejs_tfc.util.implementation.event.TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
+ * and various block's data/asset gen
  */
 public class DataUtils {
 
@@ -209,9 +214,27 @@ public class DataUtils {
         final JsonObject json = new JsonObject();
         json.addProperty("condition", "minecraft:block_state_property");
         json.addProperty("block", block);
-        final JsonObject propertiesJson = new JsonObject();
-        properties.accept(propertiesJson);
-        json.add("properties", propertiesJson);
+        json.add("properties", Util.make(new JsonObject(), properties));
         return json;
     }
+
+    public static LootTableEntry createEntry(String item) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("type", "minecraft:item");
+        json.addProperty("name", item);
+        return new LootTableEntry(json);
+    }
+
+    public static JsonObject simpleSetCountFunction(int min, int max) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("function", "minecraft:set_count");
+        final JsonObject count = new JsonObject();
+        count.addProperty("min", min);
+        count.addProperty("max", max);
+        count.addProperty("type", "minecraft:uniform");
+        json.add("count", count);
+        return json;
+    }
+
+    public static final ItemStack STICK_STACK = new ItemStack(Items.STICK);
 }

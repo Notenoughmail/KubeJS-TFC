@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-// TODO: make this take blocks instead of resource locations
+// TODO: (?) 1.1.0~[Future] Make this take blocks instead of resource locations
 @Info(value = "Define new rock layers which can be referenced in a world preset json")
 public class RockSettingsEventJS extends StartupEventJS {
 

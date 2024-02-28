@@ -7,7 +7,6 @@
     "DayMixin",
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
-    "ServerScripManagerMixin",
     "extensions.FirmaLifeISPMixin",
     "extensions.TFCCCMoldItemBuilderExtensions"
   ],

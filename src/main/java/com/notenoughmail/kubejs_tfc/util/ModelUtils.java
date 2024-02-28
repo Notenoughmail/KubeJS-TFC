@@ -148,4 +148,6 @@ public class ModelUtils {
     public static ResourceLocation newID(ResourceLocation id, String pre, String post) {
         return new ResourceLocation(id.getNamespace(), pre + id.getPath() + post);
     }
+
+    public static final String[] cardinalDirections = {"north", "east", "south", "west"};
 }

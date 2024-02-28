@@ -19,6 +19,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
+import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
@@ -52,19 +53,35 @@ import java.util.Locale;
 // Mild Javadoc abuse
 
 /**
- * TODO: <br> <br>
- *  - Blocks <br>
- *    - Supports?
- *     - {@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}
- *     - {@link net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock Horizontal}
- *  - Misc. <br>
- *    - TFC Worldgen features?
- *      - Wild crop (conditional on getting crops working)
+ * TODO: 1.2.0~[Future]
+ * <ul>
+ *     <li>Blocks
+ *         <ul>
+ *             <li>Supports
+ *                 <ul>
+ *                     <li>{@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}</li>
+ *                     <li>{@link net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock Horizontal}</li>
+ *                 </ul>
+ *             </li>
+ *             <li>Kinetics</li>
+ *             <li>Anvils</li>
+ *         </ul>
+ *     </li>
+ *     <li>BE Attachments
+ *         <ul>
+ *             <li>Heat</li>
+ *             <li>Restrict container size</li>
+ *         </ul>
+ *     </li>
+ * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
+        // If only #listenJava had been i dunno, documented or something
+        ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
+
         addValues();
 
         RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);

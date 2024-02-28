@@ -8,9 +8,10 @@ import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.event.Extra;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.kubejs.script.data.VirtualKubeJSDataPack;
+import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
@@ -19,7 +20,6 @@ import net.dries007.tfc.util.events.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,6 +34,7 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,23 +162,20 @@ public class EventHandlers {
         }
     }
 
-    public static void postDataEvents(VirtualKubeJSDataPack pack, MultiPackResourceManager manager) {
-        if (pack != null && manager != null) {
-            if (CommonConfig.debugMode.get()) {
-                KubeJSTFC.LOGGER.info("Posting KubeJS TFC data events");
-            }
+    // TODO: 1.1.0 | Test if this actually works
+    @Nullable
+    public static Object postDataEvents(EventJS event) {
+        if (event instanceof DataPackEventJS dataEvent) {
             if (data.hasListeners()) {
-                data.post(new TFCDataEventJS(pack, manager));
+                data.post(new TFCDataEventJS(dataEvent));
             }
             if (worldgenData.hasListeners()) {
-                worldgenData.post(new TFCWorldgenDataEventJS(pack, manager));
+                worldgenData.post(new TFCWorldgenDataEventJS(dataEvent));
             }
-            if (CommonConfig.debugMode.get()) {
-                KubeJSTFC.LOGGER.info("KubeJS TFC data events successfully posted");
-            }
-        } else {
-            KubeJSTFC.LOGGER.warn("KubeJS TFC was unable to post its data events due to a failed mixin!");
+        } else if (CommonConfig.debugMode.get()){
+            KubeJSTFC.LOGGER.error("KubeJSTFC data events failed to post due to wrapped event not being an instanceof DataPackEventJS, somehow");
         }
+        return null;
     }
 
     /**
@@ -207,7 +205,7 @@ public class EventHandlers {
             limitContainer.post(new ContainerLimiterEventJS(slotsToHandle, event.getEntity().level(), event.getEntity().getOnPos().above()), menuName);
         }
 
-        // TODO: Deprecated for removal
+        // TODO: 1.2.0 | Deprecated for removal
         if (event.getEntity() instanceof ServerPlayer player && LegacyContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
             ConsoleJS.SERVER.warn("KubeJS TFC: A legacy container limiter was used to limit a container! This form of limiting is deprecated, please use the new system"); // Dirty, but this implementation is actually awful
             Pair<Size, List<Pair<Integer, Integer>>> function = LegacyContainerLimiterEventJS.LIMITED_SIZES.get(menuName);

@@ -10,7 +10,7 @@ import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-// TODO: Allow custom fluid properties
+// TODO: [Future] Allow custom fluid properties
 public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public AqueductBlockBuilder(ResourceLocation i) {
