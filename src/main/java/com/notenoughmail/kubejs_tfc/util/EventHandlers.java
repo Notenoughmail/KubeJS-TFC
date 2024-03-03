@@ -162,7 +162,6 @@ public class EventHandlers {
         }
     }
 
-    // TODO: 1.1.0 | Test if this actually works
     @Nullable
     public static Object postDataEvents(EventJS event) {
         if (event instanceof DataPackEventJS dataEvent) {

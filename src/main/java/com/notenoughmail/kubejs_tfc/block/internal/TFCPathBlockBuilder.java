@@ -2,11 +2,19 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.common.blocks.soil.PathBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class TFCPathBlockBuilder extends BlockBuilder {
 
@@ -20,6 +28,35 @@ public class TFCPathBlockBuilder extends BlockBuilder {
     @Override
     public Block createObject() {
         return new PathBlock(createProperties(), parent);
+    }
+
+    @Override
+    @Generics(value = BlockItemBuilder.class)
+    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
+        if (i == null) {
+            itemBuilder = null;
+        } else {
+            i.accept(getOrCreateItemBuilder());
+        }
+
+        return this;
+    }
+
+    @Override
+    public void generateDataJsons(DataJsonGenerator generator) {
+        var lootBuilder = new LootBuilder(null);
+        lootBuilder.type = "minecraft:block";
+
+        if (lootTable != null) {
+            lootTable.accept(lootBuilder);
+        } else {
+            lootBuilder.addPool(p -> {
+                p.survivesExplosion();
+                p.addItem(new ItemStack(parent.get()));
+            });
+        }
+
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     @Override

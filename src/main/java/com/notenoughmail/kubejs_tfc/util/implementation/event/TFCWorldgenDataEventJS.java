@@ -26,11 +26,8 @@ import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenien
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState;
 
 /**
- * TODO: 1.1.0~[Future] more of TFC's types
+ * TODO: [Future] more of TFC's types
  * <ul>
- *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#TALL_WILD_CROP}</li>
- *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_CROP}</li>
- *     <li>1.1.0 | {@link net.dries007.tfc.world.feature.TFCFeatures#SPREADING_BUSH}</li>
  *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FISSURE}</li>
  *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FOREST} & 'children'</li>
  *     <li>More?</li>
@@ -312,6 +309,31 @@ public class TFCWorldgenDataEventJS extends EventJS {
         config.addProperty("block", block);
 
         finishFeature("tfc:tall_wild_crop", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'tfc:spreading_crop' configured feature and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "block", value = "The block to placed, must be an instanceof WildSpreadingCropBlock"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    @Generics(value = PlacedFeatureProperties.class)
+    public void spreadingCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        config.addProperty("block", block);
+
+        finishFeature("tfc:spreading_crop", name, config, placement);
+    }
+
+    @Info(value = "Creates a 'tfc:spreading_bush' configured feature and the matching placed feature", params = {
+            @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
+            @Param(name = "block", value = "The block to placed, must be an instanceof SpreadingBushBlock"),
+            @Param(name = "placement", value = "The placement properties")
+    })
+    public void spreadingBush(String name, String block, Consumer<PlacedFeatureProperties> placement) {
+        final JsonObject config = new JsonObject();
+        config.addProperty("block", block);
+
+        finishFeature("tfc:spreading_bush", name, config, placement);
     }
 
     @Info(value = "Creates a configured feature of the given type with the given config and the matching placed feature", params = {

@@ -26,6 +26,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
         super(i);
         this.parent = parent;
         noItem();
+        renderType("cutout_mipped");
     }
 
     @Override

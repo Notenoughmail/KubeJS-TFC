@@ -31,6 +31,7 @@ public class DeadCropBlockBuilder extends BlockBuilder implements ISupportExtend
         super(i);
         this.alive = alive;
         props = p -> {};
+        renderType("cutout");
     }
 
     @Override

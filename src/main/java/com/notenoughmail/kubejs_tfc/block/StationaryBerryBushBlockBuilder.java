@@ -43,6 +43,7 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
         productItem = new BasicItemJS.Builder(newID("", "_product"));
         props = p -> {};
         product = null;
+        renderType("cutout_mipped");
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {

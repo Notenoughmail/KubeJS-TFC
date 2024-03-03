@@ -33,6 +33,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     public transient final Supplier<ClimateRange> climateRange;
     public transient DeadCropBlockBuilder dead;
     public transient final SeedItemBuilder seeds;
+    @Nullable
     public transient final ItemBuilder product;
     public transient FarmlandBlockEntity.NutrientType nutrient;
     public transient Consumer<ExtendedPropertiesJS> props;
@@ -45,10 +46,19 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         climateRange = ClimateRange.MANAGER.register(id);
         dead = new DeadCropBlockBuilder(newID("", "_dead"), this);
         seeds = new SeedItemBuilder(newID("", "_seeds"));
-        product = new BasicItemJS.Builder(newID("", "_product"));
+        if (hasProduct()) {
+            product = new BasicItemJS.Builder(newID("", "_product"));
+        } else {
+            product = null;
+        }
         nutrient = FarmlandBlockEntity.NutrientType.NITROGEN;
         props = p -> {};
         requiresStick = false;
+        renderType("cutout");
+    }
+
+    protected boolean hasProduct() {
+        return true;
     }
 
     @Override
@@ -88,7 +98,9 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     @Info(value = "Modifies the crop's 'product' item")
     @Generics(value = ItemBuilder.class)
     public AbstractCropBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
-        productItem.accept(product);
+        if (hasProduct()) {
+            productItem.accept(product);
+        }
         return this;
     }
 
@@ -120,6 +132,11 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         RegistryInfo.BLOCK.addBuilder(dead);
         dead.createAdditionalObjects();
         RegistryInfo.ITEM.addBuilder(seeds);
+        if (hasProduct()) {
+            assert product != null;
+            RegistryInfo.ITEM.addBuilder(product);
+            product.createAdditionalObjects();
+        }
     }
 
     @Override
@@ -135,12 +152,15 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
                 p.addItem(new ItemStack(seeds.get()));
             });
 
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(new ItemStack(product.get()))
-                        .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages - 1))))
-                        .addFunction(cropYieldUniformFunction());
-            });
+            if (hasProduct()) {
+                assert product != null;
+                lootBuilder.addPool(p -> {
+                    p.survivesExplosion();
+                    p.addItem(new ItemStack(product.get()))
+                            .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages - 1))))
+                            .addFunction(cropYieldUniformFunction());
+                });
+            }
         }
 
         generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());

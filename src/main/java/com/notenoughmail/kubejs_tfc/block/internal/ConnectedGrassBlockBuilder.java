@@ -1,16 +1,25 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
@@ -28,6 +37,35 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     @Override
     public Block createObject() {
         return new ConnectedGrassBlock(createProperties().randomTicks(), parent, parent.path, parent.farmland);
+    }
+
+    @Override
+    @Generics(value = BlockItemBuilder.class)
+    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
+        if (i == null) {
+            itemBuilder = null;
+        } else {
+            i.accept(getOrCreateItemBuilder());
+        }
+
+        return this;
+    }
+
+    @Override
+    public void generateDataJsons(DataJsonGenerator generator) {
+        var lootBuilder = new LootBuilder(null);
+        lootBuilder.type = "minecraft:block";
+
+        if (lootTable != null) {
+            lootTable.accept(lootBuilder);
+        } else {
+            lootBuilder.addPool(p -> {
+                p.survivesExplosion();
+                p.addItem(new ItemStack(parent.get()));
+            });
+        }
+
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     @Override
@@ -63,12 +101,6 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        super.generateAssetJsons(generator);
-    }
-
-    // This just doesn't work correctly. TODO: 1.1.0 | Fix
-    @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
         final String bottom = newID("block/", "_bottom").toString();
         final String top = newID("block/", "_top").toString();
@@ -78,34 +110,25 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
         bs.part("", p -> p.model(bottom).x(90));
         bs.part("snowy=false", p -> {
-            p.model(top).x(270).y(90);
             p.model(top).x(270);
+            p.model(top).x(270).y(90);
             p.model(top).x(270).y(180);
             p.model(top).x(270).y(270);
         });
         bs.part("snowy=true", p -> {
-            p.model(snowyTop).x(270).y(90);
             p.model(snowyTop).x(270);
+            p.model(snowyTop).x(270).y(90);
             p.model(snowyTop).x(270).y(180);
             p.model(snowyTop).x(270).y(270);
         });
 
-        bs.part("north=true,snowy=false", top);
-        bs.part("east=true,snowy=false", p -> p.model(top).y(90));
-        bs.part("south=true,snowy=false", p -> p.model(top).y(180));
-        bs.part("west=true,snowy=false", p -> p.model(top).y(270));
-        bs.part("north=true,snowy=true", snowyTop);
-        bs.part("east=true,snowy=true", p -> p.model(snowyTop).y(90));
-        bs.part("south=true,snowy=true", p -> p.model(snowyTop).y(180));
-        bs.part("west=true,snowy=true", p -> p.model(snowyTop).y(270));
-
-        bs.part("north=false,snowy=false", side);
-        bs.part("east=false,snowy=false", p -> p.model(side).y(90));
-        bs.part("south=false,snowy=false", p -> p.model(side).y(180));
-        bs.part("west=false,snowy=false", p -> p.model(side).y(270));
-        bs.part("north=false,snowy=true", snowySide);
-        bs.part("east=false,snowy=true", p -> p.model(snowySide).y(90));
-        bs.part("south=false,snowy=false", p -> p.model(snowySide).y(180));
-        bs.part("west=false,snowy=false", p -> p.model(snowySide).y(270));
+        for (int i = 0 ; i < 4 ; i++) {
+            final int j = i;
+            final String dir = ModelUtils.cardinalDirections[j];
+            bs.part(dir + "=true,snowy=false", p -> p.model(top).y(j * 90));
+            bs.part(dir + "=true,snowy=true", p -> p.model(snowyTop).y(j * 90));
+            bs.part(dir + "=false,snowy=false", p -> p.model(side).y(j * 90));
+            bs.part(dir + "=false,snowy=true", p -> p.model(snowySide).y(j * 90));
+        }
     }
 }

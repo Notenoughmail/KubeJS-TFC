@@ -30,7 +30,7 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
         itemBuilder = new LampBlockItemBuilder(id, this);
         chainTexture = "";
         tag(Helpers.identifier("lamps"));
-        renderType = "cutout";
+        renderType("cutout");
         props = p -> {};
     }
 

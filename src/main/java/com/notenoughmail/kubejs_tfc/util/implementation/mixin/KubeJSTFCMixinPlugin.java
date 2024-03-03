@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
+
+    private final String basePackage = "com.notenoughmail.kubejs_tfc.";
+    private final String mixinPackage = basePackage + "util.implementation.mixin.";
+    private final String implementationPackage = basePackage + "util.implementation.";
+
     @Override
     public void onLoad(String mixinPackage) {}
 
@@ -20,11 +25,24 @@ public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!isModLoaded("firmalife")) {
-            return !"com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS".equals(targetClassName) || !"com.notenoughmail.kubejs_tfc.util.implementation.mixin.extensions.FirmaLifeISPMixin".equals(mixinClassName);
-        }
-        if (!isModLoaded("tfcchannelcasting")) {
-            return !"com.notenoughmail.kubejs_tfc.item.MoldItemBuilder".equals(targetClassName) || !"com.notenoughmail.kubejs_tfc.util.implementation.mixin.extensions.TFCCCMoldItemBuilderExtensions".equals(mixinClassName);
+        if ((implementationPackage + "ItemStackProviderJS").equals(targetClassName)) {
+            if (!isModLoaded("firmalife")) {
+                if ((mixinPackage + "extensions.FirmaLifeISPMixin").equals(mixinClassName)) {
+                    return false;
+                }
+            }
+        } else if ((basePackage + "item.MoldItemBuilder").equals(targetClassName)) {
+            if (!isModLoaded("tfcchannelcasting")) {
+                if ((mixinPackage + "extensions.TFCCCMoldItemBuilderExtensions").equals(mixinClassName)) {
+                    return false;
+                }
+            }
+        } else if ((implementationPackage + "event.TFCDataEventJS").equals(targetClassName)) {
+            if (!isModLoaded("firmalife")) {
+                if ((mixinPackage + "extensions.FirmaLifeDataEventMixin").equals(mixinClassName)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

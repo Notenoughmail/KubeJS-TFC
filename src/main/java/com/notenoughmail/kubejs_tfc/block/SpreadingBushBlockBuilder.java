@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.block.internal.SpreadingCaneBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
@@ -33,6 +34,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         maxHeight = 3;
         climateRange = ClimateRange.MANAGER.register(id);
         texture("layer0", newID("item/", "").toString());
+        renderType("cutout_mipped");
     }
 
     public SpreadingBushBlockBuilder maxHeight(int i) {
@@ -64,6 +66,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         return this;
     }
 
+    // TODO: 1.1.0 | Fix this (make pools[1].entries[0] reachable)
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
         var lootBuilder = new LootBuilder(null);
@@ -79,10 +82,13 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
             if (itemBuilder != null) {
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
+                    // This apparently unreachable according to mc (???) also the state condition just isn't ever added (?????)
                     p.addEntry(lootEntry());
                 });
             }
         }
+
+        KubeJSTFC.LOGGER.error("{}", lootBuilder.toJson());
 
         generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }

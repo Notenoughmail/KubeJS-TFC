@@ -18,9 +18,14 @@ import net.dries007.tfc.util.registry.RegistryWood;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.chunkdata.RockData;
+import net.dries007.tfc.world.noise.Metaballs2D;
+import net.dries007.tfc.world.noise.Metaballs3D;
+import net.dries007.tfc.world.noise.OpenSimplex2D;
+import net.dries007.tfc.world.noise.OpenSimplex3D;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -163,5 +168,39 @@ public enum MiscBindings {
     })
     public ForestType getForestType(LevelReader level, BlockPos pos) {
         return getChunkData(level, pos).getForestType();
+    }
+
+    @Info(value = "Creates a new OpenSimplex2D noise, the implementation of 2D noise TFC uses for its worldgen")
+    public OpenSimplex2D newOpenSimplex2D(long seed) {
+        return new OpenSimplex2D(seed);
+    }
+
+    @Info(value = "Creates a new OpenSimplex3D noise, the implementation of 3D noise TFC uses for its worldgen")
+    public OpenSimplex3D newOpenSimplex3D(long seed) {
+        return new OpenSimplex3D(seed);
+    }
+
+    @Info(value = "Creates a new Metaballs2D, TFC's 2D implementation of Metaballs", params = {
+            @Param(name = "random", value = "The random source used by the balls to create variance between instances"),
+            @Param(name = "minBalls", value = "The minimum number of individual balls"),
+            @Param(name = "maxBalls", value = "The maximum number of individual balls"),
+            @Param(name = "minSize", value = "The minimum size of the Metaballs"),
+            @Param(name = "maxSize", value = "The maximum size of the Metaballs"),
+            @Param(name = "radius", value = "The maximum radius of an individual ball")
+    })
+    public Metaballs2D newMetaballs2D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
+        return new Metaballs2D(random, minBalls, maxBalls, minSize, maxSize, radius);
+    }
+
+    @Info(value = "Creates a new Metaballs3D, TFC's 3D implementation of Metaballs", params = {
+            @Param(name = "random", value = "The random source used by the balls to create variance between instances"),
+            @Param(name = "minBalls", value = "The minimum number of individual balls"),
+            @Param(name = "maxBalls", value = "The maximum number of individual balls"),
+            @Param(name = "minSize", value = "The minimum size of the Metaballs"),
+            @Param(name = "maxSize", value = "The maximum size of the Metaballs"),
+            @Param(name = "radius", value = "The maximum radius of an individual ball")
+    })
+    public Metaballs3D newMetaballs3D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
+        return new Metaballs3D(random, minBalls, maxBalls, minSize, maxSize, radius);
     }
 }

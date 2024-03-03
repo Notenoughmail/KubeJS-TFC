@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
+import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -73,15 +74,13 @@ import java.util.Locale;
  *             <li>Restrict container size</li>
  *         </ul>
  *     </li>
+ * 	   <li>EntityJS compat</li>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
-        // If only #listenJava had been i dunno, documented or something
-        ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
-
         addValues();
 
         RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
@@ -179,6 +178,15 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void registerBindings(BindingsEvent event) {
         event.add("TFC", TFCBindings.class);
+
+        // This cannot be done during #init() because the server script manager does not
+        // yet exist so everything explodes, so I hijack #registerBindings() to get it to work
+        if (event.getType() == ScriptType.SERVER) {
+            ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
+            if (CommonConfig.debugMode.get()) {
+                KubeJSTFC.LOGGER.info("KubeJS TFC: Added data event listeners");
+            }
+        }
     }
 
     @Override

@@ -1,7 +1,8 @@
 ### 1.1.0 (WIP)
+- Update to TFC version 3.1.9
+- Update to KubeJS version `2001.6.4-build.121`+, fix collapse and landslide recipes being broken with said kube versions
 - Add misc sub-binding
-  - Has methods for getting some of TFC's capability data from item stacks
-  - Has maps for rocks, woods, and heat levels
+  - Has many things! Check the wiki
 - Events for custom birthdays, item stack modifiers, and adding prospecting representative blocks
 - Add item builders
   - TFC fishing rod
@@ -24,18 +25,19 @@
     - Pickable
 - Rework container limiting functionality
 - Fix type description for isp components
-- Update to KubeJS version `2001.6.4-build.118`+, fix collapse and landslide recipes being broken with said kube versions
 - `TFC.isp` can now be used in place of `TFC.itemStackProvider` to access item stack provider bindings
 - Add methods for FirmaLife's isp modifiers to `ItemStackProviderJS` if FL is present
 - Add methods to add custom molds to TFC Casting With Channels' mold table if TFCCC is present
 - Add recipe handlers for FirmaLife and ArborFirmaCraft if they are present
 - Update custom javelin models
-- Add support for more of TFC's feature types in the wroldgen data event
+- Add support for more feature types in the worldgen data event
   - Soil disc
   - Hot spring
   - Simple block
   - Random patch
   - Tall wild crop
+  - Spreading crop
+  - Spreading bush
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

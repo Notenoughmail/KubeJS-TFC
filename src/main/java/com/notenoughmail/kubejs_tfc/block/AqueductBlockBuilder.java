@@ -15,6 +15,7 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
+        renderType("cutout");
     }
 
     @Override

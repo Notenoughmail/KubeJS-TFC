@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
-// TODO: 1.1.0 | JSDoc, models
 public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient Supplier<Supplier<? extends Block>> fruitBlock;
@@ -24,6 +24,12 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
         type = Type.SPREADING;
     }
 
+    @Override
+    protected boolean hasProduct() {
+        return false;
+    }
+
+    @Info(value = "Sets the block that will be used as the block's fruit, defaults to honey blocks")
     public SpreadingCropBlockBuilder fruitBlock(ResourceLocation fruitBlock) {
         this.fruitBlock = () -> () -> RegistryInfo.BLOCK.getValue(fruitBlock);
         return this;
@@ -40,6 +46,22 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
             blockstateJson = Util.make(new MultipartBlockStateGenerator(), this::blockStates).toJson();
         }
         super.generateAssetJsons(generator);
+    }
+
+    @Override
+    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        final String base = newID("block/", "_").toString();
+        generator.blockModel(newID("", "_side"), m -> {
+            m.parent("tfc:block/crop/spreading_crop_side");
+            m.texture("crop", base + "side");
+        });
+        for (int i = 0 ; i < stages ; i++) {
+            final int j = i;
+            generator.blockModel(newID("", "_age_" + j), m -> {
+                m.parent("block/crop");
+                m.texture("crop", base + j);
+            });
+        }
     }
 
     private void blockStates(MultipartBlockStateGenerator ms) {

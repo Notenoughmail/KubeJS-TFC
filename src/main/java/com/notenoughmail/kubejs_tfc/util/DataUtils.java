@@ -1,10 +1,13 @@
 package com.notenoughmail.kubejs_tfc.util;
 
+import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
+import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.Util;
@@ -162,28 +165,54 @@ public class DataUtils {
         return json;
     }
 
-    /*
-     * See comment in TFCDataEventJS
-    public static void handleNetherFertilizers(String values, JsonObject objToAddTo) {
-        var splitValues = values.replace(" ", "").toLowerCase(Locale.ROOT).split(splitters);
-        for (int i = 0 ; i < Math.min(5, splitValues.length) ; i++) {
-            var value = splitValues[i];
-            if (value.charAt(0) == 'd' || value.matches("death.+")) {
-                objToAddTo.addProperty("death", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 't' || value.matches("destruction.+")) {
-                objToAddTo.addProperty("destruction", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'f' || value.matches("flame.+")) {
-                objToAddTo.addProperty("flame", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 'c' || value.matches("decay.+")) {
-                objToAddTo.addProperty("decay", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else if (value.charAt(0) == 's' || value.matches("sorrow.+")) {
-                objToAddTo.addProperty("sorrow", Float.parseFloat(value.replaceAll(notANumber, "")));
-            } else {
-                ConsoleJS.SERVER.error("Value '" + value + "' in values '" + values + "' is not valid! the value should match /(d|t|f|c|s)=\\d*.\\d+/");
-            }
+    public static JsonObject plantable(
+            Ingredient ingredient,
+            @Nullable PlanterType planterType,
+            @Nullable Integer tier,
+            @Nullable Integer stages,
+            @Nullable Float extraSeedChance,
+            @Nullable ItemStack seed,
+            ItemStack crop,
+            @Nullable FarmlandBlockEntity.NutrientType nutrient,
+            String[] textures,
+            @Nullable String special
+    ) {
+        final JsonObject json = new JsonObject();
+        json.add("ingredient", ingredient.toJson());
+        if (planterType != null) {
+            json.addProperty("planter", planterType.name());
         }
+        if (tier != null) {
+            json.addProperty("tier", tier);
+        }
+        if (stages != null) {
+            json.addProperty("stages", stages);
+        }
+        if (extraSeedChance != null) {
+            json.addProperty("extra_seed_chance", extraSeedChance);
+        }
+        if (seed != null) {
+            json.add("seed", IngredientHelpers.itemStackToJson(seed));
+        }
+        json.add("crop", IngredientHelpers.itemStackToJson(crop));
+        if (nutrient != null) {
+            json.addProperty("nutrient", nutrient.name());
+        }
+        final JsonArray textureArray = new JsonArray(textures.length);
+        for (String s : textures) {
+            textureArray.add(s);
+        }
+        json.add("texture", textureArray);
+        final JsonArray specialArray;
+        if (special != null) {
+            specialArray = new JsonArray(1);
+            specialArray.add(special);
+        } else {
+            specialArray = new JsonArray(0);
+        }
+        json.add("specials", specialArray);
+        return json;
     }
-    */
 
     // "worldgen" is my favorite mod!
     public static ResourceLocation configuredFeatureName(String path) {

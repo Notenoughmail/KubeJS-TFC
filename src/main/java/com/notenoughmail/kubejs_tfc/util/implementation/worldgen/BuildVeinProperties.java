@@ -63,13 +63,13 @@ public abstract class BuildVeinProperties {
         return this;
     }
 
-    // TODO: 1.1.0~[Future] JSDoc, figure out what this actually does
+    @Info(value = "Determines if the vein should project itself to the surface, defaults to false")
     public BuildVeinProperties project(boolean b) {
         project = b;
         return this;
     }
 
-    // TODO: 1.1.0~[Future] JSDoc, figure out what this actually does
+    @Info(value = "Determines if the projection of the vein should be offset in the x and z directions, defaults to false")
     public BuildVeinProperties projectOffset(boolean b) {
         projectOffset = b;
         return this;

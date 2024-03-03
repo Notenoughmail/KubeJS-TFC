@@ -11,6 +11,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
+        renderType("cutout");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
+import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ConnectedGrassBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
@@ -11,6 +12,9 @@ import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.world.entity.monster.Monster;
@@ -19,6 +23,8 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.function.Predicate;
 
 public class ClientEventHandlers {
 
@@ -43,6 +49,7 @@ public class ClientEventHandlers {
         ConnectedGrassBlockBuilder.thisList.forEach(builder -> event.register(grassBlockColor, builder.get()));
     }
 
+    @SuppressWarnings("deprecation")
     private static void clientSetup(FMLClientSetupEvent event) {
         final ItemPropertyFunction throwing = (stack, level, entity, unused) ->
                 entity != null && ((entity.isUsingItem() && entity.getUseItem() == stack) || (entity instanceof Monster monster && monster.isAggressive())) ? 1.0F : 0.0F;
@@ -63,5 +70,11 @@ public class ClientEventHandlers {
         TFCFishingRodItemBuilder.thisList.forEach(builder ->
             ItemProperties.register(builder.get(), Helpers.identifier("cast"), cast)
         );
+
+        final Predicate<RenderType> ghostBlock = rt -> rt == RenderType.cutoutMipped() || rt == Sheets.translucentCullBlockSheet();
+
+        DoubleCropBlockBuilder.ghostRenders.forEach(builder -> {
+            ItemBlockRenderTypes.setRenderLayer(builder.get(), ghostBlock);
+        });
     }
 }

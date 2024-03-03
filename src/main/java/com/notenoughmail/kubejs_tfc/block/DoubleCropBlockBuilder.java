@@ -14,9 +14,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient int doubleStages;
+    public static final List<DoubleCropBlockBuilder> ghostRenders = new ArrayList<>();
 
     public DoubleCropBlockBuilder(ResourceLocation i) {
         super(i);
@@ -44,6 +48,13 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     @Info(value = "Determines if the crop needs a stick to grow")
     public DoubleCropBlockBuilder requiresStick(boolean requiresStick) {
         this.requiresStick = requiresStick;
+        if (requiresStick) {
+            if (!ghostRenders.contains(this)) {
+                ghostRenders.add(this);
+            }
+        } else {
+            ghostRenders.remove(this);
+        }
         return this;
     }
 
@@ -70,6 +81,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 p.addItem(new ItemStack(seeds.get()))
                         .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
             });
+            assert product != null;
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(product.get()))

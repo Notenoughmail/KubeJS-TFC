@@ -42,6 +42,7 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
         type = Type.DEFAULT;
         seedItem = null;
         foodItem = null;
+        renderType("cutout");
     }
 
     @Override

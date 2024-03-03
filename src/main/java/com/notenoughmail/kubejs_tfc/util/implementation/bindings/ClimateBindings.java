@@ -11,7 +11,7 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import org.openjdk.nashorn.internal.objects.NativeString;
@@ -37,8 +37,8 @@ public enum ClimateBindings {
             return Climate.model(level);
         } else if (o instanceof ClimateModelType type) {
             return type.create();
-        } else if (o instanceof Player player) {
-            return Climate.model(player.level());
+        } else if (o instanceof Entity entity) {
+            return Climate.model(entity.level());
         }
         return null;
     }

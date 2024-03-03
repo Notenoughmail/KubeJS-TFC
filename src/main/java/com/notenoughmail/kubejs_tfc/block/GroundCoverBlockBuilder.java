@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -12,7 +13,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.function.Consumer;
 
 // TODO: [Future] Allow custom vanilla items for these? InteractionManager#382
-// TODO: 1.1.0 | Fix item model (verify it is actually broken)
 public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     private transient Type type;
@@ -28,6 +28,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
         parent = "loose/igneous_intrusive_2";
         noCollision = true;
         props = p -> {};
+        renderType("cutout");
     }
 
     @Info(value = "Sets the block to have the same bounding box as TFC's ore pieces")
@@ -82,6 +83,12 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
             case TWIG -> GroundcoverBlock.twig(createExtendedProperties());
             default -> new GroundcoverBlock(createExtendedProperties(), getShape(), itemBuilder);
         };
+    }
+
+    @Override
+    protected void generateItemModelJson(ModelGenerator m) {
+        m.parent("item/generated");
+        m.texture("layer0", newID("item/", "").toString());
     }
 
     @Override
