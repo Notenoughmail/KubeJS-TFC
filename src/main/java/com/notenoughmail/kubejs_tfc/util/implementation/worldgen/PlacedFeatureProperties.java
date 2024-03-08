@@ -8,10 +8,10 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.minecraft.Util;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -102,11 +102,11 @@ public class PlacedFeatureProperties {
         return jsonPlacement(json);
     }
 
-    @Info(value = "Adds a 'minecraft:heightmap' placement modifier", params = @Param(name = "heightMap", value = "Sets t=the 'height_map' property of the modifier"))
-    public PlacedFeatureProperties heightMap(String heightMap) {
+    @Info(value = "Adds a 'minecraft:heightmap' placement modifier", params = @Param(name = "heightMap", value = "Sets the 'height_map' property of the modifier"))
+    public PlacedFeatureProperties heightMap(Heightmap.Types heightMap) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:heightmap");
-        json.addProperty("heightmap", heightMap.toUpperCase(Locale.ROOT));
+        json.addProperty("heightmap", heightMap.getSerializedName());
         return jsonPlacement(json);
     }
 

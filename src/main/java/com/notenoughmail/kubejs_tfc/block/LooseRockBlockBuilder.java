@@ -59,7 +59,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info("sets the rock type the block model should use")
+    @Info("sets the rock type the block model should use, may be 'igneous_extrusive', 'igneous_intrusive', 'metamorphic', or 'sedimentary'")
     public LooseRockBlockBuilder rockTypeModel(String s) {
         rockType = s;
         return this;

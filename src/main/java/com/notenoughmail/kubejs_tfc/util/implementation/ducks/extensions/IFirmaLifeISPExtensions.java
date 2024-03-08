@@ -2,15 +2,19 @@ package com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.RemapForJS;
 
 public interface IFirmaLifeISPExtensions {
 
     @Info(value = "Adds a 'firmalife:add_pie_pan' modifier to the ISP")
-    ItemStackProviderJS firmaLifeAddPiePan();
+    @RemapForJS("firmaLifeAddPiePan")
+    ItemStackProviderJS kubeJS_TFC$firmaLifeAddPiePan();
 
     @Info(value = "Adds a 'firmalife:copy_dynamic_food' modifier to the ISP")
-    ItemStackProviderJS firmaLifeCopyDynamicFood();
+    @RemapForJS("firmaLifeCopyDynamicFood")
+    ItemStackProviderJS kubeJS_TFC$firmaLifeCopyDynamicFood();
 
     @Info(value = "Adds a 'firmalife:empty_pan' modifier to the ISP")
-    ItemStackProviderJS firmaLifeEmptyPan();
+    @RemapForJS("firmaLifeEmptyPan")
+    ItemStackProviderJS kubeJS_TFC$firmaLifeEmptyPan();
 }

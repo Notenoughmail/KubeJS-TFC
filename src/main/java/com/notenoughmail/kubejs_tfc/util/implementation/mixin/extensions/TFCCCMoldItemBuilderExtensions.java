@@ -27,18 +27,18 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     }
 
     @Override
-    public MoldItemBuilder tfcccAllowedInMoldTable() {
+    public MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable() {
         tag(TFCCCTags.Items.ACCEPTED_IN_MOLD_TABLES.location());
         return (MoldItemBuilder) (Object) this;
     }
 
     @Override
-    public MoldItemBuilder tfcccAllowedInMoldTable(List<String> model) {
+    public MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable(List<String> model) {
         if (model.size() != 14) {
             throw new IllegalArgumentException("The mold table model must have 14 rows each of length 14");
         }
         kubejs_tfc$model = model;
-        return tfcccAllowedInMoldTable();
+        return kubeJS_TFC$tfcccAllowedInMoldTable();
     }
 
     @Inject(method = "generateAssetJsons", at = @At("TAIL"), remap = false)
@@ -60,6 +60,6 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
 
     @Unique
     private ResourceLocation kubejs_tfc$moldTableModelId() {
-        return new ResourceLocation("tfcchannelcasting", "mold/" + id.getNamespace() + "/" + id.getPath());
+        return new ResourceLocation("tfcchannelcasting", "models/mold/" + id.getNamespace() + "/" + id.getPath());
     }
 }

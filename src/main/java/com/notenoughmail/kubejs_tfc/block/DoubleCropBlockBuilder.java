@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -84,7 +85,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
             assert product != null;
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(product.get()))
+                p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
                         .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> {
                             j.addProperty("age", Integer.toString(stages + doubleStages - 1));
                             j.addProperty("part", "bottom");

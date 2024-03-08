@@ -84,14 +84,14 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
     }
 
     @Info(value = "Sets the seeds that the crop drops when broken")
-    public WildCropBlockBuilder seeds(ResourceLocation seedId) {
-        seedItem = seedId;
+    public WildCropBlockBuilder seeds(ResourceLocation seedItem) {
+        this.seedItem = seedItem;
         return this;
     }
 
     @Info(value = "Sets the food item that the crop drops when broken")
-    public WildCropBlockBuilder food(ResourceLocation foodId) {
-        foodItem = foodId;
+    public WildCropBlockBuilder food(ResourceLocation foodItem) {
+        this.foodItem = foodItem;
         return this;
     }
 

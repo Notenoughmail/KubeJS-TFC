@@ -39,6 +39,8 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     public transient Consumer<ExtendedPropertiesJS> props;
     public transient Type type;
     public transient boolean requiresStick;
+    @Nullable
+    public transient ResourceLocation productItem;
 
     public AbstractCropBlockBuilder(ResourceLocation i) {
         super(i);
@@ -55,6 +57,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         props = p -> {};
         requiresStick = false;
         renderType("cutout");
+        productItem = null;
     }
 
     protected boolean hasProduct() {
@@ -104,6 +107,13 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         return this;
     }
 
+    public AbstractCropBlockBuilder productItem(ResourceLocation productItem) {
+        if (hasProduct()) {
+            this.productItem = productItem;
+        }
+        return this;
+    }
+
     @Info(value = "Sets the nutrient the crop uses as fertilizer, defaults to nitrogen")
     public AbstractCropBlockBuilder nutrient(FarmlandBlockEntity.NutrientType nutrient) {
         this.nutrient = nutrient;
@@ -132,7 +142,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         RegistryInfo.BLOCK.addBuilder(dead);
         dead.createAdditionalObjects();
         RegistryInfo.ITEM.addBuilder(seeds);
-        if (hasProduct()) {
+        if (hasProduct() && productItem == null) {
             assert product != null;
             RegistryInfo.ITEM.addBuilder(product);
             product.createAdditionalObjects();
@@ -156,7 +166,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
                 assert product != null;
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem(new ItemStack(product.get()))
+                    p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
                             .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages - 1))))
                             .addFunction(cropYieldUniformFunction());
                 });

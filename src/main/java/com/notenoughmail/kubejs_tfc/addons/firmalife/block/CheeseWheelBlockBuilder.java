@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.block;
 
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -25,10 +26,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class CheeseWheelBlockBuilder extends ShapedBlockBuilder {
+public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupportExtendedProperties {
 
     public transient ItemBuilder sliceItem;
     private static final String[] ages = new String[]{"fresh", "aged", "vintage"};
+    public transient Consumer<ExtendedPropertiesJS> props;
 
     public CheeseWheelBlockBuilder(ResourceLocation i) {
         super(i);
@@ -36,6 +38,7 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder {
         hardness(2f);
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
+        props = p -> {};
     }
 
     @Info(value = "Modifies the block's slice item")
@@ -59,7 +62,7 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new CheeseWheelBlock(ExtendedProperties.of(createProperties()).randomTicks().blockEntity(RegistryUtils.getTickCounter()), sliceItem);
+        return new CheeseWheelBlock(createExtendedProperties(), sliceItem);
     }
 
     @Override
@@ -124,5 +127,20 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder {
         }
 
         generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+    }
+
+    @Override
+    public ExtendedProperties createExtendedProperties() {
+        final ExtendedPropertiesJS propsJs = extendedPropsJS();
+        props.accept(propsJs);
+        return propsJs.delegate()
+                .randomTicks()
+                .blockEntity(RegistryUtils.getTickCounter());
+    }
+
+    @Override
+    public CheeseWheelBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+        props = extendedProperties;
+        return this;
     }
 }

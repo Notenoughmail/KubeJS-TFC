@@ -22,7 +22,7 @@ public abstract class FirmaLifeDataEventMixin implements IFirmaLifeDataEventMixi
     public abstract void addJson(ResourceLocation id, JsonElement json);
 
     @Override
-    public void firmalifeGreenhouseType(BlockIngredient ingredient, int tier) {
+    public void kubeJS_TFC$firmalifeGreenhouseType(BlockIngredient ingredient, int tier) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
@@ -30,7 +30,7 @@ public abstract class FirmaLifeDataEventMixin implements IFirmaLifeDataEventMixi
     }
 
     @Override
-    public void firmalifeGreenhouseType(BlockIngredient ingredient, int tier, ResourceLocation name) {
+    public void kubeJS_TFC$firmalifeGreenhouseType(BlockIngredient ingredient, int tier, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
@@ -38,12 +38,12 @@ public abstract class FirmaLifeDataEventMixin implements IFirmaLifeDataEventMixi
     }
 
     @Override
-    public void firmalifePlantable(Ingredient ingredient, @Nullable PlanterType planterType, @Nullable Integer tier, @Nullable Integer stages, @Nullable Float extraSeedChance, @Nullable ItemStack seed, ItemStack crop, FarmlandBlockEntity.@Nullable NutrientType nutrient, String[] textures, @Nullable String special) {
+    public void kubeJS_TFC$firmalifePlantable(Ingredient ingredient, @Nullable PlanterType planterType, @Nullable Integer tier, @Nullable Integer stages, @Nullable Float extraSeedChance, @Nullable ItemStack seed, ItemStack crop, FarmlandBlockEntity.@Nullable NutrientType nutrient, String[] textures, @Nullable String special) {
         addJson(DataUtils.dataIDFromObject(ingredient, "firmalife", "plantable"), DataUtils.plantable(ingredient, planterType, tier, stages, extraSeedChance, seed, crop, nutrient, textures, special));
     }
 
     @Override
-    public void firmalifePlantable(Ingredient ingredient, @Nullable PlanterType planterType, @Nullable Integer tier, @Nullable Integer stages, @Nullable Float extraSeedChance, @Nullable ItemStack seed, ItemStack crop, FarmlandBlockEntity.@Nullable NutrientType nutrient, String[] textures, @Nullable String  special, ResourceLocation name) {
+    public void kubeJS_TFC$firmalifePlantable(Ingredient ingredient, @Nullable PlanterType planterType, @Nullable Integer tier, @Nullable Integer stages, @Nullable Float extraSeedChance, @Nullable ItemStack seed, ItemStack crop, FarmlandBlockEntity.@Nullable NutrientType nutrient, String[] textures, @Nullable String  special, ResourceLocation name) {
         addJson(DataUtils.dataID(name, "firmalife", "plantable"), DataUtils.plantable(ingredient, planterType, tier, stages, extraSeedChance, seed, crop, nutrient, textures, special));
     }
 }

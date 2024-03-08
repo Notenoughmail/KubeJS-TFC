@@ -41,7 +41,7 @@ public interface ISupportExtendedProperties {
         }
 
         @Info(value = "Sets the pathing type of the block", params = {
-                @Param(name = "pathtype", value = "The path type of the block")
+                @Param(name = "pathType", value = "The path type of the block")
         })
         public ExtendedPropertiesJS pathType(BlockPathTypes pathType) {
             delegate.pathType(pathType);

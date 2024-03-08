@@ -1,6 +1,6 @@
-### 1.1.0 (WIP)
+### 1.1.0
 - Update to TFC version 3.1.9
-- Update to KubeJS version `2001.6.4-build.121`+, fix collapse and landslide recipes being broken with said kube versions
+- Update to KubeJS version `2001.6.4-build.121`+, fix collapse, landslide, and chisel recipes being broken with said kube versions
 - Add misc sub-binding
   - Has many things! Check the wiki
 - Events for custom birthdays, item stack modifiers, and adding prospecting representative blocks
@@ -31,13 +31,7 @@
 - Add recipe handlers for FirmaLife and ArborFirmaCraft if they are present
 - Update custom javelin models
 - Add support for more feature types in the worldgen data event
-  - Soil disc
-  - Hot spring
-  - Simple block
-  - Random patch
-  - Tall wild crop
-  - Spreading crop
-  - Spreading bush
+- Ship method param names for ProbeJS hints
 
 ### 1.0.3
 - Update to TFC 3.1.3-beta

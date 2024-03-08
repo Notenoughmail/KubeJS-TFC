@@ -71,12 +71,12 @@ public class KubeJSClimateModel implements ClimateModel {
         waterFog = callback;
     }
 
-    @Info(value = "Sets how hte model will determine its wind vector at the given position and time")
+    @Info(value = "Sets how the model will determine its wind vector at the given position and time")
     public void setWindVector(WindVectorCallback callback) {
         windVector = callback;
     }
 
-    @Info(value = "Returns a the climate seed being used")
+    @Info(value = "Returns the climate seed being used")
     public long getClimateSeed() {
         return climateSeed; // Can be accessed, but not modified
     }
