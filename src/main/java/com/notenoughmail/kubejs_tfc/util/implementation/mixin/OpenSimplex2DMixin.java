@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IOpenSimplex2dMixin;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IOpenSimplex2dMixin;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.world.noise.FastNoiseLite;
 import net.dries007.tfc.world.noise.OpenSimplex2D;

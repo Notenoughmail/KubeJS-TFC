@@ -1,8 +1,10 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.capabilities.food.IFood;
@@ -42,9 +44,10 @@ public enum MiscBindings {
     @Info(value = "A map associating the name of a rock to its RegistryRock")
     @Generics(value = {String.class, RegistryRock.class})
     public final Map<String, RegistryRock> rock = new HashMap<>(20);
+
     @Info(value = "A map associating the name of a wood to its RegistryWood, includes AFC woods if it is present")
-    @Generics(value = {String.class, RegistryWood.class})
-    public final Map<String, RegistryWood> wood = new HashMap<>(19);
+    @Generics(value = {String.class, NamedRegistryWood.class})
+    public final Map<String, NamedRegistryWood> wood = new HashMap<>(19);
 
     @Nullable
     @Info(value = "Returns the stack's IHeat capability if present, else null")
@@ -55,6 +58,12 @@ public enum MiscBindings {
     @Info(value = "returns true if the stack does have an IHeat capability")
     public boolean hasHeat(ItemStack stack) {
         return HeatCapability.has(stack);
+    }
+
+    @Info(value = "Returns the heat that describes the given temperature. Returns null for temperatures less than 1°C")
+    @Nullable
+    public Heat getHeatLevel(float temperature) {
+        return Heat.getHeat(temperature);
     }
 
     @Info(value = "A map associating the name of a heat level to its Heat")
@@ -202,5 +211,13 @@ public enum MiscBindings {
     })
     public Metaballs3D newMetaballs3D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
         return new Metaballs3D(random, minBalls, maxBalls, minSize, maxSize, radius);
+    }
+
+    @Info(value = "Returns a number, in the range [0, 100], an expression of how hydrated the soil is", params = {
+            @Param(name = "level", value = "The level to get the hydration from"),
+            @Param(name = "pos", value = "THe position to get the hydration from")
+    })
+    public int getHydration(LevelAccessor level, BlockPos pos) {
+        return FarmlandBlock.getHydration(level, pos);
     }
 }

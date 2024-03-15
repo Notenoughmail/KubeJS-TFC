@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.ducks;
+package com.notenoughmail.kubejs_tfc.util.helpers.ducks;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
 

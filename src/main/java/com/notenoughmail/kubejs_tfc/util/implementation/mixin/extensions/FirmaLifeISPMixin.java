@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin.extensions;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions.IFirmaLifeISPExtensions;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IFirmaLifeISPExtensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

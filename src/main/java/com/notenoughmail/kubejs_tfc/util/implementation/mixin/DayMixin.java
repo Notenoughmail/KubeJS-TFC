@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IDayMixin;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IDayMixin;
 import net.dries007.tfc.util.calendar.Day;
 import net.dries007.tfc.util.calendar.Month;
 import org.spongepowered.asm.mixin.Final;

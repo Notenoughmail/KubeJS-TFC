@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
 import dev.architectury.event.events.common.LifecycleEvent;
+import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
@@ -53,15 +54,15 @@ public class EventHandlers {
     public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
-    public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class);
+    public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
     public static final EventHandler prospect = TFCEvents.server("prospect", () -> ProspectedEventJS.class);
-    public static final EventHandler log = TFCEvents.server("log", () -> LoggingEventJS.class);
-    public static final EventHandler animalProduct = TFCEvents.server("animalProduct", () -> AnimalProductEventJS.class);
+    public static final EventHandler log = TFCEvents.server("log", () -> LoggingEventJS.class).hasResult();
+    public static final EventHandler animalProduct = TFCEvents.server("animalProduct", () -> AnimalProductEventJS.class).hasResult();
     public static final EventHandler collapse = TFCEvents.server("collapse", () -> CollapseEventJS.class);
-    public static final EventHandler douseFire = TFCEvents.server("douseFire", () -> DouseFireEventJS.class);
+    public static final EventHandler douseFire = TFCEvents.server("douseFire", () -> DouseFireEventJS.class).hasResult();
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
-    public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(Extra.REQUIRES_ID);
+    public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(PlayerEvents.SUPPORTS_MENU_TYPE.copy().required());
 
     public static void init() {
         LifecycleEvent.SETUP.register(EventHandlers::setupEvents);
@@ -191,8 +192,6 @@ public class EventHandlers {
             return; // Do nothing as a menu is needed
         }
 
-        final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
-
         if (limitContainer.hasListeners()) {
             final List<Slot> slotsToHandle = new ArrayList<>();
             for (Slot slot : container.slots) {
@@ -201,8 +200,10 @@ public class EventHandlers {
                 }
             }
 
-            limitContainer.post(new ContainerLimiterEventJS(slotsToHandle, event.getEntity().level(), event.getEntity().getOnPos().above()), menuName);
+            limitContainer.post(new ContainerLimiterEventJS(slotsToHandle, event.getEntity().level(), event.getEntity().getOnPos().above()), menuType);
         }
+
+        final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
 
         // TODO: 1.2.0 | Deprecated for removal
         if (event.getEntity() instanceof ServerPlayer player && LegacyContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {

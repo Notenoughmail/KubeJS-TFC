@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ljuangbminecraft.tfcchannelcasting.common.TFCCCTags;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions.ITFCCCMoldItemBuilderExtensions;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.ITFCCCMoldItemBuilderExtensions;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.minecraft.resources.ResourceLocation;

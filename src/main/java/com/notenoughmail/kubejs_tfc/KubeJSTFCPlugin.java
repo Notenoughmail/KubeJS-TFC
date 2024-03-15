@@ -15,12 +15,15 @@ import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
+import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
@@ -49,6 +52,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
 
+import java.util.List;
 import java.util.Locale;
 
 // Mild Javadoc abuse
@@ -230,6 +234,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         }
     }
 
+    @Override
+    public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
+        types.add(TFCInventoryAttachment.TYPE);
+    }
+
     private void addToolTier(Tier tier) {
         ItemBuilder.TOOL_TIERS.put(tier.toString().toLowerCase(), tier);
     }
@@ -249,7 +258,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             MiscBindings.INSTANCE.rock.put(rock.getSerializedName(), rock);
         }
         for (Wood wood : Wood.VALUES) {
-            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), wood);
+            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
         }
         for (Heat heatLevel : Heat.values()) {
             MiscBindings.INSTANCE.heatLevels.put(heatLevel.name().toLowerCase(Locale.ROOT), heatLevel);

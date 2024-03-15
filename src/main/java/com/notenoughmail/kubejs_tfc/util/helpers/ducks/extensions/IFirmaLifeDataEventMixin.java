@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions;
+package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import dev.latvian.mods.kubejs.typings.Info;

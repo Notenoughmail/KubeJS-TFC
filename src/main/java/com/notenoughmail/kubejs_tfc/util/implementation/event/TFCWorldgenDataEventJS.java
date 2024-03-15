@@ -203,7 +203,7 @@ public class TFCWorldgenDataEventJS extends EventJS {
 
     @Info(value = "Creates a 'tfc:soil_disc' configured feature and the matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
-            @Param(name = "A list of {block -> block state} objects in string form the define the disc's replacement map"),
+            @Param(name = "replacementMap", value = "A list of {block -> block state} objects in string form the define the disc's replacement map"),
             @Param(name = "minRadius", value = "The minimum radius of the soil disc"),
             @Param(name = "maxRadius", value = "The maximum radius of the soil disc"),
             @Param(name = "height", value = "How tall the soil disc should be"),

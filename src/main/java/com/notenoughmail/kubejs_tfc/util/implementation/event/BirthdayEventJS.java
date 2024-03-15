@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.IDayMixin;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IDayMixin;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.util.calendar.Day;

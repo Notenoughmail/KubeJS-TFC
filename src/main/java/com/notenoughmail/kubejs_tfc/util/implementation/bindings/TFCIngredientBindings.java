@@ -77,12 +77,12 @@ public enum TFCIngredientBindings {
         return LacksTraitIngredient.of(delegate, FoodTrait.getTraitOrThrow(trait));
     }
 
-    @Info(value = "Creates an ingredient of type 'tfc:not_rotten")
+    @Info(value = "Creates an ingredient of type 'tfc:not_rotten'")
     public Ingredient notRotten() {
         return NotRottenIngredient.of((Ingredient) null); // Cast because there are multiple static 'of' methods
     }
 
-    @Info(value = "Creates an ingredient of type 'tfc:not_rotten", params = @Param(name = "delegate", value = "The sub-ingredient of the not rotten ingredient"))
+    @Info(value = "Creates an ingredient of type 'tfc:not_rotten'", params = @Param(name = "delegate", value = "The sub-ingredient of the not rotten ingredient"))
     public Ingredient notRotten(Ingredient delegate) {
         return NotRottenIngredient.of(delegate);
     }

@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.ducks;
+package com.notenoughmail.kubejs_tfc.util.helpers.ducks;
 
 import net.dries007.tfc.util.calendar.Month;
 

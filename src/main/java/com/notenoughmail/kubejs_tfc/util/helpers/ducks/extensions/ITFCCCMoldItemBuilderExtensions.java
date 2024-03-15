@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions;
+package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;

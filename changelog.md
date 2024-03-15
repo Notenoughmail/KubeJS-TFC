@@ -1,3 +1,11 @@
+### 1.1.1 (WIP)
+- Add `tfc:inventory` BE attachment, identical to kube's default inventory attachment but allows for filtering allowed items by TFC size & weight
+- Fix the register representatives event not coercing given values to `ResourceLocation`s
+- Fix the `replacementMap` param in the soil disc worldgen data event's JSDoc
+- The `TFC.misc.wood` object is now a `Map<String, NamedRegistryWood>`, identical to before but the returned objects now have a `#getMod()` method which returns the mod they originate from
+- Fix events that should have `#cancel()` called in them
+- Add some methods to miscellaneous bindings
+
 ### 1.1.0
 - Update to TFC version 3.1.9
 - Update to KubeJS version `2001.6.4-build.121`+, fix collapse, landslide, and chisel recipes being broken with said kube versions

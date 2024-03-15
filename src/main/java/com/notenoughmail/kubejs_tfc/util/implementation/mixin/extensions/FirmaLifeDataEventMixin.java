@@ -4,7 +4,7 @@ import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.ducks.extensions.IFirmaLifeDataEventMixin;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IFirmaLifeDataEventMixin;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;

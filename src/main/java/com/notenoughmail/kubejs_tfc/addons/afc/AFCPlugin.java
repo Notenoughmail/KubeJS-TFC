@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.addons.afc;
 
 import com.notenoughmail.kubejs_tfc.addons.afc.recipe.TreeTapSchema;
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.therighthon.afc.AFC;
 import com.therighthon.afc.common.blocks.AFCWood;
@@ -17,7 +18,7 @@ public class AFCPlugin extends KubeJSPlugin {
     @Override
     public void init() {
         for (AFCWood wood : AFCWood.VALUES) {
-            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), wood);
+            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), new NamedRegistryWood(AFC.MOD_ID, wood));
         }
     }
 
