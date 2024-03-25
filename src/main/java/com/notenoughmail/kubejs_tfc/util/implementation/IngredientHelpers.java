@@ -8,6 +8,8 @@ import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.ListJS;
+import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.rhino.regexp.NativeRegExp;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
@@ -19,10 +21,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import org.openjdk.nashorn.internal.objects.NativeString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class IngredientHelpers {
 
@@ -62,7 +64,7 @@ public class IngredientHelpers {
     public static BlockIngredient ofBlockIngredient(Object o) {
         if (o instanceof BlockIngredient block) {
             return block;
-        } else if (o instanceof CharSequence || o instanceof NativeString) {
+        } else if (o instanceof CharSequence) {
             final String name = o.toString();
             if (name.charAt(0) == '#') {
                 return block(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
@@ -78,11 +80,21 @@ public class IngredientHelpers {
             return block(block);
         } else if (o instanceof BlockState state) {
             return block(state.getBlock());
+        } else if (o instanceof Pattern || o instanceof NativeRegExp) {
+            final Pattern reg = UtilsJS.parseRegex(o);
+            assert reg != null;
+            final List<IngredientType.Entry<Block>> blocks = new ArrayList<>();
+            RegistryInfo.BLOCK.getVanillaRegistry().keySet().forEach(rl -> {
+                if (reg.matcher(rl.toString()).matches()) {
+                    blocks.add(blockObj(RegistryInfo.BLOCK.getValue(rl)));
+                }
+            });
+            return new BlockIngredient(blocks);
         }
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Block>> blocks = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof CharSequence || object instanceof NativeString) {
+            if (object instanceof CharSequence) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     blocks.add(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
@@ -98,6 +110,14 @@ public class IngredientHelpers {
                 blocks.add(blockObj(block));
             } else if (object instanceof BlockState state) {
                 blocks.add(blockObj(state.getBlock()));
+            } else if (object instanceof Pattern || object instanceof NativeRegExp) {
+                final Pattern reg = UtilsJS.parseRegex(object);
+                assert reg != null;
+                RegistryInfo.BLOCK.getVanillaRegistry().keySet().forEach(rl -> {
+                    if (reg.matcher(rl.toString()).matches()) {
+                        blocks.add(blockObj(RegistryInfo.BLOCK.getValue(rl)));
+                    }
+                });
             }
         }
         return new BlockIngredient(blocks);
@@ -106,7 +126,7 @@ public class IngredientHelpers {
     public static FluidIngredient ofFluidIngredient(Object o) {
         if (o instanceof FluidIngredient fluid) {
             return fluid;
-        } else if (o instanceof CharSequence || o instanceof NativeString) {
+        } else if (o instanceof CharSequence) {
             final String name = o.toString();
             if (name.charAt(0) == '#') {
                 return fluid(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
@@ -120,11 +140,21 @@ public class IngredientHelpers {
             return FluidIngredient.fromJson(json);
         } else if (o instanceof FluidStackIngredient stack) { // Sometimes people get confused
             return stack.ingredient();
+        } else if (o instanceof Pattern || o instanceof NativeRegExp) {
+            final Pattern reg = UtilsJS.parseRegex(o);
+            assert reg != null;
+            final List<IngredientType.Entry<Fluid>> fluids = new ArrayList<>();
+            RegistryInfo.FLUID.getVanillaRegistry().keySet().forEach(rl -> {
+                if (reg.matcher(rl.toString()).matches()) {
+                    fluids.add(fluidObj(RegistryInfo.FLUID.getValue(rl)));
+                }
+            });
+            return new FluidIngredient(fluids);
         }
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Fluid>> fluids = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof CharSequence || object instanceof NativeString) {
+            if (object instanceof CharSequence) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     fluids.add(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
@@ -136,10 +166,18 @@ public class IngredientHelpers {
                 }
             } else if (object instanceof IngredientType.Entry<?> entry) {
                 fluids.add((IngredientType.Entry<Fluid>) entry); // If someone manages to provide an Entry<Block> they deserve whatever this causes
-            } else if (o instanceof Fluid fluid) {
+            } else if (object instanceof Fluid fluid) {
                 fluids.add(fluidObj(fluid));
-            } else if (o instanceof FluidStackJS fluid) {
+            } else if (object instanceof FluidStackJS fluid) {
                 fluids.add(fluidObj(fluid.getFluid()));
+            } else if (object instanceof Pattern || object instanceof NativeRegExp) {
+                final Pattern reg = UtilsJS.parseRegex(object);
+                assert reg != null;
+                RegistryInfo.FLUID.getVanillaRegistry().keySet().forEach(rl -> {
+                    if (reg.matcher(rl.toString()).matches()) {
+                        fluids.add(fluidObj(RegistryInfo.FLUID.getValue(rl)));
+                    }
+                });
             }
         }
         return new FluidIngredient(fluids);

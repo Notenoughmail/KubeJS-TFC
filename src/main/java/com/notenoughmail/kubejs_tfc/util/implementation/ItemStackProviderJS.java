@@ -177,12 +177,10 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ItemStackProviderJS provider) {
+		if (obj == this) {
+			return true;
+		} else if (obj instanceof ItemStackProviderJS provider) {
             return provider.stack().equals(this.stack()) && provider.modifiers.equals(this.modifiers);
-        } else if (obj instanceof ItemStack itemStack) {
-            return this.isSimple() && itemStack.equals(this.stack);
-        } else if (obj instanceof ItemStackProvider provider) {
-            return provider.equals(asCanonClass());
         }
         return false;
     }

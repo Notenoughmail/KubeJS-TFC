@@ -48,6 +48,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         climateRange = ClimateRange.MANAGER.register(id);
         dead = new DeadCropBlockBuilder(newID("", "_dead"), this);
         seeds = new SeedItemBuilder(newID("", "_seeds"));
+        seeds.blockBuilder = this;
         if (hasProduct()) {
             product = new BasicItemJS.Builder(newID("", "_product"));
         } else {

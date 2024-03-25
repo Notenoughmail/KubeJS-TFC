@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.helpers.SizePredicate;
 import com.notenoughmail.kubejs_tfc.util.helpers.WeightPredicate;
@@ -9,10 +8,10 @@ import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import dev.latvian.mods.kubejs.block.entity.InventoryAttachment;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.ScriptManager;
+import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.typings.desc.PrimitiveDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
 import dev.latvian.mods.rhino.BaseFunction;
-import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.NativeJavaObject;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -27,7 +26,6 @@ public class TFCInventoryAttachment extends InventoryAttachment {
     //     height: 2,
     //     size: size => size.isSmallerThan('normal')
     // }
-    // Theoretically it should work TODO: 1.1.1 | Test
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(
             "tfc:inventory",
             TypeDescJS.object()
@@ -40,8 +38,8 @@ public class TFCInventoryAttachment extends InventoryAttachment {
                 final int width = ((Number) map.get("width")).intValue();
                 final int height = ((Number) map.get("height")).intValue();
                 final Ingredient inputFilter = map.containsKey("inputFilter") ? IngredientJS.of(map.get("inputFilter")) : null;
-                final SizePredicate size = map.containsKey("size") ? sizePredicate(map) : null;
-                final WeightPredicate weight = map.containsKey("weight") ? weightPredicate(map) : null;
+                final SizePredicate size = sizePredicate(map);
+                final WeightPredicate weight = weightPredicate(map);
                 return entity -> new TFCInventoryAttachment(entity, width, height, inputFilter, size, weight);
             }
             );
@@ -50,7 +48,7 @@ public class TFCInventoryAttachment extends InventoryAttachment {
     private static SizePredicate sizePredicate(Map<String, Object> map) {
         final Object possibleFunction = map.get("size");
         if (possibleFunction instanceof BaseFunction func) {
-            return (SizePredicate) NativeJavaObject.createInterfaceAdapter(ScriptManager.getCurrentContext(), SizePredicate.class, func);
+            return (SizePredicate) NativeJavaObject.createInterfaceAdapter(ScriptType.STARTUP.manager.get().context, SizePredicate.class, func);
         }
         return null;
     }
@@ -59,7 +57,7 @@ public class TFCInventoryAttachment extends InventoryAttachment {
     private static WeightPredicate weightPredicate(Map<String, Object> map) {
         final Object possibleFunction = map.get("weight");
         if (possibleFunction instanceof BaseFunction func) {
-            return (WeightPredicate) NativeJavaObject.createInterfaceAdapter(ScriptManager.getCurrentContext(), WeightPredicate.class, func);
+            return (WeightPredicate) NativeJavaObject.createInterfaceAdapter(ScriptType.STARTUP.manager.get().context, WeightPredicate.class, func);
         }
         return null;
     }
