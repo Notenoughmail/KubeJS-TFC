@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
 import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
-import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
+import com.notenoughmail.kubejs_tfc.recipe.js.BloomeryRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -18,5 +18,5 @@ public interface BloomerySchema {
     RecipeKey<FluidStackIngredient> FLUID = FluidIngredientComponent.STACK_INGREDIENT.key("fluid");
     RecipeKey<Integer> DURATION = NumberComponent.INT.key("duration");
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, CATALYST, FLUID, DURATION);
+    RecipeSchema SCHEMA = new RecipeSchema(BloomeryRecipeJS.class, BloomeryRecipeJS::new, RESULT, CATALYST, FLUID, DURATION);
 }

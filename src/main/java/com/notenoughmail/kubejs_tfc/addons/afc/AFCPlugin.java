@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.addons.afc;
 
 import com.notenoughmail.kubejs_tfc.addons.afc.recipe.TreeTapSchema;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
+import com.notenoughmail.kubejs_tfc.util.internal.AddNamedRegistryWoodEvent;
 import com.therighthon.afc.AFC;
 import com.therighthon.afc.common.blocks.AFCWood;
 import com.therighthon.afc.common.recipe.AFCRecipeTypes;
@@ -12,14 +12,13 @@ import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
+import net.minecraftforge.common.MinecraftForge;
 
 public class AFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
-        for (AFCWood wood : AFCWood.VALUES) {
-            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), new NamedRegistryWood(AFC.MOD_ID, wood));
-        }
+        MinecraftForge.EVENT_BUS.addListener(AFCPlugin::addWoods);
     }
 
     @Override
@@ -36,5 +35,11 @@ public class AFCPlugin extends KubeJSPlugin {
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
         event.namespace(AFC.MOD_ID)
                 .register(AFCRecipeTypes.TREE_TAPPING_RECIPE.getId().getPath(), TreeTapSchema.SCHEMA);
+    }
+
+    private static void addWoods(AddNamedRegistryWoodEvent event) {
+        for (AFCWood wood : AFCWood.VALUES) {
+            event.put(wood.getSerializedName(), new NamedRegistryWood(AFC.MOD_ID, wood));
+        }
     }
 }

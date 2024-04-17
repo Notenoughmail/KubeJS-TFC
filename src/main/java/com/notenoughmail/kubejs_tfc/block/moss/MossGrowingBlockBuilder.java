@@ -21,7 +21,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
     public MossGrowingBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.AIR);
-        mossGrowth = MossGrowingCallback.ABOVE;
+        mossGrowth = MossGrowingCallback.ADJACENT;
     }
 
     public MossGrowingBlockBuilder mossyBlock(ResourceLocation block) {

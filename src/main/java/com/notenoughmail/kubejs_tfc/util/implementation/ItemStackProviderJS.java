@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
+import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import dev.latvian.mods.kubejs.item.ItemStackJS;

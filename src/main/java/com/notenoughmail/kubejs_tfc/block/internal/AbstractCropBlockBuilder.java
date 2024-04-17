@@ -66,14 +66,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
-        if (i == null) {
-            itemBuilder = null;
-        } else {
-            i.accept(getOrCreateItemBuilder());
-        }
-
         return this;
     }
 
@@ -108,6 +101,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         return this;
     }
 
+    @Info(value = "Sets the crop's 'product' item to be an existing item")
     public AbstractCropBlockBuilder productItem(ResourceLocation productItem) {
         if (hasProduct()) {
             this.productItem = productItem;
@@ -194,7 +188,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (int i = 0 ; i < stages ; i++) {
+        for (int i = 0 ; i <= stages ; i++) {
             final int j = i;
             generator.blockModel(newID("", "_age_" + j), m -> {
                 m.parent("block/crop");
@@ -205,7 +199,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        for (int i = 0 ; i < stages ; i++) {
+        for (int i = 0 ; i <= stages ; i++) {
             bs.simpleVariant("age=" + i, newID("block/", "_age_" + i).toString());
         }
     }

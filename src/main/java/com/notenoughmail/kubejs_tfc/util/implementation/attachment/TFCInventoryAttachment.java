@@ -1,13 +1,12 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.helpers.SizePredicate;
 import com.notenoughmail.kubejs_tfc.util.helpers.WeightPredicate;
+import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import dev.latvian.mods.kubejs.block.entity.InventoryAttachment;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
-import dev.latvian.mods.kubejs.script.ScriptManager;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.typings.desc.PrimitiveDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;

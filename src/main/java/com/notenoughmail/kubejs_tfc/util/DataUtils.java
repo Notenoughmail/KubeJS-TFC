@@ -4,7 +4,7 @@ import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;

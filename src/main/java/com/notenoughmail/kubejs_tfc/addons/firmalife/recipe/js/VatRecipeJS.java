@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.js;
 import com.google.gson.JsonElement;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.VatSchema;
 import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;

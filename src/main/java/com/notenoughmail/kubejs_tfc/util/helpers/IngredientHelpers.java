@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.helpers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -94,7 +94,9 @@ public class IngredientHelpers {
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Block>> blocks = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof CharSequence) {
+            if (object instanceof BlockIngredient block) {
+                blocks.addAll(block.entries());
+            } else if (object instanceof CharSequence) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     blocks.add(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
@@ -154,7 +156,11 @@ public class IngredientHelpers {
         final List<?> objects = ListJS.orEmpty(o);
         final List<IngredientType.Entry<Fluid>> fluids = new ArrayList<>();
         for (var object : objects) {
-            if (object instanceof CharSequence) {
+            if (object instanceof FluidIngredient fluid) {
+                fluids.addAll(fluid.entries());
+            } else if (object instanceof FluidStackIngredient fluid) {
+                fluids.addAll(fluid.ingredient().entries());
+            } else if (object instanceof CharSequence) {
                 final String name = object.toString();
                 if (name.charAt(0) == '#') {
                     fluids.add(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));

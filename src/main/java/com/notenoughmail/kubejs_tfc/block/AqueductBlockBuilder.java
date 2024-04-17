@@ -6,21 +6,58 @@ import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
+import net.dries007.tfc.common.fluids.FluidProperty;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-// TODO: [Future] Allow custom fluid properties
+import java.util.stream.Stream;
+
 public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
+
+    public transient FluidProperty fluidProperty;
+    public transient ResourceLocation[] fluids;
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
         renderType("cutout");
+        fluidProperty = AqueductBlock.FLUID;
+    }
+
+    @Info(value = "Sets the fluids that the aqueduct may move", params = {
+            @Param(name = "fluids", value = "The registry names of fluids the aqueduct can move. Two liquids with different namespaces but same paths will not be accepted")
+    })
+    public AqueductBlockBuilder allowedFluids(ResourceLocation[] fluids) {
+        final ResourceLocation[] processed = new ResourceLocation[fluids.length + 1];
+        processed[0] = new ResourceLocation("empty");
+        System.arraycopy(fluids, 0, processed, 1, processed.length - 1);
+        this.fluids = processed;
+        return this;
     }
 
     @Override
     public Block createObject() {
-        return new AqueductBlock(createProperties());
+        return new AqueductBlock(createProperties()) {
+            @Override
+            public FluidProperty getFluidProperty() {
+                if (fluids != null && fluidProperty == AqueductBlock.FLUID) {
+                    fluidProperty = FluidProperty.create("fluid", Stream.of(fluids));
+                }
+
+                return fluidProperty;
+            }
+
+            // Doing this through the properties causes the game to crash on startup because the blocks/fluids don't yet exist in the registries
+            @Override
+            public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+                return state.getFluidState().getFluidType().getLightLevel();
+            }
+        };
     }
 
     @Override

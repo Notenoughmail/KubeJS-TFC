@@ -10,7 +10,6 @@ import net.dries007.tfc.common.items.PropickItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Info(value = """
@@ -26,12 +25,7 @@ public class RegisterRepresentativeBlocksEventJS extends EventJS {
             @Param(name = "blocks", value = "A list of block registry names, the blocks to be represented")
     })
     @Generics(value = ResourceLocation.class)
-    public void registerRepresentative(ResourceLocation representative, List<ResourceLocation> blocks) {
-        final Block rep = RegistryInfo.BLOCK.getValue(representative);
-        final Block[] array = new Block[blocks.size()];
-        for (int i = 0 ; i < blocks.size() ; i++) {
-            array[i] = RegistryInfo.BLOCK.getValue(UtilsJS.getMCID(null, blocks.get(i)));
-        }
-        PropickItem.registerRepresentative(rep, array);
+    public void registerRepresentative(Block representative, Block... blocks) {
+        PropickItem.registerRepresentative(representative, blocks);
     }
 }

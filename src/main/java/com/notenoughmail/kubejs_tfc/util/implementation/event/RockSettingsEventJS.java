@@ -6,11 +6,11 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-// TODO: (?) 1.1.0~[Future] Make this take blocks instead of resource locations
 @Info(value = "Define new rock layers which can be referenced in a world preset json")
 public class RockSettingsEventJS extends StartupEventJS {
 
@@ -28,26 +28,26 @@ public class RockSettingsEventJS extends StartupEventJS {
     })
     public RockSettings defineLayer(
             ResourceLocation id,
-            ResourceLocation raw,
-            ResourceLocation hardened,
-            ResourceLocation gravel,
-            ResourceLocation cobble,
-            ResourceLocation sand,
-            ResourceLocation sandstone,
-            @Nullable ResourceLocation spike,
-            @Nullable ResourceLocation loose,
-            @Nullable ResourceLocation mossyLoose
+            Block raw,
+            Block hardened,
+            Block gravel,
+            Block cobble,
+            Block sand,
+            Block sandstone,
+            @Nullable Block spike,
+            @Nullable Block loose,
+            @Nullable Block mossyLoose
     ) {
         final RockSettings settings = new RockSettings(
-                RegistryInfo.BLOCK.getValue(raw),
-                RegistryInfo.BLOCK.getValue(hardened),
-                RegistryInfo.BLOCK.getValue(gravel),
-                RegistryInfo.BLOCK.getValue(cobble),
-                RegistryInfo.BLOCK.getValue(sand),
-                RegistryInfo.BLOCK.getValue(sandstone),
-                spike == null ? Optional.empty() : Optional.of(RegistryInfo.BLOCK.getValue(spike)),
-                loose == null ? Optional.empty() : Optional.of(RegistryInfo.BLOCK.getValue(loose)),
-                mossyLoose == null ? Optional.empty() : Optional.of(RegistryInfo.BLOCK.getValue(mossyLoose))
+                raw,
+                hardened,
+                gravel,
+                cobble,
+                sand,
+                sandstone,
+                Optional.ofNullable(spike),
+                Optional.ofNullable(loose),
+                Optional.ofNullable(mossyLoose)
         );
         return RockSettings.register(id, settings);
     }

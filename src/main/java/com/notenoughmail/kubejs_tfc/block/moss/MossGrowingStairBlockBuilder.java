@@ -23,7 +23,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
     public MossGrowingStairBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_STAIRS);
-        mossGrowth = MossGrowingCallback.DEFAULT;
+        mossGrowth = MossGrowingCallback.WATER_LOGGED;
     }
 
     public MossGrowingStairBlockBuilder mossyStair(ResourceLocation block) {

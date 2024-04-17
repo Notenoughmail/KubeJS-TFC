@@ -23,7 +23,7 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
     public MossGrowingWallBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.COBBLESTONE_WALL);
-        mossGrowth = MossGrowingCallback.DEFAULT;
+        mossGrowth = MossGrowingCallback.WATER_LOGGED;
     }
 
     public MossGrowingWallBlockBuilder mossyWall(ResourceLocation block) {

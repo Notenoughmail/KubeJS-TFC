@@ -1,6 +1,9 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
+import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.internal.AddNamedRegistryWoodEvent;
+import com.notenoughmail.kubejs_tfc.util.internal.AddRegistryRocksEvent;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -25,6 +28,7 @@ import net.dries007.tfc.world.noise.Metaballs3D;
 import net.dries007.tfc.world.noise.OpenSimplex2D;
 import net.dries007.tfc.world.noise.OpenSimplex3D;
 import net.dries007.tfc.world.settings.RockSettings;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -33,10 +37,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public enum MiscBindings {
@@ -44,11 +51,13 @@ public enum MiscBindings {
 
     @Info(value = "A map associating the name of a rock to its `RegistryRock`")
     @Generics(value = {String.class, RegistryRock.class})
-    public final Map<String, RegistryRock> rock = new HashMap<>(20);
+    public Map<String, RegistryRock> getRock() { return rock.get(); }
+    private final Supplier<Map<String, RegistryRock>> rock = Lazy.of(() -> Util.make(new ImmutableMap.Builder<String, RegistryRock>(), b -> MinecraftForge.EVENT_BUS.post(new AddRegistryRocksEvent(b))).build());
 
     @Info(value = "A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
     @Generics(value = {String.class, NamedRegistryWood.class})
-    public final Map<String, NamedRegistryWood> wood = new HashMap<>(19);
+    public Map<String, NamedRegistryWood> getWood() { return wood.get(); }
+    private final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(() -> Util.make(new ImmutableMap.Builder<String, NamedRegistryWood>(), b -> MinecraftForge.EVENT_BUS.post(new AddNamedRegistryWoodEvent(b))).build());
 
     @Nullable
     @Info(value = "Returns the stack's `IHeat` capability if present, else null")
@@ -69,7 +78,11 @@ public enum MiscBindings {
 
     @Info(value = "A map associating the name of a heat level to its Heat")
     @Generics(value = {String.class, Heat.class})
-    public final Map<String, Heat> heatLevels = new HashMap<>(11);
+    public final Map<String, Heat> heatLevels = Util.make(new ImmutableMap.Builder<String, Heat>(), b -> {
+        for (Heat heatLevel : Heat.values()) {
+            b.put(heatLevel.name().toLowerCase(Locale.ROOT), heatLevel);
+        }
+    }).build();
 
     @Nullable
     @Info(value = "Returns the stack's `IFood` capability if present, else null")

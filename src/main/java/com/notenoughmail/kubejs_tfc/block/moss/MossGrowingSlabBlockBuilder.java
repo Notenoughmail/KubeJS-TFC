@@ -25,8 +25,8 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
     public MossGrowingSlabBlockBuilder(ResourceLocation i) {
         super(i);
         mossyBlock = RegistryInfo.BLOCK.getId(Blocks.OAK_PLANKS);
-        mossGrowthFull = MossGrowingCallback.ABOVE;
-        mossGrowthHalf = MossGrowingCallback.DEFAULT;
+        mossGrowthFull = MossGrowingCallback.ADJACENT;
+        mossGrowthHalf = MossGrowingCallback.WATER_LOGGED;
     }
 
     public MossGrowingSlabBlockBuilder mossySlab(ResourceLocation block) {

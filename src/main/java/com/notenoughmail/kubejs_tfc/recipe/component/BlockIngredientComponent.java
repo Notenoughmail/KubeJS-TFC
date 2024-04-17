@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
-import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;

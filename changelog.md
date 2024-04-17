@@ -7,6 +7,8 @@
 - Add some methods to miscellaneous bindings
 - Fix crop builders' seed items
 - Fluid and block ingredient js builders can now take regex inputs
+- Update to TFC 3.2.0
+- Add support block and windmill blade item builders 
 
 ### 1.1.0
 - Update to TFC version 3.1.9

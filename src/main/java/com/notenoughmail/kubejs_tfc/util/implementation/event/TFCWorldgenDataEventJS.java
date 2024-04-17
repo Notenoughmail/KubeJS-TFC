@@ -26,7 +26,7 @@ import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenien
 import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState;
 
 /**
- * TODO: [Future] more of TFC's types
+ * TODO: [Future] Move to WorldJS compat | more of TFC's types
  * <ul>
  *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FISSURE}</li>
  *     <li>{@link net.dries007.tfc.world.feature.TFCFeatures#FOREST} & 'children'</li>

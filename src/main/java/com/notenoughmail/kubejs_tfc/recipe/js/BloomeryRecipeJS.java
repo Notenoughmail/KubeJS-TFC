@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import dev.latvian.mods.kubejs.item.InputItem;
 
-public class LoomRecipeJS extends TFCProviderRecipeJS {
+public class BloomeryRecipeJS extends TFCProviderRecipeJS {
 
     @Override
     public JsonElement writeInputItem(InputItem value) {

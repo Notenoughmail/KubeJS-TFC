@@ -13,19 +13,21 @@ import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import com.notenoughmail.kubejs_tfc.util.internal.AddNamedRegistryWoodEvent;
+import com.notenoughmail.kubejs_tfc.util.internal.AddRegistryRocksEvent;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeNamespace;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
@@ -40,7 +42,6 @@ import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
-import net.dries007.tfc.common.capabilities.heat.Heat;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
@@ -51,9 +52,12 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import java.util.List;
-import java.util.Locale;
 
 // Mild Javadoc abuse
 
@@ -62,12 +66,6 @@ import java.util.Locale;
  * <ul>
  *     <li>Blocks
  *         <ul>
- *             <li>Supports
- *                 <ul>
- *                     <li>{@link net.dries007.tfc.common.blocks.wood.VerticalSupportBlock Vertical}</li>
- *                     <li>{@link net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock Horizontal}</li>
- *                 </ul>
- *             </li>
  *             <li>Kinetics</li>
  *             <li>Anvils</li>
  *         </ul>
@@ -75,7 +73,6 @@ import java.util.Locale;
  *     <li>BE Attachments
  *         <ul>
  *             <li>Heat</li>
- *             <li>Restrict container size</li>
  *         </ul>
  *     </li>
  * 	   <li>EntityJS compat</li>
@@ -100,6 +97,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.ITEM.addType("tfc:fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:jar", JarItemBuilder.class, JarItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:glassworking", GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:windmill_blade", WindMillBladeItemBuilder.class, WindMillBladeItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
@@ -125,6 +123,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:spreading_crop", SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -136,7 +135,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
-        event.namespace(TerraFirmaCraft.MOD_ID)
+        final RecipeNamespace recipes = event.namespace(TerraFirmaCraft.MOD_ID)
                 .register(TFCRecipeSerializers.ALLOY.getId().getPath(), AlloySchema.SCHEMA)
                 .register(TFCRecipeSerializers.WELDING.getId().getPath(), WeldingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.ANVIL.getId().getPath(), AnvilSchema.SCHEMA)
@@ -167,6 +166,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 ;
+        final ArtifactVersion lastNonSewingVersion = new DefaultArtifactVersion("3.2.0");
+        if (ModList.get().getModContainerById(TerraFirmaCraft.MOD_ID).map(container -> container.getModInfo().getVersion().compareTo(lastNonSewingVersion) > 0).orElse(false)) {
+            recipes.register("sewing", SewingSchema.SCHEMA);
+        }
     }
 
     @Override
@@ -254,14 +257,19 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        for (Rock rock : Rock.VALUES) {
-            MiscBindings.INSTANCE.rock.put(rock.getSerializedName(), rock);
-        }
+        MinecraftForge.EVENT_BUS.addListener(KubeJSTFCPlugin::addWoods);
+        MinecraftForge.EVENT_BUS.addListener(KubeJSTFCPlugin::addRocks);
+    }
+
+    private static void addWoods(AddNamedRegistryWoodEvent event) {
         for (Wood wood : Wood.VALUES) {
-            MiscBindings.INSTANCE.wood.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
+            event.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
         }
-        for (Heat heatLevel : Heat.values()) {
-            MiscBindings.INSTANCE.heatLevels.put(heatLevel.name().toLowerCase(Locale.ROOT), heatLevel);
+    }
+
+    private static void addRocks(AddRegistryRocksEvent event) {
+        for (Rock rock : Rock.VALUES) {
+            event.put(rock.getSerializedName(), rock);
         }
     }
 }
