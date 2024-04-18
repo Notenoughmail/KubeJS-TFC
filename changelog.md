@@ -1,4 +1,4 @@
-### 1.1.1 (WIP)
+### 1.1.1
 - Add `tfc:inventory` BE attachment, identical to kube's default inventory attachment but allows for filtering allowed items by TFC size & weight
 - Fix the register representatives event, now takes a `Block[]` instead of a `List<ResourceLocation>`
 - Fix the `replacementMap` param in the soil disc worldgen data event's JSDoc

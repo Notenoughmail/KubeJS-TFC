@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.item;
 
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.mod.util.color.Color;
 import dev.latvian.mods.rhino.mod.wrapper.ColorWrapper;
 import net.dries007.tfc.common.TFCTags;
@@ -19,6 +20,7 @@ public class WindMillBladeItemBuilder extends ItemBuilder {
         tag(TFCTags.Items.WINDMILL_BLADES.location());
     }
 
+    @Info(value = "Sets the color of the windmill blade")
     public WindMillBladeItemBuilder bladeColor(Color color) {
         bladeColor = color;
         return this;

@@ -29,8 +29,8 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
         fluidProperty = AqueductBlock.FLUID;
     }
 
-    @Info(value = "Sets the fluids that the aqueduct may move", params = {
-            @Param(name = "fluids", value = "The registry names of fluids the aqueduct can move. Two liquids with different namespaces but same paths will not be accepted")
+    @Info(value = "Sets the fluids that the aqueduct may hold", params = {
+            @Param(name = "fluids", value = "The registry names of fluids the aqueduct can hold. Two liquids with different namespaces but same paths will not be accepted, `minecraft:empty` will automatically be added")
     })
     public AqueductBlockBuilder allowedFluids(ResourceLocation[] fluids) {
         final ResourceLocation[] processed = new ResourceLocation[fluids.length + 1];
