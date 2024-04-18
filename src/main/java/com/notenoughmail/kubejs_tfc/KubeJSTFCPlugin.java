@@ -27,7 +27,6 @@ import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
-import dev.latvian.mods.kubejs.recipe.schema.RecipeNamespace;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
@@ -53,9 +52,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModList;
-import org.apache.maven.artifact.versioning.ArtifactVersion;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import java.util.List;
 
@@ -135,7 +131,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
-        final RecipeNamespace recipes = event.namespace(TerraFirmaCraft.MOD_ID)
+        event.namespace(TerraFirmaCraft.MOD_ID)
                 .register(TFCRecipeSerializers.ALLOY.getId().getPath(), AlloySchema.SCHEMA)
                 .register(TFCRecipeSerializers.WELDING.getId().getPath(), WeldingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.ANVIL.getId().getPath(), AnvilSchema.SCHEMA)
@@ -165,11 +161,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.EXTRA_PRODUCTS_SHAPELESS_CRAFTING.getId().getPath(), ExtraProductCraftingSchema.SCHEMA)
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
+                .register(TFCRecipeSerializers.SEWING.getId().getPath(), SewingSchema.SCHEMA)
                 ;
-        final ArtifactVersion lastNonSewingVersion = new DefaultArtifactVersion("3.2.0");
-        if (ModList.get().getModContainerById(TerraFirmaCraft.MOD_ID).map(container -> container.getModInfo().getVersion().compareTo(lastNonSewingVersion) > 0).orElse(false)) {
-            recipes.register("sewing", SewingSchema.SCHEMA);
-        }
     }
 
     @Override

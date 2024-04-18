@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.event.StartupEventJS;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.world.settings.RockSettings;

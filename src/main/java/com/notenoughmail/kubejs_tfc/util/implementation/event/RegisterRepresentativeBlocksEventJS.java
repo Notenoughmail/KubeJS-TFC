@@ -1,16 +1,12 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.event;
 
 import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.items.PropickItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-
-import java.util.List;
 
 @Info(value = """
         When prospecting, TFC uses representative blocks to group similar

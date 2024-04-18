@@ -1,14 +1,15 @@
 ### 1.1.1 (WIP)
 - Add `tfc:inventory` BE attachment, identical to kube's default inventory attachment but allows for filtering allowed items by TFC size & weight
-- Fix the register representatives event not coercing given values to `ResourceLocation`s
+- Fix the register representatives event, now takes a `Block[]` instead of a `List<ResourceLocation>`
 - Fix the `replacementMap` param in the soil disc worldgen data event's JSDoc
 - The `TFC.misc.wood` object is now a `Map<String, NamedRegistryWood>`, identical to before but the returned objects now have a `getMod()` method which returns the mod they originate from
 - Fix events that should have `cancel()` called in them
 - Add some methods to miscellaneous bindings
 - Fix crop builders' seed items
 - Fluid and block ingredient js builders can now take regex inputs
-- Update to TFC 3.2.0
-- Add support block and windmill blade item builders 
+- Update to TFC 3.2.1
+- Add custom support block and windmill blade item builders
+- Add sewing recipe support
 
 ### 1.1.0
 - Update to TFC version 3.1.9
