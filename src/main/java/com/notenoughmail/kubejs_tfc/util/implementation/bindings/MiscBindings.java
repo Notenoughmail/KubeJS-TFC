@@ -1,9 +1,8 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.google.common.collect.ImmutableMap;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.internal.AddNamedRegistryWoodEvent;
-import com.notenoughmail.kubejs_tfc.util.internal.AddRegistryRocksEvent;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -37,7 +36,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,13 +49,13 @@ public enum MiscBindings {
 
     @Info(value = "A map associating the name of a rock to its `RegistryRock`")
     @Generics(value = {String.class, RegistryRock.class})
-    public Map<String, RegistryRock> getRock() { return rock.get(); }
-    private final Supplier<Map<String, RegistryRock>> rock = Lazy.of(() -> Util.make(new ImmutableMap.Builder<String, RegistryRock>(), b -> MinecraftForge.EVENT_BUS.post(new AddRegistryRocksEvent(b))).build());
+    public Map<String, RegistryRock> getRock() { KubeJSTFC.LOGGER.error("Rocks requested!"); return rock.get(); }
+    private static final Supplier<Map<String, RegistryRock>> rock = Lazy.of(KubeJSTFC::registerRocks);
 
     @Info(value = "A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
     @Generics(value = {String.class, NamedRegistryWood.class})
     public Map<String, NamedRegistryWood> getWood() { return wood.get(); }
-    private final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(() -> Util.make(new ImmutableMap.Builder<String, NamedRegistryWood>(), b -> MinecraftForge.EVENT_BUS.post(new AddNamedRegistryWoodEvent(b))).build());
+    private final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(KubeJSTFC::registerWoods);
 
     @Nullable
     @Info(value = "Returns the stack's `IHeat` capability if present, else null")

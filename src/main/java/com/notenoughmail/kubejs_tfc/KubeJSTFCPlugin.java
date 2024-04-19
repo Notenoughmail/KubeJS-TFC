@@ -20,8 +20,8 @@ import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryA
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
-import com.notenoughmail.kubejs_tfc.util.internal.AddNamedRegistryWoodEvent;
-import com.notenoughmail.kubejs_tfc.util.internal.AddRegistryRocksEvent;
+import com.notenoughmail.kubejs_tfc.util.internal.RockAdder;
+import com.notenoughmail.kubejs_tfc.util.internal.WoodAdder;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
@@ -51,7 +51,6 @@ import net.dries007.tfc.util.climate.ClimateModel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -72,6 +71,8 @@ import java.util.List;
  *         </ul>
  *     </li>
  * 	   <li>EntityJS compat</li>
+ * 	   <li>Custom InteractionManager interactions?</li>
+ * 	   <li>Custom BiomeExtensions - will probably require talking to Alc</li>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
@@ -250,17 +251,17 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (var material : TFCArmorMaterials.values()) {
             addArmorMaterial(material);
         }
-        MinecraftForge.EVENT_BUS.addListener(KubeJSTFCPlugin::addWoods);
-        MinecraftForge.EVENT_BUS.addListener(KubeJSTFCPlugin::addRocks);
+        KubeJSTFC.registerRockListener(KubeJSTFCPlugin::addRocks);
+        KubeJSTFC.registerWoodListener(KubeJSTFCPlugin::addWoods);
     }
 
-    private static void addWoods(AddNamedRegistryWoodEvent event) {
+    private static void addWoods(WoodAdder event) {
         for (Wood wood : Wood.VALUES) {
             event.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
         }
     }
 
-    private static void addRocks(AddRegistryRocksEvent event) {
+    private static void addRocks(RockAdder event) {
         for (Rock rock : Rock.VALUES) {
             event.put(rock.getSerializedName(), rock);
         }

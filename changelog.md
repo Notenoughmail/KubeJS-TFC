@@ -1,3 +1,6 @@
+### 1.1.2
+- Fix `TFC.misc.rock` and `TFC.misc.rock` maps being empty if called too soon
+
 ### 1.1.1
 - Add `tfc:inventory` BE attachment, identical to kube's default inventory attachment but allows for filtering allowed items by TFC size & weight
 - Fix the register representatives event, now takes a `Block[]` instead of a `List<ResourceLocation>`

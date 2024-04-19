@@ -78,4 +78,9 @@ public class NamedRegistryWood implements RegistryWood {
     public String getSerializedName() {
         return parent.getSerializedName();
     }
+
+    @Override
+    public String toString() {
+        return parent.toString();
+    }
 }
