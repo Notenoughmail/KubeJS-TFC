@@ -49,13 +49,13 @@ public enum MiscBindings {
 
     @Info(value = "A map associating the name of a rock to its `RegistryRock`")
     @Generics(value = {String.class, RegistryRock.class})
-    public Map<String, RegistryRock> getRock() { KubeJSTFC.LOGGER.error("Rocks requested!"); return rock.get(); }
+    public Map<String, RegistryRock> getRock() { return rock.get(); }
     private static final Supplier<Map<String, RegistryRock>> rock = Lazy.of(KubeJSTFC::registerRocks);
 
     @Info(value = "A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
     @Generics(value = {String.class, NamedRegistryWood.class})
     public Map<String, NamedRegistryWood> getWood() { return wood.get(); }
-    private final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(KubeJSTFC::registerWoods);
+    private static final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(KubeJSTFC::registerWoods);
 
     @Nullable
     @Info(value = "Returns the stack's `IHeat` capability if present, else null")

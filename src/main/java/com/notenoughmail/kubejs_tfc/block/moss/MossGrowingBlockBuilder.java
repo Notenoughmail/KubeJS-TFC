@@ -43,7 +43,7 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
                 Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (mossBlock == null) {
                     mossBlock = Blocks.AIR;
-                    KubeJSTFC.LOGGER.error("The provided 'mossy' block: \"{}\" does not exist!", mossyBlock);
+                    KubeJSTFC.error("The provided 'mossy' block: \"{}\" does not exist!", mossyBlock);
                 }
                 if (mossGrowth.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                     worldIn.setBlock(pos, mossBlock.defaultBlockState(), 3);

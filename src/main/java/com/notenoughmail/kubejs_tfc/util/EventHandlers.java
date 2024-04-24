@@ -1,31 +1,21 @@
 package com.notenoughmail.kubejs_tfc.util;
 
-import com.mojang.datafixers.util.Pair;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.event.*;
-import dev.architectury.event.events.common.LifecycleEvent;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
-import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
-import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.util.events.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,13 +34,12 @@ public class EventHandlers {
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
     public static final EventHandler rockSettings = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    public static final EventHandler limitContainerSize = TFCEvents.startup("limitContainerSize", () -> LegacyContainerLimiterEventJS.class);
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
     public static final EventHandler birthdays = TFCEvents.startup("birthdays", () -> BirthdayEventJS.class);
     public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifier", () -> RegisterItemStackModifierEventJS.class);
     public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
+    public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
@@ -64,8 +53,6 @@ public class EventHandlers {
     public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(PlayerEvents.SUPPORTS_MENU_TYPE.copy().required());
 
     public static void init() {
-        LifecycleEvent.SETUP.register(EventHandlers::setupEvents);
-
         final IEventBus bus = MinecraftForge.EVENT_BUS;
 
         bus.addListener(EventHandlers::onSelectClimateModel);
@@ -80,16 +67,6 @@ public class EventHandlers {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(EventHandlers::loadComplete);
-    }
-
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    private static void setupEvents() {
-        if (limitContainerSize.hasListeners()) {
-            final String warning = "Usage of the legacy container limiter is deprecated! Please use the server TFCEvents.limitContainer event instead!";
-            KubeJSTFC.LOGGER.warn(warning);
-            ConsoleJS.STARTUP.warn(warning);
-            limitContainerSize.post(new LegacyContainerLimiterEventJS());
-        }
     }
 
     // Guaranteed only server - provides a ServerLevel
@@ -171,8 +148,8 @@ public class EventHandlers {
             if (worldgenData.hasListeners()) {
                 worldgenData.post(new TFCWorldgenDataEventJS(dataEvent));
             }
-        } else if (CommonConfig.debugMode.get()){
-            KubeJSTFC.LOGGER.error("KubeJSTFC data events failed to post due to wrapped event not being an instanceof DataPackEventJS, somehow");
+        } else {
+            KubeJSTFC.error("KubeJSTFC data events failed to post due to wrapped event not being an instanceof DataPackEventJS, somehow");
         }
         return null;
     }
@@ -201,56 +178,6 @@ public class EventHandlers {
 
             limitContainer.post(new ContainerLimiterEventJS(slotsToHandle, event.getEntity().level(), event.getEntity().getOnPos().above()), menuType);
         }
-
-        final ResourceLocation menuName = RegistryInfo.MENU.getId(menuType);
-
-        // TODO: 1.2.0 | Deprecated for removal
-        if (event.getEntity() instanceof ServerPlayer player && LegacyContainerLimiterEventJS.LIMITED_SIZES.containsKey(menuName)) {
-            ConsoleJS.SERVER.warn("KubeJS TFC: A legacy container limiter was used to limit a container! This form of limiting is deprecated, please use the new system"); // Dirty, but this implementation is actually awful
-            Pair<Size, List<Pair<Integer, Integer>>> function = LegacyContainerLimiterEventJS.LIMITED_SIZES.get(menuName);
-
-            // Filter slots to only the ones that have items and (if present) within the ranges given
-            List<Slot> sanitizedSlots = new ArrayList<>();
-            for (Slot slot : container.slots) { // This also gives the player's inventory slots because why not
-                // Do NOT touch the player inventory
-                if (!(slot.container instanceof Inventory)) {
-                    sanitizedSlots.add(slot);
-                }
-            }
-            List<Slot> filteredSlots = new ArrayList<>();
-            if (function.getSecond().isEmpty()) {
-                sanitizedSlots.forEach(slot -> {
-                    if (slot.hasItem()) {
-                        filteredSlots.add(slot);
-                    }
-                });
-            } else {
-                for (Pair<Integer, Integer> range : function.getSecond()) {
-                    sanitizedSlots.subList(Math.max(0, range.getFirst()), Math.min(sanitizedSlots.size(), range.getSecond())).forEach(slot -> {
-                        if (slot.hasItem()) {
-                            filteredSlots.add(slot);
-                        }
-                    });
-                }
-            }
-
-            Level level = player.level();
-            BlockPos pos = player.getOnPos().above();
-            for (Slot slot : filteredSlots) {
-                ItemStack slotItem = slot.getItem();
-                // If the item is bigger than the provided size, spit it out around the player
-                if (!ItemSizeManager.get(slotItem).getSize(slotItem).isEqualOrSmallerThan(function.getFirst()) && !level.isClientSide()) {
-                    float randX = level.random.nextFloat() * 0.8F;
-                    float randY = level.random.nextFloat() * 0.8F + 0.3F;
-                    float randZ = level.random.nextFloat() * 0.8F;
-                    ItemEntity itemEntity = new ItemEntity(level, pos.getX() + randX, pos.getY() + randY, pos.getZ() + randZ, slotItem);
-                    itemEntity.setPickUpDelay(30);
-                    level.addFreshEntity(itemEntity);
-                    slot.set(ItemStack.EMPTY);
-                    slot.setChanged();
-                }
-            }
-        }
     }
 
     private static void loadComplete(FMLCommonSetupEvent event) {
@@ -266,9 +193,12 @@ public class EventHandlers {
         if (representatives.hasListeners()) {
             representatives.post(new RegisterRepresentativeBlocksEventJS());
         }
+        if (interactions.hasListeners()) {
+            interactions.post(new RegisterInteractionsEventJS());
+        }
         event.enqueueWork(() -> {
-            KubeJSTFC.LOGGER.info("KubeJS TFC configuration:");
-            KubeJSTFC.LOGGER.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
+            KubeJSTFC.info("KubeJS TFC configuration:");
+            KubeJSTFC.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
             if (rockSettings.hasListeners()) {
                 rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
             }

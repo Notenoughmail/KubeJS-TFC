@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildClimateRangeData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
@@ -40,10 +39,8 @@ public class TFCDataEventJS extends EventJS {
 
     @HideFromJS
     public void addJson(ResourceLocation id, JsonElement json) {
-        if (CommonConfig.debugMode.get()) {
-            KubeJSTFC.LOGGER.warn(id.toString());
-            KubeJSTFC.LOGGER.info(json.toString());
-        }
+        KubeJSTFC.warningLog(id.toString());
+        KubeJSTFC.infoLog(json.toString());
         wrappedEvent.addJson(id, json);
     }
 

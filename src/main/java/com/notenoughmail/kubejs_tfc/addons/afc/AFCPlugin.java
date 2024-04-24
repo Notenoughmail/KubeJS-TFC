@@ -1,9 +1,9 @@
 package com.notenoughmail.kubejs_tfc.addons.afc;
 
+import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.addons.afc.recipe.TreeTapSchema;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.internal.WoodAdder;
 import com.therighthon.afc.AFC;
 import com.therighthon.afc.common.blocks.AFCWood;
 import com.therighthon.afc.common.recipe.AFCRecipeTypes;
@@ -37,9 +37,9 @@ public class AFCPlugin extends KubeJSPlugin {
                 .register(AFCRecipeTypes.TREE_TAPPING_RECIPE.getId().getPath(), TreeTapSchema.SCHEMA);
     }
 
-    private static void addWoods(WoodAdder event) {
+    private static void addWoods(ImmutableMap.Builder<String, NamedRegistryWood> builder) {
         for (AFCWood wood : AFCWood.VALUES) {
-            event.put(wood.getSerializedName(), new NamedRegistryWood(AFC.MOD_ID, wood));
+            builder.put(wood.getSerializedName(), new NamedRegistryWood(AFC.MOD_ID, wood));
         }
     }
 }

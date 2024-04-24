@@ -1,14 +1,15 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.block.AnvilBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.entity.*;
+import com.notenoughmail.kubejs_tfc.menu.AnvilMenuBuilder;
+import com.notenoughmail.kubejs_tfc.menu.AnvilPlanMenuBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.function.Supplier;
 
 public class RegistryUtils {
 
@@ -22,6 +23,11 @@ public class RegistryUtils {
     private static FarmlandBlockEntityBuilder farmlandBuilder;
     private static final ResourceLocation cropId = KubeJSTFC.identifier("crop");
     private static CropBlockEntityBuilder cropBuilder;
+    private static final ResourceLocation anvilId = KubeJSTFC.identifier("anvil");
+    private static final ResourceLocation anvilPlanId = KubeJSTFC.identifier("anvil_plan");
+    private static AnvilBlockEntityBuilder anvilBuilder;
+    private static AnvilMenuBuilder anvilMenuBuilder;
+    private static AnvilPlanMenuBuilder anvilPlanMenuBuilder;
 
     public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
@@ -29,26 +35,18 @@ public class RegistryUtils {
             return options;
         }
         if (nullableParticle == null) {
-            KubeJSTFC.LOGGER.error("The provided particle: '{}' does not exist!", particle);
+            KubeJSTFC.error("The provided particle: '{}' does not exist!", particle);
         } else {
-            KubeJSTFC.LOGGER.error("The provided particle: '{}' is not a valid particle! Must be an instance of ParticleOptions!", particle);
+            KubeJSTFC.error("The provided particle: '{}' is not a valid particle! Must be an instance of ParticleOptions!", particle);
         }
         return fallback;
     }
 
-    /**
-     * Only use this for blocks which use the simple tick counter and call {@link #addTickCounter(BlockBuilder)} in {@link dev.latvian.mods.kubejs.registry.BuilderBase#createAdditionalObjects() createAdditionalObjects()}
-     * @return The {@link TickCounterBlockEntityBuilder} which can be passed to {@link net.dries007.tfc.common.blocks.ExtendedProperties#blockEntity(Supplier) ExtendedProperties#blockEntity(Supplier)}
-     */
     public static TickCounterBlockEntityBuilder getTickCounter() {
         assert tickCounterBuilder != null;
         return tickCounterBuilder;
     }
 
-    /**
-     * Adds/creates a simple {@link TickCounterBlockEntityBuilder} to kube's builder list if not already present and adds the builder to its list of valid blocks, use {@link #getTickCounter()} to retrieve the tick counter
-     * @param builder The block builder whose block will be added to the tick counter's valid blocks
-     */
     public static void addTickCounter(BlockBuilder builder) {
         if  (tickCounterBuilder == null) {
             tickCounterBuilder = new TickCounterBlockEntityBuilder(tickCounterId);
@@ -107,5 +105,37 @@ public class RegistryUtils {
             RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(cropBuilder);
         }
         cropBuilder.addBlock(builder);
+    }
+
+    public static boolean anvilPresent() {
+        return anvilBuilder != null;
+    }
+
+    public static AnvilBlockEntityBuilder getAnvil() {
+        assert anvilBuilder != null;
+        return anvilBuilder;
+    }
+
+    public static AnvilMenuBuilder getAnvilMenu() {
+        assert anvilMenuBuilder != null;
+        return anvilMenuBuilder;
+    }
+
+    public static AnvilPlanMenuBuilder getAnvilPlanMenu() {
+        assert anvilPlanMenuBuilder != null;
+        return anvilPlanMenuBuilder;
+    }
+
+    // This does a whole lotta heavy lifting
+    public static void addAnvil(AnvilBlockBuilder builder) {
+        if (anvilBuilder == null) {
+            anvilBuilder = new AnvilBlockEntityBuilder(anvilId);
+            anvilMenuBuilder = new AnvilMenuBuilder(anvilId);
+            anvilPlanMenuBuilder = new AnvilPlanMenuBuilder(anvilPlanId);
+            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(anvilBuilder);
+            RegistryInfo.MENU.addBuilder(anvilMenuBuilder);
+            RegistryInfo.MENU.addBuilder(anvilPlanMenuBuilder);
+        }
+        anvilBuilder.addBlock(builder);
     }
 }

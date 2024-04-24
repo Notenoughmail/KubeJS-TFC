@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.util.calendar.Calendars;
@@ -29,8 +28,8 @@ public enum ClimateBindings {
             return climate;
         } else if (o instanceof CharSequence || o instanceof ResourceLocation || o instanceof NativeString) {
             var model = Climate.create(new ResourceLocation(o.toString()));
-            if (CommonConfig.debugMode.get() && model instanceof BiomeBasedClimateModel) {
-                KubeJSTFC.LOGGER.warn("Object {} of type {} returned a biome-based climate model, this may mean that {} is not a registered climate model", o, o.getClass(), o);
+            if (model instanceof BiomeBasedClimateModel) {
+                KubeJSTFC.warningLog("Object {} of type {} returned a biome-based climate model, this may mean that {} is not a registered climate model", o, o.getClass(), o);
             }
             return model;
         } else if (o instanceof Level level) {

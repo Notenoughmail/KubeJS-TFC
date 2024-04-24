@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExt
         super(i);
         this.parent = parent;
         props = p -> {};
+        tag(TFCTags.Blocks.FARMLAND.location());
     }
 
     @Override

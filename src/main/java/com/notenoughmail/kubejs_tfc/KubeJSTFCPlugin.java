@@ -1,8 +1,8 @@
 package com.notenoughmail.kubejs_tfc;
 
+import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -20,8 +20,6 @@ import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryA
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
-import com.notenoughmail.kubejs_tfc.util.internal.RockAdder;
-import com.notenoughmail.kubejs_tfc.util.internal.WoodAdder;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
@@ -48,6 +46,7 @@ import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
+import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
@@ -121,6 +120,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:anvil", AnvilBlockBuilder.class, AnvilBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -184,9 +184,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         // yet exist so everything explodes, so I hijack #registerBindings() to get it to work
         if (event.getType() == ScriptType.SERVER) {
             ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
-            if (CommonConfig.debugMode.get()) {
-                KubeJSTFC.LOGGER.info("KubeJS TFC: Added data event listeners");
-            }
+            KubeJSTFC.infoLog("KubeJS TFC: Added data event listeners");
         }
     }
 
@@ -255,15 +253,15 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         KubeJSTFC.registerWoodListener(KubeJSTFCPlugin::addWoods);
     }
 
-    private static void addWoods(WoodAdder event) {
+    private static void addWoods(ImmutableMap.Builder<String, NamedRegistryWood> builder) {
         for (Wood wood : Wood.VALUES) {
-            event.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
+            builder.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
         }
     }
 
-    private static void addRocks(RockAdder event) {
+    private static void addRocks(ImmutableMap.Builder<String, RegistryRock> builder) {
         for (Rock rock : Rock.VALUES) {
-            event.put(rock.getSerializedName(), rock);
+            builder.put(rock.getSerializedName(), rock);
         }
     }
 }

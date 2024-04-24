@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +33,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         this.parent = parent;
         thisList.add(this);
         renderType("cutout_mipped");
+        tagBlock(TFCTags.Blocks.GRASS.location());
     }
 
     @Override

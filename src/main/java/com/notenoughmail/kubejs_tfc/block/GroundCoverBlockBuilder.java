@@ -1,9 +1,11 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterInteractionsEventJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
@@ -12,7 +14,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Consumer;
 
-// TODO: [Future] Allow custom vanilla items for these? InteractionManager#382
 public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     private transient Type type;
@@ -62,6 +63,13 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
     @Info(value = "Makes the block collide with entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
+        return this;
+    }
+
+    // TODO: 1.2.0 | Document, fix automatic loottable?
+    public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
+        noItem();
+        RegisterInteractionsEventJS.addBlockItemPlacement(() -> RegistryInfo.ITEM.getValue(item), this);
         return this;
     }
 

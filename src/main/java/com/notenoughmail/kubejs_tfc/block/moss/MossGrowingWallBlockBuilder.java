@@ -45,7 +45,7 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
                 Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof WallBlock)) {
                     mossBlock = Blocks.COBBLESTONE_WALL;
-                    KubeJSTFC.LOGGER.error("The provided 'mossy' block \"{}\" is not a wall block or does not exist!", mossyBlock);
+                    KubeJSTFC.error("The provided 'mossy' block \"{}\" is not a wall block or does not exist!", mossyBlock);
                 }
                 if (mossGrowth.convertToMossy(new BlockContainerJS(worldIn, pos), needsWater)) {
                     worldIn.setBlockAndUpdate(pos, Helpers.copyProperties(mossBlock.defaultBlockState(), state));
