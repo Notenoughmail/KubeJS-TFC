@@ -5,12 +5,17 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -21,6 +26,8 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
     public transient String parent;
     public transient VoxelShape cachedShape;
     public transient Consumer<ExtendedPropertiesJS> props;
+    @Nullable
+    public transient ResourceLocation preexistingItem;
 
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
@@ -30,6 +37,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
         noCollision = true;
         props = p -> {};
         renderType("cutout");
+        preexistingItem = null;
     }
 
     @Info(value = "Sets the block to have the same bounding box as TFC's ore pieces")
@@ -66,7 +74,6 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
         return this;
     }
 
-    // TODO: 1.1.3 | Fix automatic loottable
     @Info(value = "Sets the 'block item' of this bloc kto an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         noItem();
@@ -117,6 +124,25 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
             v.model(blockModelLoc).y(180 + rotate);
             v.model(blockModelLoc).y(270 + rotate);
         });
+    }
+
+    @Override
+    public void generateDataJsons(DataJsonGenerator generator) {
+
+        var lootBuilder = new LootBuilder(null);
+        lootBuilder.type = "minecraft:block";
+
+        if (lootTable != null) {
+            lootTable.accept(lootBuilder);
+        } else if (get().asItem() != Items.AIR || preexistingItem != null) {
+            lootBuilder.addPool(pool -> {
+                pool.survivesExplosion();
+                pool.addItem(new ItemStack(preexistingItem == null ? get() : RegistryInfo.ITEM.getValue(preexistingItem)));
+            });
+        }
+
+        var json = lootBuilder.toJson();
+        generator.json(newID("loot_tables/blocks/", ""), json);
     }
 
     @Override
