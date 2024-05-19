@@ -1,4 +1,4 @@
-### 1.1.3 (WIP)
+### 1.1.3
 - Add anvil block builder
 - Groundcover block builders can now use preexisting items as their item similar to TFC's sticks
 - Custom farmland and connected grass blocks now have some of TFC's functional tags by default
