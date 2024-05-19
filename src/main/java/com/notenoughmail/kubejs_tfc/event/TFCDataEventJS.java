@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.event;
+package com.notenoughmail.kubejs_tfc.event;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,6 +23,7 @@ import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -295,7 +296,7 @@ public class TFCDataEventJS extends EventJS {
     }
 
     @Info(value = "Defines a metal", params = {
-            @Param(name = "fluid", value = "The registry name of the fluid which corresponds to the metal"),
+            @Param(name = "fluid", value = "The fluid the metal is based on"),
             @Param(name = "meltTemperature", value = "The melting temperature °C of the metal"),
             @Param(name = "heatCapacity", value = "Specifies how fast the metal heats up relative to others. Measured in Energy / (mB x °C)"),
             @Param(name = "ingot", value = "The ingredient which specifies the metal's ingots, may be null"),
@@ -303,7 +304,7 @@ public class TFCDataEventJS extends EventJS {
             @Param(name = "sheet", value = "The ingredient which specifies the metal's sheets, may be null"),
             @Param(name = "tier", value = "The tier of the metal")
     })
-    public void metal(String fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
+    public void metal(Fluid fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
         final JsonObject json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
         addJson(DataUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
         // The name has potential to collide if the user defines multiple metals off of one fluid, but TFC states
@@ -313,7 +314,7 @@ public class TFCDataEventJS extends EventJS {
     }
 
     @Info(value = "Defines a metal", params = {
-            @Param(name = "fluid", value = "The registry name of the fluid which corresponds to the metal"),
+            @Param(name = "fluid", value = "The fluid the metal is based on"),
             @Param(name = "meltTemperature", value = "The melting temperature °C of the metal"),
             @Param(name = "heatCapacity", value = "Specifies how fast the metal heats up relative to others. Measured in Energy / (mB x °C)"),
             @Param(name = "ingot", value = "The ingredient which specifies the metal's ingots, may be null"),
@@ -322,7 +323,7 @@ public class TFCDataEventJS extends EventJS {
             @Param(name = "tier", value = "The tier of the metal"),
             @Param(name = "name", value = "The name of the metal")
     })
-    public void metal(String fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier, ResourceLocation name) {
+    public void metal(Fluid fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier, ResourceLocation name) {
         final JsonObject json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
         addJson(DataUtils.dataID(name, "tfc", "metals"), json);
     }

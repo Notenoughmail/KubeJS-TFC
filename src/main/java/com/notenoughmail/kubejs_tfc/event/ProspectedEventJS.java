@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.event;
+package com.notenoughmail.kubejs_tfc.event;
 
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
 import net.dries007.tfc.common.items.ProspectResult;

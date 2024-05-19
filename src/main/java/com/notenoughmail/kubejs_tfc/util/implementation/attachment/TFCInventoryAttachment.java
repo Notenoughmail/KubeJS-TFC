@@ -1,7 +1,5 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 
-import com.notenoughmail.kubejs_tfc.util.helpers.SizePredicate;
-import com.notenoughmail.kubejs_tfc.util.helpers.WeightPredicate;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
@@ -12,6 +10,8 @@ import dev.latvian.mods.kubejs.typings.desc.PrimitiveDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
 import dev.latvian.mods.rhino.BaseFunction;
 import dev.latvian.mods.rhino.NativeJavaObject;
+import net.dries007.tfc.common.capabilities.size.Size;
+import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
@@ -94,5 +94,15 @@ public class TFCInventoryAttachment extends InventoryAttachment {
             allowed &= weight.test(MiscBindings.INSTANCE.getWeight(itemStack));
         }
         return allowed && super.canPlaceItem(i, itemStack);
+    }
+
+    @FunctionalInterface
+    public interface SizePredicate {
+        boolean test(Size size);
+    }
+
+    @FunctionalInterface
+    public interface WeightPredicate {
+        boolean test(Weight weight);
     }
 }

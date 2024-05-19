@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.event;
+package com.notenoughmail.kubejs_tfc.event;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

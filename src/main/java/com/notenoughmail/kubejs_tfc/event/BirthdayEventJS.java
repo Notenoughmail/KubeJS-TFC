@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.event;
+package com.notenoughmail.kubejs_tfc.event;
 
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IDayMixin;
 import dev.latvian.mods.kubejs.event.EventJS;

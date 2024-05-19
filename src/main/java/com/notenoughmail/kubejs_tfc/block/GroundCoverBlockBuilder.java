@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.event.RegisterInteractionsEventJS;
+import com.notenoughmail.kubejs_tfc.event.RegisterInteractionsEventJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -66,7 +66,8 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
         return this;
     }
 
-    // TODO: 1.2.0 | Document, fix automatic loottable?
+    // TODO: 1.1.3 | Fix automatic loottable
+    @Info(value = "Sets the 'block item' of this bloc kto an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         noItem();
         RegisterInteractionsEventJS.addBlockItemPlacement(() -> RegistryInfo.ITEM.getValue(item), this);

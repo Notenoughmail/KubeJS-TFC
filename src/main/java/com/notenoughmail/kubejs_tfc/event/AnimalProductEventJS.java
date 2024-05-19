@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.event;
+package com.notenoughmail.kubejs_tfc.event;
 
 import dev.architectury.hooks.fluid.forge.FluidStackHooksForge;
 import dev.latvian.mods.kubejs.fluid.BoundFluidStackJS;

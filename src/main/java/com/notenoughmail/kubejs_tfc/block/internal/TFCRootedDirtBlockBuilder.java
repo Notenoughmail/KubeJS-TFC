@@ -17,6 +17,6 @@ public class TFCRootedDirtBlockBuilder extends BlockBuilder {
 
     @Override
     public Block createObject() {
-        return new TFCRootedDirtBlock(createProperties(), parent);
+        return new TFCRootedDirtBlock(createProperties(), parent, parent.mud);
     }
 }

@@ -1,9 +1,11 @@
-### 1.2.0 (WIP)
+### 1.1.3 (WIP)
 - Add anvil block builder
 - Groundcover block builders can now use preexisting items as their item similar to TFC's sticks
 - Custom farmland and connected grass blocks now have some of TFC's functional tags by default
 - Added event for registering custom 'interactions', see the wiki page for `TFCEvents.registerInteractions`
 - Fully remove legacy container limiting system/event
+- Add more methods in the misc sub-binding
+- Update to TFC 3.2.3
 
 ### 1.1.2
 - Fix `TFC.misc.rock` and `TFC.misc.rock` maps being empty if called too soon

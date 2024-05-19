@@ -18,7 +18,9 @@ import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
 import net.dries007.tfc.util.Metal;
+import net.dries007.tfc.util.Support;
 import net.dries007.tfc.util.registry.RegistryRock;
+import net.dries007.tfc.world.TFCChunkGenerator;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.chunkdata.RockData;
@@ -30,17 +32,22 @@ import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -114,6 +121,28 @@ public enum MiscBindings {
         return FoodTrait.getId(trait);
     }
 
+    @Info(value = "Applies the given food trait to the stack", params = {
+            @Param(name = "stack", value = "The stack to add the trait to. **Important**: This stack *will* be modified"),
+            @Param(name = "trait", value = "the id of the trait to be added")
+    })
+    public void applyFoodTrait(ItemStack stack, ResourceLocation trait) {
+        final FoodTrait foodTrait = getFoodTrait(trait);
+        if (foodTrait != null) {
+            FoodCapability.applyTrait(stack, foodTrait);
+        }
+    }
+
+    @Info(value = "Removes the given food trait to the stack", params = {
+            @Param(name = "stack", value = "The stack to take the trait from. **Important**: This stack *will* be modified"),
+            @Param(name = "trait", value = "the id of the trait to be removed")
+    })
+    public void removeFoodTrait(ItemStack stack, ResourceLocation trait) {
+        final FoodTrait foodTrait = getFoodTrait(trait);
+        if (foodTrait != null) {
+            FoodCapability.removeTrait(stack, foodTrait);
+        }
+    }
+
     @Info(value = "Returns the `Size` value of the provided stack")
     public Size getSize(ItemStack stack) {
         return ItemSizeManager.get(stack).getSize(stack);
@@ -148,6 +177,53 @@ public enum MiscBindings {
         return CollapseRecipe.startCollapse(level, pos);
     }
 
+    @Info(value = "Finds and returns all positions in the given area that are unsupported", params = {
+            @Param(name = "level", value = "The level to check in"),
+            @Param(name = "from", value = "The minimum corner to check"),
+            @Param(name = "to", value = "The maximum corner to check")
+    })
+    public Set<BlockPos> findUnsupportedPositions(BlockGetter level, BlockPos from, BlockPos to) {
+        return Support.findUnsupportedPositions(level, from, to);
+    }
+
+    @Info(value = "Finds and returns all positions in the given area that are unsupported", params = {
+            @Param(name = "level", value = "The level to check in"),
+            @Param(name = "center", value = "The center position"),
+            @Param(name = "horizontal", value = "The horizontal distance to check from the center"),
+            @Param(name = "up", value = "The upwards distance to check from the center"),
+            @Param(name = "down", value = "The downwards distance to check from the center")
+    })
+    public Set<BlockPos> findUnsupportedPositions(BlockGetter level, BlockPos center, int horizontal, int up, int down) {
+        return Support.findUnsupportedPositions(level, center.offset(-horizontal, down, -horizontal), center.offset(horizontal, up, horizontal));
+    }
+
+    @Info(value = "Returns true if the position is supported")
+    public boolean isSupported(BlockGetter level, BlockPos pos) {
+        return Support.isSupported(level, pos);
+    }
+
+    @Info(value = "Returns an iterable of all positions that could possibly be supported around the min and max points")
+    public Iterable<BlockPos> getMaximumSupportedAreaAround(BlockPos minPoint, BlockPos maxPoint) {
+        return Support.getMaximumSupportedAreaAround(minPoint, maxPoint);
+    }
+
+    @Info(value = "Gets the `SupportRange` that is used as a maximum for checking if an area is supported")
+    public Support.SupportRange getSupportCheckRange() {
+        return Support.getSupportCheckRange();
+    }
+
+    @Info(value = "Gets the support from the block, or null if it is not a supporting block")
+    @Nullable
+    public Support getSupport(BlockState state) {
+        return Support.get(state);
+    }
+
+    @Info(value = "Gets the support from the block, or null if it is not a supporting block")
+    @Nullable
+    public Support getSupport(BlockGetter level, BlockPos pos) {
+        return Support.get(level.getBlockState(pos));
+    }
+
     @Info(value = "Returns TFC's `ChunkData` object for the given level and position", params = {
             @Param(name = "level", value = "The level to get the data from"),
             @Param(name = "pos", value = "The position to get the data from")
@@ -179,6 +255,18 @@ public enum MiscBindings {
         final RockData data = getRockData(level, pos);
         if (data != null) {
             return data.getRock(pos);
+        }
+        return null;
+    }
+
+    @Info(value = "Gets the `RockSettings` of the given block in the given level", params = {
+            @Param(name = "level", value = "The level to check in"),
+            @Param(name = "block", value = "the block to check")
+    })
+    @Nullable
+    public static RockSettings getRockSettings(LevelAccessor level, Block block) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getChunkSource().getGenerator() instanceof TFCChunkGenerator tfcGenerator) {
+            return tfcGenerator.settings().rockLayerSettings().getRock(block);
         }
         return null;
     }

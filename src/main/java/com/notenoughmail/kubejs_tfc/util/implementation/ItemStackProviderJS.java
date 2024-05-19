@@ -19,9 +19,11 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
-import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
-import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
+import net.dries007.tfc.common.capabilities.food.FoodData;
+import net.dries007.tfc.common.capabilities.food.FoodTrait;
+import net.dries007.tfc.common.recipes.outputs.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,13 +104,13 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return modifiers.isEmpty();
     }
 
-    @Info(value = "Returns the item stack's CompoundTag, may be null")
+    @Info(value = "Returns the item stack's `CompoundTag`, may be null")
     @Nullable
     public CompoundTag getTag() {
         return stack.getTag();
     }
 
-    @Info(value = "Sets the item stack's CompoundTag")
+    @Info(value = "Sets the item stack's `CompoundTag`")
     public ItemStackProviderJS setTag(CompoundTag tag) {
         stack.setTag(tag);
         return this;
@@ -118,6 +120,20 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
     public ItemStackProviderJS mergeTag(CompoundTag tag) {
         stack.getOrCreateTag().merge(tag);
         return this;
+    }
+
+    @Info(value = "Returns the ISP as an `ItemStack` with all of its modifiers applied, will error if any of the modifiers are dependent on the input stack")
+    public ItemStack toStack() {
+        final ItemStackProvider provider = asCanonClass();
+        if (provider.dependsOnInput()) {
+            throw new IllegalArgumentException("Tried to convert an ISP into a regular ItemStack while it was dependent on an input stack!");
+        }
+        return provider.getEmptyStack();
+    }
+
+    @Info(value = "Returns the ISP as an `ItemStack` with all of its modifier applied, requires an input stack for any modifiers that require inputs")
+    public ItemStack toStack(ItemStack input) {
+        return asCanonClass().getSingleStack(input);
     }
 
     public static ItemStackProviderJS of(ItemStack stack, @Nullable Object b) {
@@ -163,10 +179,10 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
     }
 
     @Info(value = "Adds a 'tfc:dye_leather' modifier to the ISP with the provided color")
-    public ItemStackProviderJS dyeLeather(String color) {
+    public ItemStackProviderJS dyeLeather(DyeColor color) {
         var obj = new JsonObject();
         obj.addProperty("type", "tfc:dye_leather");
-        obj.addProperty("color", color); // Guessing as to the structure based on code as I don't know where this is actually used, and it's not in the docs
+        obj.addProperty("color", color.getSerializedName());
         modifiers.add(obj);
         return this;
     }

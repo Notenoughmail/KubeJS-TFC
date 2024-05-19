@@ -61,7 +61,6 @@ import java.util.List;
  *     <li>Blocks
  *         <ul>
  *             <li>Kinetics</li>
- *             <li>Anvils</li>
  *         </ul>
  *     </li>
  *     <li>BE Attachments
@@ -70,8 +69,14 @@ import java.util.List;
  *         </ul>
  *     </li>
  * 	   <li>EntityJS compat</li>
- * 	   <li>Custom InteractionManager interactions?</li>
  * 	   <li>Custom BiomeExtensions - will probably require talking to Alc</li>
+ * 	   <li>Modify default TFC world gen values</li>
+ * 	   <li>Investigate:</li>
+ * 	       <ul>
+ * 	           <li>Barrel rack interface</li>
+ * 	           <li>Barrel recipe interface</li>
+ * 	           <li>Snow burying API</li>
+ * 	       </ul>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
@@ -94,6 +99,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.ITEM.addType("tfc:jar", JarItemBuilder.class, JarItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:glassworking", GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:windmill_blade", WindMillBladeItemBuilder.class, WindMillBladeItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:glassworking_tool", GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);

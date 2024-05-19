@@ -4,9 +4,11 @@ import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
-import com.notenoughmail.kubejs_tfc.util.implementation.event.TFCDataEventJS;
+import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
@@ -15,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +32,7 @@ import java.util.function.Consumer;
 
 /**
  * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS},
- * {@link com.notenoughmail.kubejs_tfc.util.implementation.event.TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
+ * {@link TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
  * and various block's data/asset gen
  */
 public class DataUtils {
@@ -147,10 +150,10 @@ public class DataUtils {
         return json;
     }
 
-    public static JsonObject makeMetal(String fluid, float meltTemp, float heatCap, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
+    public static JsonObject makeMetal(Fluid fluid, float meltTemp, float heatCap, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
         var json = new JsonObject();
         json.addProperty("tier", tier);
-        json.addProperty("fluid", fluid);
+        json.addProperty("fluid", RegistryInfo.FLUID.getId(fluid).toString());
         json.addProperty("melt_temperature", meltTemp);
         json.addProperty("specific_heat_capacity", heatCap);
         if (ingot != null) {

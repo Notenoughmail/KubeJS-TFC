@@ -1,7 +1,9 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
+import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.js.SimplePotRecipeJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.EmptyFluidStackJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;
@@ -20,7 +22,7 @@ public interface SimplePotSchema {
     RecipeKey<Integer> DURATION = NumberComponent.INT.key("duration");
     RecipeKey<Float> TEMPERATURE = NumberComponent.FLOAT.key("temperature");
     RecipeKey<OutputFluid> FLUID_OUTPUT = FluidComponents.OUTPUT.key("fluid_output").preferred("fluidOutput").optional(EmptyFluidStackJS.INSTANCE);
-    RecipeKey<OutputItem[]> ITEM_OUTPUT = ItemComponents.OUTPUT_ARRAY.key("item_output").preferred("itemOutput").optional(new OutputItem[0]);
+    RecipeKey<ItemStackProviderJS[]> ITEM_OUTPUT = ItemProviderComponent.PROVIDER.asArray().key("item_output").preferred("itemOutput").optional(new ItemStackProviderJS[0]);
 
     RecipeSchema SCHEMA = new RecipeSchema(SimplePotRecipeJS.class, SimplePotRecipeJS::new, INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE, ITEM_OUTPUT, FLUID_OUTPUT)
             .constructor(INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE);

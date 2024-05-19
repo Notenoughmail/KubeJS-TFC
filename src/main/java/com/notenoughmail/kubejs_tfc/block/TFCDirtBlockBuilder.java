@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.block.internal.TFCPathBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.TFCRootedDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.custom.BasicBlockJS;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -26,6 +27,8 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
     public transient TFCFarmlandBlockBuilder farmland;
     @Nullable
     public transient TFCRootedDirtBlockBuilder rooted;
+    @Nullable
+    public transient BlockBuilder mud;
 
     public TFCDirtBlockBuilder(ResourceLocation i) {
         super(i);
@@ -33,6 +36,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         path = null;
         farmland = null;
         rooted = null;
+        mud = null;
     }
 
     @Generics(value = ConnectedGrassBlockBuilder.class)
@@ -62,9 +66,16 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Generics(value = BlockBuilder.class)
+    public TFCDirtBlockBuilder mud(Consumer<BlockBuilder> mud) {
+        this.mud = new BasicBlockJS.Builder(newID("", "_mud"));
+        mud.accept(this.mud);
+        return this;
+    }
+
     @Override
     public Block createObject() {
-        return new DirtBlock(createProperties(), grass, path, farmland, rooted);
+        return new DirtBlock(createProperties(), grass, path, farmland, rooted, mud);
     }
 
     @Override
@@ -84,6 +95,10 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         if (rooted != null) {
             RegistryInfo.BLOCK.addBuilder(rooted);
             rooted.createAdditionalObjects();
+        }
+        if (mud != null) {
+            RegistryInfo.BLOCK.addBuilder(mud);
+            mud.createAdditionalObjects();
         }
     }
 
