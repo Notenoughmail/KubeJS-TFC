@@ -183,7 +183,7 @@ public class EventHandlers {
             if (birthdays.hasListeners()) {
                 birthdays.post(new BirthdayEventJS());
             }
-            RegistryUtils.hackTFCBlockEntities();
+            RegistryUtils.hackBlockEntities();
         });
     }
 }

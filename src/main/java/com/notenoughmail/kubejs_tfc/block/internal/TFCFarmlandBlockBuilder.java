@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -10,6 +9,7 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -71,7 +71,7 @@ public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExt
         final ExtendedPropertiesJS propsJs = extendedPropsJS();
         props.accept(propsJs);
         return propsJs.delegate()
-                .blockEntity(RegistryUtils.getFarmland());
+                .blockEntity(TFCBlockEntities.FARMLAND);
     }
 
     @Override

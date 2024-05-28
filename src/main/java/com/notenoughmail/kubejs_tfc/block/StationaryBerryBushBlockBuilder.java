@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.entity.BerryBushBlockEntityJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -15,6 +14,8 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.common.blocks.plant.fruit.StationaryBerryBushBlock;
@@ -44,6 +45,7 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
         props = p -> {};
         product = null;
         renderType("cutout_mipped");
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -76,7 +78,6 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryUtils.addBerryBush(this);
         if (product == null) {
             RegistryInfo.ITEM.addBuilder(productItem);
         }
@@ -139,8 +140,8 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
         return propsJs.delegate()
                 .noOcclusion()
                 .randomTicks()
-                .blockEntity(RegistryUtils.getBerryBush())
-                .serverTicks(BerryBushBlockEntityJS::serverTick);
+                .blockEntity(TFCBlockEntities.BERRY_BUSH)
+                .serverTicks(BerryBushBlockEntity::serverTick);
     }
 
     @Override

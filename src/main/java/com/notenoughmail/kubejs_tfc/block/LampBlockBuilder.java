@@ -37,7 +37,7 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
         tag(Helpers.identifier("lamps"));
         renderType("cutout");
         props = p -> {};
-        RegistryUtils.addLamp(this);
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.LAMP, this);
     }
 
     @Info(value = "Sets the light level the lamp gives off when it is lit")

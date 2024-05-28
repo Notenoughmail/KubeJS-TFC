@@ -17,6 +17,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
@@ -64,6 +65,12 @@ public class KubeJSTFC {
     public static void warningLog(String message, Object... args) {
         if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
             LOGGER.warn(message, args);
+        }
+    }
+
+    public static void warningLog(String message, Supplier<Object> arg) {
+        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+            LOGGER.warn(message, arg.get());
         }
     }
 

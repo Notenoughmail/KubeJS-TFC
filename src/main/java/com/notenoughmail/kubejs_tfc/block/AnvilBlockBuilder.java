@@ -26,7 +26,7 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
         super(i);
         tier = 0;
         props = p -> {};
-        RegistryUtils.addAnvil(this);
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.ANVIL, this);
     }
 
     @Info(value = "Sets the tier of recipes the anvil can perform")

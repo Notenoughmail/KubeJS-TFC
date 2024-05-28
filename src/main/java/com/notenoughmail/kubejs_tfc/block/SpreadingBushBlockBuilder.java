@@ -12,6 +12,7 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.plant.fruit.SpreadingBushBlock;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         climateRange = ClimateRange.MANAGER.register(id);
         texture("layer0", newID("item/", "").toString());
         renderType("cutout_mipped");
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, child);
     }
 
     public SpreadingBushBlockBuilder maxHeight(int i) {
@@ -51,7 +53,6 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
         RegistryInfo.BLOCK.addBuilder(child);
-        RegistryUtils.addBerryBush(child);
     }
 
     @Override

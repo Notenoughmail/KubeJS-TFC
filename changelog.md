@@ -1,6 +1,6 @@
-### 1.2.0
+### 1.2.0 (W.I.P.)
 - Fix custom lamps not retaining their fluid when broken
-- Register custom anvil and lamp blocks to TFC's own anvil and lamp block entities instead of our own duplicate block entity
+- Register custom blocks with block entity parts to TFC's own block entities instead of creating a duplicate block entity type
 - Fix misspelling of extended properties method
 - Custom grass blocks now use their parent dirt block's texture as their base by default
 

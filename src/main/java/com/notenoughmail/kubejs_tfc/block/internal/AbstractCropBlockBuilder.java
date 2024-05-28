@@ -18,6 +18,7 @@ import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.minecraft.resources.ResourceLocation;
@@ -60,6 +61,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         requiresStick = false;
         renderType("cutout");
         productItem = null;
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.CROP, this);
     }
 
     protected boolean hasProduct() {
@@ -121,7 +123,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
         final ExtendedPropertiesJS propsJs = extendedPropsJS();
         props.accept(propsJs);
         return propsJs.delegate()
-                .blockEntity(RegistryUtils.getCrop())
+                .blockEntity(TFCBlockEntities.CROP)
                 .serverTicks(CropBlockEntity::serverTick);
     }
 
@@ -134,7 +136,6 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryUtils.addCrop(this);
         RegistryInfo.BLOCK.addBuilder(dead);
         dead.createAdditionalObjects();
         RegistryInfo.ITEM.addBuilder(seeds);

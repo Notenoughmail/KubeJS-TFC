@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.addons.firmalife.block;
 
+import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
@@ -40,6 +41,7 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
         props = p -> {};
+        RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
     }
 
     @Info(value = "Modifies the block's slice item")
@@ -70,7 +72,6 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
         RegistryInfo.ITEM.addBuilder(sliceItem);
-        RegistryUtils.addTickCounter(this);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
         props.accept(propsJs);
         return propsJs.delegate()
                 .randomTicks()
-                .blockEntity(RegistryUtils.getTickCounter());
+                .blockEntity(FLBlockEntities.TICK_COUNTER);
     }
 
     @Override

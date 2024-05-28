@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.soil.DirtBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -57,6 +58,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
     public TFCDirtBlockBuilder farmland(Consumer<TFCFarmlandBlockBuilder> farmland) {
         this.farmland = new TFCFarmlandBlockBuilder(newID("", "_farmland"), this);
         farmland.accept(this.farmland);
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.FARMLAND, this.farmland);
         return this;
     }
 
@@ -90,7 +92,6 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         }
         if (farmland != null) {
             RegistryInfo.BLOCK.addBuilder(farmland);
-            RegistryUtils.addFarmland(farmland);
             farmland.createAdditionalObjects();
         }
         if (rooted != null) {
