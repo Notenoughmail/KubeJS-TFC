@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class MoldItemBuilder extends ItemBuilder {
 
     public transient IntSupplier capacity;

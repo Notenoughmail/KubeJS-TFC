@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 public class StartFireEventJS extends PlayerEventJS {
 
     private final StartFireEvent event;

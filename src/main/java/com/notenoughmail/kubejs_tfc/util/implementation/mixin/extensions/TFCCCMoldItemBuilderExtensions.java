@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Mixin(value = MoldItemBuilder.class, remap = false)
 public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder implements ITFCCCMoldItemBuilderExtensions {
 

@@ -13,7 +13,7 @@ import java.util.Map;
 
 // UNUSED
 // TODO: [Future] PR ticking attachments to kube
-public class HeatAttachemnt extends CalendarTickingAttachment implements IHeatBlock {
+public class HeatAttachment extends CalendarTickingAttachment implements IHeatBlock {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(
             "tfc:heat",
@@ -22,7 +22,7 @@ public class HeatAttachemnt extends CalendarTickingAttachment implements IHeatBl
                     .add("consumeFuel", TypeDescJS.BOOLEAN, true)
                     .add("thermalInertia", TypeDescJS.NUMBER, true)
                     .add("handleCrucibleRecipes", TypeDescJS.BOOLEAN, true),
-            map -> entity -> new HeatAttachemnt(entity, getUpdater(map), getBool(map, "consumeFuel"), getThermalInertia(map), getBool(map, "handleCrucibleRecipes"))
+            map -> entity -> new HeatAttachment(entity, getUpdater(map), getBool(map, "consumeFuel"), getThermalInertia(map), getBool(map, "handleCrucibleRecipes"))
     );
 
     private static boolean getBool(Map<String, Object> map, String type) {
@@ -51,7 +51,7 @@ public class HeatAttachemnt extends CalendarTickingAttachment implements IHeatBl
     private final InventoryKJS inventoryKJS;
     private boolean needsRecipeUpdate;
 
-    public HeatAttachemnt(BlockEntityJS entity, @Nullable OnCalendarUpdate updater, boolean consumeFuel, float thermalInertia, boolean handleCrucibleRecipes) {
+    public HeatAttachment(BlockEntityJS entity, @Nullable OnCalendarUpdate updater, boolean consumeFuel, float thermalInertia, boolean handleCrucibleRecipes) {
         super(entity, updater);
         temperature = 0;
         targetTemperature = 0;

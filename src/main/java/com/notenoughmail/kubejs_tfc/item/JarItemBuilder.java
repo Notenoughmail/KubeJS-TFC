@@ -6,6 +6,7 @@ import net.dries007.tfc.common.items.JarItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@SuppressWarnings("unused")
 public class JarItemBuilder extends ItemBuilder {
 
     public transient ResourceLocation model;

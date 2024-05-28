@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
         This provides access to the level, and is fired during world load
         It is only fired on server, and the climate model will to synced to client automatically
         """)
+@SuppressWarnings("unused")
 public class SelectClimateModelEventJS extends LevelEventJS {
 
     private final SelectClimateModelEvent event;

@@ -14,7 +14,7 @@ import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-// NOTICE: It's fine to not override #item as it's properly handled in the datagen code well enough
+@SuppressWarnings("unused")
 public class LooseRockBlockBuilder extends BlockBuilder {
 
     private int rotate;

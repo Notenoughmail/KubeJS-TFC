@@ -11,9 +11,9 @@ import java.util.Set;
 
 public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
 
-    private final String basePackage = "com.notenoughmail.kubejs_tfc.";
-    private final String mixinPackage = basePackage + "util.implementation.mixin.";
-    private final String implementationPackage = basePackage + "util.implementation.";
+    private static final String basePackage = "com.notenoughmail.kubejs_tfc.";
+    private static final String mixinPackage = basePackage + "util.implementation.mixin.";
+    private static final String implementationPackage = basePackage + "util.implementation.";
 
     @Override
     public void onLoad(String mixinPackage) {}

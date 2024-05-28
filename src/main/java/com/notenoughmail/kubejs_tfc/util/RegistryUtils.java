@@ -2,32 +2,40 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.block.AnvilBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.entity.*;
-import com.notenoughmail.kubejs_tfc.menu.AnvilMenuBuilder;
-import com.notenoughmail.kubejs_tfc.menu.AnvilPlanMenuBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.BerryBushBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.CropBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.FarmlandBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.block.entity.TickCounterBlockEntityBuilder;
+import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.BlockEntityTypeAccessor;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class RegistryUtils {
 
     private static final ResourceLocation tickCounterId = KubeJSTFC.identifier("tick_counter");
     private static TickCounterBlockEntityBuilder tickCounterBuilder;
-    private static final ResourceLocation lampId = KubeJSTFC.identifier("lamp");
-    private static LampBlockEntityBuilder lampBuilder;
     private static final ResourceLocation berryBushId = KubeJSTFC.identifier("berry_bush");
     private static BerryBushBlockEntityBuilder berryBushBuilder;
     private static final ResourceLocation farmlandId = KubeJSTFC.identifier("farmland");
     private static FarmlandBlockEntityBuilder farmlandBuilder;
     private static final ResourceLocation cropId = KubeJSTFC.identifier("crop");
     private static CropBlockEntityBuilder cropBuilder;
-    private static final ResourceLocation anvilId = KubeJSTFC.identifier("anvil");
-    private static final ResourceLocation anvilPlanId = KubeJSTFC.identifier("anvil_plan");
-    private static AnvilBlockEntityBuilder anvilBuilder;
-    private static AnvilMenuBuilder anvilMenuBuilder;
-    private static AnvilPlanMenuBuilder anvilPlanMenuBuilder;
+
+    private static List<Supplier<Block>> lamps;
+    private static List<Supplier<Block>> anvils;
+    private static List<Supplier<Block>> barrels;
+    private static List<Supplier<Block>> toolRacks;
 
     public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
@@ -55,17 +63,11 @@ public class RegistryUtils {
         tickCounterBuilder.addBlock(builder);
     }
 
-    public static LampBlockEntityBuilder getLamp() {
-        assert lampBuilder != null;
-        return lampBuilder;
-    }
-
     public static void addLamp(BlockBuilder builder) {
-        if (lampBuilder == null) {
-            lampBuilder = new LampBlockEntityBuilder(lampId);
-            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(lampBuilder);
+        if (lamps == null) {
+            lamps = new ArrayList<>();
         }
-        lampBuilder.addBlock(builder);
+        lamps.add(builder);
     }
 
     public static BerryBushBlockEntityBuilder getBerryBush() {
@@ -107,35 +109,33 @@ public class RegistryUtils {
         cropBuilder.addBlock(builder);
     }
 
-    public static boolean anvilPresent() {
-        return anvilBuilder != null;
-    }
-
-    public static AnvilBlockEntityBuilder getAnvil() {
-        assert anvilBuilder != null;
-        return anvilBuilder;
-    }
-
-    public static AnvilMenuBuilder getAnvilMenu() {
-        assert anvilMenuBuilder != null;
-        return anvilMenuBuilder;
-    }
-
-    public static AnvilPlanMenuBuilder getAnvilPlanMenu() {
-        assert anvilPlanMenuBuilder != null;
-        return anvilPlanMenuBuilder;
-    }
-
-    // This does a whole lotta heavy lifting
     public static void addAnvil(AnvilBlockBuilder builder) {
-        if (anvilBuilder == null) {
-            anvilBuilder = new AnvilBlockEntityBuilder(anvilId);
-            anvilMenuBuilder = new AnvilMenuBuilder(anvilId);
-            anvilPlanMenuBuilder = new AnvilPlanMenuBuilder(anvilPlanId);
-            RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(anvilBuilder);
-            RegistryInfo.MENU.addBuilder(anvilMenuBuilder);
-            RegistryInfo.MENU.addBuilder(anvilPlanMenuBuilder);
+        if (anvils == null) {
+            anvils = new ArrayList<>();
         }
-        anvilBuilder.addBlock(builder);
+        anvils.add(builder);
+    }
+
+    static void hackTFCBlockEntities() {
+        if (lamps != null) {
+            final Set<Block> blocks = new HashSet<>(((BlockEntityTypeAccessor) TFCBlockEntities.LAMP.get()).kubejs_tfc$GetBlocks());
+            lamps.forEach(builder -> blocks.add(builder.get()));
+            ((BlockEntityTypeAccessor) TFCBlockEntities.LAMP.get()).kubejs_tfc$SetBlocks(blocks);
+        }
+        if (anvils != null) {
+            final Set<Block> blocks = new HashSet<>(((BlockEntityTypeAccessor) TFCBlockEntities.ANVIL.get()).kubejs_tfc$GetBlocks());
+            anvils.forEach(builder -> blocks.add(builder.get()));
+            ((BlockEntityTypeAccessor) TFCBlockEntities.ANVIL.get()).kubejs_tfc$SetBlocks(blocks);
+        }
+        if (barrels != null) {
+            final Set<Block> blocks = new HashSet<>(((BlockEntityTypeAccessor) TFCBlockEntities.BARREL.get()).kubejs_tfc$GetBlocks());
+            barrels.forEach(builder -> blocks.add(builder.get()));
+            ((BlockEntityTypeAccessor) TFCBlockEntities.BARREL.get()).kubejs_tfc$SetBlocks(blocks);
+        }
+        if (toolRacks != null) {
+            final Set<Block> blocks = new HashSet<>(((BlockEntityTypeAccessor) TFCBlockEntities.TOOL_RACK.get()).kubejs_tfc$GetBlocks());
+            toolRacks.forEach(builder -> blocks.add(builder.get()));
+            ((BlockEntityTypeAccessor) TFCBlockEntities.TOOL_RACK.get()).kubejs_tfc$SetBlocks(blocks);
+        }
     }
 }

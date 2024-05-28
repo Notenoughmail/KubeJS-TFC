@@ -20,6 +20,7 @@ import java.util.List;
         
         The implementation of this event is based on Oversized Item in Storage area, a 1.12 addon. It is licensed under the BSD License
         """)
+@SuppressWarnings("unused")
 public class ContainerLimiterEventJS extends EventJS {
 
     private final List<Slot> slotsToLimit;

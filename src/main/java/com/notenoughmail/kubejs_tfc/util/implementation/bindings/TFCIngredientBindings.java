@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public enum TFCIngredientBindings {
     INSTANCE;
 

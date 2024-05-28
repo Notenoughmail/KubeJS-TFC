@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class ProspectorItemBuilder extends HandheldItemBuilder {
 
     public transient int cooldown;

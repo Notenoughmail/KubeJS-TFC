@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 
 // Very "shaped" this is
+@SuppressWarnings("unused")
 public class RawRockBlockBuilder extends ShapedBlockBuilder {
 
     public transient boolean naturallySupported;

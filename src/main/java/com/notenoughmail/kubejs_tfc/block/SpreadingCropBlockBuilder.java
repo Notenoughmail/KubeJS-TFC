@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient Supplier<Supplier<? extends Block>> fruitBlock;

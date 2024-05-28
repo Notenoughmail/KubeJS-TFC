@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public interface IFirmaLifeDataEventMixin {
 
     @Info(value = "Defines a new greenhouse type", params = {

@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Info(value = "Define new rock layers which can be referenced in a world preset json")
+@SuppressWarnings("unused")
 public class RockSettingsEventJS extends StartupEventJS {
 
     @Info(value = "Registers a new rock layer with the given blocks to TFC. Does not add it to the world. This can be used to override existing layers", params = {

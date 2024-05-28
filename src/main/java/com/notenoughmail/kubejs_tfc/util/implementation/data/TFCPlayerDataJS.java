@@ -37,7 +37,7 @@ public class TFCPlayerDataJS {
 
     @Info(value = "Returns the number of ticks the player is intoxicated for")
     public long getIntoxicatedTicks() {
-        return tfcData.getIntoxicatedTicks(player.level().isClientSide());
+        return tfcData.getIntoxicatedTicks();
     }
 
     @Info(value = "Adds to the player's intoxicated ticks")

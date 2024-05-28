@@ -69,7 +69,7 @@ public class DeadCropBlockBuilder extends BlockBuilder implements ISupportExtend
     }
 
     @Override
-    public DeadCropBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public DeadCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient int doubleStages;

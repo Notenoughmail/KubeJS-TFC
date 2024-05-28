@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.minecraft.resources.ResourceLocation;
 
+@SuppressWarnings("unused")
 public class HotWaterFluidBuilder extends FluidBuilder {
 
     public transient ResourceLocation bubbleParticle;

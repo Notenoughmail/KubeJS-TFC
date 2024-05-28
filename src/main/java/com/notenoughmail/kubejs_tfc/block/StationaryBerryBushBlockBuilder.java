@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-// NOTICE: It's fine to not override #item as it's properly handled in the datagen code well enough
+@SuppressWarnings("unused")
 public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient final Lifecycle[] lifecycles;
@@ -144,7 +144,7 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
     }
 
     @Override
-    public StationaryBerryBushBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public StationaryBerryBushBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

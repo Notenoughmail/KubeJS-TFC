@@ -4,9 +4,11 @@
   "package": "com.notenoughmail.kubejs_tfc.util.implementation.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AnvilBlockEntityMixin",
     "DayMixin",
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
+    "accessor.BlockEntityTypeAccessor",
     "extensions.FirmaLifeDataEventMixin",
     "extensions.FirmaLifeISPMixin",
     "extensions.TFCCCMoldItemBuilderExtensions"

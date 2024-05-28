@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     private transient Type type;
@@ -78,6 +79,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         noItem();
         RegisterInteractionsEventJS.addBlockItemPlacement(() -> RegistryInfo.ITEM.getValue(item), this);
+        preexistingItem = item;
         return this;
     }
 
@@ -153,7 +155,7 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
     }
 
     @Override
-    public GroundCoverBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public GroundCoverBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

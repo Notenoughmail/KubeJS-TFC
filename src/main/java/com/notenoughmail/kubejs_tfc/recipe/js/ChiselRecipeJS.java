@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.typings.Info;
 
 // Technically has an ISP output
+@SuppressWarnings("unused")
 public class ChiselRecipeJS extends TFCProviderRecipeJS {
 
     @Info(value = "Specifies the chisel for the recipe, must be tagged 'tfc:chisels'")

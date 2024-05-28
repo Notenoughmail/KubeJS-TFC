@@ -8,14 +8,10 @@ import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
 import net.dries007.tfc.client.TFCColors;
 import net.dries007.tfc.client.model.ContainedFluidModel;
-import net.dries007.tfc.client.render.blockentity.AnvilBlockEntityRenderer;
-import net.dries007.tfc.client.screen.AnvilPlanScreen;
-import net.dries007.tfc.client.screen.AnvilScreen;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -23,7 +19,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -39,7 +34,6 @@ public class ClientEventHandlers {
         bus.addListener(ClientEventHandlers::registerItemColorHandlers);
         bus.addListener(ClientEventHandlers::clientSetup);
         bus.addListener(ClientEventHandlers::registerBlockColorHandlers);
-        bus.addListener(ClientEventHandlers::registerEntityRenderers);
     }
 
     // This doesn't work very well with pure white 16x16 images for both textures
@@ -79,20 +73,6 @@ public class ClientEventHandlers {
 
         final Predicate<RenderType> ghostBlock = rt -> rt == RenderType.cutoutMipped() || rt == Sheets.translucentCullBlockSheet();
 
-        DoubleCropBlockBuilder.ghostRenders.forEach(builder -> {
-            ItemBlockRenderTypes.setRenderLayer(builder.get(), ghostBlock);
-        });
-        event.enqueueWork(() -> {
-            if (RegistryUtils.anvilPresent()) {
-                MenuScreens.register(RegistryUtils.getAnvilMenu().get(), AnvilScreen::new);
-                MenuScreens.register(RegistryUtils.getAnvilPlanMenu().get(), AnvilPlanScreen::new);
-            }
-        });
-    }
-
-    private static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        if (RegistryUtils.anvilPresent()) {
-            event.registerBlockEntityRenderer(RegistryUtils.getAnvil().get(), ctx -> new AnvilBlockEntityRenderer());
-        }
+        DoubleCropBlockBuilder.ghostRenders.forEach(builder -> ItemBlockRenderTypes.setRenderLayer(builder.get(), ghostBlock));
     }
 }

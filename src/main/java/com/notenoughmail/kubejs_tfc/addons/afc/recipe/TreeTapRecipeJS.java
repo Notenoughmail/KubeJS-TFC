@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.addons.afc.recipe;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 
+@SuppressWarnings("unused")
 public class TreeTapRecipeJS extends RecipeJS {
 
     public TreeTapRecipeJS resultFluid(OutputFluid fluid) {

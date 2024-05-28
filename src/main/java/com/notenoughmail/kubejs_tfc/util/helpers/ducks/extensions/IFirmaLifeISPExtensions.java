@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.RemapForJS;
 
+@SuppressWarnings("unused")
 public interface IFirmaLifeISPExtensions {
 
     @Info(value = "Adds a 'firmalife:add_pie_pan' modifier to the ISP")

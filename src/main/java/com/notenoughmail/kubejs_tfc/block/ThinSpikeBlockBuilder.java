@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+@SuppressWarnings("unused")
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     private float dripChance;
@@ -77,7 +78,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info(value = "Sets the chance, in the range [0, 1], that the bloc kwill drip per random tick")
+    @Info(value = "Sets the chance, in the range [0, 1], that the block will drip per random tick")
     public ThinSpikeBlockBuilder meltChance(float chance) {
         meltChance = chance;
         return this;

@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 
+@SuppressWarnings("unused")
 public class WindMillBladeItemBuilder extends ItemBuilder {
 
     public transient Color bladeColor;

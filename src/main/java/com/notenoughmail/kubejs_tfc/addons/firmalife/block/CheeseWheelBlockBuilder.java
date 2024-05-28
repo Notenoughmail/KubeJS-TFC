@@ -26,9 +26,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupportExtendedProperties {
 
-    public transient ItemBuilder sliceItem;
+    public final transient ItemBuilder sliceItem;
     private static final String[] ages = new String[]{"fresh", "aged", "vintage"};
     public transient Consumer<ExtendedPropertiesJS> props;
 
@@ -139,7 +140,7 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
     }
 
     @Override
-    public CheeseWheelBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public CheeseWheelBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

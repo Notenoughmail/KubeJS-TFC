@@ -47,7 +47,7 @@ public class CalendarTickingAttachment implements BlockEntityAttachment, ICalend
         this.updater = updater;
     }
 
-    // Currently required to be called by scripters
+    // Currently required to be called by scriptors
     public void tick() {
         final Level level = entity.getLevel();
         if (level != null && !level.isClientSide()) {

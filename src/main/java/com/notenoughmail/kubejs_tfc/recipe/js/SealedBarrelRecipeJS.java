@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
+@SuppressWarnings("unused")
 public class SealedBarrelRecipeJS extends RecipeJS {
 
     @Override

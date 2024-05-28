@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient final TFCDirtBlockBuilder parent;
@@ -74,7 +75,7 @@ public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExt
     }
 
     @Override
-    public TFCFarmlandBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public TFCFarmlandBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

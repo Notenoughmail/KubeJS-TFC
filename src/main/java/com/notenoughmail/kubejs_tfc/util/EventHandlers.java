@@ -3,22 +3,17 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.LampBlockJS;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.dries007.tfc.util.events.*;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -82,24 +77,6 @@ public class EventHandlers {
                 event.setCanceled(true);
             }
         }
-
-        // Handle custom lamps and possibly future implementations
-        final Level level = event.getLevel();
-        final BlockPos pos = event.getPos();
-        final BlockState state = level.getBlockState(pos);
-        final Block block = state.getBlock();
-
-        if (RegistryUtils.getLamp() != null) {
-            if (block instanceof LampBlockJS) {
-                level.getBlockEntity(pos, RegistryUtils.getLamp().get()).ifPresent(lamp -> {
-                    if (lamp.getFuel() != null) {
-                        level.setBlock(pos, state.setValue(LampBlock.LIT, true), 3);
-                        lamp.resetCounter();
-                    }
-                });
-                event.setCanceled(true);
-            }
-        }
     }
 
     private static void onProspect(ProspectedEvent event) {
@@ -139,6 +116,7 @@ public class EventHandlers {
         }
     }
 
+    @SuppressWarnings("SameReturnValue")
     @Nullable
     public static Object postDataEvents(EventJS event) {
         if (event instanceof DataPackEventJS dataEvent) {
@@ -205,6 +183,7 @@ public class EventHandlers {
             if (birthdays.hasListeners()) {
                 birthdays.post(new BirthdayEventJS());
             }
+            RegistryUtils.hackTFCBlockEntities();
         });
     }
 }

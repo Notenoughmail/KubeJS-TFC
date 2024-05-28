@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class HorizontalSupportBlockBuilder extends MultipartShapedBlockBuilder  implements ISupportExtendedProperties {
 
     public transient Consumer<ExtendedPropertiesJS> props;
@@ -44,7 +45,7 @@ public class HorizontalSupportBlockBuilder extends MultipartShapedBlockBuilder  
     }
 
     @Override
-    public HorizontalSupportBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public HorizontalSupportBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

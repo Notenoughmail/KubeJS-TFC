@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.typings.Info;
 
+@SuppressWarnings("unused")
 public class HeatingRecipeJS extends TFCProviderRecipeJS {
 
     @Info(value = "Sets the recipe's output ItemStackProvider, implicitly has the 'tfc:copy_heat' modifier added")

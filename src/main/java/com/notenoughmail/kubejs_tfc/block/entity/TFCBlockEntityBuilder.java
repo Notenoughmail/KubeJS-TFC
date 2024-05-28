@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 // A base class for BE types which don't need any customization and can be re-used for multiple blocks without issue
 public abstract class TFCBlockEntityBuilder<T extends BlockEntity> extends BuilderBase<BlockEntityType<T>> {
 
-    public transient List<Supplier<? extends Block>> allowedBlocks;
+    public final transient List<Supplier<? extends Block>> allowedBlocks;
 
     public TFCBlockEntityBuilder(ResourceLocation i) {
         super(i);

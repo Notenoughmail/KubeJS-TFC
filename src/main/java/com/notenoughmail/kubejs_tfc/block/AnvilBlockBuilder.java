@@ -1,21 +1,22 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.AnvilBlockJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
+import net.dries007.tfc.common.blocks.devices.AnvilBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
-
-    public static final Component DEFAULT_NAME = Component.translatable("tfc.block_entity.anvil");
 
     public transient int tier;
     public transient Consumer<ExtendedPropertiesJS> props;
@@ -25,7 +26,7 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
         super(i);
         tier = 0;
         props = p -> {};
-        inventoryName = DEFAULT_NAME;
+        RegistryUtils.addAnvil(this);
     }
 
     @Info(value = "Sets the tier of recipes the anvil can perform")
@@ -45,11 +46,11 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
         final ExtendedPropertiesJS propsJS = extendedPropsJS();
         props.accept(propsJS);
         return propsJS.delegate()
-                .blockEntity(RegistryUtils.getAnvil());
+                .blockEntity(TFCBlockEntities.ANVIL);
     }
 
     @Override
-    public AnvilBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public AnvilBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }
@@ -57,12 +58,6 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
     @Override
     public Block createObject() {
         return new AnvilBlockJS(createExtendedProperties(), tier, inventoryName);
-    }
-
-    @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        RegistryUtils.addAnvil(this);
     }
 
     @Override
@@ -82,5 +77,21 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
         bs.variant("facing=east", v -> v.model(model).y(180));
         bs.variant("facing=south", v -> v.model(model).y(270));
         bs.simpleVariant("facing=west", model);
+    }
+
+    public static class AnvilBlockJS extends AnvilBlock {
+
+        @Nullable
+        private final Component defaultName;
+
+        public AnvilBlockJS(ExtendedProperties properties, int tier, @Nullable Component defaultName) {
+            super(properties, tier);
+            this.defaultName = defaultName;
+        }
+
+        @Nullable
+        public Component getDefaultName() {
+            return defaultName;
+        }
     }
 }

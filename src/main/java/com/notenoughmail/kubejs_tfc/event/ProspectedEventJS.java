@@ -6,6 +6,7 @@ import net.dries007.tfc.util.events.ProspectedEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 
+@SuppressWarnings("unused")
 public class ProspectedEventJS extends PlayerEventJS {
 
     private final ProspectedEvent event;

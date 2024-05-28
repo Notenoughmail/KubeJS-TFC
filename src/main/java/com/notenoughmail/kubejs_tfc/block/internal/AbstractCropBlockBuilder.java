@@ -27,11 +27,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public abstract class AbstractCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient int stages;
     public transient final Supplier<ClimateRange> climateRange;
-    public transient DeadCropBlockBuilder dead;
+    public final transient DeadCropBlockBuilder dead;
     public transient final SeedItemBuilder seeds;
     @Nullable
     public transient final ItemBuilder product;
@@ -125,7 +126,7 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     }
 
     @Override
-    public AbstractCropBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public AbstractCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

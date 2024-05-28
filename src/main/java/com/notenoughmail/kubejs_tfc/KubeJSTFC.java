@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {
 

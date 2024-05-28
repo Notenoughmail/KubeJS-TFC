@@ -22,6 +22,7 @@ public class NamedRegistryWood implements RegistryWood {
     }
 
     @Info(value = "The mod this wood originates from")
+    @SuppressWarnings("unused")
     public String getMod() {
         return mod;
     }

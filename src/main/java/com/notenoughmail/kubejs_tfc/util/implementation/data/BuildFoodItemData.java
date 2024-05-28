@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class BuildFoodItemData {
 
     @Nullable

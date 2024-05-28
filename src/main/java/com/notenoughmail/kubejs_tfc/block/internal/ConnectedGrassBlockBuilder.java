@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -22,11 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
 
     public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
+    public transient boolean uniqueDirtTexture;
 
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
@@ -34,6 +37,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         thisList.add(this);
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.GRASS.location());
+        uniqueDirtTexture = false;
     }
 
     @Override
@@ -50,6 +54,12 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
             i.accept(getOrCreateItemBuilder());
         }
 
+        return this;
+    }
+
+    @Info(value = "Makes the grass block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
+    public ConnectedGrassBlockBuilder uniqueDirtTexture() {
+        uniqueDirtTexture = true;
         return this;
     }
 
@@ -78,7 +88,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String baseTex = newID("block/", "").toString();
+        final String baseTex = (uniqueDirtTexture ? newID("block/", "") : parent.newID("block/", "")).toString();
 
         generator.blockModel(newID("", "_bottom"), m -> {
             m.parent("tfc:block/grass_bottom");

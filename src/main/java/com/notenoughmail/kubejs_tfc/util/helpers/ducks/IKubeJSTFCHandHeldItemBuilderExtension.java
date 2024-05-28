@@ -7,6 +7,7 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.items.ToolItem;
 
 // Ensures the JSDoc survives mixing
+@SuppressWarnings("unused")
 public interface IKubeJSTFCHandHeldItemBuilderExtension {
 
     @Info("""

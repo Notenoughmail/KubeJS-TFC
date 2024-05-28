@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class TFCDirtBlockBuilder extends BlockBuilder {
 
     public transient final ConnectedGrassBlockBuilder grass;

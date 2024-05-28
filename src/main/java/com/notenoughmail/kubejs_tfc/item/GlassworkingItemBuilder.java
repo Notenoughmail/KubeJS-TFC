@@ -7,6 +7,7 @@ import net.dries007.tfc.common.items.GlassworkingItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@SuppressWarnings("unused")
 public class GlassworkingItemBuilder extends ItemBuilder {
 
     public transient GlassOperation operation;

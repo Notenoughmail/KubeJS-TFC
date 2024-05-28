@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
     public transient final SpreadingCaneBlockBuilder child;

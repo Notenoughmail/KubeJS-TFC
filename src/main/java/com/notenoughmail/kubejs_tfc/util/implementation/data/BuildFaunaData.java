@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 public class BuildFaunaData {
 
     private final PlacedFeatureProperties.Climate climate;

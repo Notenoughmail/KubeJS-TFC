@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient Consumer<ExtendedPropertiesJS> props;
@@ -66,7 +67,7 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
     }
 
     @Override
-    public WildCropBlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties) {
+    public WildCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
         props = extendedProperties;
         return this;
     }

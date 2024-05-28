@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class FluidContainerItemBuilder extends ItemBuilder {
 
     public transient boolean canPlaceLiquid;

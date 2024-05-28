@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
+@SuppressWarnings("unused")
 public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
 
     public ResourceLocation mossyBlock;

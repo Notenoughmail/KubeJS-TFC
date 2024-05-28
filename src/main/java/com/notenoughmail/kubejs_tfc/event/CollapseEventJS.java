@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class CollapseEventJS extends LevelEventJS {
 
     private final BlockContainerJS centerBlock;

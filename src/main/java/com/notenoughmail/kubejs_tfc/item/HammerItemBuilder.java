@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 public class HammerItemBuilder extends HandheldItemBuilder {
 
     @Nullable

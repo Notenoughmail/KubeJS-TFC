@@ -10,7 +10,7 @@ import dev.latvian.mods.kubejs.util.MapJS;
 
 public class AlloyPartComponent implements RecipeComponent<AlloyPartComponent.AlloyPart> {
 
-    public static RecipeComponent<AlloyPart[]> ALLOY = new AlloyPartComponent().asArray();
+    public static final RecipeComponent<AlloyPart[]> ALLOY = new AlloyPartComponent().asArray();
 
     @Override
     public ComponentRole role() {

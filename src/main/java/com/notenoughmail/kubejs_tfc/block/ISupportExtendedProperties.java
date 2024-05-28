@@ -13,6 +13,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import java.util.function.Consumer;
 import java.util.function.ToDoubleFunction;
 
+@SuppressWarnings("unused")
 public interface ISupportExtendedProperties {
 
     @HideFromJS
@@ -22,7 +23,7 @@ public interface ISupportExtendedProperties {
 
     @Info(value = "Allows editing some of TFC's extended block properties")
     @Generics(value = ExtendedPropertiesJS.class)
-    BlockBuilder extendedPropertis(Consumer<ExtendedPropertiesJS> extendedProperties);
+    BlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties);
 
     @HideFromJS
     default ExtendedPropertiesJS extendedPropsJS() {

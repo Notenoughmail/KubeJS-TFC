@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class BuildDrinkableData {
 
     private final FluidIngredient fluidIngredient;

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class RegisterItemStackModifierEventJS extends EventJS {
 
     @Info(value = "Creates a new item stack modifier with the given id and function", params = {

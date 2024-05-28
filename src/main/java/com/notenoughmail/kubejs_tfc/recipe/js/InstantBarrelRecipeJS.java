@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
+@SuppressWarnings("unused")
 public class InstantBarrelRecipeJS extends TFCProviderRecipeJS {
 
     @Override
@@ -35,7 +36,7 @@ public class InstantBarrelRecipeJS extends TFCProviderRecipeJS {
         return this;
     }
 
-    @Info(value = "Sets the recipe's input item ingredient ngredient")
+    @Info(value = "Sets the recipe's input item ingredient ingredient")
     public InstantBarrelRecipeJS inputItem(InputItem inputItem) {
         setValue(BarrelInstantSchema.INPUT_ITEM, inputItem);
         return this;

@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class DouseFireEventJS extends LevelEventJS {
 
     private final Level level;

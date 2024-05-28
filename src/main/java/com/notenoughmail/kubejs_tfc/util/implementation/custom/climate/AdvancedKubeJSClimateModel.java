@@ -12,6 +12,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
 
     private Consumer<ServerLevel> onWorldLoad;

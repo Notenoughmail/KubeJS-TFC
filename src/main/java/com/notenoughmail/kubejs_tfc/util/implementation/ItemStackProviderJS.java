@@ -19,9 +19,8 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
-import net.dries007.tfc.common.capabilities.food.FoodData;
-import net.dries007.tfc.common.capabilities.food.FoodTrait;
-import net.dries007.tfc.common.recipes.outputs.*;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -116,7 +115,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return this;
     }
 
-    @Info(value = "Merges the provided CompoundTag into item stack's CompundTag")
+    @Info(value = "Merges the provided CompoundTag into item stack's CompoundTag")
     public ItemStackProviderJS mergeTag(CompoundTag tag) {
         stack.getOrCreateTag().merge(tag);
         return this;

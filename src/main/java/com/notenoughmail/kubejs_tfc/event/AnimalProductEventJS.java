@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
         Cancelling this event prevents the default behaviour, which is controlled
         by the entity's implementation
         """)
+@SuppressWarnings("unused")
 public class AnimalProductEventJS extends PlayerEventJS {
 
     private final AnimalProductEvent event;

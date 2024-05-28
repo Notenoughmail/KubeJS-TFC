@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+@SuppressWarnings("unused")
 public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
 
     public ResourceLocation mossyBlock;

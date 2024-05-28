@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.item.OutputItem;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
+@SuppressWarnings("unused")
 public class VatRecipeJS extends TFCProviderRecipeJS {
 
     @Override

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.util.calendar.Day;
 import net.dries007.tfc.util.calendar.Month;
 
+@SuppressWarnings("unused")
 public class BirthdayEventJS extends EventJS {
 
     private static final IDayMixin duck = ((IDayMixin) (Object) Day.MONDAY);

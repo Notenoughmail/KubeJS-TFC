@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
 
     @Nullable

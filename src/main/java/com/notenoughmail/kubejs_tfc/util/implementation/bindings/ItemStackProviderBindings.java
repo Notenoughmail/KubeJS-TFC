@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.minecraft.world.item.ItemStack;
 
+@SuppressWarnings("unused")
 public enum ItemStackProviderBindings {
     INSTANCE;
 

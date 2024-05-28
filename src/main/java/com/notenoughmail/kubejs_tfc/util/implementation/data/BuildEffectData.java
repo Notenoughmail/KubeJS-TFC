@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.typings.Info;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class BuildEffectData {
 
     private final String type;

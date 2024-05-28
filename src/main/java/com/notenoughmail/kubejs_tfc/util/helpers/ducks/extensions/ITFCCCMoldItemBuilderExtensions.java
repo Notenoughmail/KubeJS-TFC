@@ -8,6 +8,7 @@ import dev.latvian.mods.rhino.util.RemapForJS;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface ITFCCCMoldItemBuilderExtensions {
 
     @Info(value = "Allows the mold item to be placed in a TFC Casting With Channels mold table")

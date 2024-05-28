@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
         
         This allows new representatives to be registered
         """)
+@SuppressWarnings("unused")
 public class RegisterRepresentativeBlocksEventJS extends EventJS {
 
     @Info(value = "Registers a new representative block", params = {

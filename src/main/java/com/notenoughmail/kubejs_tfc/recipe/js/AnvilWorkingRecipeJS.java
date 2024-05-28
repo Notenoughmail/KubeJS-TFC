@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 import com.notenoughmail.kubejs_tfc.recipe.schema.AnvilSchema;
 import dev.latvian.mods.kubejs.typings.Info;
 
-// Recipe constructors cannot have two constructors with the same number of arguments and anvil working has 2 optional arguments, thus this
+@SuppressWarnings("unused")
 public class AnvilWorkingRecipeJS extends TFCProviderRecipeJS {
 
     @Info(value = "Sets the minimum tier of anvil the recipe requires to perform")

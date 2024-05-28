@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.recipe.schema.KnappingSchema;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.typings.Info;
 
+@SuppressWarnings("unused")
 public class KnappingRecipeJS extends TFCRecipeJS {
 
     @Info(value = "Sets the recipe's ingredient, must match the item clicked, use to restrict recipes beyond the knapping type's ingredient")

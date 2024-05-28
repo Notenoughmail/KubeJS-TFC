@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient FluidProperty fluidProperty;

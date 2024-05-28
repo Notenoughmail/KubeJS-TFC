@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class RegisterInteractionsEventJS extends EventJS {
 
     private static final List<BlockItemPlacement> customBlockItemPlacements = new ArrayList<>();
