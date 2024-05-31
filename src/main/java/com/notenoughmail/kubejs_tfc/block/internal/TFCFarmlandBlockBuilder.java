@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
-import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -20,15 +19,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class TFCFarmlandBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
-    public transient Consumer<ExtendedPropertiesJS> props;
 
     public TFCFarmlandBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        props = p -> {};
         tag(TFCTags.Blocks.FARMLAND.location());
     }
 
@@ -68,16 +65,8 @@ public class TFCFarmlandBlockBuilder extends BlockBuilder implements ISupportExt
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .blockEntity(TFCBlockEntities.FARMLAND);
-    }
-
-    @Override
-    public TFCFarmlandBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

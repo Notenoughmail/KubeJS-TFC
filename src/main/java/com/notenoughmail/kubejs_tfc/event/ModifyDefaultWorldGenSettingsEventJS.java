@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.event;
 
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.event.EventResult;

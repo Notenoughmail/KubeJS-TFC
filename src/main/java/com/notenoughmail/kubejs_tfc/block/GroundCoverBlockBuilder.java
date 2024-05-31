@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.event.RegisterInteractionsEventJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -9,7 +10,6 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
-import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,16 +17,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
 @SuppressWarnings("unused")
-public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class GroundCoverBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     private transient Type type;
     public transient int rotate;
     public transient String parent;
     public transient VoxelShape cachedShape;
-    public transient Consumer<ExtendedPropertiesJS> props;
     @Nullable
     public transient ResourceLocation preexistingItem;
 
@@ -36,7 +33,6 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
         rotate = 0;
         parent = "loose/igneous_intrusive_2";
         noCollision = true;
-        props = p -> {};
         renderType("cutout");
         preexistingItem = null;
     }
@@ -145,19 +141,6 @@ public class GroundCoverBlockBuilder extends BlockBuilder implements ISupportExt
 
         var json = lootBuilder.toJson();
         generator.json(newID("loot_tables/blocks/", ""), json);
-    }
-
-    @Override
-    public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate();
-    }
-
-    @Override
-    public GroundCoverBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     private enum Type {

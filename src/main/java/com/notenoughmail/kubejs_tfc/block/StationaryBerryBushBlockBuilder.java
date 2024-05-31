@@ -1,8 +1,8 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -29,12 +29,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class StationaryBerryBushBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     public transient final Lifecycle[] lifecycles;
     public transient final ItemBuilder productItem;
     public static final String[] lc = {"healthy", "dormant", "fruiting", "flowering"};
-    public transient Consumer<ExtendedPropertiesJS> props;
     @Nullable
     public transient ResourceLocation product;
 
@@ -42,7 +41,6 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
         productItem = new BasicItemJS.Builder(newID("", "_product"));
-        props = p -> {};
         product = null;
         renderType("cutout_mipped");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
@@ -135,18 +133,10 @@ public class StationaryBerryBushBlockBuilder extends BlockBuilder implements ISu
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .noOcclusion()
                 .randomTicks()
                 .blockEntity(TFCBlockEntities.BERRY_BUSH)
                 .serverTicks(BerryBushBlockEntity::serverTick);
-    }
-
-    @Override
-    public StationaryBerryBushBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 }

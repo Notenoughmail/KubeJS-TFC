@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -13,19 +13,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
 @SuppressWarnings("unused")
-public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class AnvilBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     public transient int tier;
-    public transient Consumer<ExtendedPropertiesJS> props;
     public transient Component inventoryName;
 
     public AnvilBlockBuilder(ResourceLocation i) {
         super(i);
         tier = 0;
-        props = p -> {};
         RegistryUtils.hackBlockEntity(TFCBlockEntities.ANVIL, this);
     }
 
@@ -43,16 +39,8 @@ public class AnvilBlockBuilder extends BlockBuilder implements ISupportExtendedP
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJS = extendedPropsJS();
-        props.accept(propsJS);
-        return propsJS.delegate()
+        return super.createExtendedProperties()
                 .blockEntity(TFCBlockEntities.ANVIL);
-    }
-
-    @Override
-    public AnvilBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

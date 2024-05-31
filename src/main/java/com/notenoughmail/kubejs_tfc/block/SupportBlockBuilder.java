@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
@@ -17,17 +18,15 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class SupportBlockBuilder extends MultipartShapedBlockBuilder implements ISupportExtendedProperties {
+public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
     public transient final HorizontalSupportBlockBuilder horizontal;
-    public transient Consumer<ExtendedPropertiesJS> props;
     public transient final String connection;
 
     public SupportBlockBuilder(ResourceLocation i) {
         super(i);
         horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
-        props = p -> {};
         connection = newID("block/", "_connection").toString();
         tagBlock(TFCTags.Blocks.SUPPORT_BEAM.location());
     }
@@ -41,19 +40,6 @@ public class SupportBlockBuilder extends MultipartShapedBlockBuilder implements 
     @Override
     public Block createObject() {
         return new VerticalSupportBlock(createExtendedProperties());
-    }
-
-    @Override
-    public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate();
-    }
-
-    @Override
-    public SupportBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

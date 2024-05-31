@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -22,15 +21,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class DeadCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class DeadCropBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     private final AbstractCropBlockBuilder alive;
-    private Consumer<ExtendedPropertiesJS> props;
 
     public DeadCropBlockBuilder(ResourceLocation i, AbstractCropBlockBuilder alive) {
         super(i);
         this.alive = alive;
-        props = p -> {};
         renderType("cutout");
     }
 
@@ -62,16 +59,8 @@ public class DeadCropBlockBuilder extends BlockBuilder implements ISupportExtend
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .randomTicks();
-    }
-
-    @Override
-    public DeadCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

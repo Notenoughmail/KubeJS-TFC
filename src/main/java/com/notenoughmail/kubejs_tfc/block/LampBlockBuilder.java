@@ -1,9 +1,9 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.LampBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -20,14 +20,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
-import java.util.function.Consumer;
-
 @SuppressWarnings("unused")
-public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class LampBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     public transient int lightLevel;
     public transient String chainTexture;
-    public transient Consumer<ExtendedPropertiesJS> props;
 
     public LampBlockBuilder(ResourceLocation i) {
         super(i);
@@ -36,7 +33,6 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
         chainTexture = "";
         tag(Helpers.identifier("lamps"));
         renderType("cutout");
-        props = p -> {};
         RegistryUtils.hackBlockEntity(TFCBlockEntities.LAMP, this);
     }
 
@@ -58,20 +54,12 @@ public class LampBlockBuilder extends BlockBuilder implements ISupportExtendedPr
     }
 
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .noOcclusion()
                 .randomTicks()
                 .pushReaction(PushReaction.DESTROY)
                 .lightLevel(state -> state.getValue(LampBlock.LIT) ? lightLevel : 0)
                 .blockEntity(TFCBlockEntities.LAMP);
-    }
-
-    @Override
-    public LampBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public abstract class AbstractCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public abstract class AbstractCropBlockBuilder extends ExtendPropertiesBlockBuilder {
 
     public transient int stages;
     public transient final Supplier<ClimateRange> climateRange;
@@ -38,7 +37,6 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
     @Nullable
     public transient final ItemBuilder product;
     public transient FarmlandBlockEntity.NutrientType nutrient;
-    public transient Consumer<ExtendedPropertiesJS> props;
     public transient Type type;
     public transient boolean requiresStick;
     @Nullable
@@ -57,7 +55,6 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
             product = null;
         }
         nutrient = FarmlandBlockEntity.NutrientType.NITROGEN;
-        props = p -> {};
         requiresStick = false;
         renderType("cutout");
         productItem = null;
@@ -120,17 +117,9 @@ public abstract class AbstractCropBlockBuilder extends BlockBuilder implements I
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .blockEntity(TFCBlockEntities.CROP)
                 .serverTicks(CropBlockEntity::serverTick);
-    }
-
-    @Override
-    public AbstractCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Override

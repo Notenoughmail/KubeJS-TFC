@@ -62,7 +62,8 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        return super.createExtendedProperties().serverTicks(CropBlockEntity::serverTickBottomPartOnly);
+        return super.createExtendedProperties()
+                .serverTicks(CropBlockEntity::serverTickBottomPartOnly);
     }
 
     @Override

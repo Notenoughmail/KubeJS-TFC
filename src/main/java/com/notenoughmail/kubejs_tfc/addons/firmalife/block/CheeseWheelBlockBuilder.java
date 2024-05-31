@@ -3,11 +3,10 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.block;
 import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.ISupportExtendedProperties;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
-import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -28,11 +27,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupportExtendedProperties {
+public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     public final transient ItemBuilder sliceItem;
     private static final String[] ages = new String[]{"fresh", "aged", "vintage"};
-    public transient Consumer<ExtendedPropertiesJS> props;
 
     public CheeseWheelBlockBuilder(ResourceLocation i) {
         super(i);
@@ -40,7 +38,6 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
         hardness(2f);
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
-        props = p -> {};
         RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
     }
 
@@ -133,16 +130,8 @@ public class CheeseWheelBlockBuilder extends ShapedBlockBuilder implements ISupp
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = extendedPropsJS();
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .randomTicks()
                 .blockEntity(FLBlockEntities.TICK_COUNTER);
-    }
-
-    @Override
-    public CheeseWheelBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 }

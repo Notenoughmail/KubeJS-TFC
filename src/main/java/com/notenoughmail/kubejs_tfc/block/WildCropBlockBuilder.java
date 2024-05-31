@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -28,9 +29,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public class WildCropBlockBuilder extends ExtendPropertiesBlockBuilder {
 
-    public transient Consumer<ExtendedPropertiesJS> props;
     public transient Type type;
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;
     @Nullable
@@ -38,7 +38,6 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
 
     public WildCropBlockBuilder(ResourceLocation i) {
         super(i);
-        props = p -> {};
         spreadingFruitBlock = () -> () -> Blocks.HONEY_BLOCK;
         type = Type.DEFAULT;
         seedItem = null;
@@ -60,16 +59,8 @@ public class WildCropBlockBuilder extends BlockBuilder implements ISupportExtend
 
     @Override
     public ExtendedProperties createExtendedProperties() {
-        final ExtendedPropertiesJS propsJs = new ExtendedPropertiesJS(ExtendedProperties.of(createProperties()));
-        props.accept(propsJs);
-        return propsJs.delegate()
+        return super.createExtendedProperties()
                 .randomTicks();
-    }
-
-    @Override
-    public WildCropBlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties) {
-        props = extendedProperties;
-        return this;
     }
 
     @Info(value = "Sets the block to use as the crop's fruit block, only applicable to the spreading type")
