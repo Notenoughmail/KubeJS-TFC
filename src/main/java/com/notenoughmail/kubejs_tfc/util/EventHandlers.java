@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.event.*;
+import com.notenoughmail.kubejs_tfc.util.helpers.StateVariables;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -16,6 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -35,6 +37,7 @@ public class EventHandlers {
     public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifier", () -> RegisterItemStackModifierEventJS.class);
     public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
     public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
+    public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
@@ -58,6 +61,7 @@ public class EventHandlers {
         bus.addListener(EventHandlers::limitContainers);
         bus.addListener(EventHandlers::onCollapse);
         bus.addListener(EventHandlers::onDouseFire);
+        bus.addListener(EventHandlers::serverAboutToStart);
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -185,5 +189,9 @@ public class EventHandlers {
             }
             RegistryUtils.hackBlockEntities();
         });
+    }
+
+    private static void serverAboutToStart(ServerAboutToStartEvent event) {
+        StateVariables.worldgenHasBeenTransformed = false;
     }
 }

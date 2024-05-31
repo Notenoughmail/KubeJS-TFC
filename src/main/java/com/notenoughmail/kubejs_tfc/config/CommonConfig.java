@@ -18,9 +18,10 @@ public class CommonConfig {
         builder.comment("KubeJS TFC common configuration");
 
         debugMode = builder.comment("""
-                 If true:
-                    Virtual json files created in the 'TFCEvents.data' and 'TFCEvents.worldgenData' events will be printed to the log
-                    Important (and potentially unstable) events will be printed to the log
+                 If true, the following will be printed to the log:
+                    Virtual json files created in the 'TFCEvents.data' and 'TFCEvents.worldgenData' events,
+                    Important (and potentially unstable) events,
+                    Block entity hijacking
                  """)
                 .define("debugMode", false);
     }

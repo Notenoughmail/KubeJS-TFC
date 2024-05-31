@@ -8,7 +8,9 @@
     "DayMixin",
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
+    "TFCChunkGeneratorMixin",
     "accessor.BlockEntityTypeAccessor",
+    "accessor.RockLayerSettingsAccessor",
     "extensions.FirmaLifeDataEventMixin",
     "extensions.FirmaLifeISPMixin",
     "extensions.TFCCCMoldItemBuilderExtensions"

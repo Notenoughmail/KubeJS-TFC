@@ -8,6 +8,7 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.climate.ClimateModelType;
+import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.noise.OpenSimplex2D;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,15 +37,30 @@ public class KubeJSClimateModel implements ClimateModel {
     protected long climateSeed = 0L;
     private final List<OpenSimplex2D> noises = new ArrayList<>();
 
+    protected float temperatureScale = 20000F;
+    protected float rainfallScale = 20000F;
+    protected final ClimateModel defaults;
 
-    public KubeJSClimateModel(ResourceLocation name, ClimateModel defaults) {
+
+    public KubeJSClimateModel(ResourceLocation name, ClimateModel model) {
         this.name = name;
+        defaults = model;
         averageTemperature = defaults::getAverageTemperature;
         averageRainfall = defaults::getRainfall;
         currentTemperature = defaults::getTemperature;
         airFog = defaults::getFogginess;
         waterFog = defaults::getWaterFogginess;
         windVector = (block, calendarTicks) -> defaults.getWindVector(block.getLevel(), block.getPos(), calendarTicks);
+    }
+
+    @Info(value = "Gets the temperature scale defined by the world's `overworld.json` file")
+    public float getTemperatureScale() {
+        return temperatureScale;
+    }
+
+    @Info(value = "Gets the rainfall scale defined by the world's `overworld.json` file")
+    public float getRainfallScale() {
+        return rainfallScale;
     }
 
     @Info(value = "Sets how the model will determine the current temperature at a given position and time")
@@ -139,18 +155,28 @@ public class KubeJSClimateModel implements ClimateModel {
         for (int i = 0 ; i < noises.size() ; i++) {
             ((IOpenSimplex2dMixin) noises.get(i)).kubejs_tfc$SetSeed(climateSeed + (35242456354313L * i));
         }
+
+        final ChunkGeneratorExtension extension = (ChunkGeneratorExtension) level.getChunkSource().getGenerator();
+        temperatureScale = extension.settings().temperatureScale();
+        rainfallScale = extension.settings().rainfallScale();
     }
 
     @HideFromJS
     @Override
     public void onSyncToClient(FriendlyByteBuf buffer) {
         buffer.writeLong(climateSeed);
+        buffer.writeFloat(temperatureScale);
+        buffer.writeFloat(rainfallScale);
+        defaults.onSyncToClient(buffer);
     }
 
     @HideFromJS
     @Override
     public void onReceiveOnClient(FriendlyByteBuf buffer) {
         climateSeed = buffer.readLong();
+        temperatureScale = buffer.readFloat();
+        rainfallScale = buffer.readFloat();
+        defaults.onReceiveOnClient(buffer);
     }
 
     @Override

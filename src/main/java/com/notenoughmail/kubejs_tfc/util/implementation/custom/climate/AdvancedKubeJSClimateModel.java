@@ -18,8 +18,10 @@ public class AdvancedKubeJSClimateModel extends KubeJSClimateModel {
     private Consumer<ServerLevel> onWorldLoad;
     private OnChunkLoadCallback onChunkLoad;
 
-    public AdvancedKubeJSClimateModel(ResourceLocation name, ClimateModel defaults) {
-        super(name, defaults);
+    public AdvancedKubeJSClimateModel(ResourceLocation name, ClimateModel model) {
+        super(name, model);
+        onWorldLoad = defaults::onWorldLoad;
+        onChunkLoad = defaults::onChunkLoad;
     }
 
     @Info(value = "Sets the model's behavior when loading into a world")

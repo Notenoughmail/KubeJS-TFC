@@ -24,7 +24,7 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
     @HideFromJS
     public static final Map<ResourceLocation, ClimateModelType> CUSTOM_MODELS = new HashMap<>(); // This exists purely to allow custom models to provide their type, so that TFC can get their name
 
-    private final ClimateModel overworld = new OverworldClimateModel();
+    private static final ClimateModel overworld = new OverworldClimateModel();
 
     @Info(value = "Creates a new climate model with the given name and properties", params = {
             @Param(name = "name", value = "The name of the climate model"),
