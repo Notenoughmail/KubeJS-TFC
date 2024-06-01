@@ -1,9 +1,9 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ConnectedGrassBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.TFCFarmlandBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.TFCPathBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.TFCRootedDirtBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.ConnectedGrassBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.TFCFarmlandBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.TFCPathBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.TFCRootedDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.BasicBlockJS;
@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.soil.DirtBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -41,12 +42,14 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         mud = null;
     }
 
+    @Info(value = "Sets the properties of the dirt's grass block")
     @Generics(value = ConnectedGrassBlockBuilder.class)
     public TFCDirtBlockBuilder grass(Consumer<ConnectedGrassBlockBuilder> grass) {
         grass.accept(this.grass);
         return this;
     }
 
+    @Info(value = "Creates and sets the properties of the dirt's path block")
     @Generics(value = TFCPathBlockBuilder.class)
     public TFCDirtBlockBuilder path(Consumer<TFCPathBlockBuilder> path) {
         this.path = new TFCPathBlockBuilder(newID("", "_path"), this);
@@ -54,6 +57,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info(value = "Creates and sets the properties of the dirt's farmland block")
     @Generics(value = TFCFarmlandBlockBuilder.class)
     public TFCDirtBlockBuilder farmland(Consumer<TFCFarmlandBlockBuilder> farmland) {
         this.farmland = new TFCFarmlandBlockBuilder(newID("", "_farmland"), this);
@@ -62,6 +66,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info(value = "Creates and sets the properties of the dirt's rooted dirt block")
     @Generics(value = TFCRootedDirtBlockBuilder.class)
     public TFCDirtBlockBuilder rooted(Consumer<TFCRootedDirtBlockBuilder> rooted) {
         this.rooted = new TFCRootedDirtBlockBuilder(newID("", "_rooted"), this);
@@ -69,6 +74,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info(value = "Creates and sets the properties of the dirt's mud block")
     @Generics(value = BlockBuilder.class)
     public TFCDirtBlockBuilder mud(Consumer<BlockBuilder> mud) {
         this.mud = new BasicBlockJS.Builder(newID("", "_mud"));

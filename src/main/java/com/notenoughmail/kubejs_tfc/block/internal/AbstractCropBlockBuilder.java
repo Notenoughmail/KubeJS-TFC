@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
@@ -28,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public abstract class AbstractCropBlockBuilder extends ExtendPropertiesBlockBuilder {
+public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient int stages;
     public transient final Supplier<ClimateRange> climateRange;

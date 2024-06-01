@@ -1,16 +1,15 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.HorizontalSupportBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
-import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.wood.VerticalSupportBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -31,6 +30,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         tagBlock(TFCTags.Blocks.SUPPORT_BEAM.location());
     }
 
+    @Info(value = "Sets the properties of the horizontal support block")
     @Generics(HorizontalSupportBlockBuilder.class)
     public SupportBlockBuilder horizontal(Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
         horizontalSupport.accept(horizontal);

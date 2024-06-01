@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class StationaryBerryBushBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final Lifecycle[] lifecycles;
     public transient final ItemBuilder productItem;

@@ -2,8 +2,9 @@
 - Fix custom lamps not retaining their fluid when broken
 - Register custom blocks with block entities to TFC's own block entities instead of creating a duplicate block entity type
 - Fix misspelling of extended properties method
-- Custom grass blocks now use their parent dirt block's texture as their base by default
+- Custom grass, farmland, and path blocks now use their parent dirt block's texture as their base by default
 - Add an event for modifying default worldgen values, including the world's rock layers 
+- Add axle block builder, which has methods for creating corresponding windmills, water wheels, gear boxes, clutches, and bladed axles
 
 ### 1.1.3
 - Add anvil block builder

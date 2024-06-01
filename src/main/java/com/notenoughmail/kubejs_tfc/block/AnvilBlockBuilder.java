@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class AnvilBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient int tier;
     public transient Component inventoryName;

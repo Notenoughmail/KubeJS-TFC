@@ -61,6 +61,9 @@ import java.util.List;
  *     <li>Blocks
  *         <ul>
  *             <li>Kinetics</li>
+ *                 <ul>
+ *                      <li>Encased Axles</li>
+ *                 </ul>
  *         </ul>
  *     </li>
  *     <li>BE Attachments
@@ -127,6 +130,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:anvil", AnvilBlockBuilder.class, AnvilBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }

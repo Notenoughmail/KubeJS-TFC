@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.event.RegisterInteractionsEventJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class GroundCoverBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private transient Type type;
     public transient int rotate;

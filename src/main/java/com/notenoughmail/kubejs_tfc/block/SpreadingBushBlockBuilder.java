@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.internal.SpreadingCaneBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.SpreadingCaneBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;

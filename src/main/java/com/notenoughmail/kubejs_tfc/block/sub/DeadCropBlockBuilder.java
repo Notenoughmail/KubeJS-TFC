@@ -1,7 +1,9 @@
-package com.notenoughmail.kubejs_tfc.block.internal;
+package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -21,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class DeadCropBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private final AbstractCropBlockBuilder alive;
 

@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.LampBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
 @SuppressWarnings("unused")
-public class LampBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient int lightLevel;
     public transient String chainTexture;

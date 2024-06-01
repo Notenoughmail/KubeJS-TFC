@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class WildCropBlockBuilder extends ExtendPropertiesBlockBuilder {
+public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient Type type;
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;

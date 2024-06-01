@@ -1,14 +1,18 @@
-package com.notenoughmail.kubejs_tfc.block.internal;
+package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
-import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
-import net.dries007.tfc.common.blocks.soil.PathBlock;
+import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
+import net.dries007.tfc.common.blocks.ExtendedProperties;
+import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -16,18 +20,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class TFCPathBlockBuilder extends BlockBuilder {
+@SuppressWarnings("unused")
+public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
+    public transient boolean useUniqueDirtTexture;
 
-    public TFCPathBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
+    public TFCFarmlandBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
+        tag(TFCTags.Blocks.FARMLAND.location());
+        useUniqueDirtTexture = false;
+    }
+
+    @Info(value = "Makes the farmland block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
+    public TFCFarmlandBlockBuilder uniqueDirtTexture() {
+        useUniqueDirtTexture = true;
+        return this;
     }
 
     @Override
     public Block createObject() {
-        return new PathBlock(createProperties(), parent);
+        return new FarmlandBlock(createExtendedProperties(), parent);
     }
 
     @Override
@@ -60,26 +74,17 @@ public class TFCPathBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String base = newID("block/", "").toString();
-
-        generator.blockModel(id, m -> {
-            m.parent("tfc:block/grass_path");
-            m.texture("dirt", base);
-            m.texture("top", base + "_top");
-            m.texture("side", base + "_side");
-        });
+    public ExtendedProperties createExtendedProperties() {
+        return super.createExtendedProperties()
+                .blockEntity(TFCBlockEntities.FARMLAND);
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
-
-        bs.variant("", v -> {
-            v.model(model);
-            v.model(model).y(90);
-            v.model(model).y(180);
-            v.model(model).y(270);
+    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        generator.blockModel(id, m -> {
+            m.parent("block/template_farmland");
+            m.texture("top", newID("block/", "").toString());
+            m.texture("dirt", useUniqueDirtTexture ? parent.textures.get("particle").getAsString() : parent.newID("block/", "").toString());
         });
     }
 }

@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.block.internal;
+package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;

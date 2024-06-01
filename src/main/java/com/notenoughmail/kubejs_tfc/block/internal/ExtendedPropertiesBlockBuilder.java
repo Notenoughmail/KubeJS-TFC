@@ -8,11 +8,11 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
-public abstract class ExtendPropertiesBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
+public abstract class ExtendedPropertiesBlockBuilder extends BlockBuilder implements ISupportExtendedProperties {
 
     public transient Consumer<ExtendedPropertiesJS> props;
 
-    public ExtendPropertiesBlockBuilder(ResourceLocation i) {
+    public ExtendedPropertiesBlockBuilder(ResourceLocation i) {
         super(i);
         props = p -> {};
     }

@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ConnectedGrassBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.ConnectedGrassBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
