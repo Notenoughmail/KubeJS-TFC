@@ -1,10 +1,16 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.HammerItem;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
@@ -29,6 +35,21 @@ public class HammerItemBuilder extends HandheldItemBuilder {
 
     @Override
     public Item createObject() {
-        return new HammerItem(toolTier, attackDamageBaseline, speedBaseline, createItemProperties(), metalTexture);
+        return new HammerItem(toolTier, attackDamageBaseline, speedBaseline, createItemProperties(), metalTexture) {
+            private boolean modified = false;
+
+            {
+                defaultModifiers = ArrayListMultimap.create(defaultModifiers);
+            }
+
+            @Override
+            public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+                if (!modified) {
+                    modified = true;
+                    attributes.forEach((r, m) -> defaultModifiers.put(RegistryInfo.ATTRIBUTE.getValue(r), m));
+                }
+                return super.getDefaultAttributeModifiers(equipmentSlot);
+            }
+        };
     }
 }

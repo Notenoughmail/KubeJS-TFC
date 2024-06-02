@@ -50,6 +50,11 @@ import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.List;
 
@@ -69,11 +74,11 @@ import java.util.List;
  *     <li>BE Attachments
  *         <ul>
  *             <li>Heat</li>
+ *             <li>Calendar ticking</li>
  *         </ul>
  *     </li>
  * 	   <li>EntityJS compat</li>
  * 	   <li>Custom BiomeExtensions - will probably require talking to Alc</li>
- * 	   <li>Modify default TFC world gen values</li>
  * 	   <li>Investigate:</li>
  * 	       <ul>
  * 	           <li>Barrel rack interface</li>
@@ -133,6 +138,20 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
+    }
+
+    @Override
+    public void afterInit() {
+        final ForgeConfigSpec spec = KubeJSTFC.serverConfigBuilder.build();
+
+        if (!spec.isEmpty()) {
+            final ModContainer prevMod =  ModLoadingContext.get().getActiveContainer();
+            ModList.get().getModContainerById(KubeJSTFC.MODID).ifPresent(ModLoadingContext.get()::setActiveContainer);
+
+            ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec, "kubejs-tfc-server.toml");
+
+            ModLoadingContext.get().setActiveContainer(prevMod);
+        }
     }
 
     @Override

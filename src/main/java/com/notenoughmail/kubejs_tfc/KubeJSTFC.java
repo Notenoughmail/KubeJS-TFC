@@ -7,10 +7,12 @@ import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.architectury.platform.Platform;
+import net.dries007.tfc.config.ConfigBuilder;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.ApiStatus;
@@ -81,6 +83,9 @@ public class KubeJSTFC {
     public static void error(String message, Object arg) {
         LOGGER.error(message, arg);
     }
+
+    public static final ForgeConfigSpec.Builder serverConfigBuilder = new ForgeConfigSpec.Builder();
+    public static final ConfigBuilder wrappedServerConfigBuilder = new ConfigBuilder(serverConfigBuilder, "kubejs_tfc");
 
     public KubeJSTFC() {
         EventHandlers.init();
