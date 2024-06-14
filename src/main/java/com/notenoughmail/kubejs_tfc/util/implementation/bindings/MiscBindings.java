@@ -17,8 +17,7 @@ import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
-import net.dries007.tfc.util.Metal;
-import net.dries007.tfc.util.Support;
+import net.dries007.tfc.util.*;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.dries007.tfc.world.TFCChunkGenerator;
 import net.dries007.tfc.world.chunkdata.ChunkData;
@@ -327,15 +326,51 @@ public enum MiscBindings {
         return Metal.get(fluid);
     }
 
-    @Info(value = "Returns the first `Metal` whose ingots match the given stack")
+    @Info(value = "Returns the first `Metal` whose ingots match the given stack, may be null")
     @Nullable
     public Metal getMetalFromIngot(ItemStack ingot) {
         return Metal.getFromIngot(ingot);
     }
 
-    @Info(value = "Returns the first `Metal` whose sheets match the given stack")
+    @Info(value = "Returns the first `Metal` whose sheets match the given stack, may be null")
     @Nullable
     public Metal getMetalFromSheet(ItemStack sheet) {
         return Metal.getFromSheet(sheet);
+    }
+
+    @Info(value = "Returns the first `LampFuel` that matches the given fluid and state, may be null")
+    @Nullable
+    public LampFuel getLampFuel(Fluid fluid, BlockState state) {
+        return LampFuel.get(fluid, state);
+    }
+
+    @Info(value = "Returns the first `Drinkable` that matches the given fluid, may be null")
+    @Nullable
+    public Drinkable getDrinkable(Fluid fluid) {
+        return Drinkable.get(fluid);
+    }
+
+    @Info(value = "Returns the first `Fertilizer` that matches the given stack, may be null")
+    @Nullable
+    public Fertilizer getFertilizer(ItemStack stack) {
+        return Fertilizer.get(stack);
+    }
+
+    @Info(value = "Returns the first `Fuel` that matches the given stack, may be null")
+    @Nullable
+    public Fuel getFuel(ItemStack stack) {
+        return Fuel.get(stack);
+    }
+
+    @Info(value = "Returns the first `Pannable` that matches the given state, may be null")
+    @Nullable
+    public Pannable getPannable(BlockState state) {
+        return Pannable.get(state);
+    }
+
+    @Info(value = "Returns the first `Sluiceable` that matches the given stack, may be null")
+    @Nullable
+    public Sluiceable getSluiceable(ItemStack stack) {
+        return Sluiceable.get(stack);
     }
 }

@@ -11,6 +11,7 @@
     "TFCChunkGeneratorMixin",
     "accessor.BlockEntityTypeAccessor",
     "accessor.RockLayerSettingsAccessor",
+    "extensions.EntityJSBaseLivingEntityBuilderFaunaMixin",
     "extensions.FirmaLifeDataEventMixin",
     "extensions.FirmaLifeISPMixin",
     "extensions.TFCCCMoldItemBuilderExtensions"

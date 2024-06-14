@@ -5,6 +5,10 @@
 - Custom grass, farmland, and path blocks now use their parent dirt block's texture as their base by default
 - Add an event for modifying default worldgen values, including the world's rock layers 
 - Add axle block builder, which has methods for creating corresponding windmills, water wheels, gear boxes, clutches, and bladed axles
+- Add EntityJS compat
+- Add event for registering a fauna definition to any entity type in the game
+- Add `getCraftingInputs()` method to the custom modifiers event to match new TFC functionality
+- Add methods for getting the fuel, drinkable, fertilizer, lamp fuel, pannable, and sluicable definitions to the misc sub-binding
 
 ### 1.1.3
 - Add anvil block builder

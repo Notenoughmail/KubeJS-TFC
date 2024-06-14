@@ -51,6 +51,8 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
             return new ItemStackProviderJS(ItemStack.EMPTY, json);
         } else if (o instanceof List<?> list) {
             return new ItemStackProviderJS(ItemStack.EMPTY, parseModifierList(list));
+        } else if (o instanceof JsonObject json) {
+            return fromJson(json);
         }
 
         return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());

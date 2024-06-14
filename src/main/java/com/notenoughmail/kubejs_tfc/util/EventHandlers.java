@@ -16,8 +16,10 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,6 +40,7 @@ public class EventHandlers {
     public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
     public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
     public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
+    public static final EventHandler registerFaunas = TFCEvents.startup("registerFaunas", () -> RegisterFaunasEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
@@ -66,6 +69,7 @@ public class EventHandlers {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(EventHandlers::loadComplete);
+        modBus.addListener(EventPriority.LOW, EventHandlers::spawnPlacements);
     }
 
     // Guaranteed only server - provides a ServerLevel
@@ -193,5 +197,11 @@ public class EventHandlers {
 
     private static void serverAboutToStart(ServerAboutToStartEvent event) {
         StateVariables.worldgenHasBeenTransformed = false;
+    }
+
+    private static void spawnPlacements(SpawnPlacementRegisterEvent event) {
+        if (registerFaunas.hasListeners()) {
+            registerFaunas.post(new RegisterFaunasEventJS(event));
+        }
     }
 }

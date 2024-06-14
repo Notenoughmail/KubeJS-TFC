@@ -2,12 +2,14 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import net.dries007.tfc.util.calendar.Calendar;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.calendar.Month;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 @SuppressWarnings("unused")
 public enum CalendarBindings {
@@ -31,6 +33,11 @@ public enum CalendarBindings {
     @Info(value = "Returns the calendar of the entity's level")
     public ICalendar getCalendar(Entity entity) {
         return Calendars.get(entity.level());
+    }
+
+    @Info(value = "Returns the calendar of the block entity's level or the best guess on the calendar if it does not have a level")
+    public ICalendar getCalendar(BlockEntity blockEntity) {
+        return blockEntity.hasLevel() ? Calendars.get(blockEntity.getLevel()) : Calendars.get();
     }
 
     @Info(value = "Returns the number of calendar ticks in a month based on the number of days in a month")
