@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.util.UtilsJS;
@@ -21,7 +22,7 @@ public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.parent = parent;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BLADED_AXLE, this);
-        texture("wood", id.getNamespace() + ":block/" + id.getPath());
+        texture("wood", parent.id.getNamespace() + ":block/" + parent.id.getPath());
     }
 
     @Override
@@ -38,11 +39,21 @@ public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("wood", tex);
+    }
+
+    @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
-            m.parent("tfc:block/bladed_axle");
-            m.textures(textures);
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("tfc:block/bladed_axle");
+                m.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override

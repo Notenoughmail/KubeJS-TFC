@@ -7,7 +7,6 @@ import com.notenoughmail.kubejs_tfc.block.sub.TFCRootedDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.BasicBlockJS;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
@@ -108,11 +107,6 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
             RegistryInfo.BLOCK.addBuilder(mud);
             mud.createAdditionalObjects();
         }
-    }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        super.generateItemModelJson(m);
     }
 
     @Override

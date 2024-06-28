@@ -111,6 +111,12 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("0", tex);
+    }
+
+    @Override
     public ThinSpikeBlock createObject() {
         return new ThinSpikeBlock(melts ? createProperties().randomTicks() : createProperties()) {
 
@@ -197,25 +203,21 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (modelJson != null) {
-            generator.json(newID("models/block", ""), modelJson);
-        } else {
-            final String texture = id.getNamespace() + ":block/" + id.getPath();
+        if (model.isEmpty()) {
             generator.blockModel(id, m -> {
                 m.parent("tfc:block/thin_spike");
-                m.texture("0", texture);
-                m.texture("particle", texture);
+                m.textures(textures);
             });
+        } else {
+            generator.blockModel(id, m -> m.parent(model));
         }
 
         if (!tipModel.isEmpty()) {
             generator.blockModel(newID("", "_tip"), m -> m.parent(tipModel));
         } else {
-            final String texture = id.getNamespace() + ":block/" + id.getPath();
             generator.blockModel(newID("", "_tip"), m -> {
                 m.parent("tfc:block/thin_spike_tip");
-                m.texture("0", texture);
-                m.texture("particle", texture);
+                m.textures(textures);
             });
         }
     }

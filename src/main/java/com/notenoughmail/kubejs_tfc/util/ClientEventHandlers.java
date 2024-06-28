@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.WildCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.ConnectedGrassBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
@@ -13,6 +14,7 @@ import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -45,14 +47,23 @@ public class ClientEventHandlers {
 
     // This doesn't work very well with pure white 16x16 images for both textures
     private static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        final ItemColor grassColor = (stack, index) -> TFCColors.getGrassColor(null, index);
+
         FluidContainerItemBuilder.thisList.forEach(builder -> event.register(new ContainedFluidModel.Colors(), builder.get()));
         MoldItemBuilder.thisList.forEach(builder -> event.register(new ContainedFluidModel.Colors(), builder.get()));
+
+        WildCropBlockBuilder.thisList.forEach(builder -> {
+            if (builder.itemBuilder != null) {
+                event.register(grassColor, builder.get().asItem());
+            }
+        });
     }
 
     private static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         final BlockColor grassColor = (state, level, pos, tintIndex) -> TFCColors.getGrassColor(pos, tintIndex);
         final BlockColor grassBlockColor = (state, level, pos, tintIndex) -> state.getValue(ConnectedGrassBlock.SNOWY) || tintIndex != 1 ? -1 : grassColor.getColor(state, level, pos, tintIndex);
 
+        WildCropBlockBuilder.thisList.forEach(builder -> event.register(grassColor, builder.get()));
         ConnectedGrassBlockBuilder.thisList.forEach(builder -> event.register(grassBlockColor, builder.get()));
     }
 

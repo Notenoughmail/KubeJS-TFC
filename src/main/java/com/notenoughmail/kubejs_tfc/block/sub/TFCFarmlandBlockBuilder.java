@@ -24,24 +24,31 @@ import java.util.function.Consumer;
 public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
-    public transient boolean useUniqueDirtTexture;
 
     public TFCFarmlandBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
         tag(TFCTags.Blocks.FARMLAND.location());
-        useUniqueDirtTexture = false;
+        texture("dirt", parent.textures.get("particle").getAsString()); // Parent does not yet exist when #textureAll is called in super constructor
     }
 
     @Info(value = "Makes the farmland block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public TFCFarmlandBlockBuilder uniqueDirtTexture() {
-        useUniqueDirtTexture = true;
+        texture("dirt", id.getNamespace() + ":block/" + id.getPath());
         return this;
     }
 
     @Override
     public Block createObject() {
         return new FarmlandBlock(createExtendedProperties(), parent);
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        texture("top", tex);
+        texture("dirt", tex);
+        return this;
     }
 
     @Override
@@ -81,10 +88,13 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
-            m.parent("block/template_farmland");
-            m.texture("top", newID("block/", "").toString());
-            m.texture("dirt", useUniqueDirtTexture ? parent.textures.get("particle").getAsString() : parent.newID("block/", "").toString());
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("block/template_farmland");
+                m.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 }

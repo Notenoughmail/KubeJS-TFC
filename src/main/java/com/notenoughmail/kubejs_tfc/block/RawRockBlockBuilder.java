@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -87,15 +88,26 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("all", tex);
+    }
+
+    @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
-            m.parent("block/cube_all");
-            m.texture("all", model);
-        });
-        generator.blockModel(newID("", "_mirrored"), m -> {
-            m.parent("block/cube_all");
-            m.texture("all", model);
-        });
+        if (!super.model.isEmpty()) {
+               generator.blockModel(id, m -> m.parent(model));
+               generator.blockModel(newID("", "_mirrored"), m -> m.parent(model));
+        } else {
+            generator.blockModel(id, m -> {
+                m.parent("block/cube_all");
+                m.textures(textures);
+            });
+            generator.blockModel(newID("", "_mirrored"), m -> {
+                m.parent("block/cube_all");
+                m.textures(textures);
+            });
+        }
     }
 
     @Override

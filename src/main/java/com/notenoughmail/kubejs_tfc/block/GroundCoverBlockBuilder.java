@@ -91,6 +91,12 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("all", tex);
+    }
+
+    @Override
     public GroundcoverBlock createObject() {
         return switch (type) {
             case ORE -> GroundcoverBlock.looseOre(createProperties());
@@ -107,10 +113,14 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
-            m.parent("kubejs_tfc:block/ground_cover/" + parent);
-            m.texture("all", id.getNamespace() + ":block/" + id.getPath());
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("kubejs_tfc:block/ground_cover/" + parent);
+                m.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override

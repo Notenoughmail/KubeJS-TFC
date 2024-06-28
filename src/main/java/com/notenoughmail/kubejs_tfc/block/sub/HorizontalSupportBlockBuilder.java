@@ -65,10 +65,14 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(parent.newID("", "_horizontal"), m -> {
-            m.parent("tfc:block/wood/support/horizontal");
-            m.texture("texture", parent.newID("block/", "").toString());
-            m.texture("particle", parent.newID("block/", "").toString());
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(parent.newID("", "_horizontal"), m -> {
+                m.parent("tfc:block/wood/support/horizontal");
+                m.texture("texture", parent.newID("block/", "").toString());
+                m.texture("particle", parent.newID("block/", "").toString());
+            });
+        } else {
+            generator.blockModel(id, m -> m.parent(model));
+        }
     }
 }

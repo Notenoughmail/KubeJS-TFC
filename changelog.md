@@ -3,12 +3,16 @@
 - Register custom blocks with block entities to TFC's own block entities instead of creating a duplicate block entity type
 - Fix misspelling of extended properties method
 - Custom grass, farmland, and path blocks now use their parent dirt block's texture as their base by default
-- Add an event for modifying default worldgen values, including the world's rock layers 
+- Add an event for modifying default worldgen values, including the world's rock layers
+  - Change `TFCEvents.rockSettings`'s method from `defineLayer` to `defineRock` to match terminology used here
 - Add axle block builder, which has methods for creating corresponding windmills, water wheels, gear boxes, clutches, and bladed axles
 - Add EntityJS compat
 - Add event for registering a fauna definition to any entity type in the game
 - Add `getCraftingInputs()` method to the custom modifiers event to match new TFC functionality
 - Add methods for getting the fuel, drinkable, fertilizer, lamp fuel, pannable, and sluicable definitions to the misc sub-binding
+- Update to TFC 3.2.5 and FirmaLife 2.1.6
+- Add recipe handlers for new FL recipe types
+- Add config option to put TFC's self-test errors into Kube's console
 
 ### 1.1.3
 - Add anvil block builder

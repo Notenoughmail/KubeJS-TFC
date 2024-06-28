@@ -59,6 +59,13 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        texture("all", tex);
+        return this;
+    }
+
     @Info("sets the rock type the block model should use, may be 'igneous_extrusive', 'igneous_intrusive', 'metamorphic', or 'sedimentary'")
     public LooseRockBlockBuilder rockTypeModel(String s) {
         rockType = s;
@@ -72,18 +79,17 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String texture = newID("block/", "").toString();
         generator.blockModel(newID("", "_pebble"), m -> {
             m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_1");
-            m.texture("all", texture);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_rubble"), m -> {
             m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_2");
-            m.texture("all", texture);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_boulder"), m -> {
             m.parent("kubejs_tfc:block/ground_cover/loose/" + rockType + "_3");
-            m.texture("all", texture);
+            m.textures(textures);
         });
     }
 

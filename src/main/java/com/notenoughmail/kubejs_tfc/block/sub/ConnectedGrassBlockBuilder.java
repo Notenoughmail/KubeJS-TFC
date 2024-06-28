@@ -29,7 +29,6 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     public transient final TFCDirtBlockBuilder parent;
 
     public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
-    public transient boolean uniqueDirtTexture;
 
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
@@ -37,7 +36,14 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         thisList.add(this);
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.GRASS.location());
-        uniqueDirtTexture = false;
+        texture("texture", parent.textures.get("particle").getAsString());
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        texture("texture", tex);
+        return this;
     }
 
     @Override
@@ -59,7 +65,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Info(value = "Makes the grass block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public ConnectedGrassBlockBuilder uniqueDirtTexture() {
-        uniqueDirtTexture = true;
+        texture("texture", id.getNamespace() + ":block/" + id.getPath());
         return this;
     }
 
@@ -88,27 +94,25 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String baseTex = (uniqueDirtTexture ? newID("block/", "") : parent.newID("block/", "")).toString();
-
         generator.blockModel(newID("", "_bottom"), m -> {
             m.parent("tfc:block/grass_bottom");
-            m.texture("texture", baseTex);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_side"), m -> {
             m.parent("tfc:block/grass_side");
-            m.texture("texture", baseTex);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_snowy_side"), m -> {
             m.parent("tfc:block/grass_snowy_side");
-            m.texture("texture", baseTex);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_snowy_top"), m -> {
             m.parent("tfc:block/grass_snowy_top");
-            m.texture("texture", baseTex);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_top"), m -> {
             m.parent("tfc:block/grass_top");
-            m.texture("texture", baseTex);
+            m.textures(textures);
         });
     }
 

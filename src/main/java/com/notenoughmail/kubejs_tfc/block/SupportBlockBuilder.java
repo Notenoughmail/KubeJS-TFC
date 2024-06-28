@@ -27,7 +27,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
         connection = newID("block/", "_connection").toString();
-        tagBlock(TFCTags.Blocks.SUPPORT_BEAM.location());
+        tag(TFCTags.Blocks.SUPPORT_BEAM.location());
     }
 
     @Info(value = "Sets the properties of the horizontal support block")
@@ -70,14 +70,16 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         generator.blockModel(newID("", "_vertical"), m -> {
-            m.parent("tfc:block/wood/support/vertical");
-            m.texture("texture", newID("block/", "").toString());
-            m.texture("particle", newID("block/", "").toString());
+            if (model.isEmpty()) {
+                m.parent("tfc:block/wood/support/vertical");
+                m.textures(textures);
+            } else {
+                m.parent(model);
+            }
         });
         generator.blockModel(newID("", "_connection"), m -> {
             m.parent("tfc:block/wood/support/connection");
-            m.texture("texture", newID("block/", "").toString());
-            m.texture("particle", newID("block/", "").toString());
+            m.textures(textures);
         });
     }
 }

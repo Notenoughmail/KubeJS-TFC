@@ -15,6 +15,13 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        texture("texture", tex);
+        return texture("particle", tex);
+    }
+
+    @Override
     public RockSpikeBlock createObject() {
         return new RockSpikeBlock(createProperties());
     }
@@ -27,21 +34,17 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        var texture = id.getNamespace() + ":block/" + id.getPath();
         generator.blockModel(newID("", "_base"), m -> {
             m.parent("tfc:block/rock/spike_base");
-            m.texture("texture", texture);
-            m.texture("particle", texture);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_middle"), m -> {
             m.parent("tfc:block/rock/spike_middle");
-            m.texture("texture", texture);
-            m.texture("particle", texture);
+            m.textures(textures);
         });
         generator.blockModel(newID("", "_tip"), m -> {
             m.parent("tfc:block/rock/spike_tip");
-            m.texture("texture", texture);
-            m.texture("particle", texture);
+            m.textures(textures);
         });
     }
 

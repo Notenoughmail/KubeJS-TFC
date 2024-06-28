@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
@@ -105,8 +106,15 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 });
             }
         }
+    }
 
-
+    @Override
+    protected void generateItemModelJson(ModelGenerator m) {
+        if (model.isEmpty()) {
+            m.parent(id.getNamespace() + ":block/" + id.getPath() + "_" + (requiresStick ? (stages + doubleStages - 1) + "_bottom" : (stages - 1)));
+        } else {
+            m.parent(model);
+        }
     }
 
     @Override

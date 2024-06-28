@@ -25,11 +25,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
+
+    public static final List<WildCropBlockBuilder> thisList = new ArrayList<>();
 
     public transient Type type;
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;
@@ -43,6 +47,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         seedItem = null;
         foodItem = null;
         renderType("cutout");
+        thisList.add(this);
     }
 
     @Override
@@ -85,6 +90,12 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public WildCropBlockBuilder food(ResourceLocation foodItem) {
         this.foodItem = foodItem;
         return this;
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("crop", tex);
     }
 
     @Override
@@ -155,8 +166,12 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         final String base = newID("block/", "").toString();
         switch (type) {
             case DEFAULT, FLOODED -> generator.blockModel(id, m -> {
-                m.parent("tfc:block/wild_crop/crop");
-                m.texture("crop", base);
+                if (model.isEmpty()) {
+                    m.parent("tfc:block/wild_crop/crop");
+                    m.textures(textures);
+                } else {
+                    m.parent(model);
+                }
             });
             case DOUBLE -> {
                 generator.blockModel(newID("", "_top"), m -> {

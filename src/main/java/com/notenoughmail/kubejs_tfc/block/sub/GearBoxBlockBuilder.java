@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -21,8 +22,13 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         super(i);
         this.parent = parent;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.GEAR_BOX, this);
-        texture("all", id.getNamespace() + ":block/" + id.getPath());
         renderType("cutout");
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("all", tex);
     }
 
     @Override

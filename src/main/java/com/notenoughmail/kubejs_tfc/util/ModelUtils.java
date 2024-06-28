@@ -135,16 +135,6 @@ public class ModelUtils {
         }
     }
 
-    public static class BLOCKS {
-        // Needed because apparently the 'textures' JsonObject doesn't include particles
-        public static JsonObject addTextureAndParticle(String texture) {
-            var json = new JsonObject();
-            json.addProperty("texture", texture);
-            json.addProperty("particle", texture);
-            return json;
-        }
-    }
-
     public static ResourceLocation newID(ResourceLocation id, String pre, String post) {
         return new ResourceLocation(id.getNamespace(), pre + id.getPath() + post);
     }

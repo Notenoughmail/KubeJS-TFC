@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -23,6 +24,12 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         tier = 0;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.ANVIL, this);
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("all", tex);
     }
 
     @Info(value = "Sets the tier of recipes the anvil can perform")
@@ -50,12 +57,14 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String texture = newID("block/", "").toString();
-        generator.blockModel(id, m -> {
-            m.parent("tfc:block/anvil");
-            m.texture("all", texture);
-            m.texture("particle", texture);
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("tfc:block/anvil");
+                m.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override

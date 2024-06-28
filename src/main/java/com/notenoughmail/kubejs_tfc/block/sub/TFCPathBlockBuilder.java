@@ -20,17 +20,27 @@ import java.util.function.Consumer;
 public class TFCPathBlockBuilder extends BlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
-    public transient boolean useUniqueDirtTexture;
 
     public TFCPathBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        useUniqueDirtTexture = false;
+        texture("top", id.getNamespace() + ":block/" + id.getPath() + "_top");
+        texture("side", id.getNamespace() + ":block/" + id.getPath() + "_side");
+        texture("dirt", parent.textures.get("particle").getAsString());
     }
 
     @Info(value = "Makes the path block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public TFCPathBlockBuilder uniqueDirtTexture() {
-        useUniqueDirtTexture = true;
+        texture("dirt", id.getNamespace() + ":block/" + id.getPath());
+        return this;
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        texture("top", tex);
+        texture("side", tex);
+        texture("dirt", tex);
         return this;
     }
 
@@ -70,14 +80,14 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String base = newID("block/", "").toString();
-
-        generator.blockModel(id, m -> {
-            m.parent("tfc:block/grass_path");
-            m.texture("dirt", useUniqueDirtTexture ? base : parent.newID("block/", "").toString());
-            m.texture("top", base + "_top");
-            m.texture("side", base + "_side");
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("tfc:block/grass_path");
+                m.textures(textures);
+            });
+        } else {
+            generator.blockModel(id, m -> m.parent(model));
+        }
     }
 
     @Override

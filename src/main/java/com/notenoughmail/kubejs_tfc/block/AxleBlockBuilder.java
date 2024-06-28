@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.*;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -32,11 +33,10 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         windmill = new WindmillBlockBuilder(newID("", "_windmill"), this);
         texture = newID("block/", "");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.AXLE, this);
-        texture("wood", id.getNamespace() + ":block/" + id.getPath());
     }
 
     @Info(value = "Sets the texture that will be used for the axle")
-    public AxleBlockBuilder texture(ResourceLocation texture) {
+    public AxleBlockBuilder axelTexture(ResourceLocation texture) {
         this.texture = texture;
         return this;
     }
@@ -77,6 +77,12 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        super.textureAll(tex);
+        return texture("wood", tex);
+    }
+
+    @Override
     public Block createObject() {
         return new AxleBlock(createExtendedProperties(), UtilsJS.cast(windmill), texture);
     }
@@ -112,10 +118,14 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, g -> {
-            g.parent("tfc:block/axle");
-            g.textures(textures);
-        });
+        if (model.isEmpty()) {
+            generator.blockModel(id, g -> {
+                g.parent("tfc:block/axle");
+                g.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override
