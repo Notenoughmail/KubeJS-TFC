@@ -8,9 +8,7 @@ import com.eerussianguy.firmalife.common.network.FLPackets;
 import com.eerussianguy.firmalife.common.recipes.FLRecipeSerializers;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.block.CheeseWheelBlockBuilder;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.item.WateringCanItemBuilder;
-import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.MixingBowlSchema;
-import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.OvenSchema;
-import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.VatSchema;
+import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.BasicSchema;
 import com.notenoughmail.kubejs_tfc.recipe.schema.SoupPotSchema;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
@@ -48,6 +46,9 @@ public class FirmaLifePlugin extends KubeJSPlugin {
                 .register(FLRecipeSerializers.OVEN.getId().getPath(), OvenSchema.SCHEMA)
                 .register(FLRecipeSerializers.STINKY_SOUP.getId().getPath(), SoupPotSchema.SCHEMA) // Yes, they are both direct inheritors of PotRecipe with nothing additional
                 .register(FLRecipeSerializers.VAT.getId().getPath(), VatSchema.SCHEMA)
+                .register(FLRecipeSerializers.STOMPING.getId().getPath(), StompingSchema.SCHEMA)
+                .register(FLRecipeSerializers.BOWL_POT.getId().getPath(), BowlPotSchema.SCHEMA)
+                .register(FLRecipeSerializers.PRESS.getId().getPath(), StompingSchema.SCHEMA) // Unused currently, recipes are actually stomping
                 ;
     }
 }

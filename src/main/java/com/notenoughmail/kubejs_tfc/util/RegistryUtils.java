@@ -19,7 +19,7 @@ public class RegistryUtils {
 
     private static final Map<Supplier<BlockEntityType<?>>, List<Supplier<Block>>> blockEntityHacks = new HashMap<>();
 
-    public static Optional<ParticleOptions> getOrLogErrorParticle(ResourceLocation particle) {
+    public static Optional<ParticleOptions> getParticleOrLogError(ResourceLocation particle) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
         if (nullableParticle instanceof ParticleOptions options) {
             return Optional.of(options);
@@ -43,7 +43,7 @@ public class RegistryUtils {
 
     static void hackBlockEntities() {
         blockEntityHacks.forEach((type, blocks) -> {
-            KubeJSTFC.warningLog("For BE type {}", BlockEntityType.getKey(type.get()));
+            KubeJSTFC.warningLog("For BE type {}", () -> BlockEntityType.getKey(type.get()));
             KubeJSTFC.warningLog("Adding: {}", () -> blocks.stream().map(Supplier::get).toList());
             final BlockEntityTypeAccessor accessor = (BlockEntityTypeAccessor) type.get();
             final Set<Block> blockSet = new HashSet<>(accessor.kubejs_tfc$GetBlocks());

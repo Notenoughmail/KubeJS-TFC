@@ -35,13 +35,13 @@ public class HotWaterBlockJS extends HotWaterBlock {
 
         if (builder.hasBubbles && random.nextInt(4) == 0) {
             if (bubbleParticle == null) {
-                bubbleParticle = RegistryUtils.getOrLogErrorParticle(builder.bubbleParticle);
+                bubbleParticle = RegistryUtils.getParticleOrLogError(builder.bubbleParticle);
             }
             bubbleParticle.ifPresent(particle -> level.addParticle(particle, x + random.nextFloat() - random.nextFloat(), y, z + random.nextFloat() - random.nextFloat(), 0.0D, 0.0D, 0.0D));
         }
         if (builder.hasSteam && level.isEmptyBlock(pos.above())) {
             if (steamParticle == null) {
-                steamParticle = RegistryUtils.getOrLogErrorParticle(builder.steamParticle);
+                steamParticle = RegistryUtils.getParticleOrLogError(builder.steamParticle);
             }
             steamParticle.ifPresent(particle -> level.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D));
         }

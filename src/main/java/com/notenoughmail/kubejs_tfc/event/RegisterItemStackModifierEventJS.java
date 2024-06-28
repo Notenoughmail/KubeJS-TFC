@@ -26,7 +26,7 @@ public class RegisterItemStackModifierEventJS extends EventJS {
         ItemStackModifiers.register(id, new KubeJSItemStackModifier(id, applicator, dependsOnInput));
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.2.0")
     @Info(value = "Returns a supplier for the current crafting container. Only available during advanced shaped and shapeless crafting recipes. Deprecated, use `getCraftingInput()` instead")
     @Generics(CraftingContainer.class)
     public Supplier<@Nullable CraftingContainer> getCraftingContainer() {

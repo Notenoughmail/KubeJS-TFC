@@ -15,7 +15,6 @@ import net.dries007.tfc.util.climate.OverworldClimateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -27,6 +26,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class ThinSpikeBlockBuilder extends BlockBuilder {
@@ -112,13 +114,19 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     public ThinSpikeBlock createObject() {
         return new ThinSpikeBlock(melts ? createProperties().randomTicks() : createProperties()) {
 
+            @Nullable
+            private Optional<ParticleOptions> particle;
+
             @Override
             public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
                 if (drips) {
                     final float temperature = Climate.getTemperature(level, pos);
                     if (state.getValue(TIP) && state.getValue(FLUID).getFluid() == Fluids.EMPTY && temperature > dripTemp && random.nextFloat() < dripChance) {
                         if (random.nextFloat() < dripChance) { // Weird but TFC does it
-                            spawnParticle(level, pos, state, RegistryUtils.getOrLogErrorParticle(dripParticle, ParticleTypes.DRIPPING_DRIPSTONE_WATER));
+                            if (particle == null) {
+                                particle = RegistryUtils.getParticleOrLogError(dripParticle);
+                            }
+                            particle.ifPresent(options -> spawnParticle(level, pos, state, options));
                         }
                     }
                 }
