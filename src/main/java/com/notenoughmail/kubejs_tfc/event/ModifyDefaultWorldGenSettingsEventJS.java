@@ -8,6 +8,7 @@ import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.world.TFCChunkGenerator;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
@@ -58,18 +59,12 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
 
         // Copy values to mutable lists and maps
         final RockLayerSettings.Data data = ((RockLayerSettingsAccessor) (Object) settings.rockLayerSettings()).kubejs_tfc$Data();
-        rocks = new HashMap<>();
-        rocks.putAll(data.rocks());
-        bottom = new ArrayList<>();
-        bottom.addAll(data.bottom());
-        oceanFloor = new ArrayList<>();
-        oceanFloor.addAll(data.oceanFloor());
-        land = new ArrayList<>();
-        land.addAll(data.land());
-        volcanic = new ArrayList<>();
-        volcanic.addAll(data.volcanic());
-        uplift = new ArrayList<>();
-        uplift.addAll(data.uplift());
+        rocks = new HashMap<>(data.rocks());
+        bottom = new ArrayList<>(data.bottom());
+        oceanFloor = new ArrayList<>(data.oceanFloor());
+        land = new ArrayList<>(data.land());
+        volcanic = new ArrayList<>(data.volcanic());
+        uplift = new ArrayList<>(data.uplift());
         layers = new ArrayList<>();
         data.layers().forEach(layerData -> layers.add(new RockLayerSettings.LayerData(layerData.id(), new HashMap<>(layerData.layers()))));
     }
@@ -191,6 +186,15 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
     @Info("Removes the given layer from the generator")
     public void removeLayer(String layerId) {
         layers.removeIf(layer -> layer.id().equals(layerId));
+        layers.forEach(layer -> {
+            final List<String> removals = new ArrayList<>(layer.layers().size());
+            layer.layers().forEach((rock, rockLayer) -> {
+                if (rockLayer.equals(layerId)) {
+                    removals.add(rock);
+                }
+            });
+            removals.forEach(rock -> layer.layers().remove(rock));
+        });
         oceanFloor.remove(layerId);
         land.remove(layerId);
         volcanic.remove(layerId);
@@ -280,6 +284,20 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
 
     @Override
     protected void afterPosted(EventResult result) {
+        final boolean validSettings;
+        if (bottom.isEmpty() || oceanFloor.isEmpty() || land.isEmpty() || volcanic.isEmpty() || uplift.isEmpty()) {
+            validSettings = false;
+            ConsoleJS.SERVER.error("""
+                    Custom rock layer settings are invalid, cannot have an empty layer type, using default settings.
+                        bottom=%s
+                        ocean_floor=%s
+                        land=%s
+                        volcanic=%s
+                        uplift=%s
+                    """.formatted(bottom, oceanFloor, land, volcanic, uplift));
+        } else {
+            validSettings = true;
+        }
         generator.applySettings(old -> new Settings(
                 flatBedrock,
                 spawnDistance,
@@ -289,7 +307,7 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
                 tempConstant,
                 rainScale,
                 rainConstant,
-                new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift).parse(),
+                validSettings ? new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift).parse() : old.rockLayerSettings(),
                 continentalness,
                 grassDensity
         ));

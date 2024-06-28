@@ -27,12 +27,12 @@ minecraft {
     runs {
         configureEach {
             workingDirectory project.file('run')
-            args '-mixin.config=kubejs_tfc.mixins.json', '--debug'
+            args '-mixin.config=kubejs_tfc.mixins.json'
 
             property 'forge.logging.console.level', 'debug'
 
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
+            property "mixin.env.remapRefMap", "true"
+            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 "${mod_id}" {
@@ -146,6 +146,7 @@ dependencies {
     if (System.getProperty("idea.sync.active") != "true") {
         annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
     }
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
 }
 
 tasks.named('processResources', ProcessResources).configure {

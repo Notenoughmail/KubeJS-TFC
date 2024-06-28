@@ -1,9 +1,8 @@
 package com.notenoughmail.kubejs_tfc.addons.entityjs.builders;
 
-import com.notenoughmail.kubejs_tfc.addons.entityjs.entities.OviparousAnimalJS;
 import com.notenoughmail.kubejs_tfc.addons.entityjs.AnimalConfigBuilder;
+import com.notenoughmail.kubejs_tfc.addons.entityjs.entities.OviparousAnimalJS;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,7 @@ import java.util.function.Consumer;
 
 public class OviparousAnimalJSBuilder extends TFCAnimalBuilder<OviparousAnimalJS> {
 
-    public transient AnimalConfigBuilder.Oviparous config;
+    public final transient AnimalConfigBuilder.Oviparous config;
     public transient boolean crows;
     @Nullable
     public transient MutableComponent productReadyMessage;

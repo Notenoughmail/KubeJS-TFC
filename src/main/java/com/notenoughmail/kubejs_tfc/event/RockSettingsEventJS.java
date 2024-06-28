@@ -26,7 +26,7 @@ public class RockSettingsEventJS extends StartupEventJS {
             @Param(name = "loose", value = "The registry name of the loose block of the rock layer, may be null to indicate no loose block"),
             @Param(name = "mossyLoose", value = "The registry name of the mossy loose block of the rock layer, may be null to indicate no mossy loose block")
     })
-    public RockSettings defineLayer(
+    public RockSettings defineRock(
             ResourceLocation id,
             Block raw,
             Block hardened,
@@ -50,5 +50,24 @@ public class RockSettingsEventJS extends StartupEventJS {
                 Optional.ofNullable(mossyLoose)
         );
         return RockSettings.register(id, settings);
+    }
+
+    @Info("Deprecated, please use the other method")
+    @Deprecated(forRemoval = true, since = "1.2.0")
+    public RockSettings defineLayer(
+            ResourceLocation id,
+            Block raw,
+            Block hardened,
+            Block gravel,
+            Block cobble,
+            Block sand,
+            Block sandstone,
+            @Nullable Block spike,
+            @Nullable Block loose,
+            @Nullable Block mossyLoose
+    ) {
+        return defineRock(
+                id, raw, hardened, gravel, cobble, sand, sandstone, spike, loose, mossyLoose
+        );
     }
 }

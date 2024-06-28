@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.sub.*;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.*;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
-    public transient WindmillBlockBuilder windmill;
+    public transient final WindmillBlockBuilder windmill;
     public transient ResourceLocation texture;
     public transient WaterWheelBlockBuilder waterWheel;
     public transient GearBoxBlockBuilder gearBox;

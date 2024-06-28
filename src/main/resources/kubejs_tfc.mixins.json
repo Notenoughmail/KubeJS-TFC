@@ -8,6 +8,8 @@
     "DayMixin",
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
+    "RegisteredDataManagerMixin",
+    "SelfTestsMixin",
     "TFCChunkGeneratorMixin",
     "accessor.BlockEntityTypeAccessor",
     "accessor.RockLayerSettingsAccessor",

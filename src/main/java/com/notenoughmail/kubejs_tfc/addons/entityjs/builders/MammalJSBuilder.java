@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.addons.entityjs.builders;
 
-import com.notenoughmail.kubejs_tfc.addons.entityjs.entities.MammalJS;
 import com.notenoughmail.kubejs_tfc.addons.entityjs.AnimalConfigBuilder;
+import com.notenoughmail.kubejs_tfc.addons.entityjs.entities.MammalJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class MammalJSBuilder extends TFCAnimalBuilder<MammalJS> {
 
-    public transient AnimalConfigBuilder.Mammal config;
+    public final transient AnimalConfigBuilder.Mammal config;
 
     public MammalJSBuilder(ResourceLocation i) {
         super(i);

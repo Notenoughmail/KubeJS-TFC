@@ -441,33 +441,6 @@ public class TFCDataEventJS extends EventJS {
     }
 
     /*
-     * FirmaLife and Beneath aren't out for 1.20 yet, they may potentially change how they do things
-    public void greenhouse(BlockIngredient blockIngredient, int tier) {
-        final JsonObject json = new JsonObject();
-        json.add("ingredient", blockIngredient.toJson());
-        json.addProperty("tier", tier);
-        addJson(DataUtils.dataIDFromObject(blockIngredient, "firmalife", "greenhouse"), json);
-    }
-
-    public void greenhouse(BlockIngredient blockIngredient, int tier, ResourceLocation name) {
-        final JsonObject json = new JsonObject();
-        json.add("ingredient", blockIngredient.toJson());
-        json.addProperty("tier", tier);
-        addJson(DataUtils.dataID(name, "firmalife", "greenhouse"), json);
-    }
-
-    public void plantable(Ingredient ingredient, Consumer<BuildPlantableData> plantableData) {
-        var data = new BuildPlantableData(ingredient);
-        plantableData.accept(data);
-        addJson(DataUtils.dataIDFromObject(ingredient, "firmalife", "plantable"), data.toJson());
-    }
-
-    public void plantable(Ingredient ingredient, Consumer<BuildPlantableData> plantableData, ResourceLocation name) {
-        var data = new BuildPlantableData(ingredient);
-        plantableData.accept(data);
-        addJson(DataUtils.dataID(name, "firmalife", "plantable"), data.toJson());
-    }
-
     // Why the hell not
     public void netherFertilizer(Ingredient ingredient, String values) { // "d=0.2, f=0.5"
         final JsonObject json = new JsonObject();

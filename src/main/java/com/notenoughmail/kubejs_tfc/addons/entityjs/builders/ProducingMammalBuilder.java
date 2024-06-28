@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public abstract class ProducingMammalBuilder<T extends ProducingMammal & IAnimatableJS> extends TFCAnimalBuilder<T>{
 
-    public transient AnimalConfigBuilder.ProducingMammal config;
+    public final transient AnimalConfigBuilder.ProducingMammal config;
     @Nullable
     public transient MutableComponent productMessage;
 

@@ -13,6 +13,7 @@ public class CommonConfig {
     }
 
     public static ForgeConfigSpec.BooleanValue debugMode;
+    public static ForgeConfigSpec.BooleanValue insertSelfTestsIntoKubeJSConsole;
 
     private static void register(ForgeConfigSpec.Builder builder) {
         builder.comment("KubeJS TFC common configuration");
@@ -24,5 +25,10 @@ public class CommonConfig {
                     Block entity hijacking
                  """)
                 .define("debugMode", false);
+
+        insertSelfTestsIntoKubeJSConsole = builder.comment("""
+                If true and TFC's datapack self tests are enabled, adds TFC's error message to the KubeJS log
+                """)
+                .define("insertSelfTestsIntoKubeJSConsole", true);
     }
 }

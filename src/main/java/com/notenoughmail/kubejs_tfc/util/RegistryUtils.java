@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -18,19 +19,20 @@ public class RegistryUtils {
 
     private static final Map<Supplier<BlockEntityType<?>>, List<Supplier<Block>>> blockEntityHacks = new HashMap<>();
 
-    public static ParticleOptions getOrLogErrorParticle(ResourceLocation particle, ParticleOptions fallback) {
+    public static Optional<ParticleOptions> getOrLogErrorParticle(ResourceLocation particle) {
         final ParticleType<?> nullableParticle = RegistryInfo.PARTICLE_TYPE.getValue(particle);
         if (nullableParticle instanceof ParticleOptions options) {
-            return options;
+            return Optional.of(options);
         }
         if (nullableParticle == null) {
             KubeJSTFC.error("The provided particle: '{}' does not exist!", particle);
         } else {
             KubeJSTFC.error("The provided particle: '{}' is not a valid particle! Must be an instance of ParticleOptions!", particle);
         }
-        return fallback;
+        return Optional.empty();
     }
 
+    @ApiStatus.Internal
     public static <T extends BlockEntity> void hackBlockEntity(Supplier<BlockEntityType<T>> be, Supplier<Block> block) {
         blockEntityHacks.compute(UtilsJS.cast(be), (type, blocks) -> {
             if (blocks == null) blocks = new ArrayList<>();
