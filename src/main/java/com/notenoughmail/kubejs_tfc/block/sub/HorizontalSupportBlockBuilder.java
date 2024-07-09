@@ -68,8 +68,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
         if (model.isEmpty()) {
             generator.blockModel(parent.newID("", "_horizontal"), m -> {
                 m.parent("tfc:block/wood/support/horizontal");
-                m.texture("texture", parent.newID("block/", "").toString());
-                m.texture("particle", parent.newID("block/", "").toString());
+                m.textures(textures);
             });
         } else {
             generator.blockModel(id, m -> m.parent(model));

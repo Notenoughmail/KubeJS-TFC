@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.util.helpers.StateVariables;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -197,7 +196,7 @@ public class EventHandlers {
     }
 
     private static void serverAboutToStart(ServerAboutToStartEvent event) {
-        StateVariables.worldgenHasBeenTransformed = false;
+        WorldGenUtils.worldgenHasBeenTransformed = false;
     }
 
     private static void spawnPlacements(SpawnPlacementRegisterEvent event) {

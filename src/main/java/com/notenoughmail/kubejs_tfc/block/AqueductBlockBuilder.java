@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;

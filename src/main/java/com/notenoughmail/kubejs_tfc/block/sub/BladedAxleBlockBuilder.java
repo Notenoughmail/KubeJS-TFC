@@ -22,7 +22,7 @@ public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.parent = parent;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BLADED_AXLE, this);
-        texture("wood", parent.id.getNamespace() + ":block/" + parent.id.getPath());
+        textureAll(parent.id.getNamespace() + ":block/" + parent.id.getPath());
     }
 
     @Override

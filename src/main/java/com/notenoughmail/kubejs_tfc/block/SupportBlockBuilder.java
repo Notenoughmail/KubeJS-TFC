@@ -28,6 +28,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
         connection = newID("block/", "_connection").toString();
         tag(TFCTags.Blocks.SUPPORT_BEAM.location());
+        horizontal.textureAll(id.getNamespace() + ":block/" + id.getPath());
     }
 
     @Info(value = "Sets the properties of the horizontal support block")
@@ -63,7 +64,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
             m.parent(model);
         } else {
             m.parent("tfc:block/wood/support/inventory");
-            m.texture("texture", newID("block/", "").toString());
+            m.textures(textures);
         }
     }
 

@@ -6,6 +6,7 @@ import net.dries007.tfc.common.capabilities.food.NutritionData;
 import net.dries007.tfc.common.capabilities.food.TFCFoodData;
 import net.dries007.tfc.common.capabilities.player.PlayerData;
 import net.dries007.tfc.common.recipes.ChiselRecipe;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,7 +20,7 @@ public class TFCPlayerDataJS {
 
     public TFCPlayerDataJS(Player player) {
         this.player = player;
-        tfcData = new PlayerData(this.player);
+        tfcData = PlayerData.get(player);
         TFCFoodData.replaceFoodStats(this.player);
         foodData = (TFCFoodData) this.player.getFoodData();
         nutrition = foodData.getNutrition();
@@ -128,5 +129,9 @@ public class TFCPlayerDataJS {
     @Info(value = "Returns all nutrient values")
     public float[] getNutrients() {
         return nutrition.getNutrients();
+    }
+
+    public CompoundTag toNBT() {
+        return tfcData.serializeNBT();
     }
 }

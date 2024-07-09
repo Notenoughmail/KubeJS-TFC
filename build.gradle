@@ -122,7 +122,7 @@ dependencies {
     // implementation fg.deobf("curse.maven:rosia-856122:${rosia_identifier}")
     compileOnly fg.deobf("curse.maven:tfccc-820815:${tfccc_identifer}") // Breaks things during dev runtime
     compileOnly fg.deobf("curse.maven:arborfirmacraft-877545:${arbor_identifier}")
-    compileOnly fg.deobf("curse.maven:precision-prospecting-700638:${precpros_identifier}")
+    implementation fg.deobf("curse.maven:precision-prospecting-700638:${precpros_identifier}")
 
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
@@ -142,6 +142,9 @@ dependencies {
     implementation fg.deobf("curse.maven:entityjs-967617:${entityjs_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     implementation("com.eliotlash.mclib:mclib:20")
+
+    // ProwerfulJS
+    implementation fg.deobf("curse.maven:powerfuljs-819845:${powerfuljs_version}")
 
     if (System.getProperty("idea.sync.active") != "true") {
         annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")

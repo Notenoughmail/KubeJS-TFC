@@ -4,3 +4,4 @@ com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin precisionprospecting
 com.notenoughmail.kubejs_tfc.addons.afc.AFCPlugin afc
 com.notenoughmail.kubejs_tfc.addons.tfccc.TFCCCPlugin tfcchannelcasting
 com.notenoughmail.kubejs_tfc.addons.entityjs.EntityJSTFCPlugin entityjs
+com.notenoughmail.kubejs_tfc.addons.powerfuljs.PowerfulJSTFCPlugin powerfuljs

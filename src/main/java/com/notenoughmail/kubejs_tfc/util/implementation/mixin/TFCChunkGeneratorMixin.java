@@ -4,7 +4,7 @@ import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.ModifyDefaultWorldGenSettingsEventJS;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
-import com.notenoughmail.kubejs_tfc.util.helpers.StateVariables;
+import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import net.dries007.tfc.world.TFCChunkGenerator;
 import net.dries007.tfc.world.biome.BiomeSourceExtension;
 import net.dries007.tfc.world.settings.Settings;
@@ -24,10 +24,10 @@ public abstract class TFCChunkGeneratorMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void kubejs_tfc$ModifyDefaultSettings(BiomeSourceExtension arg0, Holder<NoiseGeneratorSettings> arg1, Settings arg2, CallbackInfo ci) {
-        if (!StateVariables.worldgenHasBeenTransformed && EventHandlers.defaultSettings.hasListeners()) {
+        if (!WorldGenUtils.worldgenHasBeenTransformed && EventHandlers.defaultSettings.hasListeners()) {
             EventHandlers.defaultSettings.post(new ModifyDefaultWorldGenSettingsEventJS((TFCChunkGenerator) (Object) this));
             KubeJSTFC.warningLog("Modified worldgen settings: {}", () -> Settings.CODEC.encoder().encodeStart(JsonOps.INSTANCE, settings).get().left().get());
-            StateVariables.worldgenHasBeenTransformed = true;
+            WorldGenUtils.worldgenHasBeenTransformed = true;
         }
     }
 }

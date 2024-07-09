@@ -7,7 +7,6 @@ import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.helpers.StateVariables;
 import net.dries007.tfc.client.TFCColors;
 import net.dries007.tfc.client.model.ContainedFluidModel;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
@@ -96,7 +95,7 @@ public class ClientEventHandlers {
 
     private static void screenInit(ScreenEvent.Init.Pre event) {
         if (event.getScreen() instanceof TitleScreen || event.getScreen() instanceof SelectWorldScreen) {
-            StateVariables.worldgenHasBeenTransformed = false;
+            WorldGenUtils.worldgenHasBeenTransformed = false;
         }
     }
 }

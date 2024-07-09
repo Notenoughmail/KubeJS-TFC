@@ -14,7 +14,6 @@ import com.notenoughmail.kubejs_tfc.util.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
-import com.notenoughmail.kubejs_tfc.util.helpers.StateVariables;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
@@ -72,20 +71,8 @@ import java.util.List;
  *                 </ul>
  *         </ul>
  *     </li>
- *     <li>BE Attachments
- *         <ul>
- *             <li>Heat</li>
- *             <li>Calendar ticking</li>
- *         </ul>
- *     </li>
  * 	   <li>EntityJS compat</li>
  * 	   <li>Custom BiomeExtensions - will probably require talking to Alc</li>
- * 	   <li>Investigate:</li>
- * 	       <ul>
- * 	           <li>Barrel rack interface</li>
- * 	           <li>Barrel recipe interface</li>
- * 	           <li>Snow burying API</li>
- * 	       </ul>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
@@ -237,7 +224,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(EventHandlers.class);
         filter.deny(IngredientHelpers.class);
         filter.deny(ClientEventHandlers.class);
-        filter.deny(StateVariables.class);
         filter.deny("com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.afc.AFCPlugin");
