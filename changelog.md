@@ -10,9 +10,10 @@
 - Add event for registering a fauna definition to any entity type in the game
 - Add `getCraftingInputs()` method to the custom modifiers event to match new TFC functionality
 - Add methods for getting the fuel, drinkable, fertilizer, lamp fuel, pannable, and sluicable definitions to the misc sub-binding
-- Update to TFC 3.2.5 and FirmaLife 2.1.6
+- Update to TFC 3.2.6 and FirmaLife 2.1.6
 - Add recipe handlers for new FL recipe types
 - Add config option to put TFC's self-test errors into Kube's console
+- Allow custom windmill blades to specify the texture they use
 
 ### 1.1.3
 - Add anvil block builder

@@ -7,6 +7,23 @@ import com.notenoughmail.kubejs_tfc.addons.entityjs.builders.WoolAnimalJSBuilder
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 
+/**
+ * TODO: [Future]
+ * WildAnimal
+ * Prey
+ * Predator
+ * WingedPrey
+ * Pest
+ * TamableMammal
+ * RammingPrey
+ * PackPredator
+ * AmphibiousPredator
+ * FelinePredator
+ * Jellyfish
+ * TFCHorse
+ * TFCMule
+ * TFCDonkey
+ */
 public class EntityJSTFCPlugin extends KubeJSPlugin {
 
     @Override

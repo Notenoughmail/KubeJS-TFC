@@ -1,14 +1,14 @@
-package com.notenoughmail.kubejs_tfc.util;
+package com.notenoughmail.kubejs_tfc.util.client;
 
 import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.WildCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.ConnectedGrassBlockBuilder;
-import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
-import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
-import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
-import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.*;
+import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
+import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.TFCColors;
 import net.dries007.tfc.client.model.ContainedFluidModel;
+import net.dries007.tfc.client.render.blockentity.WindmillBlockEntityRenderer;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -91,6 +92,12 @@ public class ClientEventHandlers {
         final Predicate<RenderType> ghostBlock = rt -> rt == RenderType.cutoutMipped() || rt == Sheets.translucentCullBlockSheet();
 
         DoubleCropBlockBuilder.ghostRenders.forEach(builder -> ItemBlockRenderTypes.setRenderLayer(builder.get(), ghostBlock));
+
+        WindMillBladeItemBuilder.thisList.forEach(builder -> WindmillBlockEntityRenderer.BLADE_MODELS.put(builder.get(), new WindmillBlockEntityRenderer.Provider<>(
+                builder.getBladeTexture(),
+                DyeColor.WHITE, // Meaningless in this case
+                ctx -> new WindmillBladeModelJS(ctx.bakeLayer(RenderHelpers.modelIdentifier("windmill_blade")), builder.getColor())
+        )));
     }
 
     private static void screenInit(ScreenEvent.Init.Pre event) {
