@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.SupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
@@ -48,7 +47,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
             });
         }
 
-        generator.json(parent.newID("loot_table/blocks/", ""), lootBuilder.toJson());
+        generator.json(newID("loot_table/blocks/", ""), lootBuilder.toJson());
     }
 
     @Override
@@ -59,9 +58,6 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
         bs.part("south=true", p -> p.model(parent.connection).y(90));
         bs.part("west=true", p -> p.model(parent.connection).y(180));
     }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {}
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {

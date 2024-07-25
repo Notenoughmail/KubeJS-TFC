@@ -1,19 +1,23 @@
 ### 1.2.0 (W.I.P.)
 - Fix custom lamps not retaining their fluid when broken
 - Register custom blocks with block entities to TFC's own block entities instead of creating a duplicate block entity type
-- Fix misspelling of extended properties method
 - Custom grass, farmland, and path blocks now use their parent dirt block's texture as their base by default
 - Add an event for modifying default worldgen values, including the world's rock layers
   - Change `TFCEvents.rockSettings`'s method from `defineLayer` to `defineRock` to match terminology used here
 - Add axle block builder, which has methods for creating corresponding windmills, water wheels, gear boxes, clutches, and bladed axles
-- Add EntityJS compat
+- Add encased axle block builder
+- Add extremely basic [EntityJS](https://modrinth.com/mod/entityjs) compat
+  - Has `mammal`, `oviparious`, `wooly_animal`, and `dairy_animal` types currently
 - Add event for registering a fauna definition to any entity type in the game
 - Add `getCraftingInputs()` method to the custom modifiers event to match new TFC functionality
 - Add methods for getting the fuel, drinkable, fertilizer, lamp fuel, pannable, and sluicable definitions to the misc sub-binding
 - Update to TFC 3.2.6 and FirmaLife 2.1.6
 - Add recipe handlers for new FL recipe types
-- Add config option to put TFC's self-test errors into Kube's console
 - Allow custom windmill blades to specify the texture they use
+- Non-wild crops now no longer have an item by default
+- Now use Kube's `dev.properties` file instead of a config
+  - `debugMode` -> `debugInfo` (default property)
+  - Add `tfc/insertSelfTestsIntoConsole` property that will put TFC's self tests into the Kube console if enabled (defaults to true)
 
 ### 1.1.3
 - Add anvil block builder

@@ -7,9 +7,12 @@ import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
@@ -50,5 +53,20 @@ public class RegistryUtils {
             blocks.forEach(block -> blockSet.add(block.get()));
             accessor.kubejs_tfc$SetBlocks(blockSet);
         });
+    }
+
+    /**
+     * Turn fluids and items into their ids so they're useful for errors
+     */
+    public static String stringify(Object o) {
+        // The defaults for these are varying degrees of awful
+        if (o instanceof  Fluid fluid) {
+            return RegistryInfo.FLUID.getId(fluid).toString();
+        } else if (o instanceof Item item) {
+            return RegistryInfo.ITEM.getId(item).toString();
+        } else if (o instanceof ItemStack stack) {
+            return stack.getCount() + " " + stringify(stack.getItem());
+        }
+        return String.valueOf(o);
     }
 }

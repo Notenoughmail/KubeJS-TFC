@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.event.*;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
@@ -183,8 +182,8 @@ public class EventHandlers {
         }
         event.enqueueWork(() -> {
             KubeJSTFC.info("KubeJS TFC configuration:");
-            KubeJSTFC.info("    Debug mode enabled: {}", CommonConfig.debugMode.get());
-            KubeJSTFC.info("    Self tests console insertion enabled: {}", CommonConfig.insertSelfTestsIntoKubeJSConsole.get());
+            KubeJSTFC.info("    Debug mode enabled: {}", KubeJSTFC.debug);
+            KubeJSTFC.info("    Self tests console insertion enabled: {}", KubeJSTFC.insertIntoConsole);
             if (rockSettings.hasListeners()) {
                 rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
             }

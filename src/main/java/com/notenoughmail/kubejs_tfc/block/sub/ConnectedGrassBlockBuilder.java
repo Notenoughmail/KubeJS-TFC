@@ -37,12 +37,16 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.GRASS.location());
         texture("texture", parent.textures.get("particle").getAsString());
+        itemBuilder.texture("block", textures.get("texture").getAsString());
     }
 
     @Override
     public BlockBuilder textureAll(String tex) {
         super.textureAll(tex);
         texture("texture", tex);
+        if (itemBuilder != null) {
+            itemBuilder.texture("block", tex);
+        }
         return this;
     }
 
@@ -89,7 +93,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     @Override
     protected void generateItemModelJson(ModelGenerator m) {
         m.parent("tfc:item/grass_inv");
-        m.texture("block", newID("block/", "").toString());
+        m.textures(itemBuilder.textureJson);
     }
 
     @Override

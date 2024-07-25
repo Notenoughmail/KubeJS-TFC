@@ -5,13 +5,10 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
-import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.crop.DeadClimbingCropBlock;
 import net.dries007.tfc.common.blocks.crop.DeadCropBlock;
@@ -19,9 +16,6 @@ import net.dries007.tfc.common.blocks.crop.DeadDoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.FloodedDeadCropBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
@@ -31,18 +25,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.alive = alive;
         renderType("cutout");
-    }
-
-    @Override
-    @Generics(value = BlockItemBuilder.class)
-    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
-        if (i == null) {
-            itemBuilder = null;
-        } else {
-            i.accept(getOrCreateItemBuilder());
-        }
-
-        return this;
+        noItem();
     }
 
     @Override

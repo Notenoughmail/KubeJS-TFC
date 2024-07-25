@@ -20,6 +20,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryA
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
@@ -124,6 +125,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:anvil", AnvilBlockBuilder.class, AnvilBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:encased_axle", EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -249,6 +251,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
         types.add(TFCInventoryAttachment.TYPE);
+    }
+
+    @Override
+    public void loadDevProperties(DevProperties properties) {
+        KubeJSTFC.debug = properties.debugInfo;
+        KubeJSTFC.insertIntoConsole = properties.get("tfc/insertSelfTestsIntoConsole", true);
     }
 
     private void addToolTier(Tier tier) {

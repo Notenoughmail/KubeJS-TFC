@@ -52,7 +52,7 @@ public class RockSettingsEventJS extends StartupEventJS {
         return RockSettings.register(id, settings);
     }
 
-    @Info("Deprecated, please use the other method")
+    @Info("Deprecated, please use `defineRock`")
     @Deprecated(forRemoval = true, since = "1.2.0")
     public RockSettings defineLayer(
             ResourceLocation id,

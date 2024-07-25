@@ -2,13 +2,11 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
-import com.notenoughmail.kubejs_tfc.config.CommonConfig;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.architectury.platform.Platform;
 import net.dries007.tfc.config.ConfigBuilder;
-import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,6 +26,7 @@ public class KubeJSTFC {
     public static final String MOD_NAME = "KubeJS TFC";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
+    public static boolean debug, insertIntoConsole;
 
     private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {};
     private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {};
@@ -41,37 +40,37 @@ public class KubeJSTFC {
     }
 
     public static void infoLog(String message) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.info(message);
         }
     }
 
     public static void infoLog(String message, Object arg) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.info(message, arg);
         }
     }
 
     public static void infoLog(String message, Object... args) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.info(message, args);
         }
     }
 
     public static void warningLog(String message) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.warn(message);
         }
     }
 
     public static void warningLog(String message, Object... args) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.warn(message, args);
         }
     }
 
     public static void warningLog(String message, Supplier<Object> arg) {
-        if (Platform.isDevelopmentEnvironment() || Helpers.getValueOrDefault(CommonConfig.debugMode)) {
+        if (Platform.isDevelopmentEnvironment() || debug) {
             LOGGER.warn(message, arg.get());
         }
     }
@@ -89,7 +88,6 @@ public class KubeJSTFC {
 
     public KubeJSTFC() {
         EventHandlers.init();
-        CommonConfig.register();
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientEventHandlers.init();

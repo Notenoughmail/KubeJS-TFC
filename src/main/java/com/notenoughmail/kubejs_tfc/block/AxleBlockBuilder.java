@@ -36,7 +36,7 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info(value = "Sets the texture that will be used for the axle")
-    public AxleBlockBuilder axelTexture(ResourceLocation texture) {
+    public AxleBlockBuilder axleTexture(ResourceLocation texture) {
         this.texture = texture;
         return this;
     }

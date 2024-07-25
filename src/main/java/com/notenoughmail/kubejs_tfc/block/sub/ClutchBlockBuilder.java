@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.util.UtilsJS;
@@ -35,6 +36,13 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return super.createExtendedProperties()
                 .pushReaction(PushReaction.DESTROY)
                 .blockEntity(TFCBlockEntities.CLUTCH);
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        texture("side", tex);
+        texture("end", tex);
+        return super.textureAll(tex);
     }
 
     @Override
