@@ -22,8 +22,8 @@ public class AnimalConfigBuilder {
         cache = null;
     }
 
-    @Info(value = "Sets the name of the mammal in the config")
-    public AnimalConfigBuilder mammalName(String name) {
+    @Info(value = "Sets the name of the animal in the config")
+    public AnimalConfigBuilder animalName(String name) {
         this.name = name;
         return this;
     }
@@ -40,7 +40,7 @@ public class AnimalConfigBuilder {
         return this;
     }
 
-    @Info(value = "Sets the maximum familiarity, in the range [0, 1], that the first generation may go up to")
+    @Info(value = "Sets the maximum familiarity, in the range [0, 1], that an adult mammal may be brought up to")
     public AnimalConfigBuilder maxFamiliarity(double max) {
         familiarityCap = max;
         return this;

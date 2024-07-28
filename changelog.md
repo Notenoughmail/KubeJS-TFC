@@ -7,9 +7,8 @@
 - Add axle block builder, which has methods for creating corresponding windmills, water wheels, gear boxes, clutches, and bladed axles
 - Add encased axle block builder
 - Add extremely basic [EntityJS](https://modrinth.com/mod/entityjs) compat
-  - Has `mammal`, `oviparious`, `wooly_animal`, and `dairy_animal` types currently
+  - Has `mammal`, `oviparous`, `wooly_animal`, and `dairy_animal` types currently
 - Add event for registering a fauna definition to any entity type in the game
-- Add `getCraftingInputs()` method to the custom modifiers event to match new TFC functionality
 - Add methods for getting the fuel, drinkable, fertilizer, lamp fuel, pannable, and sluicable definitions to the misc sub-binding
 - Update to TFC 3.2.6 and FirmaLife 2.1.6
 - Add recipe handlers for new FL recipe types
