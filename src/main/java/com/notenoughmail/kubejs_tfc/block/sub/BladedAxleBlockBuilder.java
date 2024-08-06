@@ -46,6 +46,14 @@ public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        if (model.isEmpty()) {
+            generator.blockModel(id, m -> {
+                m.parent("tfc:block/bladed_axle");
+                m.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override

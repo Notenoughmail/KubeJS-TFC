@@ -62,18 +62,14 @@ import java.util.List;
 // Mild Javadoc abuse
 
 /**
- * TODO: 1.2.0~[Future]
+ * TODO: [Future]
  * <ul>
  *     <li>Blocks
  *         <ul>
- *             <li>Kinetics</li>
- *                 <ul>
- *                      <li>Encased Axles</li>
- *                 </ul>
+ *             <li>Kinetics -- custom</li>
  *         </ul>
  *     </li>
- * 	   <li>EntityJS compat</li>
- * 	   <li>Custom BiomeExtensions - will probably require talking to Alc</li>
+ * 	   <li>Custom BiomeExtensions -- 1.21</li>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
@@ -255,11 +251,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void loadDevProperties(DevProperties properties) {
-        KubeJSTFC.debug = properties.debugInfo;
-        KubeJSTFC.insertIntoConsole = properties.get("tfc/insertSelfTestsIntoConsole", true);
-        KubeJSTFC.info("KubeJS TFC configuration:");
-        KubeJSTFC.info("    Debug mode enabled: {}", KubeJSTFC.debug);
-        KubeJSTFC.info("    Self tests console insertion enabled: {}", KubeJSTFC.insertIntoConsole);
+        KubeJSTFC.reloadConfig(properties);
     }
 
     private void addToolTier(Tier tier) {

@@ -1,11 +1,13 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin.extensions;
 
+import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IFirmaLifeDataEventMixin;
+import com.notenoughmail.kubejs_tfc.util.implementation.IfPresent;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+@IfPresent(FirmaLife.MOD_ID)
 @Mixin(value = TFCDataEventJS.class, remap = false)
 public abstract class FirmaLifeDataEventMixin implements IFirmaLifeDataEventMixin {
 

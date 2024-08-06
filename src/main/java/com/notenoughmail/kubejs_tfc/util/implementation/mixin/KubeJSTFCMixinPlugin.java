@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.LoadingModList;
+import com.notenoughmail.kubejs_tfc.util.implementation.MixinLoadingUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -11,12 +10,12 @@ import java.util.Set;
 
 public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
 
-    private static final String basePackage = "com.notenoughmail.kubejs_tfc.";
-    private static final String mixinPackage = basePackage + "util.implementation.mixin.";
-    private static final String implementationPackage = basePackage + "util.implementation.";
+    private String mixinPackage;
 
     @Override
-    public void onLoad(String mixinPackage) {}
+    public void onLoad(String mixinPackage) {
+        this.mixinPackage = mixinPackage;
+    }
 
     @Override
     public String getRefMapperConfig() {
@@ -25,26 +24,10 @@ public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if ((implementationPackage + "ItemStackProviderJS").equals(targetClassName)) {
-            if (!isModLoaded("firmalife")) {
-                if ((mixinPackage + "extensions.FirmaLifeISPMixin").equals(mixinClassName)) {
-                    return false;
-                }
-            }
-        } else if ((basePackage + "item.MoldItemBuilder").equals(targetClassName)) {
-            if (!isModLoaded("tfcchannelcasting")) {
-                if ((mixinPackage + "extensions.TFCCCMoldItemBuilderExtensions").equals(mixinClassName)) {
-                    return false;
-                }
-            }
-        } else if ((implementationPackage + "event.TFCDataEventJS").equals(targetClassName)) {
-            if (!isModLoaded("firmalife")) {
-                if ((mixinPackage + "extensions.FirmaLifeDataEventMixin").equals(mixinClassName)) {
-                    return false;
-                }
-            }
+        if (mixinPackage != null && !mixinClassName.startsWith(mixinPackage)) {
+            return true;
         }
-        return true;
+        return MixinLoadingUtil.shouldApplyMixin(mixinClassName);
     }
 
     @Override
@@ -60,12 +43,4 @@ public class KubeJSTFCMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
-
-    private boolean isModLoaded(String id) {
-        if (ModList.get() == null) {
-            return LoadingModList.get().getModFileById(id) != null;
-        } else {
-            return ModList.get().isLoaded(id);
-        }
-    }
 }

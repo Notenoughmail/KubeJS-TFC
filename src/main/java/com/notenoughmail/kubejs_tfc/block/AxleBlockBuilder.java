@@ -118,6 +118,14 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+        if (model.isEmpty()) {
+            generator.blockModel(id, g -> {
+                g.parent("tfc:block/axle");
+                g.textures(textures);
+            });
+        } else {
+            hasModel(generator);
+        }
     }
 
     @Override

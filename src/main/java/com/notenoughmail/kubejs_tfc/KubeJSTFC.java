@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.architectury.platform.Platform;
+import dev.latvian.mods.kubejs.DevProperties;
 import net.dries007.tfc.config.ConfigBuilder;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +31,15 @@ public class KubeJSTFC {
 
     private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {};
     private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {};
+
+    public static void reloadConfig(DevProperties props) {
+        debug = props.debugInfo;
+        insertIntoConsole = props.get("tfc/insertSelfTestsIntoConsole", true);
+
+        KubeJSTFC.info("KubeJS TFC configuration:");
+        KubeJSTFC.info("\tDebug mode enabled: {}", debug);
+        KubeJSTFC.info("\tSelf tests console insertion enabled: {}", insertIntoConsole);
+    }
 
     public static void info(String message) {
         LOGGER.info(message);
@@ -83,6 +93,10 @@ public class KubeJSTFC {
         LOGGER.error(message, arg);
     }
 
+    public static void error(String message, Throwable thr) {
+        LOGGER.error(message, thr);
+    }
+
     public static final ForgeConfigSpec.Builder serverConfigBuilder = new ForgeConfigSpec.Builder();
     public static final ConfigBuilder wrappedServerConfigBuilder = new ConfigBuilder(serverConfigBuilder, "kubejs_tfc");
 
@@ -92,6 +106,8 @@ public class KubeJSTFC {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientEventHandlers.init();
         }
+
+        reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production
     }
 
     public static ResourceLocation identifier(String path) {
