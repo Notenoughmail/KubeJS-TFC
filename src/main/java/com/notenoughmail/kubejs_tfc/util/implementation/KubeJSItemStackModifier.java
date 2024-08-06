@@ -26,7 +26,7 @@ public record KubeJSItemStackModifier(ResourceLocation id, ModifierApplicator ap
                 @Param(name = "stack", value = "The current output stack, may be modified. A no-op modifier would just return this stack"),
                 @Param(name = "input", value = "The provided input stack. Do not modify this stack")
         })
-        ItemStack apply(ItemStack stack, ItemStack input);
+        ItemStack apply(ItemStack output, ItemStack input);
     }
 
     @FunctionalInterface
@@ -37,8 +37,8 @@ public record KubeJSItemStackModifier(ResourceLocation id, ModifierApplicator ap
         ItemStack apply(ItemStack stack);
 
         @Override
-        default ItemStack apply(ItemStack stack, ItemStack input) {
-            return apply(stack);
+        default ItemStack apply(ItemStack output, ItemStack input) {
+            return apply(output);
         }
     }
 
@@ -49,11 +49,11 @@ public record KubeJSItemStackModifier(ResourceLocation id, ModifierApplicator ap
                 @Param(name = "input", value = "The provided input stack. Do not modify this stack"),
                 @Param(name = "inventory", value = "An iterable view of the inventory's items")
         })
-        ItemStack apply(ItemStack stack, ItemStack input, Iterable<ItemStack> inventory);
+        ItemStack apply(ItemStack output, ItemStack input, Iterable<ItemStack> inventory);
 
         @Override
-        default ItemStack apply(ItemStack stack, ItemStack input) {
-            return apply(stack, input, RecipeHelpers.getCraftingInput());
+        default ItemStack apply(ItemStack output, ItemStack input) {
+            return apply(output, input, RecipeHelpers.getCraftingInput());
         }
     }
 }

@@ -94,8 +94,9 @@ public interface ISupportExtendedProperties {
         public ExtendedPropertiesJS isRedstoneConductor(BlockBehaviour.StatePredicate isRedstoneConductor) { delegate.isRedstoneConductor(isRedstoneConductor); return this; }
         public ExtendedPropertiesJS isSuffocating(BlockBehaviour.StatePredicate isSuffocating) { delegate.isSuffocating(isSuffocating); return this; }
         public ExtendedPropertiesJS isViewBlocking(BlockBehaviour.StatePredicate isViewBlocking) { delegate.isViewBlocking(isViewBlocking); return this; }
-        public ExtendedPropertiesJS hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { delegate.hasPostProcess(hasPostProcess); return this; }
-        public ExtendedPropertiesJS emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering) { delegate.emissiveRendering(emissiveRendering); return this; }
+        // These two aren't used
+        // public ExtendedPropertiesJS hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { delegate.hasPostProcess(hasPostProcess); return this; }
+        // public ExtendedPropertiesJS emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering) { delegate.emissiveRendering(emissiveRendering); return this; }
         public ExtendedPropertiesJS requiresCorrectToolForDrops() { delegate.requiresCorrectToolForDrops(); return this; }
         public ExtendedPropertiesJS mapColor(MapColor color) { delegate.mapColor(color); return this; }
         public ExtendedPropertiesJS mapColor(MapColorFunction mapColor) { delegate.mapColor(mapColor); return this; }

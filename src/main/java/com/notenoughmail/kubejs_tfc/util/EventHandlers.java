@@ -181,9 +181,6 @@ public class EventHandlers {
             interactions.post(new RegisterInteractionsEventJS());
         }
         event.enqueueWork(() -> {
-            KubeJSTFC.info("KubeJS TFC configuration:");
-            KubeJSTFC.info("    Debug mode enabled: {}", KubeJSTFC.debug);
-            KubeJSTFC.info("    Self tests console insertion enabled: {}", KubeJSTFC.insertIntoConsole);
             if (rockSettings.hasListeners()) {
                 rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
             }

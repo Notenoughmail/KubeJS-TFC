@@ -257,6 +257,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void loadDevProperties(DevProperties properties) {
         KubeJSTFC.debug = properties.debugInfo;
         KubeJSTFC.insertIntoConsole = properties.get("tfc/insertSelfTestsIntoConsole", true);
+        KubeJSTFC.info("KubeJS TFC configuration:");
+        KubeJSTFC.info("    Debug mode enabled: {}", KubeJSTFC.debug);
+        KubeJSTFC.info("    Self tests console insertion enabled: {}", KubeJSTFC.insertIntoConsole);
     }
 
     private void addToolTier(Tier tier) {

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public enum CalendarBindings {
     INSTANCE;
 
+    // TODO: 1.21 | Add context param so guessing is not needed?
     @Info(value = "Returns the best guess on the appropriate calendar")
     public ICalendar getCalendar() {
         return Calendars.get();

@@ -27,7 +27,7 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
         RegistryUtils.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
     }
 
-    @Info(value = "Sets the texture that will be used for the water wheel, the path will be relative to the `textures/entity/waterwheel/` subdirectory")
+    @Info(value = "Sets the texture that will be used for the water wheel, the path will be relative to the `/textures/entity/waterwheel/` subdirectory")
     public WaterWheelBlockBuilder texture(ResourceLocation tex) {
         texture = tex;
         return this;
