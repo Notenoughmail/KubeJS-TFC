@@ -26,38 +26,7 @@ public class EventHandlers {
 
     private static void spawnPlacement(SpawnPlacementRegisterEvent event) {
         for (IFaunaDefinable.FaunaType<?> type : IFaunaDefinable.registeredFaunas) {
-            event.register(type.type().get(), type.place(), type.heightMap(), (mob, level, heightmap, pos, rand) -> {
-                final Fauna fauna = type.fauna().get();
-                final ChunkGenerator generator = level.getLevel().getChunkSource().getGenerator();
-                if (rand.nextInt(fauna.getChance()) != 0)
-                {
-                    return false;
-                }
-
-                if (mob instanceof AquaticMob aquaticMob && !aquaticMob.canSpawnIn(level.getFluidState(pos).getType()))
-                {
-                    return false;
-                }
-
-                final int seaLevel = generator.getSeaLevel();
-                if (fauna.getDistanceBelowSeaLevel() != -1 && pos.getY() > (seaLevel - fauna.getDistanceBelowSeaLevel()))
-                {
-                    return false;
-                }
-
-                final ChunkData data = EntityHelpers.getChunkDataForSpawning(level, pos);
-                if (!fauna.getClimate().isValid(data, pos, rand))
-                {
-                    return false;
-                }
-
-                final BlockPos below = pos.below();
-                if (fauna.isSolidGround() && !Helpers.isBlock(level.getBlockState(below), BlockTags.VALID_SPAWN))
-                {
-                    return false;
-                }
-                return fauna.getMaxBrightness() == -1 || level.getRawBrightness(pos, 0) <= fauna.getMaxBrightness();
-            }, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(type.type().get(), type.place(), type.heightMap(), new IFaunaDefinable.Placement<>(type.fauna()), SpawnPlacementRegisterEvent.Operation.REPLACE);
         }
     }
 }

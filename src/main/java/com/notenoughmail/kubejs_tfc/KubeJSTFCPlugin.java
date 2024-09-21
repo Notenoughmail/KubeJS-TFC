@@ -70,6 +70,7 @@ import java.util.List;
  *         </ul>
  *     </li>
  * 	   <li>Custom BiomeExtensions -- 1.21</li>
+ * 	   <li><a href="https://discord.com/channels/303440391124942858/1279992681652682874">Attach TFC entity properties to existing entities, ping mo_mo</a></li>
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {

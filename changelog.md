@@ -1,4 +1,12 @@
-### 1.2.0 (W.I.P.)
+### 1.2.1 (W.I.P.)
+- Fix custom fauna registrations causing *certain mods* to crash because they do not use Forge's event
+- Changes to `TFCEvents.registerFaunas`
+  - Deprecate `.register`, identical function provided by `.replace`
+  - Add `.replace`, `.and`, and `.or` methods, these perform the operation their name implies on any existing spawn placements with the fauna based on created through it
+    - Have the exact same args as the now-deprecated `.register` method
+    - Also have a version with a nullable string arg added after the entity type, this is suffixed to the registered fauna's id with a `/`
+
+### 1.2.0
 - Fix custom lamps not retaining their fluid when broken
 - Register custom blocks with block entities to TFC's own block entities instead of creating a duplicate block entity type
 - Custom grass, farmland, and path blocks now use their parent dirt block's texture as their base by default
