@@ -1,4 +1,4 @@
-### 1.2.1 (W.I.P.)
+### 1.2.1
 - Fix custom fauna registrations causing *certain mods* to crash because they do not use Forge's event
 - Changes to `TFCEvents.registerFaunas`
   - Deprecate `.register`, identical function provided by `.replace`
