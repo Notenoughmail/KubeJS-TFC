@@ -5,6 +5,8 @@
   - Add `.replace`, `.and`, and `.or` methods, these perform the operation their name implies on any existing spawn placements with the fauna based on created through it
     - Have the exact same args as the now-deprecated `.register` method
     - Also have a version with a nullable string arg added after the entity type, this is suffixed to the registered fauna's id with a `/`
+- Fix not being able to define portions in the meal ISP modifier
+- Fix custom crops having an empty loot table by default
 
 ### 1.2.0
 - Fix custom lamps not retaining their fluid when broken

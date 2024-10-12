@@ -347,10 +347,10 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
             @Param(name = "food", value = "The base food data values for the meal modifier"),
             @Param(name = "portions", value = "The portion data values for the meal modifier")
     })
-    @Generics(value = {BuildFoodItemData.class, Consumer.class, BuildPortionData.class})
-    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, List<Consumer<BuildPortionData>> portions) {
+    @Generics(value = {BuildFoodItemData.class, BuildPortionData.class})
+    public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food, Consumer<BuildPortionData>[] portions) {
         final JsonObject obj = mealBase(food);
-        JsonArray portionArray = new JsonArray(portions.size());
+        JsonArray portionArray = new JsonArray(portions.length);
         for (Consumer<BuildPortionData> portion : portions) {
             var portionData = new BuildPortionData();
             portion.accept(portionData);

@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.block.SeedItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -104,6 +105,12 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         if (hasProduct()) {
             this.productItem = productItem;
         }
+        return this;
+    }
+
+    @Override
+    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
+        itemBuilder = null;
         return this;
     }
 
