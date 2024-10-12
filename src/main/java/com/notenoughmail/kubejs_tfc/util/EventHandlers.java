@@ -14,12 +14,11 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,8 +65,8 @@ public class EventHandlers {
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        modBus.addListener(EventHandlers::commonSetup);
         modBus.addListener(EventHandlers::loadComplete);
-        modBus.addListener(EventPriority.LOW, EventHandlers::spawnPlacements);
     }
 
     // Guaranteed only server - provides a ServerLevel
@@ -164,7 +163,7 @@ public class EventHandlers {
         }
     }
 
-    private static void loadComplete(FMLCommonSetupEvent event) {
+    private static void commonSetup(FMLCommonSetupEvent event) {
         if (registerFoodTrait.hasListeners()) {
             registerFoodTrait.post(new RegisterFoodTraitEventJS());
         }
@@ -195,9 +194,9 @@ public class EventHandlers {
         WorldGenUtils.worldgenHasBeenTransformed = false;
     }
 
-    private static void spawnPlacements(SpawnPlacementRegisterEvent event) {
+    private static void loadComplete(FMLLoadCompleteEvent event) {
         if (registerFaunas.hasListeners()) {
-            registerFaunas.post(new RegisterFaunasEventJS(event));
+            registerFaunas.post(new RegisterFaunasEventJS());
         }
     }
 }

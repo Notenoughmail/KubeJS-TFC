@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.AnvilBlock;
@@ -24,6 +25,7 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         tier = 0;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.ANVIL, this);
+        tag(TFCTags.Items.ANVILS.location());
     }
 
     @Override

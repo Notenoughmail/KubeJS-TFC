@@ -23,7 +23,7 @@ public class CropUtils {
             Supplier<ClimateRange> climateRange
     ) {
         final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(stages);
-        return new DefaultCropBlock(properties, stages - 1, dead, seeds, primaryNutrient, climateRange) {
+        return new DefaultCropBlock(properties, stages, dead, seeds, primaryNutrient, climateRange) {
             @Override
             public IntegerProperty getAgeProperty() {
                 return property;
