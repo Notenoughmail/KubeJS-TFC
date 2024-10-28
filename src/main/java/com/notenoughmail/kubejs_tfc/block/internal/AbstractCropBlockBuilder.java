@@ -63,6 +63,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         productItem = null;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.CROP, this);
         noItem();
+        noCollision();
     }
 
     protected boolean hasProduct() {
@@ -71,7 +72,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Info(value = "Determines how many growth stages the crop will have")
     public AbstractCropBlockBuilder stages(int i) {
-        if (i >= 1 && i <= 12) {
+        if (i >= 1 && i <= 8) {
             stages = i;
         }
         return this;
@@ -248,7 +249,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
                     p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
-                            .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages - 1))))
+                            .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages))))
                             .addFunction(cropYieldUniformFunction());
                 });
             }

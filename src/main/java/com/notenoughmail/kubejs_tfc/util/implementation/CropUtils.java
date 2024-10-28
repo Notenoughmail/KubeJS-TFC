@@ -40,7 +40,7 @@ public class CropUtils {
             Supplier<ClimateRange> climateRange
     ) {
         final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(stages);
-        return new FloodedCropBlock(properties, stages - 1, dead, seeds, primaryNutrient, climateRange) {
+        return new FloodedCropBlock(properties, stages, dead, seeds, primaryNutrient, climateRange) {
             @Override
             public IntegerProperty getAgeProperty() {
                 return property;
@@ -59,7 +59,7 @@ public class CropUtils {
             Supplier<Supplier<? extends Item>> matureFruit
     ) {
         final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(stages);
-        return new PickableCropBlock(properties, stages - 1, dead, seeds, primaryNutrient, climateRange, fruit, matureFruit) {
+        return new PickableCropBlock(properties, stages, dead, seeds, primaryNutrient, climateRange, fruit, matureFruit) {
             @Override
             public IntegerProperty getAgeProperty() {
                 return property;
@@ -78,7 +78,7 @@ public class CropUtils {
 
     ) {
         final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(stages);
-        return new SpreadingCropBlock(properties, stages - 1, dead, seeds, primaryNutrient, climateRange, fruitBlock) {
+        return new SpreadingCropBlock(properties, stages, dead, seeds, primaryNutrient, climateRange, fruitBlock) {
             @Override
             public IntegerProperty getAgeProperty() {
                 return property;
@@ -96,9 +96,9 @@ public class CropUtils {
             Supplier<ClimateRange> climateRange,
             boolean requiresStick
     ) {
-        final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(singleStages + doubleStages - 1);
+        final IntegerProperty property = TFCBlockStateProperties.getAgeProperty(singleStages + doubleStages);
         if (requiresStick) {
-            return new ClimbingCropBlock(properties, singleStages - 1, singleStages + doubleStages - 1, dead, seeds, primaryNutrient, climateRange) {
+            return new ClimbingCropBlock(properties, singleStages, singleStages + doubleStages, dead, seeds, primaryNutrient, climateRange) {
                 @Override
                 public IntegerProperty getAgeProperty() {
                     return property;

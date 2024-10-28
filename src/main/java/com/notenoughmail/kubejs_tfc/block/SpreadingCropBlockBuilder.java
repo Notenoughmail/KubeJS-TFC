@@ -56,7 +56,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
             m.parent("tfc:block/crop/spreading_crop_side");
             m.texture("crop", base + "side");
         });
-        for (int i = 0 ; i < stages ; i++) {
+        for (int i = 0 ; i <= stages ; i++) {
             final int j = i;
             generator.blockModel(newID("", "_age_" + j), m -> {
                 m.parent("block/crop");
@@ -68,7 +68,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
     private void blockStates(MultipartBlockStateGenerator ms) {
         final String side = newID("block/", "_side").toString();
         final String age = newID("block/", "_age_").toString();
-        for (int i = 0 ; i < stages ; i++) {
+        for (int i = 0 ; i <= stages ; i++) {
             ms.part("age=" + i, age + i);
         }
         for (int i = 0 ; i < 4 ; i++) {

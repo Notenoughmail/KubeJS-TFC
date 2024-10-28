@@ -34,7 +34,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public DoubleCropBlockBuilder stages(int i) {
-        if (i >= 1 && i <= 6) {
+        if (i >= 1 && i <= 4) {
             stages = i;
         }
         return this;
@@ -42,7 +42,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Info(value = "Determines how many stages the crop has in its top state")
     public DoubleCropBlockBuilder doubleStages(int i) {
-        if (i >= 1 && i <= 6) {
+        if (i >= 1 && i <= 4) {
             doubleStages = i;
         }
         return this;
@@ -106,6 +106,8 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 });
             }
         }
+
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     @Override
@@ -120,7 +122,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         final String baseTexture = newID("block/", "_").toString();
-        for (int i = 0 ; i < stages + doubleStages ; i++) {
+        for (int i = 0 ; i <= stages + doubleStages ; i++) {
             final int j = i;
             if (i < stages) {
                 generator.blockModel(newID("", "_" + j), m -> {
@@ -149,7 +151,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         final String baseModel = newID("block/", "_").toString();
-        for (int i = 0 ; i < stages + doubleStages ; i++) {
+        for (int i = 0 ; i <= stages + doubleStages ; i++) {
             final String baseKey = "age=" + i;
             if (i < stages) {
                 bs.simpleVariant(baseKey + (requiresStick ? ",stick=false" : ""), baseModel + i);
