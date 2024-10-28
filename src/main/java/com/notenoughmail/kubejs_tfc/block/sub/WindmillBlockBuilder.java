@@ -24,7 +24,7 @@ public class WindmillBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public WindmillBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        noItem();
+        itemBuilder = null;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.WINDMILL, this);
     }
 

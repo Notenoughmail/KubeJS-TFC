@@ -35,7 +35,9 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
         if (i == null) {
             itemBuilder = null;
         } else {
-            i.accept(getOrCreateItemBuilder());
+            var item = getOrCreateItemBuilder();
+            item.blockBuilder = this;
+            i.accept(item);
         }
 
         return this;

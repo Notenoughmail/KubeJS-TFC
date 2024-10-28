@@ -48,6 +48,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         foodItem = null;
         renderType("cutout");
         thisList.add(this);
+        noCollision();
     }
 
     @Override
@@ -56,7 +57,9 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         if (i == null) {
             itemBuilder = null;
         } else {
-            i.accept(getOrCreateItemBuilder());
+            var item = getOrCreateItemBuilder();
+            item.blockBuilder = this;
+            i.accept(item);
         }
 
         return this;

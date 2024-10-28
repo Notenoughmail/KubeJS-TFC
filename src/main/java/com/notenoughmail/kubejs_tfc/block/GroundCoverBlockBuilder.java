@@ -73,7 +73,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Info(value = "Sets the 'block item' of this bloc kto an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
-        noItem();
+        itemBuilder = null;
         RegisterInteractionsEventJS.addBlockItemPlacement(() -> RegistryInfo.ITEM.getValue(item), this);
         preexistingItem = item;
         return this;

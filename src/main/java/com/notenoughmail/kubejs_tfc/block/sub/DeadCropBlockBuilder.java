@@ -25,7 +25,8 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.alive = alive;
         renderType("cutout");
-        noItem();
+        itemBuilder = null;
+        noCollision();
     }
 
     @Override
