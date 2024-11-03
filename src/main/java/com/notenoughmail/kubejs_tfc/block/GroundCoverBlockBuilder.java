@@ -10,12 +10,16 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
@@ -25,7 +29,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public transient String parent;
     public transient VoxelShape cachedShape;
     @Nullable
-    public transient ResourceLocation preexistingItem;
+    public transient Supplier<Item> preexistingItem;
 
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
@@ -46,6 +50,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info(value = "Sets the block to have the same bounding box as TFC's twigs")
     public GroundCoverBlockBuilder twig() {
         type = Type.TWIG;
+        props = props.andThen(p -> p.flammable(60, 30));
         return this;
     }
 
@@ -74,20 +79,36 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info(value = "Sets the 'block item' of this bloc kto an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         itemBuilder = null;
-        RegisterInteractionsEventJS.addBlockItemPlacement(() -> RegistryInfo.ITEM.getValue(item), this);
-        preexistingItem = item;
+        preexistingItem = Lazy.of(() -> RegistryInfo.ITEM.getValue(item));
+        RegisterInteractionsEventJS.addBlockItemPlacement(preexistingItem, this);
         return this;
     }
 
     // Default b/c the basic shape should not be a full block
+    @HideFromJS
     public VoxelShape getShape() {
         if (customShape.isEmpty()) {
-            return GroundcoverBlock.MEDIUM;
+            return switch (type) {
+                case ORE -> GroundcoverBlock.SMALL;
+                case TWIG -> GroundcoverBlock.TWIG;
+                default -> GroundcoverBlock.MEDIUM;
+            };
         }
         if (cachedShape == null) {
             cachedShape = BlockBuilder.createShape(customShape);
         }
         return cachedShape;
+    }
+
+    @HideFromJS
+    public Supplier<Item> itemSupplier() {
+        if (preexistingItem != null) {
+            return preexistingItem;
+        } else if (itemBuilder != null) {
+            return itemBuilder;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -98,11 +119,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public GroundcoverBlock createObject() {
-        return switch (type) {
-            case ORE -> GroundcoverBlock.looseOre(createProperties());
-            case TWIG -> GroundcoverBlock.twig(createExtendedProperties());
-            default -> new GroundcoverBlock(createExtendedProperties(), getShape(), itemBuilder);
-        };
+        return new GroundcoverBlock(createExtendedProperties(), getShape(), itemSupplier());
     }
 
     @Override
@@ -142,10 +159,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
         if (lootTable != null) {
             lootTable.accept(lootBuilder);
-        } else if (get().asItem() != Items.AIR || preexistingItem != null) {
+        } else if (itemSupplier() != null) {
             lootBuilder.addPool(pool -> {
                 pool.survivesExplosion();
-                pool.addItem(new ItemStack(preexistingItem == null ? get() : RegistryInfo.ITEM.getValue(preexistingItem)));
+                pool.addItem(new ItemStack(itemSupplier().get()));
             });
         }
 

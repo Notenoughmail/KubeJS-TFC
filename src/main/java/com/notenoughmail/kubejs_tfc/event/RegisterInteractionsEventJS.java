@@ -21,9 +21,11 @@ public class RegisterInteractionsEventJS extends EventJS {
         customBlockItemPlacements.add(new BlockItemPlacement(item, block));
     }
 
-    public RegisterInteractionsEventJS() {
+    public static void registerCustomPlacements() {
         customBlockItemPlacements.forEach(InteractionManager::register);
     }
+
+    public RegisterInteractionsEventJS() {}
 
     @Info(value = "Registers an interaction", params = {
             @Param(name = "ingredient", value = "The items this interactions applies to"),

@@ -179,6 +179,7 @@ public class EventHandlers {
         if (interactions.hasListeners()) {
             interactions.post(new RegisterInteractionsEventJS());
         }
+        RegisterInteractionsEventJS.registerCustomPlacements();
         event.enqueueWork(() -> {
             if (rockSettings.hasListeners()) {
                 rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
