@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
+import com.eerussianguy.beneath.misc.LostPage;
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,12 +15,13 @@ import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -214,6 +216,47 @@ public class DataUtils {
             specialArray = new JsonArray(0);
         }
         json.add("specials", specialArray);
+        return json;
+    }
+
+    public static void handleNetherFertilizers(JsonObject json, @Nullable Float death, @Nullable Float destruction, @Nullable Float decay, @Nullable Float sorrow, @Nullable Float flame) {
+        if (death != null) {
+            json.addProperty("death", death);
+        }
+        if (destruction != null) {
+            json.addProperty("destruction", destruction);
+        }
+        if (decay != null) {
+            json.addProperty("decay", decay);
+        }
+        if (sorrow != null) {
+            json.addProperty("sorrow", sorrow);
+        }
+        if (flame != null) {
+            json.addProperty("flame", flame);
+        }
+    }
+
+    public static JsonObject lostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey) {
+        final JsonObject json = new JsonObject();
+        json.add("cost", cost.toJson());
+        json.addProperty("reward", RegistryInfo.ITEM.getId(reward).toString());
+        final JsonArray costsArray = new JsonArray(costs.length), rewardsArray = new JsonArray(rewards.length), punishmentsArray = new JsonArray(punishments.length);
+        for (int i : costs) {
+            costsArray.add(i);
+        }
+        json.add("costs", costsArray);
+        for (int i : rewards) {
+            rewardsArray.add(i);
+        }
+        json.add("rewards", rewardsArray);
+        for (LostPage.Punishment punishment : punishments) {
+            punishmentsArray.add(punishment.getSerializedName());
+        }
+        json.add("punishments", punishmentsArray);
+        if (langKey != null) {
+            json.addProperty("ingredient_translation", langKey);
+        }
         return json;
     }
 

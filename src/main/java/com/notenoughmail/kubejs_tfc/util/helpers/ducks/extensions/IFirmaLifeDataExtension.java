@@ -1,9 +1,12 @@
 package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 
+import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
+import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.RemapForJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.minecraft.resources.ResourceLocation;
@@ -12,22 +15,33 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public interface IFirmaLifeDataEventMixin {
+public interface IFirmaLifeDataExtension {
+
+    @HideFromJS
+    void KubeJS_TFC$AddJson(ResourceLocation id, JsonObject json);
 
     @Info(value = "Defines a new greenhouse type", params = {
             @Param(name = "ingredient", value = "The blocks that make up the greenhouse type"),
             @Param(name = "tier", value = "The tier of the greenhouse")
     })
-    @RemapForJS("firmalifeGreenhouseType")
-    void kubeJS_TFC$firmalifeGreenhouseType(BlockIngredient ingredient, int tier);
+    default void firmalifeGreenhouseType(BlockIngredient ingredient, int tier) {
+        final JsonObject json = new JsonObject();
+        json.add("ingredient", ingredient.toJson());
+        json.addProperty("tier", tier);
+        KubeJS_TFC$AddJson(DataUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "greenhouse"), json);
+    }
 
     @Info(value = "Defines a new greenhouse type", params = {
             @Param(name = "ingredient", value = "The blocks that make up the greenhouse type"),
             @Param(name = "tier", value = "The tier of the greenhouse"),
             @Param(name = "name", value = "The name of the greenhouse type")
     })
-    @RemapForJS("firmalifeGreenhouseType")
-    void kubeJS_TFC$firmalifeGreenhouseType(BlockIngredient ingredient, int tier, ResourceLocation name);
+    default void firmalifeGreenhouseType(BlockIngredient ingredient, int tier, ResourceLocation name) {
+        final JsonObject json = new JsonObject();
+        json.add("ingredient", ingredient.toJson());
+        json.addProperty("tier", tier);
+        KubeJS_TFC$AddJson(DataUtils.dataID(name, FirmaLife.MOD_ID, "greenhouse"), json);
+    }
 
     @Info(value = "Defines a new plantable definition", params = {
             @Param(name = "ingredient", value = "The seed items to be used for this plantable definition"),
@@ -54,8 +68,7 @@ public interface IFirmaLifeDataEventMixin {
                     For planter type `hanging`: Pass the fruit texture
                     """)
     })
-    @RemapForJS("firmalifePlantable")
-    void kubeJS_TFC$firmalifePlantable(
+    default void firmalifePlantable(
             Ingredient ingredient,
             @Nullable PlanterType planterType,
             @Nullable Integer tier,
@@ -66,7 +79,23 @@ public interface IFirmaLifeDataEventMixin {
             @Nullable FarmlandBlockEntity.NutrientType nutrient,
             String[] textures,
             @Nullable String special
-    );
+    ) {
+        KubeJS_TFC$AddJson(
+                DataUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "plantable"),
+                DataUtils.plantable(
+                        ingredient,
+                        planterType,
+                        tier,
+                        stages,
+                        extraSeedChance,
+                        seed,
+                        crop,
+                        nutrient,
+                        textures,
+                        special
+                )
+        );
+    }
 
     @Info(value = "Defines a new plantable definition", params = {
             @Param(name = "ingredient", value = "The seed items to be used for this plantable definition"),
@@ -94,8 +123,7 @@ public interface IFirmaLifeDataEventMixin {
                     """),
             @Param(name = "name", value = "The name of the plantable definition")
     })
-    @RemapForJS("firmalifePlantable")
-    void kubeJS_TFC$firmalifePlantable(
+    default void firmalifePlantable(
             Ingredient ingredient,
             @Nullable PlanterType planterType,
             @Nullable Integer tier,
@@ -107,5 +135,21 @@ public interface IFirmaLifeDataEventMixin {
             String[] textures,
             @Nullable String special,
             ResourceLocation name
-    );
+    ) {
+        KubeJS_TFC$AddJson(
+                DataUtils.dataID(name, FirmaLife.MOD_ID, "plantable"),
+                DataUtils.plantable(
+                        ingredient,
+                        planterType,
+                        tier,
+                        stages,
+                        extraSeedChance,
+                        seed,
+                        crop,
+                        nutrient,
+                        textures,
+                        special
+                )
+        );
+    }
 }
