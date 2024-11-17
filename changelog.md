@@ -1,4 +1,4 @@
-### 1.2.2 (W.I.P.)
+### 1.2.2
 - Add Beneath nether fertilizer and lost page builders to the `TFCEvents.data` event if it is installed
 - Register the previously missing dispenser behaviors for custom `tfc:fluid_container` items
 - Fix the `#withPreExisting` method not working as intended in custom ground cover blocks
