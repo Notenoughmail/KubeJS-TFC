@@ -13,6 +13,8 @@ import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.crop.FloodedWildCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildCropBlock;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// TODO: 1.2.2 | Specify dead (immature) model/texture
 @SuppressWarnings("unused")
 public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
@@ -40,6 +41,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;
     @Nullable
     public transient ResourceLocation seedItem, foodItem;
+    public transient String @Nullable [] deadModels;
 
     public WildCropBlockBuilder(ResourceLocation i) {
         super(i);
@@ -63,6 +65,36 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
             i.accept(item);
         }
 
+        return this;
+    }
+
+    @Info(value = "Specifies the model to use when the crop is dead/immature, also see doubleDeadModels and spreadingDeadModels")
+    public WildCropBlockBuilder deadModel(String model) {
+        if (type == Type.DEFAULT || type == Type.FLOODED) {
+            deadModels = new String[]{model};
+        } else {
+            ConsoleJS.STARTUP.warn("WildCropBlockBuilder.deadModel called on a non default or flooded wild crop, please use .doubleDeadModels for double types and .spreadingDeadModels for spreading types");
+        }
+        return this;
+    }
+
+    @Info(value = "Specifies the models to use when the crop is dead/immature. Additionally sets the type tot `double`. Also see deadModel and spreadingDeadModels", params = {
+            @Param(name = "topModel", value = "The model for the top block state when the crop is dead"),
+            @Param(name = "bottomModel", value = "The model for the bottom block state when the crop is dead")
+    })
+    public WildCropBlockBuilder doubleDeadModels(String topModel, String bottomModel) {
+        type = Type.DOUBLE;
+        deadModels = new String[] {topModel, bottomModel};
+        return this;
+    }
+
+    @Info(value = "Specifies the models to use when the crop is dead/immature. Additionally sets the type to `spreading`. Also see deadModel and doubleDeadModels", params = {
+            @Param(name = "coreModel", value = "The model for the non-sided state when the crop is dead"),
+            @Param(name = "sideModel", value = "The model for the side block state when the crop is dead")
+    })
+    public WildCropBlockBuilder spreadingDeadModels(String coreModel, String sideModel) {
+        type = Type.SPREADING;
+        deadModels = new String[] {coreModel, sideModel};
         return this;
     }
 
@@ -207,15 +239,15 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
             switch (type) {
                 case DEFAULT, FLOODED -> {
                     bs.simpleVariant("mature=true", baseModel);
-                    bs.simpleVariant("mature=false", baseModel);
+                    bs.simpleVariant("mature=false", deadModels == null ? baseModel : deadModels[0]);
                 }
                 case DOUBLE -> {
                     final String top = baseModel + "_top";
                     final String bottom = baseModel + "_bottom";
                     bs.simpleVariant("part=top,mature=true", top);
-                    bs.simpleVariant("part=top,mature=false", top);
+                    bs.simpleVariant("part=top,mature=false", deadModels == null ? top : deadModels[0]);
                     bs.simpleVariant("part=bottom,mature=true", bottom);
-                    bs.simpleVariant("part=bottom,mature=false", bottom);
+                    bs.simpleVariant("part=bottom,mature=false", deadModels == null ? bottom : deadModels[1]);
                 }
             }
         }
@@ -225,15 +257,15 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         final String baseModel = newID("block/", "").toString();
         final String side = baseModel + "_side";
         ms.part("mature=true", baseModel);
-        ms.part("mature=false", baseModel);
+        ms.part("mature=false", deadModels == null ? baseModel : deadModels[0]);
         ms.part("east=true,mature=true", p -> p.model(side).y(90));
-        ms.part("east=true,mature=false", p -> p.model(side).y(90));
+        ms.part("east=true,mature=false", p -> p.model(deadModels == null ? side : deadModels[1]).y(90));
         ms.part("north=true,mature=true", side);
-        ms.part("north=true,mature=false", side);
+        ms.part("north=true,mature=false", deadModels == null ? side : deadModels[1]);
         ms.part("south=true,mature=true", p -> p.model(side).y(180));
-        ms.part("south=true,mature=false", p -> p.model(side).y(180));
+        ms.part("south=true,mature=false", p -> p.model(deadModels == null ? side : deadModels[1]).y(180));
         ms.part("west=true,mature=true", p -> p.model(side).y(270));
-        ms.part("west=true,mature=false", p -> p.model(side).y(270));
+        ms.part("west=true,mature=false", p -> p.model(deadModels == null ? side : deadModels[1]).y(270));
     }
 
     public enum Type {
