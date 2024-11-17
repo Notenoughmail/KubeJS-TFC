@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+// TODO: 1.2.2 | Specify dead (immature) model/texture
 @SuppressWarnings("unused")
 public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

@@ -1,3 +1,9 @@
+### 1.2.2 (W.I.P.)
+- Add Beneath nether fertilizer and lost page builders to the `TFCEvents.data` event if it is installed
+- Register the previously missing dispenser behaviors for custom `tfc:fluid_container` items
+- Fix the `#withPreExisting` method not working as intended in custom ground cover blocks
+- Yet more custom crop fixes (hopefully for the last time)
+
 ### 1.2.1
 - Fix custom fauna registrations causing *certain mods* to crash because they do not use Forge's event
 - Changes to `TFCEvents.registerFaunas`

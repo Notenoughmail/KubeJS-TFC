@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IDataConstructor;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildVeinProperties;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.PlacedFeatureProperties;
 import dev.latvian.mods.kubejs.event.EventJS;
@@ -13,7 +14,6 @@ import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState
  * </ul>
  */
 @SuppressWarnings("unused")
-public class TFCWorldgenDataEventJS extends EventJS {
+public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor {
 
     private final DataPackEventJS wrappedEvent;
 
@@ -41,7 +41,7 @@ public class TFCWorldgenDataEventJS extends EventJS {
         wrappedEvent = wrapped;
     }
 
-    @HideFromJS
+    @Override
     public void addJson(ResourceLocation id, JsonElement json) {
         KubeJSTFC.warningLog(id.toString());
         KubeJSTFC.infoLog(json.toString());

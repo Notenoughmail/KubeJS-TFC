@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IDataConstructor;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildClimateRangeData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFaunaData;
@@ -15,7 +16,6 @@ import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class TFCDataEventJS extends EventJS {
+public class TFCDataEventJS extends EventJS implements IDataConstructor {
 
     private final DataPackEventJS wrappedEvent;
 
@@ -38,7 +38,7 @@ public class TFCDataEventJS extends EventJS {
         wrappedEvent = wrapped;
     }
 
-    @HideFromJS
+    @Override
     public void addJson(ResourceLocation id, JsonElement json) {
         KubeJSTFC.warningLog(id.toString());
         KubeJSTFC.infoLog(json.toString());

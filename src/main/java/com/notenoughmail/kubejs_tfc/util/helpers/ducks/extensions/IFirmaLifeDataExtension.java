@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.minecraft.resources.ResourceLocation;
@@ -15,10 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public interface IFirmaLifeDataExtension {
-
-    @HideFromJS
-    void KubeJS_TFC$AddJson(ResourceLocation id, JsonObject json);
+public interface IFirmaLifeDataExtension extends IDataConstructor {
 
     @Info(value = "Defines a new greenhouse type", params = {
             @Param(name = "ingredient", value = "The blocks that make up the greenhouse type"),
@@ -28,7 +24,7 @@ public interface IFirmaLifeDataExtension {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
-        KubeJS_TFC$AddJson(DataUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "greenhouse"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "greenhouse"), json);
     }
 
     @Info(value = "Defines a new greenhouse type", params = {
@@ -40,7 +36,7 @@ public interface IFirmaLifeDataExtension {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
-        KubeJS_TFC$AddJson(DataUtils.dataID(name, FirmaLife.MOD_ID, "greenhouse"), json);
+        addJson(DataUtils.dataID(name, FirmaLife.MOD_ID, "greenhouse"), json);
     }
 
     @Info(value = "Defines a new plantable definition", params = {
@@ -80,7 +76,7 @@ public interface IFirmaLifeDataExtension {
             String[] textures,
             @Nullable String special
     ) {
-        KubeJS_TFC$AddJson(
+        addJson(
                 DataUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "plantable"),
                 DataUtils.plantable(
                         ingredient,
@@ -136,7 +132,7 @@ public interface IFirmaLifeDataExtension {
             @Nullable String special,
             ResourceLocation name
     ) {
-        KubeJS_TFC$AddJson(
+        addJson(
                 DataUtils.dataID(name, FirmaLife.MOD_ID, "plantable"),
                 DataUtils.plantable(
                         ingredient,

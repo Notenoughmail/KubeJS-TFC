@@ -2,21 +2,16 @@ package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 
 import com.eerussianguy.beneath.Beneath;
 import com.eerussianguy.beneath.misc.LostPage;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.DataUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
-public interface IBeneathDataExtension {
-
-    @HideFromJS
-    void KubeJS_TFC$AddJson(ResourceLocation id, JsonElement json);
+public interface IBeneathDataExtension extends IDataConstructor {
 
     @Info(value = "Defines a new nether fertilizer", params = {
             @Param(name = "ingredient", value = "The ingredient for the nether fertilizer"),
@@ -31,7 +26,7 @@ public interface IBeneathDataExtension {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         DataUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
-        KubeJS_TFC$AddJson(DataUtils.dataID(name, Beneath.MOD_ID, "nether_fertilizers"), json);
+        addJson(DataUtils.dataID(name, Beneath.MOD_ID, "nether_fertilizers"), json);
     }
 
     @Info(value = "Defines a new nether fertilizer", params = {
@@ -46,7 +41,7 @@ public interface IBeneathDataExtension {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         DataUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
-        KubeJS_TFC$AddJson(DataUtils.dataIDFromObject(ingredient, Beneath.MOD_ID, "nether_fertilizers"), json);
+        addJson(DataUtils.dataIDFromObject(ingredient, Beneath.MOD_ID, "nether_fertilizers"), json);
     }
 
     @Info(value = "Defines a new lost page", params = {
@@ -58,7 +53,7 @@ public interface IBeneathDataExtension {
             @Param(name = "langKey", value = "A custom lang key to use for the ingredient in the lost page screen")
     })
     default void beneathLostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey) {
-        KubeJS_TFC$AddJson(
+        addJson(
                 DataUtils.dataIDFromObject(cost, Beneath.MOD_ID, "lost_pages"),
                 DataUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
         );
@@ -74,7 +69,7 @@ public interface IBeneathDataExtension {
             @Param(name = "name", value = "The name of the lost page definition")
     })
     default void beneathLostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey, ResourceLocation name) {
-        KubeJS_TFC$AddJson(
+        addJson(
                 DataUtils.dataID(name, Beneath.MOD_ID, "lost_pages"),
                 DataUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
         );
