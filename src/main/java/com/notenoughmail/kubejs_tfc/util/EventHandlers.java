@@ -191,7 +191,7 @@ public class EventHandlers {
                 birthdays.post(new BirthdayEventJS());
             }
             RegistryUtils.hackBlockEntities();
-            FluidContainerItemBuilder.thisList.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
+            FluidContainerItemBuilder.dispenserList.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
         });
     }
 

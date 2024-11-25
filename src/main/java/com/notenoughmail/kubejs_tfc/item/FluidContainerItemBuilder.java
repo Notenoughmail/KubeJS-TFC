@@ -31,7 +31,8 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     @Nullable
     public transient Component filledDisplayName;
 
-    public static final List<FluidContainerItemBuilder> thisList = new ArrayList<>();
+    public static final List<Supplier<Item>> dispenserList = new ArrayList<>();
+    public static final List<Supplier<Item>> colorList = new ArrayList<>();
 
     public FluidContainerItemBuilder(ResourceLocation i) {
         super(i);
@@ -40,7 +41,14 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         capacity = () -> 100;
         whitelist = TFCTags.Fluids.USABLE_IN_JUG;
         filledDisplayName = null;
-        thisList.add(this);
+        colorList.add(this);
+        dispenserList.add(this);
+    }
+
+    @Override
+    public ItemBuilder texture(String tex) {
+        texture("base", tex);
+        return texture("fluid", tex + "_overlay");
     }
 
     @Info(value = "Determines if the item can place fluids in world")
@@ -98,9 +106,10 @@ public class FluidContainerItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        generator.itemModel(id, m -> ModelUtils.ITEMS.fluidContainerModelJson(m, id));
+        ModelUtils.fluidContainer(this, generator);
     }
 
+    // TODO: 1.2.3 | This seems to be doing something funky
     @Override
     public void generateLang(LangEventJS lang) {
         super.generateLang(lang);

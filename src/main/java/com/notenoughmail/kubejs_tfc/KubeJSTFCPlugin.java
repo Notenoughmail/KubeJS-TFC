@@ -94,6 +94,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.ITEM.addType("tfc:glassworking", GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:windmill_blade", WindMillBladeItemBuilder.class, WindMillBladeItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:glassworking_tool", GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:jug", JugItemBuilder.class, JugItemBuilder::new);
+        RegistryInfo.ITEM.addType("tfc:glass_bottle", GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);

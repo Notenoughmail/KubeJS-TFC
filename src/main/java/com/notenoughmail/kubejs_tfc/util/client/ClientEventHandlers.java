@@ -3,7 +3,10 @@ package com.notenoughmail.kubejs_tfc.util.client;
 import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.WildCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.ConnectedGrassBlockBuilder;
-import com.notenoughmail.kubejs_tfc.item.*;
+import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
+import com.notenoughmail.kubejs_tfc.item.WindMillBladeItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.TFCColors;
@@ -49,8 +52,7 @@ public class ClientEventHandlers {
     private static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         final ItemColor grassColor = (stack, index) -> TFCColors.getGrassColor(null, index);
 
-        FluidContainerItemBuilder.thisList.forEach(builder -> event.register(new ContainedFluidModel.Colors(), builder.get()));
-        MoldItemBuilder.thisList.forEach(builder -> event.register(new ContainedFluidModel.Colors(), builder.get()));
+        FluidContainerItemBuilder.colorList.forEach(builder -> event.register(new ContainedFluidModel.Colors(), builder.get()));
 
         WildCropBlockBuilder.thisList.forEach(builder -> {
             if (builder.itemBuilder != null) {

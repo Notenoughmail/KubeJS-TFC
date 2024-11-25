@@ -4,23 +4,49 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.minecraft.resources.ResourceLocation;
 
 public class ModelUtils {
 
-    public static class ITEMS {
-        public static void fluidContainerModelJson(ModelGenerator m, ResourceLocation id) {
+    public static void fluidContainer(ItemBuilder builder, ModelGenerator m) {
+        if (!builder.parentModel.isEmpty()) {
+            m.parent(builder.parentModel);
+        } else {
             m.parent("kubejs_tfc:item/generated_fluid_container");
-            m.textures(fluidContainerTextures(id));
         }
 
-        private static JsonObject fluidContainerTextures(ResourceLocation id) {
-            var json = new JsonObject();
-            var nameSpace = newItemID(id).toString();
-            json.addProperty("base", nameSpace);
-            json.addProperty("fluid", nameSpace + "_overlay");
-            return json;
+        if (builder.textureJson.size() == 0) {
+            builder.texture(newItemID(builder.id).toString());
         }
+
+        m.textures(builder.textureJson);
+    }
+
+    public static void fluidContainer(ItemBuilder builder, AssetJsonGenerator generator) {
+        if (builder.modelJson != null) {
+            generator.json(AssetJsonGenerator.asItemModelLocation(builder.id), builder.modelJson);
+        } else {
+            generator.itemModel(builder.id, m -> {
+                if (!builder.parentModel.isEmpty()) {
+                    m.parent(builder.parentModel);
+                } else {
+                    m.parent("kubejs_tfc:item/generated_fluid_container");
+                }
+
+                if (builder.textureJson.size() == 0) {
+                    final String tex = newItemID(builder.id).toString();
+                    builder.texture("base", tex);
+                    builder.texture("fluid", tex + "_overlay");
+                }
+
+                m.textures(builder.textureJson);
+            });
+        }
+    }
+
+    // TODO: 1.2.3 | Dehardcode texture references, merge into builder classes
+    public static class ITEMS {
 
         private static final String[] javelinPerspectives = {"none", "fixed", "ground", "gui"};
 
@@ -129,14 +155,14 @@ public class ModelUtils {
                 generator.json(AssetJsonGenerator.asItemModelLocation(newID(id, "", "_cast")), cast);
             }
         }
-
-        private static ResourceLocation newItemID(ResourceLocation id) {
-            return newID(id, "item/", "");
-        }
     }
 
-    public static ResourceLocation newID(ResourceLocation id, String pre, String post) {
+    private static ResourceLocation newID(ResourceLocation id, String pre, String post) {
         return new ResourceLocation(id.getNamespace(), pre + id.getPath() + post);
+    }
+
+    private static ResourceLocation newItemID(ResourceLocation id) {
+        return newID(id, "item/", "");
     }
 
     public static final String[] cardinalDirections = {"north", "east", "south", "west"};

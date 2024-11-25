@@ -12,8 +12,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
@@ -23,13 +21,17 @@ public class MoldItemBuilder extends ItemBuilder {
     public transient IntSupplier capacity;
     public transient TagKey<Fluid> acceptableFluids;
 
-    public static final List<MoldItemBuilder> thisList = new ArrayList<>();
-
     public MoldItemBuilder(ResourceLocation i) {
         super(i);
         this.capacity = () -> 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
-        thisList.add(this);
+        FluidContainerItemBuilder.colorList.add(this);
+    }
+
+    @Override
+    public ItemBuilder texture(String tex) {
+        texture("base", tex);
+        return texture("fluid", tex + "_overlay");
     }
 
     @Info(value = "Sets the capacity, in mB, of the mold")
@@ -51,18 +53,7 @@ public class MoldItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        if (modelJson != null) {
-            generator.json(AssetJsonGenerator.asItemModelLocation(id), modelJson);
-            return;
-        }
-
-        generator.itemModel(id, m -> {
-            if (!parentModel.isEmpty()) {
-                m.parent(parentModel);
-            } else {
-                ModelUtils.ITEMS.fluidContainerModelJson(m, id);
-            }
-        });
+        ModelUtils.fluidContainer(this, generator);
     }
 
     @Override
