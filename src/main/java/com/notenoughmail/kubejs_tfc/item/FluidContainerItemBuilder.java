@@ -109,14 +109,13 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         ModelUtils.fluidContainer(this, generator);
     }
 
-    // TODO: 1.2.3 | This seems to be doing something funky
     @Override
     public void generateLang(LangEventJS lang) {
         super.generateLang(lang);
         if (filledDisplayName != null) {
             lang.add(id.getNamespace(), getBuilderTranslationKey() + ".filled", filledDisplayName.getString());
         } else {
-            lang.add(id.getNamespace(), getBuilderTranslationKey() + ".filled", "%s " + UtilsJS.snakeCaseToTitleCase(id.toString()));
+            lang.add(id.getNamespace(), getBuilderTranslationKey() + ".filled", "%s " + (displayName == null ? UtilsJS.snakeCaseToTitleCase(id.getPath()) : displayName.getString()));
         }
     }
 }

@@ -157,7 +157,8 @@ tasks.named('processResources', ProcessResources).configure {
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
-            tfc_version_range: tfc_version_range, kube_version_range: kube_version_range
+            tfc_version_range: tfc_version_range, kube_version_range: kube_version_range,
+            firmalife_version_range : firmalife_version_range
     ]
     inputs.properties replaceProperties
 

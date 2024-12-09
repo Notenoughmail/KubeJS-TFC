@@ -9,20 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModelUtils {
 
-    public static void fluidContainer(ItemBuilder builder, ModelGenerator m) {
-        if (!builder.parentModel.isEmpty()) {
-            m.parent(builder.parentModel);
-        } else {
-            m.parent("kubejs_tfc:item/generated_fluid_container");
-        }
-
-        if (builder.textureJson.size() == 0) {
-            builder.texture(newItemID(builder.id).toString());
-        }
-
-        m.textures(builder.textureJson);
-    }
-
     public static void fluidContainer(ItemBuilder builder, AssetJsonGenerator generator) {
         if (builder.modelJson != null) {
             generator.json(AssetJsonGenerator.asItemModelLocation(builder.id), builder.modelJson);
@@ -125,35 +111,6 @@ public class ModelUtils {
                 m.parent("item/generated");
                 m.texture("layer0", baseModelLocation);
             });
-        }
-
-        public static void fishingRod(ResourceLocation id, AssetJsonGenerator generator, String customCastModel) {
-
-            final JsonObject rod = new JsonObject();
-            rod.addProperty("parent", "minecraft:item/handheld_rod");
-            final JsonObject rodTextures = new JsonObject();
-            rodTextures.addProperty("layer0", newItemID(id).toString());
-            rod.add("textures", rodTextures);
-            final JsonObject predicate = new JsonObject();
-            final JsonObject castPredicate = new JsonObject();
-            castPredicate.addProperty("tfc:cast", 1);
-            predicate.add("predicate", castPredicate);
-            predicate.addProperty("model", customCastModel.isEmpty() ? newItemID(id) + "_cast" : customCastModel);
-            final JsonArray overrides = new JsonArray(1);
-            overrides.add(predicate);
-            rod.add("overrides", overrides);
-
-            generator.json(AssetJsonGenerator.asItemModelLocation(id), rod);
-
-            if (customCastModel.isEmpty()) {
-                final JsonObject cast = new JsonObject();
-                cast.addProperty("parent", "item/fishing_rod");
-                final JsonObject castTextures = new JsonObject();
-                castTextures.addProperty("layer0", newItemID(id) + "_cast");
-                cast.add("textures", castTextures);
-
-                generator.json(AssetJsonGenerator.asItemModelLocation(newID(id, "", "_cast")), cast);
-            }
         }
     }
 

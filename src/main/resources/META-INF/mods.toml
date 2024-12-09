@@ -40,3 +40,10 @@ issueTrackerURL="https://github.com/Notenoughmail/KubeJS-TFC/issues"
     versionRange = "${kube_version_range}"
     ordering = "NONE"
     side = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId = "firmalife"
+    mandatory = false
+    versionRange = "${firmalife_version_range}"
+    ordering = "NONE"
+    side = "BOTH"
