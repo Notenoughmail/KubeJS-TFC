@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -21,7 +21,7 @@ public class PlacedFeatureProperties {
     private final List<JsonObject> placements = new ArrayList<>();
 
     public PlacedFeatureProperties(String name) {
-        feature = DataUtils.normalizeResourceLocation(name).toString();
+        feature = JsonUtils.normalizeResourceLocation(name).toString();
     }
 
     @Info(value = "Adds a placement with the provided type and no extra arguments")

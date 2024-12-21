@@ -2,8 +2,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.SpreadingBushBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.StationaryBerryBushBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
-import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -67,7 +66,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         for (String lifecycle : StationaryBerryBushBlockBuilder.lc) {
             for (int i = 0 ; i < 4 ; i++) {
-                final String dir = ModelUtils.cardinalDirections[i];
+                final String dir = JsonUtils.cardinalDirections[i];
                 final int finalI = i;
                 for (int j = 0 ; j < 3 ; j++) {
                     final int finalJ = j; // Lambda stuff
@@ -89,7 +88,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(DataUtils.STICK_STACK);
+                p.addItem(JsonUtils.STICK_STACK);
             });
         }
 

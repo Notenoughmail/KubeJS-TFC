@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
@@ -144,7 +144,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
         for (int i = 0 ; i < 4 ; i++) {
             final int j = i;
-            final String dir = ModelUtils.cardinalDirections[j];
+            final String dir = JsonUtils.cardinalDirections[j];
             bs.part(dir + "=true,snowy=false", p -> p.model(top).y(j * 90));
             bs.part(dir + "=true,snowy=true", p -> p.model(snowyTop).y(j * 90));
             bs.part(dir + "=false,snowy=false", p -> p.model(side).y(j * 90));

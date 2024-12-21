@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IDataConstructor;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildVeinProperties;
@@ -396,9 +396,9 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     }
 
     private void finishFeature(String name, JsonObject configuredFeature, Consumer<PlacedFeatureProperties> placement) {
-        addJson(DataUtils.configuredFeatureName(name), configuredFeature);
+        addJson(JsonUtils.configuredFeatureName(name), configuredFeature);
 
-        addJson(DataUtils.placedFeatureName(name), Util.make(new PlacedFeatureProperties(name), placement).toJson());
+        addJson(JsonUtils.placedFeatureName(name), Util.make(new PlacedFeatureProperties(name), placement).toJson());
     }
 
     private void finishFeature(String type, String name, JsonObject config, Consumer<PlacedFeatureProperties> placement) {

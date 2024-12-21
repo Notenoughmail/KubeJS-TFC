@@ -8,6 +8,8 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
+import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
@@ -37,7 +39,7 @@ import java.util.function.Consumer;
  * {@link TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
  * and various block's data/asset gen
  */
-public class DataUtils {
+public class JsonUtils {
 
     public static ResourceLocation dataID(ResourceLocation base, String mod, String category) {
         return dataID(base.getNamespace(), base.getPath(), mod, category);
@@ -90,6 +92,10 @@ public class DataUtils {
         }
     }
 
+    public static JsonObject buildJson(Consumer<JsonObject> consumer) {
+        return Util.make(new JsonObject(), consumer);
+    }
+
     public static void handleResistances(JsonObject json, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
         if (piercing != null) {
             json.addProperty("piercing", piercing);
@@ -115,16 +121,16 @@ public class DataUtils {
     }
 
     public static JsonObject buildHeat(Ingredient ingredient, float heatCap, @Nullable Float forgeTemp, @Nullable Float weldTemp) {
-        var json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
-        json.addProperty("heat_capacity", heatCap);
-        if (forgeTemp != null) {
-            json.addProperty("forging_temperature", forgeTemp);
-        }
-        if (weldTemp != null) {
-            json.addProperty("welding_temperature", weldTemp);
-        }
-        return json;
+        return buildJson(json -> {
+            json.add("ingredient", ingredient.toJson());
+            json.addProperty("heat_capacity", heatCap);
+            if (forgeTemp != null) {
+                json.addProperty("forging_temperature", forgeTemp);
+            }
+            if (weldTemp != null) {
+                json.addProperty("welding_temperature", weldTemp);
+            }
+        });
     }
 
     // Should have been this way from the beginning
@@ -138,36 +144,36 @@ public class DataUtils {
     }
 
     public static JsonObject knappingType(Ingredient ingredient, int ingredientCount, int amountToConsume, ResourceLocation clickSound, boolean consumeAfterComplete, boolean useDisabledTexture, boolean spawnsParticles, ItemStack jeiIconItem) {
-        final JsonObject isi = new JsonObject();
-        isi.add("ingredient", ingredient.toJson());
-        isi.addProperty("count", ingredientCount);
-        final JsonObject json = new JsonObject();
-        json.add("input", isi);
-        json.addProperty("amount_to_consume", amountToConsume);
-        json.addProperty("click_sound", clickSound.toString());
-        json.addProperty("consume_after_complete", consumeAfterComplete);
-        json.addProperty("use_disabled_texture", useDisabledTexture);
-        json.addProperty("spawns_particles", spawnsParticles);
-        json.add("jei_icon_item", IngredientHelpers.itemStackToJson(jeiIconItem));
-        return json;
+        return buildJson(json -> {
+            json.add("input", buildJson(isi -> {
+                isi.add("ingredient", ingredient.toJson());
+                isi.addProperty("count", ingredientCount);
+            }));
+            json.addProperty("amount_to_consume", amountToConsume);
+            json.addProperty("click_sound", clickSound.toString());
+            json.addProperty("consume_after_complete", consumeAfterComplete);
+            json.addProperty("use_disabled_texture", useDisabledTexture);
+            json.addProperty("spawns_particles", spawnsParticles);
+            json.add("jei_icon_item", IngredientHelpers.itemStackToJson(jeiIconItem));
+        });
     }
 
     public static JsonObject makeMetal(Fluid fluid, float meltTemp, float heatCap, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
-        var json = new JsonObject();
-        json.addProperty("tier", tier);
-        json.addProperty("fluid", RegistryInfo.FLUID.getId(fluid).toString());
-        json.addProperty("melt_temperature", meltTemp);
-        json.addProperty("specific_heat_capacity", heatCap);
-        if (ingot != null) {
-            json.add("ingots", ingot.toJson());
-        }
-        if (doubleIngot != null) {
-            json.add("double_ingots", doubleIngot.toJson());
-        }
-        if (sheet != null) {
-            json.add("sheets", sheet.toJson());
-        }
-        return json;
+        return buildJson(json -> {
+            json.addProperty("tier", tier);
+            json.addProperty("fluid", RegistryInfo.FLUID.getId(fluid).toString());
+            json.addProperty("melt_temperature", meltTemp);
+            json.addProperty("specific_heat_capacity", heatCap);
+            if (ingot != null) {
+                json.add("ingots", ingot.toJson());
+            }
+            if (doubleIngot != null) {
+                json.add("double_ingots", doubleIngot.toJson());
+            }
+            if (sheet != null) {
+                json.add("sheets", sheet.toJson());
+            }
+        });
     }
 
     public static JsonObject plantable(
@@ -182,41 +188,41 @@ public class DataUtils {
             String[] textures,
             @Nullable String special
     ) {
-        final JsonObject json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
-        if (planterType != null) {
-            json.addProperty("planter", planterType.name());
-        }
-        if (tier != null) {
-            json.addProperty("tier", tier);
-        }
-        if (stages != null) {
-            json.addProperty("stages", stages);
-        }
-        if (extraSeedChance != null) {
-            json.addProperty("extra_seed_chance", extraSeedChance);
-        }
-        if (seed != null) {
-            json.add("seed", IngredientHelpers.itemStackToJson(seed));
-        }
-        json.add("crop", IngredientHelpers.itemStackToJson(crop));
-        if (nutrient != null) {
-            json.addProperty("nutrient", nutrient.name());
-        }
-        final JsonArray textureArray = new JsonArray(textures.length);
-        for (String s : textures) {
-            textureArray.add(s);
-        }
-        json.add("texture", textureArray);
-        final JsonArray specialArray;
-        if (special != null) {
-            specialArray = new JsonArray(1);
-            specialArray.add(special);
-        } else {
-            specialArray = new JsonArray(0);
-        }
-        json.add("specials", specialArray);
-        return json;
+        return buildJson(json -> {
+            json.add("ingredient", ingredient.toJson());
+            if (planterType != null) {
+                json.addProperty("planter", planterType.name());
+            }
+            if (tier != null) {
+                json.addProperty("tier", tier);
+            }
+            if (stages != null) {
+                json.addProperty("stages", stages);
+            }
+            if (extraSeedChance != null) {
+                json.addProperty("extra_seed_chance", extraSeedChance);
+            }
+            if (seed != null) {
+                json.add("seed", IngredientHelpers.itemStackToJson(seed));
+            }
+            json.add("crop", IngredientHelpers.itemStackToJson(crop));
+            if (nutrient != null) {
+                json.addProperty("nutrient", nutrient.name());
+            }
+            final JsonArray textureArray = new JsonArray(textures.length);
+            for (String s : textures) {
+                textureArray.add(s);
+            }
+            json.add("texture", textureArray);
+            final JsonArray specialArray;
+            if (special != null) {
+                specialArray = new JsonArray(1);
+                specialArray.add(special);
+            } else {
+                specialArray = new JsonArray(0);
+            }
+            json.add("specials", specialArray);
+        });
     }
 
     public static void handleNetherFertilizers(JsonObject json, @Nullable Float death, @Nullable Float destruction, @Nullable Float decay, @Nullable Float sorrow, @Nullable Float flame) {
@@ -238,26 +244,26 @@ public class DataUtils {
     }
 
     public static JsonObject lostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey) {
-        final JsonObject json = new JsonObject();
-        json.add("cost", cost.toJson());
-        json.addProperty("reward", RegistryInfo.ITEM.getId(reward).toString());
-        final JsonArray costsArray = new JsonArray(costs.length), rewardsArray = new JsonArray(rewards.length), punishmentsArray = new JsonArray(punishments.length);
-        for (int i : costs) {
-            costsArray.add(i);
-        }
-        json.add("costs", costsArray);
-        for (int i : rewards) {
-            rewardsArray.add(i);
-        }
-        json.add("rewards", rewardsArray);
-        for (LostPage.Punishment punishment : punishments) {
-            punishmentsArray.add(punishment.getSerializedName());
-        }
-        json.add("punishments", punishmentsArray);
-        if (langKey != null) {
-            json.addProperty("ingredient_translation", langKey);
-        }
-        return json;
+        return buildJson(json -> {
+            json.add("cost", cost.toJson());
+            json.addProperty("reward", RegistryInfo.ITEM.getId(reward).toString());
+            final JsonArray costsArray = new JsonArray(costs.length), rewardsArray = new JsonArray(rewards.length), punishmentsArray = new JsonArray(punishments.length);
+            for (int i : costs) {
+                costsArray.add(i);
+            }
+            json.add("costs", costsArray);
+            for (int i : rewards) {
+                rewardsArray.add(i);
+            }
+            json.add("rewards", rewardsArray);
+            for (LostPage.Punishment punishment : punishments) {
+                punishmentsArray.add(punishment.getSerializedName());
+            }
+            json.add("punishments", punishmentsArray);
+            if (langKey != null) {
+                json.addProperty("ingredient_translation", langKey);
+            }
+        });
     }
 
     // "worldgen" is my favorite mod!
@@ -277,39 +283,63 @@ public class DataUtils {
     }
 
     public static JsonObject sharpToolsCondition() {
-        final JsonObject json = new JsonObject();
-        json.addProperty("condition", "minecraft:match_tool");
-        final JsonObject predicate = new JsonObject();
-        predicate.addProperty("tag", "tfc:sharp_tools");
-        json.add("predicate", predicate);
-        return json;
+        return buildJson(json -> {
+            json.addProperty("condition", "minecraft:match_tool");
+            final JsonObject predicate = new JsonObject();
+            predicate.addProperty("tag", "tfc:sharp_tools");
+            json.add("predicate", predicate);
+        });
     }
 
     public static JsonObject blockStatePropertyCondition(String block, Consumer<JsonObject> properties) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("condition", "minecraft:block_state_property");
-        json.addProperty("block", block);
-        json.add("properties", Util.make(new JsonObject(), properties));
-        return json;
+        return buildJson(json -> {
+            json.addProperty("condition", "minecraft:block_state_property");
+            json.addProperty("block", block);
+            json.add("properties", buildJson(properties));
+        });
     }
 
     public static LootTableEntry createEntry(String item) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:item");
-        json.addProperty("name", item);
-        return new LootTableEntry(json);
+        return new LootTableEntry(buildJson(json -> {
+            json.addProperty("type", "minecraft:item");
+            json.addProperty("name", item);
+        }));
     }
 
     public static JsonObject simpleSetCountFunction(int min, int max) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("function", "minecraft:set_count");
-        final JsonObject count = new JsonObject();
-        count.addProperty("min", min);
-        count.addProperty("max", max);
-        count.addProperty("type", "minecraft:uniform");
-        json.add("count", count);
-        return json;
+        return buildJson(json -> {
+            json.addProperty("function", "minecraft:set_count");
+            final JsonObject count = new JsonObject();
+            count.addProperty("min", min);
+            count.addProperty("max", max);
+            count.addProperty("type", "minecraft:uniform");
+            json.add("count", count);
+        });
     }
 
     public static final ItemStack STICK_STACK = new ItemStack(Items.STICK);
+
+    public static void fluidContainerModel(ItemBuilder builder, AssetJsonGenerator generator) {
+        if (builder.modelJson != null) {
+            generator.json(AssetJsonGenerator.asItemModelLocation(builder.id), builder.modelJson);
+        } else {
+            generator.itemModel(builder.id, m -> {
+                if (!builder.parentModel.isEmpty()) {
+                    m.parent(builder.parentModel);
+                } else {
+                    m.parent("kubejs_tfc:item/generated_fluid_container");
+                }
+
+                if (builder.textureJson.size() == 0) {
+                    final String tex = builder.id.getNamespace() + ":item/" + builder.id.getPath();
+                    builder.texture("base", tex);
+                    builder.texture("fluid", tex + "_overlay");
+                }
+
+                m.textures(builder.textureJson);
+            });
+        }
+    }
+
+    public static final String[] cardinalDirections = {"north", "east", "south", "west"};
 }

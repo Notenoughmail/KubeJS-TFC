@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -124,7 +124,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(itemBuilder.get()))
-                        .addCondition(DataUtils.sharpToolsCondition());
+                        .addCondition(JsonUtils.sharpToolsCondition());
             });
         }
 

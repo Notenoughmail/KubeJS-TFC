@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
@@ -174,7 +174,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                     p.survivesExplosion();
                     p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
                             .addCondition((type == Type.DOUBLE || type == Type.SPREADING) ? doubleFoodCondition() : defaultFoodCondition())
-                            .addFunction(DataUtils.simpleSetCountFunction(1, 3));
+                            .addFunction(JsonUtils.simpleSetCountFunction(1, 3));
                 });
             }
         }
@@ -183,15 +183,15 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     private JsonObject defaultFoodCondition() {
-        return DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("mature", "true"));
+        return JsonUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("mature", "true"));
     }
 
     private JsonObject doubleSeedCondition() {
-        return DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom"));
+        return JsonUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom"));
     }
 
     private JsonObject doubleFoodCondition() {
-        return DataUtils.blockStatePropertyCondition(id.toString(), j -> {
+        return JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
             j.addProperty("part", "bottom");
             j.addProperty("mature", "true");
         });

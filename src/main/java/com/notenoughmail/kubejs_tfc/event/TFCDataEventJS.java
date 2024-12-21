@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IDataConstructor;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildClimateRangeData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildDrinkableData;
@@ -54,8 +54,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void itemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleResistances(json, piercing, slashing, crushing);
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_damage_resistances"), json);
+        JsonUtils.handleResistances(json, piercing, slashing, crushing);
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "item_damage_resistances"), json);
     }
 
     @Info(value = "Adds an item damage resistance to the specified ingredient", params = {
@@ -68,8 +68,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void itemDamageResistance(Ingredient ingredient, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleResistances(json, piercing, slashing, crushing);
-        addJson(DataUtils.dataID(name, "tfc", "item_damage_resistances"), json);
+        JsonUtils.handleResistances(json, piercing, slashing, crushing);
+        addJson(JsonUtils.dataID(name, "tfc", "item_damage_resistances"), json);
     }
 
     @Info(value = "Adds an entity damage resistance to the specified entity tag", params = {
@@ -81,8 +81,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void entityDamageResistance(String entityTag, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
         final JsonObject json = new JsonObject();
         json.addProperty("entity", entityTag);
-        DataUtils.handleResistances(json, piercing, slashing, crushing);
-        addJson(DataUtils.dataIDFromObject(entityTag, "tfc", "entity_damage_resistances"), json);
+        JsonUtils.handleResistances(json, piercing, slashing, crushing);
+        addJson(JsonUtils.dataIDFromObject(entityTag, "tfc", "entity_damage_resistances"), json);
     }
     @Info(value = "Adds an entity damage resistance to the specified entity tag", params = {
             @Param(name = "entityTag", value = "The entity tag to apply the damage resistances to"),
@@ -94,8 +94,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void entityDamageResistance(String entityTag, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.addProperty("entity", entityTag);
-        DataUtils.handleResistances(json, piercing, slashing, crushing);
-        addJson(DataUtils.dataID(name, "tfc", "entity_damage_resistances"), json);
+        JsonUtils.handleResistances(json, piercing, slashing, crushing);
+        addJson(JsonUtils.dataID(name, "tfc", "entity_damage_resistances"), json);
     }
 
     @Info(value = "Defines that a fluid is directly drinkable", params = {
@@ -106,7 +106,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void drinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
-        addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "drinkables"), data.toJson());
+        addJson(JsonUtils.dataIDFromObject(fluidIngredient, "tfc", "drinkables"), data.toJson());
     }
 
     @Info(value = "Defines that a fluid is directly drinkable", params = {
@@ -118,7 +118,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void drinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData, ResourceLocation name) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
-        addJson(DataUtils.dataID(name, "tfc", "drinkables"), data.toJson());
+        addJson(JsonUtils.dataID(name, "tfc", "drinkables"), data.toJson());
     }
 
     @Info(value = "Adds a fertilizer definition to the specified ingredient", params = {
@@ -130,8 +130,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fertilizers"), json);
+        JsonUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "fertilizers"), json);
     }
 
     @Info(value = "Adds a fertilizer definition to the specified ingredient", params = {
@@ -144,8 +144,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void fertilizer(Ingredient ingredient, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
-        addJson(DataUtils.dataID(name, "tfc", "fertilizers"), json);
+        JsonUtils.handleFertilizers(json, nitrogen, phosphorus, potassium);
+        addJson(JsonUtils.dataID(name, "tfc", "fertilizers"), json);
     }
 
     @Info(value = "Adds a food definition to the specified ingredient", params = {
@@ -156,7 +156,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData) {
         var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "food_items"), data.toJson());
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "food_items"), data.toJson());
     }
 
     @Info(value = "Adds a food definition to the specified ingredient", params = {
@@ -168,7 +168,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData, ResourceLocation name) {
         var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
-        addJson(DataUtils.dataID(name, "tfc", "food_items"), data.toJson());
+        addJson(JsonUtils.dataID(name, "tfc", "food_items"), data.toJson());
     }
 
     @Info(value = "Adds a fuel definition to the specified ingredient", params = {
@@ -185,7 +185,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         if (purity != null) {
             json.addProperty("purity", purity);
         }
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "fuels"), json);
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "fuels"), json);
     }
 
     @Info(value = "Adds a fuel definition to the specified ingredient", params = {
@@ -203,7 +203,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         if (purity != null) {
             json.addProperty("purity", purity);
         }
-        addJson(DataUtils.dataID(name, "tfc", "fuels"), json);
+        addJson(JsonUtils.dataID(name, "tfc", "fuels"), json);
     }
 
     @Info(value = "Adds a heat definition to the specified ingredient", params = {
@@ -213,7 +213,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "weldingTemperature", value = "Specifies the temperature °C required to weld the ingredient. May be null to allow welding at any temperature")
     })
     public void itemHeat(Ingredient ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature) {
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_heats"), DataUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "item_heats"), JsonUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
     @Info(value = "Adds a heat definition to the specified ingredient", params = {
@@ -224,7 +224,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "name", value = "The name of the heat definition")
     })
     public void itemHeat(Ingredient ingredient, float heatCapacity, @Nullable Float forgingTemperature, @Nullable Float weldingTemperature, ResourceLocation name) {
-        addJson(DataUtils.dataID(name, "tfc", "item_heats"), DataUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
+        addJson(JsonUtils.dataID(name, "tfc", "item_heats"), JsonUtils.buildHeat(ingredient, heatCapacity, forgingTemperature, weldingTemperature));
     }
 
     @Info(value = "Adds an item size definition tot he specified ingredient", params ={
@@ -235,8 +235,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void itemSize(Ingredient ingredient, @Nullable Size size, @Nullable Weight weight) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleItemSize(json, size, weight);
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "item_sizes"), json);
+        JsonUtils.handleItemSize(json, size, weight);
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "item_sizes"), json);
     }
 
     @Info(value = "Adds an item size definition to the specified ingredient", params ={
@@ -248,8 +248,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void itemSize(Ingredient ingredient, @Nullable Size size, @Nullable Weight weight, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        DataUtils.handleItemSize(json, size, weight);
-        addJson(DataUtils.dataID(name, "tfc", "item_sizes"), json);
+        JsonUtils.handleItemSize(json, size, weight);
+        addJson(JsonUtils.dataID(name, "tfc", "item_sizes"), json);
     }
 
     @Info(value = "Defines a knapping type", params = {
@@ -264,8 +264,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "name", value = "The name of the knapping type")
     })
     public void knappingType(Ingredient ingredient, int ingredientCount, int amountToConsume, ResourceLocation clickSound, boolean consumeAfterComplete, boolean useDisabledTexture, boolean spawnsParticles, ItemStack jeiIconItem, ResourceLocation name) {
-        final JsonObject json = DataUtils.knappingType(ingredient, ingredientCount, amountToConsume, clickSound, consumeAfterComplete, useDisabledTexture, spawnsParticles, jeiIconItem);
-        addJson(DataUtils.dataID(name, "tfc", "knapping_types"), json);
+        final JsonObject json = JsonUtils.knappingType(ingredient, ingredientCount, amountToConsume, clickSound, consumeAfterComplete, useDisabledTexture, spawnsParticles, jeiIconItem);
+        addJson(JsonUtils.dataID(name, "tfc", "knapping_types"), json);
     }
 
     @Info(value = "Defines a lamp fuel", params = {
@@ -278,7 +278,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         json.add("fluid", fluidIngredient.toJson());
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
-        addJson(DataUtils.dataIDFromObject(fluidIngredient, "tfc", "lamp_fuels"), json);
+        addJson(JsonUtils.dataIDFromObject(fluidIngredient, "tfc", "lamp_fuels"), json);
     }
 
     @Info(value = "Defines a lamp fuel", params = {
@@ -292,7 +292,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         json.add("fluid", fluidIngredient.toJson());
         json.add("valid_lamps", blockIngredient.toJson());
         json.addProperty("burn_rate", burnRate);
-        addJson(DataUtils.dataID(name, "tfc", "lamp_fuels"), json);
+        addJson(JsonUtils.dataID(name, "tfc", "lamp_fuels"), json);
     }
 
     @Info(value = "Defines a metal", params = {
@@ -305,8 +305,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "tier", value = "The tier of the metal")
     })
     public void metal(Fluid fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier) {
-        final JsonObject json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
-        addJson(DataUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
+        final JsonObject json = JsonUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
+        addJson(JsonUtils.dataIDFromObject(fluid, "tfc", "metals"), json);
         // The name has potential to collide if the user defines multiple metals off of one fluid, but TFC states
         // "   Creating multiple metals that reference the same fluid is
         //     liable to cause undefined behavior and may introduce bugs   "
@@ -324,8 +324,8 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "name", value = "The name of the metal")
     })
     public void metal(Fluid fluid, float meltTemperature, float heatCapacity, @Nullable Ingredient ingot, @Nullable Ingredient doubleIngot, @Nullable Ingredient sheet, int tier, ResourceLocation name) {
-        final JsonObject json = DataUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
-        addJson(DataUtils.dataID(name, "tfc", "metals"), json);
+        final JsonObject json = JsonUtils.makeMetal(fluid, meltTemperature, heatCapacity, ingot, doubleIngot, sheet, tier);
+        addJson(JsonUtils.dataID(name, "tfc", "metals"), json);
     }
 
     @Info(value = "Defines a support definition", params = {
@@ -340,7 +340,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         json.addProperty("support_up", up);
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
-        addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "supports"), json);
+        addJson(JsonUtils.dataIDFromObject(blockIngredient, "tfc", "supports"), json);
     }
 
     @Info(value = "Defines a support definition", params = {
@@ -356,7 +356,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         json.addProperty("support_up", up);
         json.addProperty("support_down", down);
         json.addProperty("support_horizontal", horizontal);
-        addJson(DataUtils.dataID(name, "tfc", "supports"), json);
+        addJson(JsonUtils.dataID(name, "tfc", "supports"), json);
     }
 
     @Info(value = "Adds a sluicing definition to the ingredient", params = {
@@ -367,7 +367,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("loot_table", lootTable);
-        addJson(DataUtils.dataIDFromObject(ingredient, "tfc", "sluicing"), json);
+        addJson(JsonUtils.dataIDFromObject(ingredient, "tfc", "sluicing"), json);
     }
 
     @Info(value = "Adds a sluicing definition to the ingredient", params = {
@@ -379,7 +379,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("loot_table", lootTable);
-        addJson(DataUtils.dataID(name, "tfc", "sluicing"), json);
+        addJson(JsonUtils.dataID(name, "tfc", "sluicing"), json);
     }
 
     @Info(value = "Adds a panning definition to the block ingredient", params = {
@@ -395,7 +395,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         final JsonArray array = new JsonArray();
         models.forEach(array::add);
         json.add("model_stages", array);
-        addJson(DataUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
+        addJson(JsonUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
     }
 
     @Info(value = "Adds a panning definition to the block ingredient", params = {
@@ -412,7 +412,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         final JsonArray array = new JsonArray();
         models.forEach(array::add);
         json.add("model_stages", array);
-        addJson(DataUtils.dataID(name, "tfc", "panning"), json);
+        addJson(JsonUtils.dataID(name, "tfc", "panning"), json);
     }
 
     @Info(value = "Specifies the fauna data of the given name", params = {
@@ -426,7 +426,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         climate.accept(climateObj);
         var faunaObj = new BuildFaunaData(climateObj);
         fauna.accept(faunaObj);
-        addJson(DataUtils.dataID(name, "tfc", "fauna"), faunaObj.toJson());
+        addJson(JsonUtils.dataID(name, "tfc", "fauna"), faunaObj.toJson());
     }
 
     @Info(value = "Specifies the climate range data of the given name", params = {
@@ -437,7 +437,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     public void climateRange(Consumer<BuildClimateRangeData> climateRange, ResourceLocation name) {
         var climateRageObj = new BuildClimateRangeData();
         climateRange.accept(climateRageObj);
-        addJson(DataUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
+        addJson(JsonUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
     }
 
     /*

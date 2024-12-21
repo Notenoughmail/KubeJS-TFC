@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.block.internal;
 
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.DataUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.SeedItemBuilder;
@@ -242,7 +242,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
                     p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
-                            .addCondition(DataUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages))))
+                            .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages))))
                             .addFunction(cropYieldUniformFunction());
                 });
             }

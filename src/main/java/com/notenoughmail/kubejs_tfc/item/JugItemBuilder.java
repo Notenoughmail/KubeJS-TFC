@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
-import com.notenoughmail.kubejs_tfc.util.ModelUtils;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -69,7 +69,7 @@ public class JugItemBuilder extends ItemBuilder {
 
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
-        ModelUtils.fluidContainer(this, generator);
+        JsonUtils.fluidContainerModel(this, generator);
     }
 
     @Override
