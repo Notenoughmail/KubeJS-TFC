@@ -439,21 +439,4 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
         climateRange.accept(climateRageObj);
         addJson(JsonUtils.dataID(name, "tfc", "climate_ranges"), climateRageObj.toJson());
     }
-
-    /*
-    // Why the hell not
-    public void netherFertilizer(Ingredient ingredient, String values) { // "d=0.2, f=0.5"
-        final JsonObject json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
-        DataUtils.handleNetherFertilizers(values, json);
-        addJson(DataUtils.dataIDFromObject(ingredient, "beneath", "nether_fertilizers"), json);
-    }
-
-    public void netherFertilizer(Ingredient ingredient, String values, ResourceLocation name) {
-        final JsonObject json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
-        DataUtils.handleNetherFertilizers(values, json);
-        addJson(DataUtils.dataID(name, "beneath", "nether_fertilizers"), json);
-    }
-    */
 }

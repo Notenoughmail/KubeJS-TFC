@@ -1,10 +1,10 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.mixin.extensions;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
 import com.ljuangbminecraft.tfcchannelcasting.common.TFCCCTags;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.ITFCCCMoldItemBuilderExtensions;
 import com.notenoughmail.kubejs_tfc.util.implementation.IfPresent;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -48,17 +48,16 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     @Inject(method = "generateAssetJsons", at = @At("TAIL"), remap = false)
     private void kubejs_tfc$generateMoldTableModel(AssetJsonGenerator generator, CallbackInfo ci) {
         if (kubejs_tfc$model != null) {
-            final JsonObject model = new JsonObject();
-            model.addProperty("loader", "tfcchannelcasting:mold");
-            final JsonObject textures = new JsonObject();
-            textures.addProperty("0", "tfcchannelcasting:block/mold_texture");
-            textures.addProperty("particle", "tfcchannelcasting:block/mold_texture");
-            model.add("textures", textures);
-            final JsonArray pattern = new JsonArray(14);
-            kubejs_tfc$model.forEach(pattern::add);
-            model.add("pattern", pattern);
-
-            generator.json(kubejs_tfc$moldTableModelId(), model);
+            generator.json(kubejs_tfc$moldTableModelId(), JsonUtils.buildJson(model -> {
+                model.addProperty("loader", "tfcchannelcasting:mold");
+                model.add("textures", JsonUtils.buildJson(textures -> {
+                    textures.addProperty("0", "tfcchannelcasting:block/mold_texture");
+                    textures.addProperty("particle", "tfcchannelcasting:block/mold_texture");
+                }));
+                final JsonArray pattern = new JsonArray(14);
+                kubejs_tfc$model.forEach(pattern::add);
+                model.add("pattern", pattern);
+            }));
         }
     }
 

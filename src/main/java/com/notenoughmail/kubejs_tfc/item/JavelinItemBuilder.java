@@ -43,6 +43,12 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         texture(newID("item/", "").toString());
     }
 
+    @Info(value = "Sets the model used when throwing")
+    public JavelinItemBuilder throwingModel(String model) {
+        throwingModel = model;
+        return this;
+    }
+
     @Info(value = "Sets the javelin's thrown damage")
     public JavelinItemBuilder thrownDamage(float damage) {
         thrownDamage = damage;

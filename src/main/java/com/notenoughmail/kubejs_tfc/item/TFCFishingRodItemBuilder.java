@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.item;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
@@ -54,6 +55,7 @@ public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
         return (TFCFishingRodItemBuilder) tag(TFCTags.Items.HOLDS_LARGE_FISHING_BAIT.location());
     }
 
+    @Info(value = "Sets the texture used when the rod is cast")
     public TFCFishingRodItemBuilder castTexture(String tex) {
         castTexture = tex;
         return this;
@@ -90,13 +92,11 @@ public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
             m.textures(textureJson);
         }).toJson();
 
-        final JsonObject predicate = new JsonObject();
-        final JsonObject castPredicate = new JsonObject();
-        castPredicate.addProperty("tfc:cast", 1);
-        predicate.add("predicate", castPredicate);
-        predicate.addProperty("model", customCastModel.isEmpty() ? newID("item/", "_cast").toString() : customCastModel);
         final JsonArray overrides = new JsonArray(1);
-        overrides.add(predicate);
+        overrides.add(JsonUtils.buildJson(predicate -> {
+            predicate.add("predicate", JsonUtils.buildJson(castPredicate -> castPredicate.addProperty("tfc:cast", 1)));
+            predicate.addProperty("model", customCastModel.isEmpty() ? newID("item/", "_cast").toString() : customCastModel);
+        }));
         primaryModel.add("overrides", overrides);
 
         generator.json(AssetJsonGenerator.asItemModelLocation(id), primaryModel);

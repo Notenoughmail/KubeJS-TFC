@@ -285,9 +285,7 @@ public class JsonUtils {
     public static JsonObject sharpToolsCondition() {
         return buildJson(json -> {
             json.addProperty("condition", "minecraft:match_tool");
-            final JsonObject predicate = new JsonObject();
-            predicate.addProperty("tag", "tfc:sharp_tools");
-            json.add("predicate", predicate);
+            json.add("predicate", JsonUtils.buildJson(predicate -> predicate.addProperty("tag", "tfc:sharp_tools")));
         });
     }
 
@@ -309,11 +307,11 @@ public class JsonUtils {
     public static JsonObject simpleSetCountFunction(int min, int max) {
         return buildJson(json -> {
             json.addProperty("function", "minecraft:set_count");
-            final JsonObject count = new JsonObject();
-            count.addProperty("min", min);
-            count.addProperty("max", max);
-            count.addProperty("type", "minecraft:uniform");
-            json.add("count", count);
+            json.add("count", buildJson(count -> {
+                count.addProperty("min", min);
+                count.addProperty("max", max);
+                count.addProperty("type", "minecraft:uniform");
+            }));
         });
     }
 

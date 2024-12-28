@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.*;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
+import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -65,6 +66,7 @@ public class EventHandlers {
         bus.addListener(EventHandlers::onCollapse);
         bus.addListener(EventHandlers::onDouseFire);
         bus.addListener(EventHandlers::serverAboutToStart);
+        bus.addListener(KubeJSTFCCommands::reg);
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
