@@ -30,6 +30,7 @@ public class JugItemBuilder extends ItemBuilder {
         capacity = () -> 100;
         acceptableFluids = TFCTags.Fluids.USABLE_IN_JUG;
         FluidContainerItemBuilder.colorList.add(this);
+        FluidContainerItemBuilder.dispenserList.add(this);
     }
 
     @Info(value = "Sets the display name to use when the jug is filled")
@@ -45,7 +46,7 @@ public class JugItemBuilder extends ItemBuilder {
     }
 
     @Info(value = "Sets the capacity, in mB, of the jug")
-    public JugItemBuilder capcity(int capacity) {
+    public JugItemBuilder capacity(int capacity) {
         this.capacity = () -> capacity;
         return this;
     }

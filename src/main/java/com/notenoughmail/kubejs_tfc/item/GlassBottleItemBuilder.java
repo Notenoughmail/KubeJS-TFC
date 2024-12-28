@@ -33,6 +33,7 @@ public class GlassBottleItemBuilder extends ItemBuilder {
         breakChance = () -> 0.01;
         acceptableFluids = TFCTags.Fluids.USABLE_IN_JUG;
         FluidContainerItemBuilder.colorList.add(this);
+        FluidContainerItemBuilder.dispenserList.add(this);
     }
 
     @Info(value = "Sets the display name to used when a fluid is in the bottle")
@@ -48,7 +49,7 @@ public class GlassBottleItemBuilder extends ItemBuilder {
     }
 
     @Info(value = "Sets the capacity, in mB, of the bottle")
-    public GlassBottleItemBuilder capcity(int capacity) {
+    public GlassBottleItemBuilder capacity(int capacity) {
         this.capacity = () -> capacity;
         return this;
     }

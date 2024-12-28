@@ -1,4 +1,4 @@
-### 1.2.3 (W.I.P.)
+### 1.2.3
 - Add `tfc:jug` and `tfc:glass_bottle` item types, similar to the `tfc:fluid_container` item type, but can be drunken from
 - De-hardcode most non-crop resource generation
 - Add `/kubejs_tfc list_ids` and `/kubejs_tfc describe` commands which can be used to print info about some of TFC's data types

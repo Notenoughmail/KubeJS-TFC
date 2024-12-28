@@ -278,7 +278,7 @@ public class DairyAnimalJS extends DairyAnimal implements IAnimatableJS {
     }
 
 
-    //Mob Interact here because it has special implimentations due to breeding in AgeableMob classes.
+    //Mob Interact here because it has special implementations due to breeding in AgeableMob classes.
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
