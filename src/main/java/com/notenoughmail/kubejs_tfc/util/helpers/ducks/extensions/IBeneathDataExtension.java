@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 import com.eerussianguy.beneath.Beneath;
 import com.eerussianguy.beneath.misc.LostPage;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.minecraft.resources.ResourceLocation;
@@ -25,8 +25,8 @@ public interface IBeneathDataExtension extends IDataConstructor {
     default void beneathNetherFertilizer(Ingredient ingredient, @Nullable Float death, @Nullable Float destruction, @Nullable Float decay, @Nullable Float sorrow, @Nullable Float flame, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        JsonUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
-        addJson(JsonUtils.dataID(name, Beneath.MOD_ID, "nether_fertilizers"), json);
+        ResourceUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
+        addJson(ResourceUtils.dataID(name, Beneath.MOD_ID, "nether_fertilizers"), json);
     }
 
     @Info(value = "Defines a new nether fertilizer", params = {
@@ -40,8 +40,8 @@ public interface IBeneathDataExtension extends IDataConstructor {
     default void beneathNetherFertilizer(Ingredient ingredient, @Nullable Float death, @Nullable Float destruction, @Nullable Float decay, @Nullable Float sorrow, @Nullable Float flame) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
-        JsonUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
-        addJson(JsonUtils.dataIDFromObject(ingredient, Beneath.MOD_ID, "nether_fertilizers"), json);
+        ResourceUtils.handleNetherFertilizers(json, death, destruction, decay, sorrow, flame);
+        addJson(ResourceUtils.dataIDFromObject(ingredient, Beneath.MOD_ID, "nether_fertilizers"), json);
     }
 
     @Info(value = "Defines a new lost page", params = {
@@ -54,8 +54,8 @@ public interface IBeneathDataExtension extends IDataConstructor {
     })
     default void beneathLostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey) {
         addJson(
-                JsonUtils.dataIDFromObject(cost, Beneath.MOD_ID, "lost_pages"),
-                JsonUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
+                ResourceUtils.dataIDFromObject(cost, Beneath.MOD_ID, "lost_pages"),
+                ResourceUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
         );
     }
 
@@ -70,8 +70,8 @@ public interface IBeneathDataExtension extends IDataConstructor {
     })
     default void beneathLostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey, ResourceLocation name) {
         addJson(
-                JsonUtils.dataID(name, Beneath.MOD_ID, "lost_pages"),
-                JsonUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
+                ResourceUtils.dataID(name, Beneath.MOD_ID, "lost_pages"),
+                ResourceUtils.lostPage(cost, reward, costs, rewards, punishments, langKey)
         );
     }
 }

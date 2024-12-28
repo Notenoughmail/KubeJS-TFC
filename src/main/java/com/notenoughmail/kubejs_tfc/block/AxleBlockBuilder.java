@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.*;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -118,14 +119,10 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, g -> {
-                g.parent("tfc:block/axle");
-                g.textures(textures);
-            });
-        } else {
-            hasModel(generator);
-        }
+        ResourceUtils.hasModelOrElse(generator, this, g -> {
+            g.parent("tfc:block/axle");
+            g.textures(textures);
+        });
     }
 
     @Override

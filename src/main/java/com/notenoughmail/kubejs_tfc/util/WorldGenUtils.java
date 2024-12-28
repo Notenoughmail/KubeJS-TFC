@@ -35,15 +35,16 @@ public class WorldGenUtils {
             var blockState = block.replace("]", "").split("\\[");
             var states = blockState[1].split(",");
 
-            var json = new JsonObject();
-            json.addProperty("Name", blockState[0]);
-            var properties = new JsonObject();
-            for (String state : states) {
-                var value = state.split("=");
-                properties.addProperty(value[0], value[1]);
-            }
-            json.add("Properties", properties);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("Name", blockState[0]);
+                var properties = new JsonObject();
+                for (String state : states) {
+                    var value = state.split("=");
+                    properties.addProperty(value[0], value[1]);
+                }
+                json.add("Properties", properties);
+
+            });
         }
 
         return new JsonPrimitive(block);
@@ -60,16 +61,16 @@ public class WorldGenUtils {
      * Converts the string representation of a weighted object into an entry of a json weighted list
      */
     public static JsonObject weightedJsonListEntry(String value, Function<String, JsonElement> applicator, String type) {
-        final JsonObject json = new JsonObject();
-        final String[] biValue = value.split(" ");
-        if (biValue.length == 2) {
-            json.add(type, applicator.apply(biValue[1]));
-            json.addProperty("weight", Float.parseFloat(biValue[0].replaceAll(notANumber, "")));
-        } else {
-            json.add(type, applicator.apply(biValue[0]));
-            json.addProperty("weight", 1F);
-        }
-        return json;
+        return ResourceUtils.buildJson(json -> {
+            final String[] biValue = value.split(" ");
+            if (biValue.length == 2) {
+                json.add(type, applicator.apply(biValue[1]));
+                json.addProperty("weight", Float.parseFloat(biValue[0].replaceAll(notANumber, "")));
+            } else {
+                json.add(type, applicator.apply(biValue[0]));
+                json.addProperty("weight", 1F);
+            }
+        });
     }
 
     /**
@@ -80,12 +81,12 @@ public class WorldGenUtils {
     public record BlockToBlockStatesMapEntry(String block, List<String> blockStates) {
 
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            json.addProperty("rock", block);
-            final JsonArray stateArray = new JsonArray(blockStates.size());
-            blockStates.forEach(s -> stateArray.add(blockStateToLenient(s)));
-            json.add("blocks", stateArray);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("rock", block);
+                final JsonArray stateArray = new JsonArray(blockStates.size());
+                blockStates.forEach(s -> stateArray.add(blockStateToLenient(s)));
+                json.add("blocks", stateArray);
+            });
         }
     }
 
@@ -98,14 +99,14 @@ public class WorldGenUtils {
     public record BlockToWeightedBlockStateMapEntry(List<String> blocks, List<String> blockStates) {
 
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            final JsonArray blockArray = new JsonArray(blocks.size());
-            blocks.forEach(blockArray::add);
-            json.add("replace", blockArray);
-            final JsonArray stateArray = new JsonArray(blockStates.size());
-            blockStates.forEach(s -> stateArray.add(weightedBlockState(s, "block")));
-            json.add("with", stateArray);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                final JsonArray blockArray = new JsonArray(blocks.size());
+                blocks.forEach(blockArray::add);
+                json.add("replace", blockArray);
+                final JsonArray stateArray = new JsonArray(blockStates.size());
+                blockStates.forEach(s -> stateArray.add(weightedBlockState(s, "block")));
+                json.add("with", stateArray);
+            });
         }
     }
 
@@ -116,10 +117,10 @@ public class WorldGenUtils {
     public record BlockToBlockStateMapEntry(String block, String state) {
 
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            json.addProperty("replace", block);
-            json.add("with", blockStateToLenient(state));
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("replace", block);
+                json.add("with", blockStateToLenient(state));
+            });
         }
     }
 
@@ -130,14 +131,14 @@ public class WorldGenUtils {
     public record FissureDecoration(List<BlockToWeightedBlockStateMapEntry> blocks, int rarity, int radius, int count) {
 
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            final JsonArray blocksArray = new JsonArray(blocks.size());
-            blocks.forEach(entry -> blocksArray.add(entry.toJson()));
-            json.add("blocks", blocksArray);
-            json.addProperty("rarity", rarity);
-            json.addProperty("radius", radius);
-            json.addProperty("count", count);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                final JsonArray blocksArray = new JsonArray(blocks.size());
+                blocks.forEach(entry -> blocksArray.add(entry.toJson()));
+                json.add("blocks", blocksArray);
+                json.addProperty("rarity", rarity);
+                json.addProperty("radius", radius);
+                json.addProperty("count", count);
+            });
         }
     }
 }

@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.block;
 
 import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
-import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
@@ -30,7 +29,8 @@ import java.util.function.Consumer;
 public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     public final transient ItemBuilder sliceItem;
-    private static final String[] ages = new String[]{"fresh", "aged", "vintage"};
+    private static final String[] ages = new String[] {"fresh", "aged", "vintage"};
+    private static final String[] insideTextures = new String[3];
 
     public CheeseWheelBlockBuilder(ResourceLocation i) {
         super(i);
@@ -39,6 +39,32 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
         RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
+        textureAll(newID("block/", "").toString());
+        insideTextures[0] = insideTextures[1] = insideTextures[2] = null;
+    }
+
+    @Override
+    public BlockBuilder textureAll(String tex) {
+        texture("surface", tex);
+        texture("particle", tex);
+        texture("down", tex);
+        insideTextures[0] = insideTextures[1] = insideTextures[2] = tex;
+        return this;
+    }
+
+    public CheeseWheelBlockBuilder freshInsideTexture(String tex) {
+        insideTextures[0] = tex;
+        return this;
+    }
+
+    public CheeseWheelBlockBuilder agedInsideTexture(String tex) {
+        insideTextures[1] = tex;
+        return this;
+    }
+
+    public CheeseWheelBlockBuilder vintageInsideTexture(String tex) {
+        insideTextures[2] = tex;
+        return this;
     }
 
     @Info(value = "Modifies the block's slice item")
@@ -73,19 +99,17 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (String age : ages) {
-            final String surface = newID("block/", "_surface_" + age).toString();
-            final JsonObject tex = new JsonObject();
-            tex.addProperty("surface", surface);
-            tex.addProperty("particle", surface);
-            tex.addProperty("down", surface);
-            tex.addProperty("inside", newID("block/", "_surface_" + age).toString());
-
+        for (int age = 0 ; age < 3 ; age++) {
+            int finalAge = age;
             for (int i = 1 ; i < 5 ; i++) {
                 final String parent ="firmalife:block/cheese_" + i; // makes the lambda not complain when up here
-                generator.blockModel(newID("", "_" + age +"_" + i), m -> {
+                generator.blockModel(newID("", "_" + ages[age] +"_" + i), m -> {
                     m.parent(parent);
-                    m.textures(tex);
+                    m.textures(textures);
+                    m.texture("inside", insideTextures[finalAge] == null ?
+                            newID("block/", "_surface_" + finalAge).toString() :
+                            insideTextures[finalAge]
+                    );
                 });
             }
         }

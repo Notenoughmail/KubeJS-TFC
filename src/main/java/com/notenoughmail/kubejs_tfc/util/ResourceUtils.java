@@ -8,6 +8,8 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
@@ -39,7 +41,7 @@ import java.util.function.Consumer;
  * {@link TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
  * and various block's data/asset gen
  */
-public class JsonUtils {
+public class ResourceUtils {
 
     public static ResourceLocation dataID(ResourceLocation base, String mod, String category) {
         return dataID(base.getNamespace(), base.getPath(), mod, category);
@@ -285,7 +287,7 @@ public class JsonUtils {
     public static JsonObject sharpToolsCondition() {
         return buildJson(json -> {
             json.addProperty("condition", "minecraft:match_tool");
-            json.add("predicate", JsonUtils.buildJson(predicate -> predicate.addProperty("tag", "tfc:sharp_tools")));
+            json.add("predicate", buildJson(predicate -> predicate.addProperty("tag", "tfc:sharp_tools")));
         });
     }
 
@@ -336,6 +338,18 @@ public class JsonUtils {
 
                 m.textures(builder.textureJson);
             });
+        }
+    }
+
+    public static void hasModel(AssetJsonGenerator generator, BlockBuilder builder) {
+        generator.blockModel(builder.id, m -> m.parent(builder.model));
+    }
+
+    public static void hasModelOrElse(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
+        if (builder.model.isEmpty()) {
+            generator.blockModel(builder.id, m);
+        } else {
+            hasModel(generator, builder);
         }
     }
 

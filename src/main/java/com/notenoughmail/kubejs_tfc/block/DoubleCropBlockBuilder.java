@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -83,13 +83,13 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(seeds.get()))
-                        .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
+                        .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
             });
             assert product != null;
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
-                        .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
+                        .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                             j.addProperty("age", Integer.toString(stages + doubleStages - 1));
                             j.addProperty("part", "bottom");
                         }))
@@ -98,8 +98,8 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
             if (requiresStick) {
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem(JsonUtils.STICK_STACK)
-                            .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
+                    p.addItem(ResourceUtils.STICK_STACK)
+                            .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                                 j.addProperty("part", "bottom");
                                 j.addProperty("stick", "true");
                             }));

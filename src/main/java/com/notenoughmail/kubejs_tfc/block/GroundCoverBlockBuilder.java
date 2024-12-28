@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.event.RegisterInteractionsEventJS;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -130,14 +131,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, m -> {
-                m.parent("kubejs_tfc:block/ground_cover/" + parent);
-                m.textures(textures);
-            });
-        } else {
-            hasModel(generator);
-        }
+        ResourceUtils.hasModelOrElse(generator, this, m -> {
+            m.parent("kubejs_tfc:block/ground_cover/" + parent);
+            m.textures(textures);
+        });
     }
 
     @Override

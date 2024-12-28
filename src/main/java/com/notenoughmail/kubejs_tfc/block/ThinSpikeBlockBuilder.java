@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -203,14 +204,10 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, m -> {
-                m.parent("tfc:block/thin_spike");
-                m.textures(textures);
-            });
-        } else {
-            generator.blockModel(id, m -> m.parent(model));
-        }
+        ResourceUtils.hasModelOrElse(generator, this, m -> {
+            m.parent("tfc:block/thin_spike");
+            m.textures(textures);
+        });
 
         if (!tipModel.isEmpty()) {
             generator.blockModel(newID("", "_tip"), m -> m.parent(tipModel));

@@ -39,7 +39,6 @@ import java.util.function.Supplier;
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.create;
 
-// TODO: 1.2.3 | Exhaustive review of resource generation hardcoding
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {

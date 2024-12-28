@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -73,7 +73,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
         }
         for (int i = 0 ; i < 4 ; i++) {
             final int j = i;
-            ms.part(JsonUtils.cardinalDirections[j] + "=true", p -> p.model(side).y(j * 90));
+            ms.part(ResourceUtils.cardinalDirections[j] + "=true", p -> p.model(side).y(j * 90));
         }
     }
 }

@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -88,13 +89,9 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, m -> {
-                m.parent("block/template_farmland");
-                m.textures(textures);
-            });
-        } else {
-            hasModel(generator);
-        }
+        ResourceUtils.hasModelOrElse(generator, this, m -> {
+            m.parent("block/template_farmland");
+            m.textures(textures);
+        });
     }
 }

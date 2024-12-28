@@ -4,7 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -135,11 +135,11 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     }
 
     private JsonObject transforms(String baseModel, boolean throwing) {
-        return JsonUtils.buildJson(model -> {
+        return ResourceUtils.buildJson(model -> {
             model.addProperty("loader", "forge:separate_transforms");
             model.addProperty("gui_light", "front");
 
-            model.add("base", JsonUtils.buildJson(base ->
+            model.add("base", ResourceUtils.buildJson(base ->
                     base.addProperty(
                             "parent",
                             baseModel.isEmpty() ?
@@ -148,21 +148,21 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
                     )
             ));
 
-            model.add("perspectives", JsonUtils.buildJson(spectives ->
+            model.add("perspectives", ResourceUtils.buildJson(spectives ->
                     perspectives.forEach((p, m) ->
                             spectives.add(
                                     p.getSerializedName(),
-                                    JsonUtils.buildJson(j -> j.addProperty("parent", m))
+                                    ResourceUtils.buildJson(j -> j.addProperty("parent", m))
                             )
                     )
             ));
 
             if (!throwing) {
                 final JsonArray overrides = new JsonArray(1);
-                overrides.add(JsonUtils.buildJson(override -> {
+                overrides.add(ResourceUtils.buildJson(override -> {
                     override.add(
                             "predicate",
-                            JsonUtils.buildJson(predicate ->
+                            ResourceUtils.buildJson(predicate ->
                                     predicate.addProperty("tfc:throwing", 1)
                             )
                     );

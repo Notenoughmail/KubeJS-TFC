@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.item;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
@@ -93,8 +93,8 @@ public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
         }).toJson();
 
         final JsonArray overrides = new JsonArray(1);
-        overrides.add(JsonUtils.buildJson(predicate -> {
-            predicate.add("predicate", JsonUtils.buildJson(castPredicate -> castPredicate.addProperty("tfc:cast", 1)));
+        overrides.add(ResourceUtils.buildJson(predicate -> {
+            predicate.add("predicate", ResourceUtils.buildJson(castPredicate -> castPredicate.addProperty("tfc:cast", 1)));
             predicate.addProperty("model", customCastModel.isEmpty() ? newID("item/", "_cast").toString() : customCastModel);
         }));
         primaryModel.add("overrides", overrides);

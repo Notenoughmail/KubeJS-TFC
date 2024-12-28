@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
@@ -69,8 +69,8 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
             if (alive.requiresStick) {
                 lootBuilder.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem(JsonUtils.STICK_STACK)
-                            .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
+                    p.addItem(ResourceUtils.STICK_STACK)
+                            .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                                 j.addProperty("part", "bottom");
                                 j.addProperty("stick", "true");
                             }));
@@ -92,20 +92,20 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     private JsonObject matureEntry(int min, int max, boolean tall) {
-        return JsonUtils.createEntry(alive.seeds.id.toString())
-                .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
+        return ResourceUtils.createEntry(alive.seeds.id.toString())
+                .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "true");
                     if (tall) {
                         j.addProperty("part", "bottom");
                     }
                 }))
-                .addFunction(JsonUtils.simpleSetCountFunction(min, max))
+                .addFunction(ResourceUtils.simpleSetCountFunction(min, max))
                 .json;
     }
 
     private JsonObject notMatureEntry(boolean tall) {
-        return JsonUtils.createEntry(alive.seeds.id.toString())
-                .addCondition(JsonUtils.blockStatePropertyCondition(id.toString(), j -> {
+        return ResourceUtils.createEntry(alive.seeds.id.toString())
+                .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "false");
                     if (tall) {
                         j.addProperty("part", "bottom");

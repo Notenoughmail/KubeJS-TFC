@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -59,14 +60,10 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, m -> {
-                m.parent("tfc:block/anvil");
-                m.textures(textures);
-            });
-        } else {
-            hasModel(generator);
-        }
+        ResourceUtils.hasModelOrElse(generator, this, m -> {
+            m.parent("tfc:block/anvil");
+            m.textures(textures);
+        });
     }
 
     @Override

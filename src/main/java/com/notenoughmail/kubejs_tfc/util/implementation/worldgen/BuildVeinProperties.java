@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -92,31 +93,31 @@ public abstract class BuildVeinProperties {
     }
 
     protected JsonObject baseConfig() {
-        final JsonObject config = new JsonObject();
-        final JsonArray blocksArray = new JsonArray(blocks.size());
-        blocks.forEach(entry -> blocksArray.add(entry.toJson()));
-        config.add("blocks", blocksArray);
-        if (indicator != null) {
-            config.add("indicator", indicator);
-        }
-        config.addProperty("rarity", rarity);
-        config.addProperty("density", density);
-        config.addProperty("min_y", minY);
-        config.addProperty("max_y", maxY);
-        if (project != null) {
-            config.addProperty("project", project);
-        }
-        if (projectOffset != null) {
-            config.addProperty("project_offset", projectOffset);
-        }
-        config.addProperty("random_name", random_name);
-        if (biomes != null) {
-            config.addProperty("biomes", biomes);
-        }
-        if (nearLava != null) {
-            config.addProperty("near_lava", nearLava);
-        }
-        return config;
+        return ResourceUtils.buildJson(config -> {
+            final JsonArray blocksArray = new JsonArray(blocks.size());
+            blocks.forEach(entry -> blocksArray.add(entry.toJson()));
+            config.add("blocks", blocksArray);
+            if (indicator != null) {
+                config.add("indicator", indicator);
+            }
+            config.addProperty("rarity", rarity);
+            config.addProperty("density", density);
+            config.addProperty("min_y", minY);
+            config.addProperty("max_y", maxY);
+            if (project != null) {
+                config.addProperty("project", project);
+            }
+            if (projectOffset != null) {
+                config.addProperty("project_offset", projectOffset);
+            }
+            config.addProperty("random_name", random_name);
+            if (biomes != null) {
+                config.addProperty("biomes", biomes);
+            }
+            if (nearLava != null) {
+                config.addProperty("near_lava", nearLava);
+            }
+        });
     }
 
     public abstract JsonObject toJson();
@@ -132,12 +133,12 @@ public abstract class BuildVeinProperties {
 
         @Override
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            json.addProperty("type", "tfc:cluster_vein");
-            final JsonObject config = baseConfig();
-            config.addProperty("size", size);
-            json.add("config", config);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("type", "tfc:cluster_vein");
+                final JsonObject config = baseConfig();
+                config.addProperty("size", size);
+                json.add("config", config);
+            });
         }
     }
 
@@ -164,18 +165,18 @@ public abstract class BuildVeinProperties {
 
         @Override
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            json.addProperty("type", "tfc:pipe_vein");
-            final JsonObject config = baseConfig();
-            config.addProperty("height", height);
-            config.addProperty("radius", radius);
-            config.addProperty("min_skew", minSkew);
-            config.addProperty("max_skew", maxSkew);
-            config.addProperty("min_slant", minSlant);
-            config.addProperty("max_slant", maxSlant);
-            config.addProperty("sign", sign);
-            json.add("config", config);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("type", "tfc:pipe_vein");
+                final JsonObject config = baseConfig();
+                config.addProperty("height", height);
+                config.addProperty("radius", radius);
+                config.addProperty("min_skew", minSkew);
+                config.addProperty("max_skew", maxSkew);
+                config.addProperty("min_slant", minSlant);
+                config.addProperty("max_slant", maxSlant);
+                config.addProperty("sign", sign);
+                json.add("config", config);
+            });
         }
     }
 
@@ -192,13 +193,13 @@ public abstract class BuildVeinProperties {
 
         @Override
         public JsonObject toJson() {
-            final JsonObject json = new JsonObject();
-            json.addProperty("type", "tfc:disc_vein");
-            final JsonObject config = baseConfig();
-            config.addProperty("size", size);
-            config.addProperty("height", height);
-            json.add("config", config);
-            return json;
+            return ResourceUtils.buildJson(json -> {
+                json.addProperty("type", "tfc:disc_vein");
+                final JsonObject config = baseConfig();
+                config.addProperty("size", size);
+                config.addProperty("height", height);
+                json.add("config", config);
+            });
         }
     }
 }

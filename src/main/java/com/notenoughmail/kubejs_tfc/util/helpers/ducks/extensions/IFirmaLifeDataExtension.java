@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
 import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
@@ -24,7 +24,7 @@ public interface IFirmaLifeDataExtension extends IDataConstructor {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
-        addJson(JsonUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "greenhouse"), json);
+        addJson(ResourceUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "greenhouse"), json);
     }
 
     @Info(value = "Defines a new greenhouse type", params = {
@@ -36,7 +36,7 @@ public interface IFirmaLifeDataExtension extends IDataConstructor {
         final JsonObject json = new JsonObject();
         json.add("ingredient", ingredient.toJson());
         json.addProperty("tier", tier);
-        addJson(JsonUtils.dataID(name, FirmaLife.MOD_ID, "greenhouse"), json);
+        addJson(ResourceUtils.dataID(name, FirmaLife.MOD_ID, "greenhouse"), json);
     }
 
     @Info(value = "Defines a new plantable definition", params = {
@@ -77,8 +77,8 @@ public interface IFirmaLifeDataExtension extends IDataConstructor {
             @Nullable String special
     ) {
         addJson(
-                JsonUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "plantable"),
-                JsonUtils.plantable(
+                ResourceUtils.dataIDFromObject(ingredient, FirmaLife.MOD_ID, "plantable"),
+                ResourceUtils.plantable(
                         ingredient,
                         planterType,
                         tier,
@@ -133,8 +133,8 @@ public interface IFirmaLifeDataExtension extends IDataConstructor {
             ResourceLocation name
     ) {
         addJson(
-                JsonUtils.dataID(name, FirmaLife.MOD_ID, "plantable"),
-                JsonUtils.plantable(
+                ResourceUtils.dataID(name, FirmaLife.MOD_ID, "plantable"),
+                ResourceUtils.plantable(
                         ingredient,
                         planterType,
                         tier,

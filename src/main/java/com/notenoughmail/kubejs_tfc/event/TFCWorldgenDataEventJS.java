@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IDataConstructor;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.BuildVeinProperties;
@@ -57,16 +57,15 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = {String.class, PlacedFeatureProperties.class})
     public void geode(String name, String outer, String middle, List<String> innerValues, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.add("outer", blockStateToLenient(outer));
-        config.add("middle", blockStateToLenient(middle));
-        final JsonArray innerArray = new JsonArray(innerValues.size());
-        for (String inner : innerValues) {
-            innerArray.add(weightedBlockState(inner, "data"));
-        }
-        config.add("inner", innerArray);
-
-        finishFeature("tfc:geode", name, config, placement);
+        finishFeature("tfc:geode", name, ResourceUtils.buildJson(config -> {
+            config.add("outer", blockStateToLenient(outer));
+            config.add("middle", blockStateToLenient(middle));
+            final JsonArray innerArray = new JsonArray(innerValues.size());
+            for (String inner : innerValues) {
+                innerArray.add(weightedBlockState(inner, "data"));
+            }
+            config.add("inner", innerArray);
+        }), placement);
     }
 
     @Info(value = "Creates a boulder configured feature and the matching placed feature", params = {
@@ -90,12 +89,11 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     }
 
     private void boulder(String type, String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
-        final JsonArray statesArray = new JsonArray(states.size());
-        states.forEach(entry -> statesArray.add(entry.toJson()));
-        final JsonObject config = new JsonObject();
-        config.add("states", statesArray);
-
-        finishFeature(type, name, config, placement);
+        finishFeature(type, name, ResourceUtils.buildJson(config -> {
+            final JsonArray statesArray = new JsonArray(states.size());
+            states.forEach(entry -> statesArray.add(entry.toJson()));
+            config.add("states", statesArray);
+        }), placement);
     }
 
     @Info(value = "Creates a thin spike configured feature and the matching placed feature", params = {
@@ -109,14 +107,13 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void thinSpike(String name, String state, int radius, int tries, int minHeight, int maxHeight, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.add("state", blockStateToLenient(state));
-        config.addProperty("radius", radius);
-        config.addProperty("tries", tries);
-        config.addProperty("min_height", minHeight);
-        config.addProperty("max_height", maxHeight);
-
-        finishFeature("tfc:thin_spike", name, config, placement);
+        finishFeature("tfc:thin_spike", name, ResourceUtils.buildJson(config -> {
+            config.add("state", blockStateToLenient(state));
+            config.addProperty("radius", radius);
+            config.addProperty("tries", tries);
+            config.addProperty("min_height", minHeight);
+            config.addProperty("max_height", maxHeight);
+        }), placement);
     }
 
     @Info(value = "Creates a 'tfc:cluster_vein' configured feature and the matching placed feature", params = {
@@ -191,11 +188,10 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void ifThen(String name, String if_, String then, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.addProperty("if", if_);
-        config.addProperty("then", then);
-
-        finishFeature("tfc:if_then", name, config, placement);
+        finishFeature("tfc:if_then", name, ResourceUtils.buildJson(config -> {
+            config.addProperty("if", if_);
+            config.addProperty("then", then);
+        }), placement);
     }
 
     @Info(value = "Creates a 'tfc:soil_disc' configured feature and the matching placed feature", params = {
@@ -209,18 +205,17 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = {WorldGenUtils.BlockToBlockStateMapEntry.class, PlacedFeatureProperties.class})
     public void soilDisc(String name, List<WorldGenUtils.BlockToBlockStateMapEntry> replacementMap, int minRadius, int maxRadius, int height, @Nullable Float integrity, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.addProperty("min_radius", minRadius);
-        config.addProperty("max_radius", maxRadius);
-        config.addProperty("height", height);
-        if (integrity != null) {
-            config.addProperty("integrity", integrity);
-        }
-        final JsonArray states = new JsonArray(replacementMap.size());
-        replacementMap.forEach(entry -> states.add(entry.toJson()));
-        config.add("states", states);
-
-        finishFeature("tfc:soil_disc", name, config, placement);
+        finishFeature("tfc:soil_disc", name, ResourceUtils.buildJson(config -> {
+            config.addProperty("min_radius", minRadius);
+            config.addProperty("max_radius", maxRadius);
+            config.addProperty("height", height);
+            if (integrity != null) {
+                config.addProperty("integrity", integrity);
+            }
+            final JsonArray states = new JsonArray(replacementMap.size());
+            replacementMap.forEach(entry -> states.add(entry.toJson()));
+            config.add("states", states);
+        }), placement);
     }
 
     @Info(value = "Creates a 'tfc:hot_spring' configured feature and the matching placed feature", params = {
@@ -235,23 +230,22 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, PlacedFeatureProperties.class})
     public void hotSpring(String name, @Nullable String wallState, String fluidState, int radius, boolean allowUnderwater, @Nullable List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacesOnFluidContact, @Nullable WorldGenUtils.FissureDecoration decoration, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        if (wallState != null) {
-            config.add("wall_state", WorldGenUtils.blockStateToLenient(wallState));
-        }
-        config.add("fluid_state", WorldGenUtils.blockStateToLenient(fluidState));
-        config.addProperty("radius", radius);
-        config.addProperty("allow_underwater", allowUnderwater);
-        if (replacesOnFluidContact != null) {
-            final JsonArray fluidReplacementArray = new JsonArray(replacesOnFluidContact.size());
-            replacesOnFluidContact.forEach(entry -> fluidReplacementArray.add(entry.toJson()));
-            config.add("replaces_on_fluid_contact", fluidReplacementArray);
-        }
-        if (decoration != null) {
-            config.add("decoration", decoration.toJson());
-        }
-
-        finishFeature("tfc:hot_spring", name, config, placement);
+        finishFeature("tfc:hot_spring", name, ResourceUtils.buildJson(config -> {
+            if (wallState != null) {
+                config.add("wall_state", WorldGenUtils.blockStateToLenient(wallState));
+            }
+            config.add("fluid_state", WorldGenUtils.blockStateToLenient(fluidState));
+            config.addProperty("radius", radius);
+            config.addProperty("allow_underwater", allowUnderwater);
+            if (replacesOnFluidContact != null) {
+                final JsonArray fluidReplacementArray = new JsonArray(replacesOnFluidContact.size());
+                replacesOnFluidContact.forEach(entry -> fluidReplacementArray.add(entry.toJson()));
+                config.add("replaces_on_fluid_contact", fluidReplacementArray);
+            }
+            if (decoration != null) {
+                config.add("decoration", decoration.toJson());
+            }
+        }), placement);
     }
 
     @Info(value = "Creates a 'minecraft:simple_block' configured feature and the matching placed feature, uses a SimpleStateProvider", params = {
@@ -261,13 +255,12 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void simpleBlockState(String name, String blockState, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        final JsonObject toPlace = new JsonObject();
-        toPlace.addProperty("type", "minecraft:simple_state_provider");
-        toPlace.add("state", WorldGenUtils.blockStateToLenient(blockState));
-        config.add("to_place", toPlace);
-
-        finishFeature("minecraft:simple_block", name, config, placement);
+        finishFeature("minecraft:simple_block", name, ResourceUtils.buildJson(config -> {
+            config.add("to_place", ResourceUtils.buildJson(toPlace -> {
+                toPlace.addProperty("type", "minecraft:simple_state_provider");
+                toPlace.add("state", WorldGenUtils.blockStateToLenient(blockState));
+            }));
+        }), placement);
     }
 
     @Info(value = "Creates a 'minecraft:random_patch' configured feature and the matching placed feature", params = {
@@ -280,19 +273,18 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void randomPatch(String name, @Nullable Integer tries, @Nullable Integer xzSpread, @Nullable Integer ySpread, String feature, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        if (tries != null) {
-            config.addProperty("tries", tries);
-        }
-        if (xzSpread != null) {
-            config.addProperty("xz_spread", xzSpread);
-        }
-        if (ySpread != null) {
-            config.addProperty("y_spread", ySpread);
-        }
-        config.addProperty("feature", feature);
-
-        finishFeature("minecraft:random_patch", name, config, placement);
+        finishFeature("minecraft:random_patch", name, ResourceUtils.buildJson(config -> {
+            if (tries != null) {
+                config.addProperty("tries", tries);
+            }
+            if (xzSpread != null) {
+                config.addProperty("xz_spread", xzSpread);
+            }
+            if (ySpread != null) {
+                config.addProperty("y_spread", ySpread);
+            }
+            config.addProperty("feature", feature);
+        }), placement);
     }
 
     @Info(value = "Creates a 'tfc:tall_wild_crop' configured feature and the matching placed feature", params = {
@@ -302,10 +294,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void tallWildCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.addProperty("block", block);
-
-        finishFeature("tfc:tall_wild_crop", name, config, placement);
+        finishFeature("tfc:tall_wild_crop", name, ResourceUtils.buildJson(config -> config.addProperty("block", block)), placement);
     }
 
     @Info(value = "Creates a 'tfc:spreading_crop' configured feature and the matching placed feature", params = {
@@ -315,10 +304,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     })
     @Generics(value = PlacedFeatureProperties.class)
     public void spreadingCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.addProperty("block", block);
-
-        finishFeature("tfc:spreading_crop", name, config, placement);
+        finishFeature("tfc:spreading_crop", name, ResourceUtils.buildJson(config -> config.addProperty("block", block)), placement);
     }
 
     @Info(value = "Creates a 'tfc:spreading_bush' configured feature and the matching placed feature", params = {
@@ -327,10 +313,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "placement", value = "The placement properties")
     })
     public void spreadingBush(String name, String block, Consumer<PlacedFeatureProperties> placement) {
-        final JsonObject config = new JsonObject();
-        config.addProperty("block", block);
-
-        finishFeature("tfc:spreading_bush", name, config, placement);
+        finishFeature("tfc:spreading_bush", name, ResourceUtils.buildJson(config -> config.addProperty("block", block)), placement);
     }
 
     @Info(value = "Creates a configured feature of the given type with the given config and the matching placed feature", params = {
@@ -396,9 +379,9 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     }
 
     private void finishFeature(String name, JsonObject configuredFeature, Consumer<PlacedFeatureProperties> placement) {
-        addJson(JsonUtils.configuredFeatureName(name), configuredFeature);
+        addJson(ResourceUtils.configuredFeatureName(name), configuredFeature);
 
-        addJson(JsonUtils.placedFeatureName(name), Util.make(new PlacedFeatureProperties(name), placement).toJson());
+        addJson(ResourceUtils.placedFeatureName(name), Util.make(new PlacedFeatureProperties(name), placement).toJson());
     }
 
     private void finishFeature(String type, String name, JsonObject config, Consumer<PlacedFeatureProperties> placement) {

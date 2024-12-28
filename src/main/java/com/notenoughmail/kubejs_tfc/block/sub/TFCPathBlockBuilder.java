@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -80,14 +81,10 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(id, m -> {
-                m.parent("tfc:block/grass_path");
-                m.textures(textures);
-            });
-        } else {
-            generator.blockModel(id, m -> m.parent(model));
-        }
+        ResourceUtils.hasModelOrElse(generator, this, m -> {
+           m.parent("tfc:block/grass_path");
+           m.textures(textures);
+        });
     }
 
     @Override

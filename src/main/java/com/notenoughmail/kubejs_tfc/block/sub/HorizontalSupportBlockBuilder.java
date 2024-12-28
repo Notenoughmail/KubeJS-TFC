@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.SupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
@@ -67,7 +68,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
                 m.textures(textures);
             });
         } else {
-            generator.blockModel(id, m -> m.parent(model));
+            ResourceUtils.hasModel(generator, this);
         }
     }
 }

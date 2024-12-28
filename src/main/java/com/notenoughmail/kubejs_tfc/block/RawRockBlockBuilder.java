@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -95,9 +96,9 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (!super.model.isEmpty()) {
-               generator.blockModel(id, m -> m.parent(model));
-               generator.blockModel(newID("", "_mirrored"), m -> m.parent(model));
+        if (!model.isEmpty()) {
+            ResourceUtils.hasModel(generator, this);
+            generator.blockModel(newID("", "_mirrored"), m -> m.parent(model));
         } else {
             generator.blockModel(id, m -> {
                 m.parent("block/cube_all");

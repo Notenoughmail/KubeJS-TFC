@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -158,7 +158,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         function.addProperty("count", count);
 
         final JsonArray conditions = new JsonArray();
-        conditions.add(JsonUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", Integer.toString(count))));
+        conditions.add(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", Integer.toString(count))));
         function.add("conditions", conditions);
         return function;
     }

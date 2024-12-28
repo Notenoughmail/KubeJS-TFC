@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.ljuangbminecraft.tfcchannelcasting.TFCChannelCasting;
 import com.ljuangbminecraft.tfcchannelcasting.common.TFCCCTags;
 import com.notenoughmail.kubejs_tfc.item.MoldItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.ITFCCCMoldItemBuilderExtensions;
 import com.notenoughmail.kubejs_tfc.util.implementation.IfPresent;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -48,9 +48,9 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     @Inject(method = "generateAssetJsons", at = @At("TAIL"), remap = false)
     private void kubejs_tfc$generateMoldTableModel(AssetJsonGenerator generator, CallbackInfo ci) {
         if (kubejs_tfc$model != null) {
-            generator.json(kubejs_tfc$moldTableModelId(), JsonUtils.buildJson(model -> {
+            generator.json(kubejs_tfc$moldTableModelId(), ResourceUtils.buildJson(model -> {
                 model.addProperty("loader", "tfcchannelcasting:mold");
-                model.add("textures", JsonUtils.buildJson(textures -> {
+                model.add("textures", ResourceUtils.buildJson(textures -> {
                     textures.addProperty("0", "tfcchannelcasting:block/mold_texture");
                     textures.addProperty("particle", "tfcchannelcasting:block/mold_texture");
                 }));

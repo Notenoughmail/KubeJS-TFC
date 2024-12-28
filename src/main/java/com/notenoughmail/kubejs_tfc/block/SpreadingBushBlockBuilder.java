@@ -3,8 +3,8 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.sub.SpreadingCaneBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.JsonUtils;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -77,7 +77,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(JsonUtils.STICK_STACK);
+                p.addItem(ResourceUtils.STICK_STACK);
             });
             if (itemBuilder != null) {
                 lootBuilder.addPool(p -> {
@@ -99,7 +99,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         {
             final JsonObject entry = lootEntryBase();
             final JsonArray conditions = new JsonArray(2);
-            conditions.add(JsonUtils.sharpToolsCondition());
+            conditions.add(ResourceUtils.sharpToolsCondition());
 
             final JsonObject stateCondition = new JsonObject();
             stateCondition.addProperty("condition", "minecraft:block_state_property");
@@ -116,7 +116,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         {
             final JsonObject entry = lootEntryBase();
             final JsonArray conditions = new JsonArray(2);
-            conditions.add(JsonUtils.sharpToolsCondition());
+            conditions.add(ResourceUtils.sharpToolsCondition());
 
             final JsonObject chanceCondition = new JsonObject();
             chanceCondition.addProperty("condition", "minecraft:random_chance");
