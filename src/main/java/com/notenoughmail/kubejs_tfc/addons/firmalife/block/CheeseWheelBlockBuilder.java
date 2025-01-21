@@ -30,7 +30,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
 
     public final transient ItemBuilder sliceItem;
     private static final String[] ages = new String[] {"fresh", "aged", "vintage"};
-    private static final String[] insideTextures = new String[3];
+    private final String[] insideTextures = new String[3];
 
     public CheeseWheelBlockBuilder(ResourceLocation i) {
         super(i);

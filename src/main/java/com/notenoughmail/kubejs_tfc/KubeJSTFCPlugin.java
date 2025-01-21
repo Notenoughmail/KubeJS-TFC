@@ -32,6 +32,7 @@ import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
+import dev.latvian.mods.kubejs.util.LogType;
 import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
@@ -204,6 +205,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
             KubeJSTFC.infoLog("KubeJS TFC: Added data event listeners");
         }
+
+        KubeJSTFC.printConfig(s -> event.getType().console.writeToFile(LogType.INIT, s));
     }
 
     @Override

@@ -55,9 +55,13 @@ public class KubeJSTFC {
         debug = props.debugInfo;
         insertIntoConsole = props.get("tfc/insertSelfTestsIntoConsole", true);
 
-        KubeJSTFC.info("KubeJS TFC configuration:");
-        KubeJSTFC.info("\tDebug mode enabled: {}", debug);
-        KubeJSTFC.info("\tSelf tests console insertion enabled: {}", insertIntoConsole);
+        printConfig(KubeJSTFC::info);
+    }
+
+    public static void printConfig(Consumer<String> info) {
+        info.accept("KubeJS TFC configuration:");
+        info.accept("- Debug mode enabled: %s".formatted(debug));
+        info.accept("- Self tests console insertion enabled: %s".formatted(insertIntoConsole));
     }
 
     public static void info(String message) {

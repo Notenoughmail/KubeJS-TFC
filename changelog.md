@@ -1,3 +1,7 @@
+### 1.2.4 (W.I.P.)
+- Fix FirmaLife cheese wheel block builders sharing inside textures
+- Fix potential crashes & inconsistencies related to custom entity type's hand & armor items (Thanks Liopyu!)
+
 ### 1.2.3
 - Add `tfc:jug` and `tfc:glass_bottle` item types, similar to the `tfc:fluid_container` item type, but can be drunken from
 - De-hardcode most non-crop resource generation
