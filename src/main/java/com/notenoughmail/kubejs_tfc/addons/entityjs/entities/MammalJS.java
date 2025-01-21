@@ -97,7 +97,7 @@ public class MammalJS extends Mammal implements IAnimatableJS {
             if (obj != null) return (MoveControl) obj;
             EntityJSHelperClass.logErrorMessageOnce("[EntityJS]: Invalid return value for setMoveControl from entity: " + getTypeId() + ". Value: " + obj + ". Must be a MoveControl object. Defaulting to super method.");
         }
-        return new MoveControl(this);
+        return this.moveControl;
     }
 
     private LookControl createLookControl() {
@@ -106,7 +106,7 @@ public class MammalJS extends Mammal implements IAnimatableJS {
             if (obj != null) return (LookControl) obj;
             EntityJSHelperClass.logErrorMessageOnce("[EntityJS]: Invalid return value for setLookControl from entity: " + getTypeId() + ". Value: " + obj + ". Must be a LookControl object. Defaulting to super method.");
         }
-        return new LookControl(this);
+        return this.lookControl;
     }
 
     private JumpControl createJumpControl() {
@@ -115,7 +115,7 @@ public class MammalJS extends Mammal implements IAnimatableJS {
             if (obj != null) return (JumpControl) obj;
             EntityJSHelperClass.logErrorMessageOnce("[EntityJS]: Invalid return value for setJumpControl from entity: " + getTypeId() + ". Value: " + obj + ". Must be a JumpControl object. Defaulting to super method.");
         }
-        return new JumpControl(this);
+        return this.jumpControl;
     }
     @Override
     public TagKey<Item> getFoodTag() {
