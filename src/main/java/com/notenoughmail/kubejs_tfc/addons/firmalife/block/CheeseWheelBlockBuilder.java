@@ -39,8 +39,6 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
         RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
-        textureAll(newID("block/", "").toString());
-        insideTextures[0] = insideTextures[1] = insideTextures[2] = null;
     }
 
     @Override
@@ -48,7 +46,6 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         texture("surface", tex);
         texture("particle", tex);
         texture("down", tex);
-        insideTextures[0] = insideTextures[1] = insideTextures[2] = tex;
         return this;
     }
 

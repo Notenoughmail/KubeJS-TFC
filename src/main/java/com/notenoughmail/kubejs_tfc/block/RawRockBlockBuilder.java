@@ -17,18 +17,23 @@ import javax.annotation.Nullable;
 @SuppressWarnings("unused")
 public class RawRockBlockBuilder extends ShapedBlockBuilder {
 
-    public transient boolean naturallySupported;
+    public transient boolean naturallySupported, uniqueSideTextures;
     @Nullable
     public transient Component rockTypeTooltip;
-    private final String model;
-    private final String mirrorModel;
 
     public RawRockBlockBuilder(ResourceLocation i) {
         super(i);
         naturallySupported = false;
+        uniqueSideTextures = false;
         rockTypeTooltip = null;
-        model = newID("block/", "").toString();
-        mirrorModel = newID("block/", "_mirrored").toString();
+        notSolid = false; // Super class sets this to true
+        itemBuilder.parentModel = id.getNamespace() + ":block/" + id.getPath();
+    }
+
+    @Info(value = "Makes the default model generator use the 'side' and 'end' textures instead of just the 'end'")
+    public RawRockBlockBuilder uniqueSideTextures() {
+        uniqueSideTextures = true;
+        return this;
     }
 
     @Info(value = "Determines if the block is considered to be naturally supported for the purposes of spawning particles indicating unsupported regions")
@@ -89,9 +94,12 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
+    public RawRockBlockBuilder textureAll(String tex) {
         super.textureAll(tex);
-        return texture("all", tex);
+        texture("all", tex);
+        texture("side", tex);
+        texture("end", tex);
+        return this;
     }
 
     @Override
@@ -101,11 +109,11 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
             generator.blockModel(newID("", "_mirrored"), m -> m.parent(model));
         } else {
             generator.blockModel(id, m -> {
-                m.parent("block/cube_all");
+                m.parent(uniqueSideTextures ? "block/cube_column" : "block/cube_all");
                 m.textures(textures);
             });
             generator.blockModel(newID("", "_mirrored"), m -> {
-                m.parent("block/cube_all");
+                m.parent(uniqueSideTextures ? "block/cube_column" : "block/cube_all");
                 m.textures(textures);
             });
         }
@@ -113,21 +121,23 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+        final String modelId = id.getNamespace() + ":block/" + id.getPath();
+        final String mirrorId = modelId + "_mirrored";
         bs.variant("axis=x", v -> {
-            v.model(model).x(90).y(90);
-            v.model(mirrorModel).x(90).y(90);
+            v.model(modelId).x(90).y(90);
+            v.model(mirrorId).x(90).y(90);
         });
         bs.variant("axis=y", v -> {
-            v.model(model);
-            v.model(mirrorModel);
-            v.model(model).y(180);
-            v.model(mirrorModel).y(180);
+            v.model(modelId);
+            v.model(mirrorId);
+            v.model(modelId).y(180);
+            v.model(mirrorId).y(180);
         });
         bs.variant("axis=z", v -> {
-            v.model(model).x(90);
-            v.model(mirrorModel).x(90);
-            v.model(model).x(90).y(180);
-            v.model(mirrorModel).x(90).y(180);
+            v.model(modelId).x(90);
+            v.model(mirrorId).x(90);
+            v.model(modelId).x(90).y(180);
+            v.model(mirrorId).x(90).y(180);
         });
     }
 }
