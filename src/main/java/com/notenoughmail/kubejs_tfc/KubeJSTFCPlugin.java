@@ -14,6 +14,7 @@ import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
@@ -41,6 +42,7 @@ import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.common.capabilities.glass.GlassOperation;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
@@ -145,6 +147,14 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     }
 
     @Override
+    public void initStartup() {
+        // Load the class and do something with the values so the compiler doesn't strip it out
+        for (GlassOperation op : GlassOperation.VALUES) {
+            KubeJSTFC.infoLog("GlassOperation: {} exists", op);
+        }
+    }
+
+    @Override
     public void registerEvents() {
         EventHandlers.TFCEvents.register();
     }
@@ -216,6 +226,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
+        typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
     }
 
     @Override

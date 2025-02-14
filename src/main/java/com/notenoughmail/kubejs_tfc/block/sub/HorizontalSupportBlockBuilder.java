@@ -48,7 +48,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
             });
         }
 
-        generator.json(newID("loot_table/blocks/", ""), lootBuilder.toJson());
+        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
     @Override

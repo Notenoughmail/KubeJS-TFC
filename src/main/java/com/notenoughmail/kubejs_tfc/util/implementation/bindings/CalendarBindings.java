@@ -14,6 +14,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public enum CalendarBindings {
     INSTANCE;
 
+    public final int
+            TICKS_IN_HOUR = ICalendar.TICKS_IN_HOUR,
+            HOURS_IN_DAY = ICalendar.HOURS_IN_DAY,
+            TICKS_IN_DAY = ICalendar.TICKS_IN_DAY,
+            MONTHS_IN_YEAR = ICalendar.MONTHS_IN_YEAR;
+    public final float TICKS_IN_MINUTE = ICalendar.TICKS_IN_MINUTE;
+
     // TODO: 1.21 | Add context param so guessing is not needed?
     @Info(value = "Returns the best guess on the appropriate calendar")
     public ICalendar getCalendar() {

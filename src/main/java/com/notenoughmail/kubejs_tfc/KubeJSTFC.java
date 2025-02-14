@@ -14,6 +14,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
+import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import net.dries007.tfc.config.ConfigBuilder;
@@ -137,6 +138,8 @@ public class KubeJSTFC {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientEventHandlers.init();
         }
+
+        KJSTFCNetwork.init();
 
         COMMAND_ARGS.register(FMLJavaModLoadingContext.get().getModEventBus());
 

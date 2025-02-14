@@ -6,6 +6,7 @@
   "mixins": [
     "AnvilBlockEntityMixin",
     "DayMixin",
+    "GlassOperationMixin",
     "HandHeldItemBuilderMixin",
     "OpenSimplex2DMixin",
     "RegisteredDataManagerMixin",
@@ -27,7 +28,9 @@
     "extensions.FirmaLifeISPMixin",
     "extensions.TFCCCMoldItemBuilderExtensions"
   ],
-  "client": [],
+  "client": [
+    "GlassworkingRecipeCategoryMixin"
+  ],
   "refmap": "kubejs_tfc.refmap.json",
   "plugin": "com.notenoughmail.kubejs_tfc.util.implementation.mixin.KubeJSTFCMixinPlugin"
 }

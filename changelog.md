@@ -2,6 +2,8 @@
 - Fix FirmaLife cheese wheel block builders sharing inside textures
 - Fix potential crashes & inconsistencies related to custom entity type's hand & armor items (Thanks Liopyu!)
 - Fix custom path navigations not working for custom entity types, update EntityJS version in-dev (Thanks Liopyu!)
+- Add the ability to create custom glass operations
+- Fix custom horizontal support block loot tables
 
 ### 1.2.3
 - Add `tfc:jug` and `tfc:glass_bottle` item types, similar to the `tfc:fluid_container` item type, but can be drunken from
