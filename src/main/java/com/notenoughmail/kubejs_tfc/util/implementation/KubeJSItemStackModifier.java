@@ -30,7 +30,7 @@ public record KubeJSItemStackModifier(ResourceLocation id, ModifierApplicator ap
     }
 
     @FunctionalInterface
-    public interface  SimpleApplicator extends ModifierApplicator {
+    public interface SimpleApplicator extends ModifierApplicator {
         @Info(value = "Applies a modifier to the stack", params = {
                 @Param(name = "stack", value = "The current output stack, may be modified. A no-op modifier would just return this stack")
         })

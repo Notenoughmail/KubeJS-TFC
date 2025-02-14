@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.util.calendar.Day;
 import net.dries007.tfc.util.calendar.Month;
 
+@Info(value = "Add and remove birthdays from the in-game calendar")
 @SuppressWarnings("unused")
 public class BirthdayEventJS extends EventJS {
 
@@ -13,17 +14,17 @@ public class BirthdayEventJS extends EventJS {
 
     @Info(value = "Adds a new birthday")
     public void add(Month month, int day, String name) {
-        duck.kubeJS_TFC$Add(month, day, name);
+        duck.kubejs_tfc$Add(month, day, name);
     }
 
     @Info(value = "Removes the birthday from the given month and day")
     public void remove(Month month, int day) {
-        duck.kubeJS_TFC$Remove(month, day);
+        duck.kubejs_tfc$Remove(month, day);
     }
 
     // For when you want to be very mean
     @Info(value = "Removes all birthdays")
     public void removeAll() {
-        duck.kubeJS_TFC$Clear();
+        duck.kubejs_tfc$Clear();
     }
 }

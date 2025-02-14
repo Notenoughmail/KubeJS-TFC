@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Info("""
+        Used to register/create new climate models which can be used during climate model selection
+        """)
 @SuppressWarnings("unused")
 public class RegisterClimateModelEventJS extends StartupEventJS {
 

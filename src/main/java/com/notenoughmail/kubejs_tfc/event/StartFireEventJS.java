@@ -11,6 +11,9 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
+@Info("""
+        This event is used for lighting things with fire. It can be cancelled to handle lighting of an external device or source
+        """)
 @SuppressWarnings("unused")
 public class StartFireEventJS extends PlayerEventJS {
 

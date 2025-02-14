@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;

@@ -17,17 +17,17 @@ public abstract class DayMixin implements IDayMixin {
     private static Map<String, String> BIRTHDAYS;
 
     @Override
-    public void kubeJS_TFC$Add(Month month, int day, String name) {
+    public void kubejs_tfc$Add(Month month, int day, String name) {
         BIRTHDAYS.put(month.name() + day, name);
     }
 
     @Override
-    public void kubeJS_TFC$Remove(Month month, int day) {
+    public void kubejs_tfc$Remove(Month month, int day) {
         BIRTHDAYS.remove(month.name() + day);
     }
 
     @Override
-    public void kubeJS_TFC$Clear() {
+    public void kubejs_tfc$Clear() {
         BIRTHDAYS.clear();
     }
 }

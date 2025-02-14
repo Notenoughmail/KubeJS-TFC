@@ -98,7 +98,7 @@ public class EventHandlers {
 
     private static void onLog(LoggingEvent event) {
         if (event.getLevel() instanceof Level level && !level.isClientSide() && log.hasListeners()) {
-            if (log.post(new LoggingEventJS(level, event.getPos(), event.getAxe())).interruptFalse()) {
+            if (log.post(new LoggingEventJS(level, event)).interruptFalse()) {
                 event.setCanceled(true);
             }
         }

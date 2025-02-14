@@ -336,20 +336,6 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
         return new WorldGenUtils.BlockToBlockStatesMapEntry(rock, blockStates);
     }
 
-    @Info(value = """
-            Creates a new block list to weighted block state list map entry for use in vein configured features
-            
-            Deprecated in favor of the generic blockToWeightedBlockState method
-            """, params = {
-            @Param(name = "blocks", value = "A list of strings, the registry names of blocks to be replaced"),
-            @Param(name = "blockStates", value = "A list of string representations of weighted block states")
-    })
-    @Generics(value = {String.class, String.class})
-    @Deprecated(since = "1.1.0", forRemoval = true)
-    public WorldGenUtils.BlockToWeightedBlockStateMapEntry veinReplacement(List<String> replace, List<String> with) {
-        return blockToWeightedBlockState(replace, with);
-    }
-
     @Info(value = "Creates a new block list to weighted block state list map entry for use several configured features", params = {
             @Param(name = "blocks", value = "A list of strings, the registry names of blocks to be replaced"),
             @Param(name = "blockStates", value = "A list of string representations of weighted block states")

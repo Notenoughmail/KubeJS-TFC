@@ -102,7 +102,7 @@ public class PlacedFeatureProperties {
         return jsonPlacement(json);
     }
 
-    @Info(value = "Adds a 'minecraft:heightmap' placement modifier", params = @Param(name = "heightMap", value = "Sets the 'height_map' property of the modifier"))
+    @Info(value = "Adds a 'minecraft:heightmap' placement modifier", params = @Param(name = "heightMap", value = "Sets the 'heightmap' property of the modifier"))
     public PlacedFeatureProperties heightMap(Heightmap.Types heightMap) {
         var json = new JsonObject();
         json.addProperty("type", "minecraft:heightmap");

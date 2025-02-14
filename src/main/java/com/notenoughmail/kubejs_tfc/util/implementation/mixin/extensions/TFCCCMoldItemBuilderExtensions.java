@@ -31,24 +31,24 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     }
 
     @Override
-    public MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable() {
+    public MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable() {
         tag(TFCCCTags.Items.ACCEPTED_IN_MOLD_TABLES.location());
         return (MoldItemBuilder) (Object) this;
     }
 
     @Override
-    public MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable(List<String> model) {
+    public MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable(List<String> model) {
         if (model.size() != 14) {
             throw new IllegalArgumentException("The mold table model must have 14 rows each of length 14");
         }
         kubejs_tfc$model = model;
-        return kubeJS_TFC$tfcccAllowedInMoldTable();
+        return kubejs_tfc$TFCCCAllowedInMoldTable();
     }
 
     @Inject(method = "generateAssetJsons", at = @At("TAIL"), remap = false)
-    private void kubejs_tfc$generateMoldTableModel(AssetJsonGenerator generator, CallbackInfo ci) {
+    private void kubejs_tfc$GenerateMoldTableModel(AssetJsonGenerator generator, CallbackInfo ci) {
         if (kubejs_tfc$model != null) {
-            generator.json(kubejs_tfc$moldTableModelId(), ResourceUtils.buildJson(model -> {
+            generator.json(kubejs_tfc$MoldTableModelId(), ResourceUtils.buildJson(model -> {
                 model.addProperty("loader", "tfcchannelcasting:mold");
                 model.add("textures", ResourceUtils.buildJson(textures -> {
                     textures.addProperty("0", "tfcchannelcasting:block/mold_texture");
@@ -62,7 +62,7 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     }
 
     @Unique
-    private ResourceLocation kubejs_tfc$moldTableModelId() {
+    private ResourceLocation kubejs_tfc$MoldTableModelId() {
         return new ResourceLocation("tfcchannelcasting", "models/mold/" + id.getNamespace() + "/" + id.getPath());
     }
 }

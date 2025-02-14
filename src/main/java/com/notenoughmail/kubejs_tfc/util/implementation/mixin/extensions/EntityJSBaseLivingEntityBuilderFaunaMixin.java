@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.Pseudo;
 @IfPresent(EntityJSMod.MOD_ID)
 @Pseudo
 @Mixin(targets = "net/liopyu/entityjs/builders/living/BaseLivingEntityBuilder", remap = false)
-public class EntityJSBaseLivingEntityBuilderFaunaMixin implements IFaunaDefinable {
+public abstract class EntityJSBaseLivingEntityBuilderFaunaMixin implements IFaunaDefinable {
 }

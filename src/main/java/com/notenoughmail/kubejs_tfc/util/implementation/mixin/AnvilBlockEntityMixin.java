@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AnvilBlockEntity.class, remap = false)
-public class AnvilBlockEntityMixin extends InventoryBlockEntity<AnvilBlockEntity.AnvilInventory> {
+public abstract class AnvilBlockEntityMixin extends InventoryBlockEntity<AnvilBlockEntity.AnvilInventory> {
 
     @SuppressWarnings("unused")
     private AnvilBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, InventoryFactory<AnvilBlockEntity.AnvilInventory> inventoryFactory, Component defaultName) {

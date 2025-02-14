@@ -13,12 +13,12 @@ public interface ITFCCCMoldItemBuilderExtensions {
 
     @Info(value = "Allows the mold item to be placed in a TFC Casting With Channels mold table")
     @RemapForJS("tfcccAllowedInMoldTable")
-    MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable();
+    MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable();
 
     @Info(value = "Allows the mold item to be placed in a TFC Casting With Channels mold table", params = {
             @Param(name = "model", value = "A list of 14 strings, each 14 chars long, creates the default model for the item when in the mold table")
     })
     @Generics(value = String.class)
     @RemapForJS("tfcccAllowedInMoldTable")
-    MoldItemBuilder kubeJS_TFC$tfcccAllowedInMoldTable(List<String> model);
+    MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable(List<String> model);
 }

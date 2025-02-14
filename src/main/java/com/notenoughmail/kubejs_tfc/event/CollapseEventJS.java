@@ -9,43 +9,44 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+@Info(value = "Fires whenever a collapse happens for both real and fake collapses")
 @SuppressWarnings("unused")
 public class CollapseEventJS extends LevelEventJS {
 
-    private final BlockContainerJS centerBlock;
-    private final Level level;
-    private final double radiusSquared;
-    private final List<BlockPos> secondaries;
-    private final boolean isFake;
+    private BlockContainerJS centerBlock;
+    private final CollapseEvent event;
 
     public CollapseEventJS(CollapseEvent event) {
-        level = event.getLevel();
-        centerBlock = new BlockContainerJS(level, event.getCenterPos());
-        radiusSquared = event.getRadiusSquared();
-        secondaries = event.getNextPositions();
-        isFake = event.isFake();
+        this.event = event;
     }
 
     public BlockContainerJS getCenterBlock() {
+        if (centerBlock == null) {
+            centerBlock = new BlockContainerJS(event.getLevel(), event.getCenterPos());
+        }
         return centerBlock;
+    }
+
+    public BlockPos getCenterPos() {
+        return event.getCenterPos();
     }
 
     @Override
     public Level getLevel() {
-        return level;
+        return event.getLevel();
     }
 
     @Info(value = "Returns the maximum distance from the center block of collapsing blocks, or 0 if the collapse is fake")
     public double getRadiusSquared() {
-        return radiusSquared;
+        return event.getRadiusSquared();
     }
 
     @Info(value = "Returns a list of `BlockPos`es where a block collapses or, if the collapse is fake, particles spawn")
     public List<BlockPos> getSecondaryPositions() {
-        return secondaries;
+        return event.getNextPositions();
     }
 
     public boolean isFake() {
-        return isFake;
+        return event.isFake();
     }
 }

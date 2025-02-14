@@ -4,9 +4,9 @@ import net.dries007.tfc.util.calendar.Month;
 
 public interface IDayMixin {
 
-    void kubeJS_TFC$Add(Month month, int day, String name);
+    void kubejs_tfc$Add(Month month, int day, String name);
 
-    void kubeJS_TFC$Remove(Month month, int day);
+    void kubejs_tfc$Remove(Month month, int day);
 
-    void kubeJS_TFC$Clear();
+    void kubejs_tfc$Clear();
 }

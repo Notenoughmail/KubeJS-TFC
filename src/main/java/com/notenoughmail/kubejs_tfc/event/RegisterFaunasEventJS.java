@@ -26,13 +26,10 @@ import java.util.function.Supplier;
  * Forge helpfully provides an event for modifying and adding placements, unfortunately people <strong>exist</strong>
  * and do not care or do not know that there is a proper way to do something, thus I am left picking up the debris
  */
+@Info("""
+        Used to register one or more fauna definitions for an entity type
+        """)
 public class RegisterFaunasEventJS extends EventJS {
-
-    @Deprecated(forRemoval = true, since = "1.2.1")
-    @Info(value = "Deprecated, use `.replace` for previous behavior")
-    public void register(EntityType<? extends Entity> entityType, SpawnPlacements.Type placementType, Heightmap.Types heightmap) {
-        replace(entityType, placementType, heightmap);
-    }
 
     private static void register(EntityType<?> entityType, SpawnPlacements.SpawnPredicate<?> predicate, SpawnPlacements.Type placementType, Heightmap.Types heightmap) {
         SpawnPlacements.DATA_BY_TYPE.put(entityType, new SpawnPlacements.Data(heightmap, placementType, predicate));

@@ -15,17 +15,17 @@ public abstract class FirmaLifeISPMixin implements IFirmaLifeISPExtensions {
     public abstract ItemStackProviderJS simpleModifier(String s);
 
     @Override
-    public ItemStackProviderJS kubeJS_TFC$firmaLifeAddPiePan() {
+    public ItemStackProviderJS kubejs_tfc$FirmaLifeAddPiePan() {
         return simpleModifier("firmalife:add_pie_pan");
     }
 
     @Override
-    public ItemStackProviderJS kubeJS_TFC$firmaLifeCopyDynamicFood() {
+    public ItemStackProviderJS kubejs_tfc$FirmaLifeCopyDynamicFood() {
         return simpleModifier("firmalife:copy_dynamic_food");
     }
 
     @Override
-    public ItemStackProviderJS kubeJS_TFC$firmaLifeEmptyPan() {
+    public ItemStackProviderJS kubejs_tfc$FirmaLifeEmptyPan() {
         return simpleModifier("firmalife:empty_pan");
     }
 }

@@ -4,6 +4,9 @@
 - Fix custom path navigations not working for custom entity types, update EntityJS version in-dev (Thanks Liopyu!)
 - Add the ability to create custom glass operations
 - Fix custom horizontal support block loot tables
+- Add `TICKS_IN_HOUR`, `HOURS_IN_DAY`, `TICKS_IN_DAY`, `MONTHS_IN_YEAR`, and `TICKS_IN_MINUTE` fields to calendar bindings
+- Remove deprecated methods in fauna registration, ISM, rock settings, and worldgen data events
+- Add independent `getPos()` method to events where it makes sense to access
 
 ### 1.2.3
 - Add `tfc:jug` and `tfc:glass_bottle` item types, similar to the `tfc:fluid_container` item type, but can be drunken from

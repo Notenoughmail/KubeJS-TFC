@@ -6,6 +6,9 @@ import dev.latvian.mods.kubejs.typings.Param;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.minecraft.resources.ResourceLocation;
 
+@Info("""
+        Used to register custom food traits
+        """)
 @SuppressWarnings("unused")
 public class RegisterFoodTraitEventJS extends StartupEventJS {
 

@@ -9,13 +9,13 @@ public interface IFirmaLifeISPExtensions {
 
     @Info(value = "Adds a 'firmalife:add_pie_pan' modifier to the ISP")
     @RemapForJS("firmaLifeAddPiePan")
-    ItemStackProviderJS kubeJS_TFC$firmaLifeAddPiePan();
+    ItemStackProviderJS kubejs_tfc$FirmaLifeAddPiePan();
 
     @Info(value = "Adds a 'firmalife:copy_dynamic_food' modifier to the ISP")
     @RemapForJS("firmaLifeCopyDynamicFood")
-    ItemStackProviderJS kubeJS_TFC$firmaLifeCopyDynamicFood();
+    ItemStackProviderJS kubejs_tfc$FirmaLifeCopyDynamicFood();
 
     @Info(value = "Adds a 'firmalife:empty_pan' modifier to the ISP")
     @RemapForJS("firmaLifeEmptyPan")
-    ItemStackProviderJS kubeJS_TFC$firmaLifeEmptyPan();
+    ItemStackProviderJS kubejs_tfc$FirmaLifeEmptyPan();
 }

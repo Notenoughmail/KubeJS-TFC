@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Info("""
+        Used to register custom item-block interactions that go through TFC's interaction pipeline
+        """)
 @SuppressWarnings("unused")
 public class RegisterInteractionsEventJS extends EventJS {
 

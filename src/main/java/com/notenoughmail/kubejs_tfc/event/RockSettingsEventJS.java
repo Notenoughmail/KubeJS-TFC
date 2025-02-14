@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-@Info(value = "Define new rock layers which can be referenced in a world preset json")
+@Info(value = "Define new rocks which can be referenced in a world preset json")
 @SuppressWarnings("unused")
 public class RockSettingsEventJS extends StartupEventJS {
 
@@ -50,24 +50,5 @@ public class RockSettingsEventJS extends StartupEventJS {
                 Optional.ofNullable(mossyLoose)
         );
         return RockSettings.register(id, settings);
-    }
-
-    @Info("Deprecated, please use `defineRock`")
-    @Deprecated(forRemoval = true, since = "1.2.0")
-    public RockSettings defineLayer(
-            ResourceLocation id,
-            Block raw,
-            Block hardened,
-            Block gravel,
-            Block cobble,
-            Block sand,
-            Block sandstone,
-            @Nullable Block spike,
-            @Nullable Block loose,
-            @Nullable Block mossyLoose
-    ) {
-        return defineRock(
-                id, raw, hardened, gravel, cobble, sand, sandstone, spike, loose, mossyLoose
-        );
     }
 }

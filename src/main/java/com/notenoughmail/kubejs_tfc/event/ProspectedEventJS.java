@@ -1,11 +1,15 @@
 package com.notenoughmail.kubejs_tfc.event;
 
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
+import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.items.ProspectResult;
 import net.dries007.tfc.util.events.ProspectedEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 
+@Info("""
+        Fired when a prospecting event is fired and is purely informational
+        """)
 @SuppressWarnings("unused")
 public class ProspectedEventJS extends PlayerEventJS {
 
