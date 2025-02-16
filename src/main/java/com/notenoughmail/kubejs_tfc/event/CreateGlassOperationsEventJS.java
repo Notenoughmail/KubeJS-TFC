@@ -70,8 +70,8 @@ public class CreateGlassOperationsEventJS extends EventJS {
             @Param(name = "name", value = "The name of the operation, will be prepended with 'KUBEJS_'"),
             @Param(name = "displayStack", value = "A supplier for an item stack that will be used to represent the operation in JEI")
     })
-    public void create(String name, CustomGlassOperations.StackSupplier stack) {
-        create(name, stack, null);
+    public void create(String name, CustomGlassOperations.StackSupplier displayStack) {
+        create(name, displayStack, null);
     }
 
     @Info(value = "Creates a new glass operation", params = {

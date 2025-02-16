@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 import com.google.common.collect.ImmutableMap;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.CreateGlassOperationsEventJS;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
@@ -44,7 +43,7 @@ public abstract class GlassOperationMixin {
     }
 
     @Mutable
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private static GlassOperation[] $VALUES;
 
@@ -55,7 +54,6 @@ public abstract class GlassOperationMixin {
 
     static {
         if (EventHandlers.createGlassOperations.hasListeners()) {
-            KubeJSTFC.error("Adding glass ops");
             //noinspection Convert2MethodRef
             kubejs_tfc$CreateEvent = new CreateGlassOperationsEventJS($VALUES.length, (n, o) -> create(n, o));
             EventHandlers.createGlassOperations.post(kubejs_tfc$CreateEvent);

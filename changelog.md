@@ -1,4 +1,4 @@
-### 1.2.4 (W.I.P.)
+### 1.2.4
 - Fix FirmaLife cheese wheel block builders sharing inside textures
 - Fix potential crashes & inconsistencies related to custom entity type's hand & armor items (Thanks Liopyu!)
 - Fix custom path navigations not working for custom entity types, update EntityJS version in-dev (Thanks Liopyu!)

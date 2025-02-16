@@ -14,13 +14,15 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient FluidProperty fluidProperty;
-    public transient ResourceLocation[] fluids;
+    public transient List<Object> fluids; // List<Object> so the fluid property builder doesn't complain at compile time
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
@@ -32,10 +34,9 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
             @Param(name = "fluids", value = "The registry names of fluids the aqueduct can hold. Two liquids with different namespaces but same paths will not be accepted, `minecraft:empty` will automatically be added")
     })
     public AqueductBlockBuilder allowedFluids(ResourceLocation[] fluids) {
-        final ResourceLocation[] processed = new ResourceLocation[fluids.length + 1];
-        processed[0] = new ResourceLocation("empty");
-        System.arraycopy(fluids, 0, processed, 1, processed.length - 1);
-        this.fluids = processed;
+        this.fluids = new ArrayList<>(fluids.length + 1);
+        this.fluids.add(new ResourceLocation("empty"));
+        this.fluids.addAll(Arrays.asList(fluids));
         return this;
     }
 
@@ -45,7 +46,7 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
             @Override
             public FluidProperty getFluidProperty() {
                 if (fluids != null && fluidProperty == AqueductBlock.FLUID) {
-                    fluidProperty = FluidProperty.create("fluid", Stream.of(fluids));
+                    fluidProperty = FluidProperty.create("fluid", fluids.stream());
                 }
 
                 return fluidProperty;
