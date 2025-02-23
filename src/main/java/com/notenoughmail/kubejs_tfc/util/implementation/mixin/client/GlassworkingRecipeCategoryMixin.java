@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package com.notenoughmail.kubejs_tfc.util.implementation.mixin.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;

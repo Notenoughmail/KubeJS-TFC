@@ -1,3 +1,6 @@
+### 1.2.5 (W.I.P.)
+- Fix faulty assumption that climate models will only be added to TFC-like worlds
+
 ### 1.2.4
 - Fix FirmaLife cheese wheel block builders sharing inside textures
 - Fix potential crashes & inconsistencies related to custom entity type's hand & armor items (Thanks Liopyu!)

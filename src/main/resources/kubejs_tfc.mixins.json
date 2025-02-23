@@ -29,7 +29,7 @@
     "extensions.TFCCCMoldItemBuilderExtensions"
   ],
   "client": [
-    "GlassworkingRecipeCategoryMixin"
+    "client.GlassworkingRecipeCategoryMixin"
   ],
   "refmap": "kubejs_tfc.refmap.json",
   "plugin": "com.notenoughmail.kubejs_tfc.util.implementation.mixin.KubeJSTFCMixinPlugin"

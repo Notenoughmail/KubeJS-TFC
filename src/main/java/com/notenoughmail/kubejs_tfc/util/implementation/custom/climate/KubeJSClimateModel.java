@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: 1.2.5 | Make this extend OverworldClimateModel, remove defaults constructor parameter
 @SuppressWarnings("unused")
 public class KubeJSClimateModel implements ClimateModel {
 
@@ -53,12 +54,12 @@ public class KubeJSClimateModel implements ClimateModel {
         windVector = (block, calendarTicks) -> defaults.getWindVector(block.getLevel(), block.getPos(), calendarTicks);
     }
 
-    @Info(value = "Gets the temperature scale defined by the world's `overworld.json` file")
+    @Info(value = "Gets the temperature scale of the level, defaults to 20000 if it does not have a TFC-like chunk generator")
     public float getTemperatureScale() {
         return temperatureScale;
     }
 
-    @Info(value = "Gets the rainfall scale defined by the world's `overworld.json` file")
+    @Info(value = "Gets the rainfall scale of the level, defaults to 20000 if it does not have a TFC-like chunk generator")
     public float getRainfallScale() {
         return rainfallScale;
     }
@@ -156,9 +157,10 @@ public class KubeJSClimateModel implements ClimateModel {
             ((IOpenSimplex2dMixin) noises.get(i)).kubejs_tfc$SetSeed(climateSeed + (35242456354313L * i));
         }
 
-        final ChunkGeneratorExtension extension = (ChunkGeneratorExtension) level.getChunkSource().getGenerator();
-        temperatureScale = extension.settings().temperatureScale();
-        rainfallScale = extension.settings().rainfallScale();
+        if (level.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension extension) {
+            temperatureScale = extension.settings().temperatureScale();
+            rainfallScale = extension.settings().rainfallScale();
+        }
     }
 
     @HideFromJS
