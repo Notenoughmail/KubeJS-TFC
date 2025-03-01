@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -58,7 +59,7 @@ public class EventHandlers {
     public static void init() {
         final IEventBus bus = MinecraftForge.EVENT_BUS;
 
-        bus.addListener(EventHandlers::onSelectClimateModel);
+        bus.addListener(EventPriority.LOWEST, EventHandlers::onSelectClimateModel);
         bus.addListener(EventHandlers::onFireStart);
         bus.addListener(EventHandlers::onProspect);
         bus.addListener(EventHandlers::onLog);

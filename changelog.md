@@ -1,5 +1,13 @@
 ### 1.2.5 (W.I.P.)
 - Fix faulty assumption that climate models will only be added to TFC-like worlds
+- Slight rework to how custom climate models are created
+  - 'Advanced' climate model functionality has been mered into the regular custom model
+    - Along with this, there is now only a single `.register` method in the event, the previous registration methods are now deprecated
+  - TFC climate default accessors have been moved from the event to the model builder callback
+  - The wind vector callback now provides a `Level` and `BlockPos` instead of a `BlockContainerJS`
+  - Custom noises are now created differently:
+    - First, `.newNoise` is called with a callback where the noise can be modified, this returns an index
+    - This index can be used in `.noise` to get the noise within calculation callbacks
 
 ### 1.2.4
 - Fix FirmaLife cheese wheel block builders sharing inside textures
