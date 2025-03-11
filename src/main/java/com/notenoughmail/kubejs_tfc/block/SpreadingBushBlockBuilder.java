@@ -12,6 +12,8 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.plant.fruit.SpreadingBushBlock;
 import net.dries007.tfc.util.climate.ClimateRange;
@@ -37,8 +39,24 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
         texture("layer0", newID("item/", "").toString());
         renderType("cutout_mipped");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, child);
+        tagBlock(TFCTags.Blocks.ANY_SPREADING_BUSH.location());
     }
 
+    @Override
+    protected void initModels() {
+        allModels((lc, stage) -> m -> {
+            m.parent("tfc:block/plant/berry_bush_" + stage); // The only difference from super
+            m.texture(
+                    "bush",
+                    (textures.has("#" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#" + lc.ordinal() + "_" + stage) :
+                            newID("block/", "_" + lc.getSerializedName())
+                    ).toString()
+            );
+        });
+    }
+
+    @Info("Sets the maximum height this bush can grow to, defaults to 3")
     public SpreadingBushBlockBuilder maxHeight(int i) {
         maxHeight = i;
         return this;

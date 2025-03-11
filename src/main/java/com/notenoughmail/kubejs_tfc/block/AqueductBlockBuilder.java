@@ -55,7 +55,7 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
             // Doing this through the properties causes the game to crash on startup because the blocks/fluids don't yet exist in the registries
             @Override
             public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-                return state.getFluidState().getFluidType().getLightLevel();
+                return state.getValue(getFluidProperty()).getFluid().getFluidType().getLightLevel();
             }
         };
     }

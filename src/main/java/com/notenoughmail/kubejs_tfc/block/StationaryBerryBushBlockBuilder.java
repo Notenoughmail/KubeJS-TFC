@@ -31,19 +31,37 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
+    public static final Lifecycle[] LC_VALUES = Lifecycle.values();
+
     public transient final Lifecycle[] lifecycles;
     public transient final ItemBuilder productItem;
     public static final String[] lc = {"healthy", "dormant", "fruiting", "flowering"};
     @Nullable
     public transient ResourceLocation product;
+    public transient final Consumer<ModelGenerator>[][] models;
 
     public StationaryBerryBushBlockBuilder(ResourceLocation i) {
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
         productItem = new BasicItemJS.Builder(newID("", "_product"));
         product = null;
+        models = new Consumer[4][3];
+        initModels();
         renderType("cutout_mipped");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
+    }
+
+    protected void initModels() {
+        allModels((lc, stage) -> m -> {
+            m.parent("tfc:block/plant/stationary_bush_" + stage);
+            m.texture(
+                    "bush",
+                    (textures.has("#" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#" + lc.ordinal() + "_" + stage) :
+                            newID("block/", "_" + lc.getSerializedName())
+                    ).toString()
+            );
+        });
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -65,6 +83,31 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     @Info(value = "Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
     public StationaryBerryBushBlockBuilder productItem(ResourceLocation productId) {
         product = productId;
+        return this;
+    }
+
+    @Info("Sets the model for the given lifecycle and stage")
+    public StationaryBerryBushBlockBuilder model(Lifecycle lifecycle, int stage, Consumer<ModelGenerator> modelGenerator) {
+        models[lifecycle.ordinal()][stage] = modelGenerator;
+        return this;
+    }
+
+    @Info("Sets the model for all lifecycle and stage combinations via a callback")
+    public StationaryBerryBushBlockBuilder allModels(BushModelsCreator modelsCreator) {
+        for (Lifecycle lc : LC_VALUES) {
+            for (int i = 0 ; i < 3 ; i++) {
+                final var m = modelsCreator.getFor(lc, i);
+                if (m != null) {
+                    models[lc.ordinal()][i] = m;
+                }
+            }
+        }
+        return this;
+    }
+
+    @Info("Sets the texture for the given lifecycle and stage")
+    public StationaryBerryBushBlockBuilder texture(Lifecycle lifecycle, int stage, String tex) {
+        textures.addProperty("#" + lifecycle.ordinal() + "_" + stage, tex);
         return this;
     }
 
@@ -92,14 +135,9 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (String lifecycle : lc) {
-            final String tex = newID("block/", "_" + lifecycle).toString();
-            for (int i = 0 ; i < 3 ; i++) {
-                final String parent = "tfc:block/plant/stationary_bush_" + i;
-                generator.blockModel(newID("", "_" + lifecycle + "_" + i), m -> {
-                    m.parent(parent);
-                    m.texture("bush", tex);
-                });
+        for (int i = 0 ; i < 4 ; i++) {
+            for (int j = 0 ; j < 3 ; j++) {
+                generator.blockModel(newID("", "_" + lc[i] + "_" + j), models[i][j]);
             }
         }
     }
@@ -138,5 +176,12 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
                 .randomTicks()
                 .blockEntity(TFCBlockEntities.BERRY_BUSH)
                 .serverTicks(BerryBushBlockEntity::serverTick);
+    }
+
+    @FunctionalInterface
+    public interface BushModelsCreator {
+        @Nullable
+        @Generics({ ModelGenerator.class })
+        Consumer<ModelGenerator> getFor(Lifecycle lifecycle, int stage);
     }
 }
