@@ -27,18 +27,18 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
-    public transient final SpreadingCaneBlockBuilder child;
+    public transient final SpreadingCaneBlockBuilder cane;
     public transient int maxHeight;
     public transient final Supplier<ClimateRange> climateRange;
 
     public SpreadingBushBlockBuilder(ResourceLocation i) {
         super(i);
-        child = new SpreadingCaneBlockBuilder(newID("", "_cane"), this);
+        cane = new SpreadingCaneBlockBuilder(newID("", "_cane"), this);
         maxHeight = 3;
         climateRange = ClimateRange.MANAGER.register(id);
         texture("layer0", newID("item/", "").toString());
         renderType("cutout_mipped");
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, child);
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, cane);
         tagBlock(TFCTags.Blocks.ANY_SPREADING_BUSH.location());
     }
 
@@ -64,13 +64,13 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new SpreadingBushBlock(createExtendedProperties(), productItem, lifecycles, child, maxHeight, climateRange);
+        return new SpreadingBushBlock(createExtendedProperties(), productGetter(), lifecycles, cane, maxHeight, climateRange);
     }
 
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(child);
+        RegistryInfo.BLOCK.addBuilder(cane);
     }
 
     @Override

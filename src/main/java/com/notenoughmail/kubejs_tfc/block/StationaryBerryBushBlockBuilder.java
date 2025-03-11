@@ -14,6 +14,7 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -22,11 +23,14 @@ import net.dries007.tfc.common.blocks.plant.fruit.StationaryBerryBushBlock;
 import net.dries007.tfc.util.calendar.Month;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuilder {
@@ -62,6 +66,11 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
                     ).toString()
             );
         });
+    }
+
+    @HideFromJS
+    public Supplier<Item> productGetter()  {
+        return product == null ? productItem : Lazy.of(() -> RegistryInfo.ITEM.getValue(product));
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -113,7 +122,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Override
     public Block createObject() {
-        return new StationaryBerryBushBlock(createExtendedProperties(), product == null ? productItem : () -> RegistryInfo.ITEM.getValue(product), lifecycles, ClimateRange.MANAGER.register(id));
+        return new StationaryBerryBushBlock(createExtendedProperties(), productGetter(), lifecycles, ClimateRange.MANAGER.register(id));
     }
 
     @Override

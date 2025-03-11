@@ -25,12 +25,12 @@ import java.util.function.Consumer;
 
 public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
-    private final SpreadingBushBlockBuilder parent;
+    private final SpreadingBushBlockBuilder bush;
     public transient final Consumer<ModelGenerator>[][] models;
 
-    public SpreadingCaneBlockBuilder(ResourceLocation i, SpreadingBushBlockBuilder parent) {
+    public SpreadingCaneBlockBuilder(ResourceLocation i, SpreadingBushBlockBuilder bush) {
         super(i);
-        this.parent = parent;
+        this.bush = bush;
         models = new Consumer[4][3];
         allModels((lc, stage) -> m -> {
             m.parent("tfc:block/plant/berry_bush_side_" + stage);
@@ -45,15 +45,14 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
                     "bush",
                     (textures.has("#bush_" + lc.ordinal() + "_" + stage) ?
                             textures.get("#bush_" + lc.ordinal() + "_" + stage) :
-                            parent.textures.has("#" + lc.ordinal() + "_" + stage) ?
-                                    parent.textures.get("#" + lc.ordinal() + "_" + stage) :
+                            bush.textures.has("#" + lc.ordinal() + "_" + stage) ?
+                                    bush.textures.get("#" + lc.ordinal() + "_" + stage) :
                                     newID("block/", "_bush_" + lc.getSerializedName())
                     ).toString()
             );
         });
         noItem();
         renderType("cutout_mipped");
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
         tagBlock(TFCTags.Blocks.ANY_SPREADING_BUSH.location());
     }
 
@@ -106,14 +105,14 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     @Override
     public Block createObject() {
-        return new SpreadingCaneBlock(parent.createExtendedProperties(), parent.productItem, parent.lifecycles, parent, parent.maxHeight, parent.climateRange);
+        return new SpreadingCaneBlock(bush.createExtendedProperties(), bush.productGetter(), bush.lifecycles, bush, bush.maxHeight, bush.climateRange);
     }
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         for (int i = 0 ; i < 4 ; i ++) {
             for (int j = 0 ; j < 3 ; j++) {
-                generator.blockModel(parent.newID("", "_side_" + StationaryBerryBushBlockBuilder.lc[i] + "_" + j), models[i][j]);
+                generator.blockModel(bush.newID("", "_side_" + StationaryBerryBushBlockBuilder.lc[i] + "_" + j), models[i][j]);
             }
         }
     }
@@ -127,7 +126,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
                 for (int j = 0 ; j < 3 ; j++) {
                     final int finalJ = j; // Lambda stuff
                     bs.variant("lifecycle=" + lifecycle + ",facing=" + dir + ",stage=" + j, v ->
-                        v.model(parent.newID("block/", "_side_" + lifecycle + "_" + finalJ).toString()).y(finalI * 90)
+                        v.model(bush.newID("block/", "_side_" + lifecycle + "_" + finalJ).toString()).y(finalI * 90)
                     );
                 }
             }
