@@ -142,7 +142,7 @@ public class KubeJSClimateModel implements ClimateModel {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" + builder.name + "}@";
+        return getClass().getName() + "[" + builder.name + "]";
     }
 
     @Info(value = "A callback which takes a LevelReader and a BlockPos and returns a number")
@@ -256,7 +256,7 @@ public class KubeJSClimateModel implements ClimateModel {
             model.waterFog = callback;
         }
 
-        @Info(value = "Sets how the model will determine its wind vector at the given position and time")
+        @Info(value = "Sets how the model will determine the wind strength at the given position and time")
         public void setWindVector(WindVectorCallback callback) {
             model.wind = callback;
         }
@@ -289,7 +289,7 @@ public class KubeJSClimateModel implements ClimateModel {
             return defaults::getWindVector;
         }
 
-        @Info(value = "Returns the callback used byt TFC for its chunk loading")
+        @Info(value = "Returns the callback used by TFC for its chunk loading")
         public OnChunkLoadCallback getTfcChunkLoad() {
             return defaults::onChunkLoad;
         }

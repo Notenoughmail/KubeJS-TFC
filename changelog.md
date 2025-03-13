@@ -1,4 +1,4 @@
-### 1.2.5 (W.I.P.)
+### 1.2.5
 - Fix faulty assumption that climate models will only be added to TFC-like worlds
 - Slight rework to how custom climate models are created
   - 'Advanced' climate model functionality has been mered into the regular custom model

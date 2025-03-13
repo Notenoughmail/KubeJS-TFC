@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+// TODO: [Future] | Since JavaAdapter now actually works(?), a way to register models created through that could be useful?
 @Info("""
         Used to register/create new climate models which can be used during climate model selection
         """)
