@@ -51,42 +51,43 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
     }
 
     @Deprecated
+    @Info("Deprecated")
     public Vec2 newVec2(float x, float z) {
         return new Vec2(x, z);
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.TemperatureCallback getDefaultCurrentTemperatureCallback() {
         return overworld::getTemperature;
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.LevelPos2FloatCallback getDefaultAverageTemperatureCallback() {
         return overworld::getAverageTemperature;
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.LevelPos2FloatCallback getDefaultAverageRainfallCallback() {
         return overworld::getRainfall;
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.LevelPosLong2FloatCallback getDefaultAirFogCallback() {
         return overworld::getFogginess;
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.LevelPosLong2FloatCallback getDefaultWaterFogCallback() {
         return overworld::getWaterFogginess;
     }
 
     @Deprecated
-    @Info(value = "Deprecated")
+    @Info("Deprecated")
     public KubeJSClimateModel.WindVectorCallback getDefaultWindVectorCallback() {
         return overworld::getWindVector;
     }

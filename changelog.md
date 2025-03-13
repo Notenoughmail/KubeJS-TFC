@@ -8,9 +8,11 @@
   - Custom noises are now created differently:
     - First, `.newNoise` is called with a callback where the noise can be modified, this returns an index
     - This index can be used in `.noise` to get the noise within calculation callbacks
-  - Spreading bush blocks are now tagged with `tfc:any_spreading_bush` by default, fixing max height being ignored and cane blocks breaking
-  - Add methods for setting the model and textures of bush blocks
-  - Cane block models are now named `<parent_id>_side_<lifecycle>_<stage>`, previously they were named `<parent_id>_cane_side_<lifecycle>_<stage>`
+- Spreading bush blocks are now tagged with `tfc:any_spreading_bush` by default, fixing max height being ignored and cane blocks breaking
+- Add methods for setting the model and textures of bush blocks
+- Cane block models are now named `<parent_id>_side_<lifecycle>_<stage>` to match TFC's model naming scheme, previously they were named `<parent_id>_cane_side_<lifecycle>_<stage>`
+- Fix the use of `productItem` with a pre-existing item not working as it should
+- Add `/kubejs_tfc search` command, enabling pack makers to determine which data entries are applied to an item/block/fluid
 
 ### 1.2.4
 - Fix FirmaLife cheese wheel block builders sharing inside textures

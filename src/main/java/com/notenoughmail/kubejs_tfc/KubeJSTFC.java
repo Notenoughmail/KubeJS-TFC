@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
+import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
@@ -17,13 +18,17 @@ import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.Plantable
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
+import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.config.ConfigBuilder;
+import net.dries007.tfc.util.ItemDefinition;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
@@ -36,9 +41,9 @@ import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
-import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.create;
 
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
@@ -175,12 +180,12 @@ public class KubeJSTFC {
 
     static {
         if (ModList.get().isLoaded(FirmaLife.MOD_ID)) {
-            create("FIRMALIFE_GREENHOUSE_TYPE", GreenhouseType.MANAGER, (gt, cmp) -> {
+            DataType.create("FIRMALIFE_GREENHOUSE_TYPE", GreenhouseType.MANAGER, (gt, cmp) -> {
                 append(cmp, "tier", gt.tier);
                 append(cmp, "translationKey", "greenhouse." + gt.id.getNamespace() + "." + gt.id.getPath());
                 append(cmp, "ingredient", gt.ingredient, true);
-            });
-            create("FIRMALIFE_PLANTABLE", Plantable.MANAGER, (p, cmp) -> {
+            }, BuiltInRegistries.BLOCK, (gt, b) -> gt.ingredient.test(b), DataType.blockSuggester(GreenhouseType.CACHE));
+            DataType.create("FIRMALIFE_PLANTABLE", Plantable.MANAGER, (p, cmp) -> {
                 append(cmp, "ingredient", p);
                 append(cmp, "planter", p.getPlanterType());
                 append(cmp, "tier", p.getTier());
@@ -191,18 +196,26 @@ public class KubeJSTFC {
                 append(cmp, "nutrient", p.getPrimaryNutrient());
                 append(cmp, "textures", ((PlantableAccessor) p).kubejs_tfc$Textures());
                 append(cmp, "specials", ((PlantableAccessor) p).kubejs_tfc$Specials(), true);
-            });
+            }, Plantable::matches, Plantable.CACHE);
         }
         if (ModList.get().isLoaded(Beneath.MOD_ID)) {
-            create("BENEATH_LOST_PAGE", LostPage.MANAGER, (lp, cmp) -> {
+            DataType.create("BENEATH_LOST_PAGE", LostPage.MANAGER, (lp, cmp) -> {
                 append(cmp, "cost", lp.getCost());
                 append(cmp, "costs", lp.getCosts());
                 append(cmp, "reward", lp.getReward());
                 append(cmp, "rewards", lp.getRewards());
                 append(cmp, "punishments", lp.getPunishments());
                 append(cmp, "ingredientTranslation", lp.getIngredientTranslation(), true);
+            }, BuiltInRegistries.ITEM, (p, i) -> p.getCost().test(i.getDefaultInstance()), () -> {
+                final Stream.Builder<String> builder = Stream.builder();
+                for (LostPage page : LostPage.MANAGER.getValues()) {
+                    for (ItemStack stack : page.getCost().getItems()) {
+                        builder.accept(RegistryInfo.ITEM.getId(stack.getItem()).toString());
+                    }
+                }
+                return builder.build();
             });
-            create("BENEATH_NETHER_FERTILIZER", NetherFertilizer.MANAGER, (nf, cmp) -> {
+            DataType.create("BENEATH_NETHER_FERTILIZER", NetherFertilizer.MANAGER, (nf, cmp) -> {
                 var values = ((NetherFertilizerAccessor) nf).kubejs_tfc$Values();
                 append(cmp, "death", values[0]);
                 append(cmp, "destruction", values[1]);
@@ -210,7 +223,7 @@ public class KubeJSTFC {
                 append(cmp, "sorrow", values[3]);
                 append(cmp, "flame", values[4]);
                 append(cmp, "ingredient", nf, true);
-            });
+            }, ItemDefinition::matches, NetherFertilizer.CACHE);
         }
     }
 }

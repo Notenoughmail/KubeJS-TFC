@@ -15,6 +15,7 @@
     "accessor.ClimatePlacementAccessor",
     "accessor.DataManagerAccessor",
     "accessor.EntityDamageResistanceAccessor",
+    "accessor.IndirectHashCollectionAccessor",
     "accessor.ItemDamageResistanceAccessor",
     "accessor.ItemDefinitionAccessor",
     "accessor.NetherFertilizerAccessor",

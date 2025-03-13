@@ -37,11 +37,7 @@ public class RegistryUtils {
 
     @ApiStatus.Internal
     public static <T extends BlockEntity> void hackBlockEntity(Supplier<BlockEntityType<T>> be, Supplier<Block> block) {
-        blockEntityHacks.compute(UtilsJS.cast(be), (type, blocks) -> {
-            if (blocks == null) blocks = new ArrayList<>();
-            blocks.add(block);
-            return blocks;
-        });
+        blockEntityHacks.computeIfAbsent(UtilsJS.cast(be), type -> new ArrayList<>()).add(block);
     }
 
     static void hackBlockEntities() {

@@ -4,14 +4,19 @@ import com.mojang.brigadier.context.CommandContext;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
 import net.dries007.tfc.util.DataManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.StringRepresentableArgument;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegisterCommandsEvent;
+
+import java.util.Set;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -55,7 +60,7 @@ public class KubeJSTFCCommands {
                                                     }
                                                     try {
                                                         final MutableComponent text = Component.empty();
-                                                        text.append(Component.literal("\ninfo for %s in %s:\n".formatted(id, manager.directory)));
+                                                        text.append(Component.literal("\nInfo for %s in %s:\n".formatted(id, manager.directory)));
                                                         dataType.display(value, text);
                                                         sysMsg(text, ctx);
                                                         return 1;
@@ -64,6 +69,42 @@ public class KubeJSTFCCommands {
                                                         sysMsg("Error encountered trying to process the request, see logs", ctx);
                                                         return 0;
                                                     }
+                                                })
+                                        )
+                                )
+                        )
+                        .then(literal("search")
+                                .then(argument("data_type", DataTypeArgument.create())
+                                        .then(argument("value", ResourceLocationArgument.id())
+                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).suggest(), builder))
+                                                .executes(ctx -> {
+                                                    final DataType dataType = DataType.get("data_type", ctx);
+                                                    final String name = dataType.manager.directory;
+                                                    final ResourceLocation regId = ResourceLocationArgument.getId(ctx, "value");
+                                                    final Set<String> ids = dataType.search(regId);
+
+                                                    if (ids.isEmpty()) {
+                                                        sysMsg("There are no %s entries with %s".formatted(name, regId), ctx);
+                                                        return 0;
+                                                    } else if (ids.size() == 1) {
+                                                        sysMsg("Found 1 %s entry with %s".formatted(name, regId), ctx);
+                                                    } else {
+                                                        sysMsg("Found %s %s entries with %s".formatted(ids.size(), name, regId), ctx);
+                                                    }
+
+                                                    ids.forEach(id -> sysMsg(
+                                                            Component.literal("- ")
+                                                                    .append(Component.literal(id).withStyle(s ->
+                                                                            s.withUnderlined(true)
+                                                                                    .withColor(ChatFormatting.AQUA)
+                                                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), id)))
+                                                                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")))
+                                                                            )
+                                                                    ),
+                                                            ctx
+                                                    ));
+
+                                                    return ids.size();
                                                 })
                                         )
                                 )
