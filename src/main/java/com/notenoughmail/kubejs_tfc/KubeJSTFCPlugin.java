@@ -55,9 +55,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.List;
@@ -128,6 +126,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:anvil", AnvilBlockBuilder.class, AnvilBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:encased_axle", EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:log", LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -137,12 +136,8 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         final ForgeConfigSpec spec = KubeJSTFC.serverConfigBuilder.build();
 
         if (!spec.isEmpty()) {
-            final ModContainer prevMod =  ModLoadingContext.get().getActiveContainer();
-            ModList.get().getModContainerById(KubeJSTFC.MODID).ifPresent(ModLoadingContext.get()::setActiveContainer);
-
-            ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec, "kubejs-tfc-server.toml");
-
-            ModLoadingContext.get().setActiveContainer(prevMod);
+            ModList.get().getModContainerById(KubeJSTFC.MODID).ifPresent(container ->
+                    container.addConfig(new ModConfig(ModConfig.Type.SERVER, spec, container, "kubejs-tfc-server.toml")));
         }
     }
 

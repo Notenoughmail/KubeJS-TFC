@@ -28,18 +28,7 @@ public class KubeJSTFCCommands {
                 literal(KubeJSTFC.MODID).requires(s -> s.hasPermission(2))
                         .then(literal("list_ids")
                                 .then(argument("data_type", DataTypeArgument.create())
-                                        .executes(ctx -> {
-                                            final DataManager<?> manager = DataType.getManager("data_type", ctx);
-                                            sysMsg("List of all data handled by %s:".formatted(manager.directory), ctx);
-                                            final int i = ((DataManagerAccessor<?>) manager).kubejs_tfc$Types().keySet().stream()
-                                                    .map(rl -> Component.literal("- %s".formatted(rl)))
-                                                    .mapToInt(cmp -> {
-                                                        sysMsg(cmp, ctx);
-                                                        return 1;
-                                                    }).sum();
-                                            sysMsg("Printed %s ids".formatted(i), ctx);
-                                            return i;
-                                        })
+                                        .executes(KubeJSTFCCommands::listIds)
                                 )
                         )
                         .then(literal("describe")
@@ -49,27 +38,7 @@ public class KubeJSTFCCommands {
                                                     final DataManager<?> manager = DataType.getManager("data_type", ctx);
                                                     return SharedSuggestionProvider.suggest(((DataManagerAccessor<?>) manager).kubejs_tfc$Types().keySet().stream().map(ResourceLocation::toString), builder);
                                                 })
-                                                .executes(ctx -> {
-                                                    final DataType dataType = DataType.get("data_type", ctx);
-                                                    final DataManager<?> manager = dataType.manager;
-                                                    final ResourceLocation id = ResourceLocationArgument.getId(ctx, "id");
-                                                    final Object value = manager.get(id);
-                                                    if (value == null) {
-                                                        sysMsg("%s does not have a value named %s".formatted(manager.directory, id), ctx);
-                                                        return 0;
-                                                    }
-                                                    try {
-                                                        final MutableComponent text = Component.empty();
-                                                        text.append(Component.literal("\nInfo for %s in %s:\n".formatted(id, manager.directory)));
-                                                        dataType.display(value, text);
-                                                        sysMsg(text, ctx);
-                                                        return 1;
-                                                    } catch (Exception e) {
-                                                        KubeJSTFC.error("Error encountered during data type print!", e);
-                                                        sysMsg("Error encountered trying to process the request, see logs", ctx);
-                                                        return 0;
-                                                    }
-                                                })
+                                                .executes(KubeJSTFCCommands::describe)
                                         )
                                 )
                         )
@@ -77,39 +46,82 @@ public class KubeJSTFCCommands {
                                 .then(argument("data_type", DataTypeArgument.create())
                                         .then(argument("value", ResourceLocationArgument.id())
                                                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).suggest(), builder))
-                                                .executes(ctx -> {
-                                                    final DataType dataType = DataType.get("data_type", ctx);
-                                                    final String name = dataType.manager.directory;
-                                                    final ResourceLocation regId = ResourceLocationArgument.getId(ctx, "value");
-                                                    final Set<String> ids = dataType.search(regId);
-
-                                                    if (ids.isEmpty()) {
-                                                        sysMsg("There are no %s entries with %s".formatted(name, regId), ctx);
-                                                        return 0;
-                                                    } else if (ids.size() == 1) {
-                                                        sysMsg("Found 1 %s entry with %s".formatted(name, regId), ctx);
-                                                    } else {
-                                                        sysMsg("Found %s %s entries with %s".formatted(ids.size(), name, regId), ctx);
-                                                    }
-
-                                                    ids.forEach(id -> sysMsg(
-                                                            Component.literal("- ")
-                                                                    .append(Component.literal(id).withStyle(s ->
-                                                                            s.withUnderlined(true)
-                                                                                    .withColor(ChatFormatting.AQUA)
-                                                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), id)))
-                                                                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")))
-                                                                            )
-                                                                    ),
-                                                            ctx
-                                                    ));
-
-                                                    return ids.size();
-                                                })
+                                                .executes(KubeJSTFCCommands::search)
                                         )
                                 )
                         )
         );
+    }
+
+    private static int listIds(CommandContext<CommandSourceStack> ctx) {
+        final DataType dataType = DataType.get("data_type", ctx);
+        final DataManager<?> manager = dataType.manager;
+        sysMsg("List of all data handled by %s:".formatted(manager.directory), ctx);
+        final int i = ((DataManagerAccessor<?>) manager).kubejs_tfc$Types().keySet().stream()
+                .map(rl -> Component.literal("- ").append(
+                        Component.literal(rl.toString()).withStyle(s -> s
+                                .withUnderlined(true)
+                                .withColor(ChatFormatting.AQUA)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), rl)))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry"))))
+                ))
+                .mapToInt(cmp -> {
+                    sysMsg(cmp, ctx);
+                    return 1;
+                }).sum();
+        sysMsg("Printed %s id(s)".formatted(i), ctx);
+        return i;
+    }
+
+    private static int describe(CommandContext<CommandSourceStack> ctx) {
+        final DataType dataType = DataType.get("data_type", ctx);
+        final DataManager<?> manager = dataType.manager;
+        final ResourceLocation id = ResourceLocationArgument.getId(ctx, "id");
+        final Object value = manager.get(id);
+        if (value == null) {
+            sysMsg("%s does not have a value named %s".formatted(manager.directory, id), ctx);
+            return 0;
+        }
+        try {
+            final MutableComponent text = Component.empty();
+            text.append(Component.literal("\nInfo for %s in %s:\n".formatted(id, manager.directory)));
+            dataType.display(value, text);
+            sysMsg(text, ctx);
+            return 1;
+        } catch (Exception e) {
+            KubeJSTFC.error("Error encountered during data type print!", e);
+            sysMsg("Error encountered trying to process the request, see logs", ctx);
+            return 0;
+        }
+    }
+
+    private static int search(CommandContext<CommandSourceStack> ctx) {
+        final DataType dataType = DataType.get("data_type", ctx);
+        final String name = dataType.manager.directory;
+        final ResourceLocation regId = ResourceLocationArgument.getId(ctx, "value");
+        final Set<String> ids = dataType.search(regId);
+
+        if (ids.isEmpty()) {
+            sysMsg("There are no %s entries with %s".formatted(name, regId), ctx);
+            return 0;
+        } else if (ids.size() == 1) {
+            sysMsg("Found 1 %s entry with %s".formatted(name, regId), ctx);
+        } else {
+            sysMsg("Found %s %s entries with %s".formatted(ids.size(), name, regId), ctx);
+        }
+
+        ids.forEach(id -> sysMsg(
+                Component.literal("- ")
+                        .append(Component.literal(id).withStyle(s -> s
+                                .withUnderlined(true)
+                                .withColor(ChatFormatting.AQUA)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), id)))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")))
+                        )),
+                ctx
+        ));
+
+        return ids.size();
     }
 
     private static void sysMsg(String msg, CommandContext<CommandSourceStack> ctx) {

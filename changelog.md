@@ -1,3 +1,6 @@
+### 1.2.6 (W.I.P.)
+- Add TFC Log block builder
+
 ### 1.2.5
 - Fix faulty assumption that climate models will only be added to TFC-like worlds
 - Slight rework to how custom climate models are created
