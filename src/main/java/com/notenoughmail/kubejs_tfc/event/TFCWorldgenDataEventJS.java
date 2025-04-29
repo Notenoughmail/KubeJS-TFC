@@ -258,7 +258,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
         finishFeature("minecraft:simple_block", name, ResourceUtils.buildJson(config -> {
             config.add("to_place", ResourceUtils.buildJson(toPlace -> {
                 toPlace.addProperty("type", "minecraft:simple_state_provider");
-                toPlace.add("state", WorldGenUtils.blockStateToLenient(blockState));
+                toPlace.add("state", WorldGenUtils.blockStateToLenient(blockState, true));
             }));
         }), placement);
     }

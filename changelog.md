@@ -1,5 +1,7 @@
-### 1.2.6 (W.I.P.)
+### 1.2.6
 - Add TFC Log block builder
+- Enable custom climate models to set chunk data for levels without TFC-like generation
+- Fix `#simpleBlockState` in the worldgen data event incorrectly serializing propertyless block states 
 
 ### 1.2.5
 - Fix faulty assumption that climate models will only be added to TFC-like worlds

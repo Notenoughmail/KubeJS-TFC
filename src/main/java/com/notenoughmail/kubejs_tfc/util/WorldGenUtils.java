@@ -30,24 +30,29 @@ public class WorldGenUtils {
     /**
      * Converts a string representation of a block state into an equivalent lenient block state json element
      */
-    public static JsonElement blockStateToLenient(String block) {
-        if (block.indexOf('[') != -1 && block.indexOf(']') != -1) {
+    public static JsonElement blockStateToLenient(String block, boolean forceExpanded) {
+        if (forceExpanded || (block.indexOf('[') != -1 && block.indexOf(']') != -1)) {
             var blockState = block.replace("]", "").split("\\[");
-            var states = blockState[1].split(",");
+            var states = blockState.length > 1 ? blockState[1].split(",") : new String[0];
 
             return ResourceUtils.buildJson(json -> {
                 json.addProperty("Name", blockState[0]);
-                var properties = new JsonObject();
-                for (String state : states) {
-                    var value = state.split("=");
-                    properties.addProperty(value[0], value[1]);
+                if (states.length > 0) {
+                    var properties = new JsonObject();
+                    for (String state : states) {
+                        var value = state.split("=");
+                        properties.addProperty(value[0], value[1]);
+                    }
+                    json.add("Properties", properties);
                 }
-                json.add("Properties", properties);
-
             });
         }
 
         return new JsonPrimitive(block);
+    }
+
+    public static JsonElement blockStateToLenient(String block) {
+        return blockStateToLenient(block, false);
     }
 
     /**
