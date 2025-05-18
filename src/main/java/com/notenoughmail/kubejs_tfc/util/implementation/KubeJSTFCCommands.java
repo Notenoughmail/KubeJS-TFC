@@ -3,20 +3,32 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.mojang.brigadier.context.CommandContext;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
+import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
+import dev.latvian.mods.kubejs.util.UtilsJS;
+import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.util.DataManager;
+import net.dries007.tfc.world.ChunkGeneratorExtension;
+import net.dries007.tfc.world.chunkdata.ChunkData;
+import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
+import net.dries007.tfc.world.settings.RockLayerSettings;
+import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.StringRepresentableArgument;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -49,6 +61,15 @@ public class KubeJSTFCCommands {
                                                 .executes(KubeJSTFCCommands::search)
                                         )
                                 )
+                        )
+                        .then(literal("print_world_settings")
+                                .executes(KubeJSTFCCommands::printWorldSettings)
+                        )
+                        .then(literal("print_rock_settings")
+                                .executes(KubeJSTFCCommands::printRockSettings)
+                        )
+                        .then(literal("print_chunk_data")
+                                .executes(KubeJSTFCCommands::printChunkData)
                         )
         );
     }
@@ -124,6 +145,93 @@ public class KubeJSTFCCommands {
         return ids.size();
     }
 
+    private static int printWorldSettings(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
+            final Settings settings = ext.settings();
+            final MutableComponent out = Component.empty();
+            out.append("TFC world settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
+            DataType.append(out, "flatBedrock", settings.flatBedrock());
+            DataType.append(out, "spawnDistance", settings.spawnDistance());
+            DataType.append(out, "spawnCenterX", settings.spawnCenterX());
+            DataType.append(out, "spawnCenterZ", settings.spawnCenterZ());
+            DataType.append(out, "temperatureScale", settings.temperatureScale());
+            DataType.append(out, "temperatureConstant", settings.temperatureConstant());
+            DataType.append(out, "rainfallScale", settings.rainfallScale());
+            DataType.append(out, "rainfallConstant", settings.rainfallConstant());
+            DataType.append(out, "continentalness", settings.continentalness());
+            DataType.append(out, "grassDensity", settings.grassDensity());
+            DataType.append(out, "rockLayerSettings", Component.literal("...").withStyle(s -> s
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc print_rock_settings"))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Print rock layer settings")))
+                    .withColor(ChatFormatting.YELLOW))
+            );
+            sysMsg(out, ctx);
+            return 1;
+        } else {
+            sysMsg(Component.literal("Not a TFC-like level!").withStyle(ChatFormatting.RED), ctx);
+            return 0;
+        }
+    }
+
+    public static int printRockSettings(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
+            final RockLayerSettings.Data rockData = ((RockLayerSettingsAccessor) (Object) ext.rockLayerSettings()).kubejs_tfc$Data();
+            final MutableComponent out = Component.empty();
+            out.append("Rock settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
+
+            DataType.append(out, "bottom", rockData.bottom());
+            DataType.append(out, "oceanFloor", rockData.oceanFloor());
+            DataType.append(out, "land", rockData.land());
+            DataType.append(out, "volcanic", rockData.volcanic());
+            DataType.append(out, "uplift", rockData.uplift());
+            DataType.appendMap(out, "rocks", rockData.rocks(), 0, (rs, indent) -> DataType.simpleAdd(out, rs.raw().getName()), true);
+            final Map<String, Map<String, String>> expanded = new HashMap<>();
+            rockData.layers().forEach(ld -> expanded.put(ld.id(), ld.layers()));
+            DataType.appendMap(out, "layers", expanded, 0, (map, indent) -> DataType.appendMap(out, "", map, indent, (layer, i) -> DataType.simpleAdd(out, layer), false), true);
+
+            sysMsg(out, ctx);
+            return 1;
+        } else {
+            sysMsg(Component.literal("Not a TFC-like level!").withStyle(ChatFormatting.RED), ctx);
+            return 0;
+        }
+    }
+
+    private static int printChunkData(CommandContext<CommandSourceStack> ctx) {
+        final var dPos = ctx.getSource().getPosition();
+        final ChunkPos pos = new ChunkPos(new BlockPos((int) dPos.x(), (int) dPos.y(), (int) dPos.z()));
+        final ServerLevel level = ctx.getSource().getLevel();
+        final ChunkData data = ChunkData.get(level, pos);
+        final MutableComponent msg = Component.empty();
+        msg.append("Chunk %s in %s has following data:\n".formatted(pos, level.dimension().location()));
+        DataType.append(msg, "status", data.status());
+        if (data.status() == ChunkData.Status.PARTIAL || data.status() == ChunkData.Status.FULL) {
+            DataType.append(msg, "forestWeirdness", data.getForestWeirdness());
+            DataType.append(msg, "forestDensity", data.getForestDensity());
+            DataType.append(msg, "forestType", data.getForestType());
+            final ChunkWatchPacket pkt = data.getUpdatePacket();
+            final LerpFloatLayer rain = pkt.rainfallLayer(), temp = pkt.temperatureLayer();
+            DataType.append(msg, "rainfallLayer", (new ArrayPrinter(new float[] {
+                    rain.value00(),
+                    rain.value01(),
+                    rain.value10(),
+                    rain.value11()
+            })).print());
+            DataType.append(msg, "temperatureLayer", (new ArrayPrinter(new float[] {
+                    temp.value00(),
+                    temp.value01(),
+                    temp.value10(),
+                    temp.value11()
+            })).print());
+            if (data.status() == ChunkData.Status.FULL) {
+                DataType.append(msg, "surfaceHeight", (new ArrayPrinter(data.getRockData().getSurfaceHeight())).print());
+                DataType.append(msg, "aquiferHeight", (new ArrayPrinter(data.getAquiferSurfaceHeight())).print());
+            }
+        }
+        sysMsg(msg, ctx);
+        return 1;
+    }
+
     private static void sysMsg(String msg, CommandContext<CommandSourceStack> ctx) {
         ctx.getSource().sendSystemMessage(Component.literal(msg));
     }
@@ -140,6 +248,57 @@ public class KubeJSTFCCommands {
 
         protected DataTypeArgument() {
             super(DataType.CODEC, DataType::values);
+        }
+    }
+
+    private record ArrayPrinter(Object[] vals, int size, String formatter, ChatFormatting color) {
+
+        public ArrayPrinter(float[] vals) {
+            this(cast(vals), "%.2f", ChatFormatting.GREEN);
+        }
+
+        public ArrayPrinter(int[] vals) {
+            this(cast(vals), "%d", ChatFormatting.GREEN);
+        }
+
+        private ArrayPrinter(Object[] vals, String formatter, ChatFormatting color) {
+            this(vals, (int) Math.sqrt(vals.length), formatter, color);
+            assert Mth.isPowerOfTwo(vals.length);
+        }
+
+        // Woo, primitive types!
+        private static Object[] cast(float[] arr) {
+            final Object[] array = new Object[arr.length];
+            for (int i = 0 ; i < array.length ; i++) {
+                array[i] = arr[i];
+            }
+            return array;
+        }
+
+        private static Object[] cast(int[] arr) {
+            final Object[] array = new Object[arr.length];
+            for (int i = 0 ; i < array.length ; i++) {
+                array[i] = arr[i];
+            }
+            return array;
+        }
+
+        public Component print() {
+            final MutableComponent txt = Component.literal("[\n");
+            for (int i = 0 ; i < size ; i++) {
+                txt.append("  ");
+                for (int j = 0 ; j < size ; j++) {
+                    final int index = i + j * size;
+                    final Object obj = vals[index];
+                    txt.append(Component.literal(formatter.formatted(obj)).withStyle(color));
+                    if (index != vals.length - 1) {
+                        txt.append(",");
+                    }
+                }
+                txt.append(CommonComponents.NEW_LINE);
+            }
+            txt.append("]");
+            return txt;
         }
     }
 }

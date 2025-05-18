@@ -384,13 +384,15 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 simpleAdd(text, "null", ChatFormatting.BLACK);
             } else if (value instanceof Collection<?> c) {
                 var iter = c.iterator();
-                text.append("[\n");
+                text.append("[");
+                if (c.size() > 1) {
+                    text.append(CommonComponents.NEW_LINE);
+                }
                 switch (c.size()) {
-                    case 0 -> {
-                    }
+                    case 0 -> simpleAdd(text, "  ", ChatFormatting.GRAY);
                     case 1 -> {
                         var val = iter.next();
-                        simpleAdd(text, "  %s".formatted(RegistryUtils.stringify(val)), getColor(val));
+                        simpleAdd(text, "  %s  ".formatted(RegistryUtils.stringify(val)), getColor(val));
                     }
                     default -> {
                         var val = iter.next();
@@ -402,13 +404,19 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                         }
                     }
                 }
-                text.append("\n]");
+                if (c.size() > 1) {
+                    text.append(CommonComponents.NEW_LINE);
+                }
+                text.append("]");
             } else if (value.getClass().isArray()) {
                 var arr = (Object[]) value;
-                text.append("[\n");
+                text.append("[");
+                if (arr.length > 1) {
+                    text.append(CommonComponents.NEW_LINE);
+                }
                 switch (arr.length) {
-                    case 0 -> {}
-                    case 1 -> simpleAdd(text, "  %s".formatted(RegistryUtils.stringify(arr[0])), getColor(arr[0]));
+                    case 0 -> simpleAdd(text, "  ", ChatFormatting.GRAY);
+                    case 1 -> simpleAdd(text, "  %s  ".formatted(RegistryUtils.stringify(arr[0])), getColor(arr[0]));
                     default -> {
                         simpleAdd(text, "  %s".formatted(RegistryUtils.stringify(arr[0])), getColor(arr[0]));
                         for (int i = 1; i < arr.length; i++) {
@@ -417,7 +425,10 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                         }
                     }
                 }
-                text.append("\n]");
+                if (arr.length > 1) {
+                    text.append(CommonComponents.NEW_LINE);
+                }
+                text.append("]");
             } else {
                 simpleAdd(text, value);
             }
@@ -431,7 +442,11 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
     }
 
     public static void simpleAdd(MutableComponent text, Object val) {
-        simpleAdd(text, RegistryUtils.stringify(val), getColor(val));
+        if (val instanceof Component txt) {
+            text.append(txt);
+        } else {
+            simpleAdd(text, RegistryUtils.stringify(val), getColor(val));
+        }
     }
 
     public static void simpleAdd(MutableComponent text, String val, ChatFormatting color) {
@@ -444,6 +459,42 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         if (value instanceof CharSequence || value instanceof ResourceLocation) return ChatFormatting.DARK_PURPLE;
         if (value instanceof Enum<?>) return ChatFormatting.AQUA;
         return ChatFormatting.GRAY;
+    }
+
+    public static <T> void appendMap(MutableComponent out, String desc, Map<String, T> map, int indent, BiConsumer<T, Integer> forEach, boolean needDescriptor) {
+        String mov = " ".repeat(indent * 2);
+        if (needDescriptor) {
+            DataType.simpleDescriptor(out, mov + desc);
+            out.append(mov + "{");
+        } else {
+            out.append("{");
+        }
+        int i = 0;
+        final Set<Map.Entry<String, T>> entries = map.entrySet();
+        if (entries.size() > 1) {
+            out.append(CommonComponents.NEW_LINE);
+            for (Map.Entry<String, T> entry : entries) {
+                i++;
+                simpleDescriptor(out, mov + "  " + entry.getKey());
+                forEach.accept(entry.getValue(), indent + 1);
+                if (i != map.size()) {
+                    out.append(",");
+                }
+                out.append(CommonComponents.NEW_LINE);
+            }
+            out.append(mov + "}");
+        } else {
+            out.append("  ");
+            if (!entries.isEmpty()) {
+                final Map.Entry<String, T> entry = UtilsJS.cast(entries.toArray()[0]); // Ugly, but eh
+                simpleDescriptor(out, entry.getKey());
+                simpleAdd(out, entry.getValue());
+                out.append("  }");
+            }
+        }
+        if (needDescriptor) {
+            out.append(CommonComponents.NEW_LINE);
+        }
     }
 
     private static final Map<String, DataType> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DataType::getSerializedName, d -> d));

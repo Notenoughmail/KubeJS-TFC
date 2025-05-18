@@ -52,7 +52,7 @@ public class KubeJSTFC {
     public static final String MOD_NAME = "KubeJS TFC";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
-    public static boolean debug, insertIntoConsole;
+    public static boolean debug, insertIntoConsole, deduplicateConsoleErrors;
 
     private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {};
     private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {};
@@ -60,6 +60,7 @@ public class KubeJSTFC {
     public static void reloadConfig(DevProperties props) {
         debug = props.debugInfo;
         insertIntoConsole = props.get("tfc/insertSelfTestsIntoConsole", true);
+        deduplicateConsoleErrors = props.get("tfc/deduplicateConsoleErrors", true);
 
         printConfig(KubeJSTFC::info);
     }

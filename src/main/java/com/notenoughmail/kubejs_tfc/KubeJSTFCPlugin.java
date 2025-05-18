@@ -17,6 +17,7 @@ import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
@@ -259,6 +260,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
         types.add(TFCInventoryAttachment.TYPE);
+        types.add(HeatAttachment.TYPE);
     }
 
     @Override

@@ -17,7 +17,9 @@ public abstract class RegisteredDataManagerMixin {
         if (KubeJSTFC.insertIntoConsole) {
             ConsoleJS.SERVER.error(string.replace("{}", "%s").formatted(object0, object1));
         }
-        original.call(instance, string, object0, object1);
+        if (!KubeJSTFC.insertIntoConsole || !KubeJSTFC.deduplicateConsoleErrors) {
+            original.call(instance, string, object0, object1);
+        }
     }
 
     @WrapOperation(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "org/slf4j/Logger.error(Ljava/lang/String;[Ljava/lang/Object;)V"), remap = false)
@@ -25,6 +27,8 @@ public abstract class RegisteredDataManagerMixin {
         if (KubeJSTFC.insertIntoConsole) {
             ConsoleJS.SERVER.error(string.replace("{}", "%s").formatted(objects));
         }
-        original.call(instance, string, objects);
+        if (!KubeJSTFC.insertIntoConsole || !KubeJSTFC.deduplicateConsoleErrors) {
+            original.call(instance, string, objects);
+        }
     }
 }

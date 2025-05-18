@@ -16,7 +16,7 @@ import java.util.Collection;
 @Mixin(value = SelfTests.class, remap = false)
 public abstract class SelfTestsMixin {
 
-    @Inject(method = "logErrors", at = @At("HEAD"), remap = false)
+    @Inject(method = "logErrors", at = @At("HEAD"), remap = false, cancellable = true)
     private static <T> void kubejs_tfc$LogErrors(String error, Collection<T> errors, Logger logger, CallbackInfoReturnable<Boolean> cir) {
         if (KubeJSTFC.insertIntoConsole && !errors.isEmpty()) {
             final StringWriter message = new StringWriter();
@@ -26,6 +26,9 @@ public abstract class SelfTestsMixin {
                 message.append(RegistryUtils.stringify(t));
             });
             ConsoleJS.SERVER.error(message.toString());
+            if (KubeJSTFC.deduplicateConsoleErrors) {
+                cir.setReturnValue(!errors.isEmpty());
+            }
         }
     }
 }

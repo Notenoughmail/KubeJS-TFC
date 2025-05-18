@@ -37,7 +37,7 @@ public class KubeJSClimateModel implements ClimateModel {
 
     private final Builder builder;
     private WindVectorCallback wind;
-    private OnChunkLoadCallback chunkLoad, createChunkData;
+    private OnChunkLoadCallback chunkLoad;
     private TemperatureCallback currentTemperature;
     private LevelPos2FloatCallback averageTemp, averageRain;
     private LevelPosLong2FloatCallback waterFog, airFog;
@@ -50,7 +50,6 @@ public class KubeJSClimateModel implements ClimateModel {
         this.builder = builder;
         wind = (level, pos, calendarTicks) -> Vec2.ZERO;
         chunkLoad = (level, chunk, chunkData) -> {};
-        createChunkData = (level, chunk, chunkData) -> {};
         currentTemperature = (level, pos, calendarTicks, daysInMonth) -> 0;
         averageTemp = (level, pos) -> 0;
         averageRain = (level, pos) -> 0;
@@ -122,10 +121,6 @@ public class KubeJSClimateModel implements ClimateModel {
     @Override
     public void onChunkLoad(WorldGenLevel level, ChunkAccess chunk, ChunkData chunkData) {
         chunkLoad.apply(level, chunk, chunkData);
-    }
-
-    public void createChunkData(WorldGenLevel level, ChunkAccess chunk, ChunkData chunkData) {
-        createChunkData.apply(level, chunk, chunkData);
     }
 
     @Override
@@ -275,11 +270,6 @@ public class KubeJSClimateModel implements ClimateModel {
         @Info(value = "Sets the model's behavior on chunk load")
         public void setOnChunkLoad(OnChunkLoadCallback callback) {
             model.chunkLoad = callback;
-        }
-
-        @Info(value = "Called on generation of a new chunk when the world generator is not TFC-like, enabling population of `ChunkData` values")
-        public void setCreateChunkData(OnChunkLoadCallback callback) {
-            model.createChunkData = callback;
         }
 
         @Info(value = "Adds a new Noise2D to the model, which can be retrieved later via the returned index")

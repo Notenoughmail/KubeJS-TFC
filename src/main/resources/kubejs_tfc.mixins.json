@@ -8,6 +8,7 @@
     "DayMixin",
     "GlassOperationMixin",
     "HandHeldItemBuilderMixin",
+    "HeatCapabilityMixin",
     "RegisteredDataManagerMixin",
     "SelfTestsMixin",
     "TFCChunkGeneratorMixin",

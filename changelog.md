@@ -1,3 +1,8 @@
+### 1.3.0 (W.I.P.)
+- Add heat block entity attachment
+- Add commands to print TFC's level settings and chunk data
+- Add setting (default enabled) to deduplicate TFc datapack validation errors that are inserted into the KubeJS console 
+
 ### 1.2.6
 - Add TFC Log block builder
 - Enable custom climate models to set chunk data for levels without TFC-like generation
