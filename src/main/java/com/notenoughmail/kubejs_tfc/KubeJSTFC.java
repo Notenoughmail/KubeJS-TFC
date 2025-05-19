@@ -8,11 +8,13 @@ import com.eerussianguy.firmalife.common.util.GreenhouseType;
 import com.eerussianguy.firmalife.common.util.Plantable;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
@@ -29,8 +31,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -131,12 +135,17 @@ public class KubeJSTFC {
     public static final ConfigBuilder wrappedServerConfigBuilder = new ConfigBuilder(serverConfigBuilder, "kubejs_tfc");
 
     private static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, MODID);
-    private static final Supplier<SingletonArgumentInfo<KubeJSTFCCommands.DataTypeArgument>> DATA_TYPE_ARG = COMMAND_ARGS.register("data_type", () ->
-            ArgumentTypeInfos.registerByClass(
-                    KubeJSTFCCommands.DataTypeArgument.class,
-                    SingletonArgumentInfo.contextFree(KubeJSTFCCommands.DataTypeArgument::create)
-            )
-    );
+    private static final DeferredRegister<Codec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
+
+    static {
+        COMMAND_ARGS.register("data_type", () ->
+                ArgumentTypeInfos.registerByClass(
+                        KubeJSTFCCommands.DataTypeArgument.class,
+                        SingletonArgumentInfo.contextFree(KubeJSTFCCommands.DataTypeArgument::create)
+                )
+        );
+        CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
+    }
 
     public KubeJSTFC() {
         EventHandlers.init();
@@ -147,13 +156,24 @@ public class KubeJSTFC {
 
         KJSTFCNetwork.init();
 
-        COMMAND_ARGS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        COMMAND_ARGS.register(modBus);
+        CHUNK_GENERATOR.register(modBus);
 
         reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production
     }
 
     public static ResourceLocation identifier(String path) {
         return new ResourceLocation(MODID, path);
+    }
+
+    public static <T> T tryOrElse(Supplier<T> supplier, T orElse, Consumer<Exception> onError) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            onError.accept(e);
+            return orElse;
+        }
     }
 
     // Poor man's event bus because scripts are read before the main event bus is started

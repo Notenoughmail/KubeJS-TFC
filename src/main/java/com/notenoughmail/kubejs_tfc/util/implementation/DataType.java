@@ -488,9 +488,10 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (!entries.isEmpty()) {
                 final Map.Entry<String, T> entry = UtilsJS.cast(entries.toArray()[0]); // Ugly, but eh
                 simpleDescriptor(out, entry.getKey());
-                simpleAdd(out, entry.getValue());
-                out.append("  }");
+                forEach.accept(entry.getValue(), indent + 1);
+                out.append("  ");
             }
+            out.append("}");
         }
         if (needDescriptor) {
             out.append(CommonComponents.NEW_LINE);

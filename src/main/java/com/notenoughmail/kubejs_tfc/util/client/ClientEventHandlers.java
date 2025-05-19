@@ -7,7 +7,6 @@ import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.JavelinItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.TFCFishingRodItemBuilder;
 import com.notenoughmail.kubejs_tfc.item.WindMillBladeItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.TFCColors;
 import net.dries007.tfc.client.model.ContainedFluidModel;
@@ -17,8 +16,6 @@ import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -28,8 +25,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -43,9 +38,6 @@ public class ClientEventHandlers {
         modBus.addListener(ClientEventHandlers::registerItemColorHandlers);
         modBus.addListener(ClientEventHandlers::clientSetup);
         modBus.addListener(ClientEventHandlers::registerBlockColorHandlers);
-
-        final IEventBus bus = MinecraftForge.EVENT_BUS;
-        bus.addListener(ClientEventHandlers::screenInit);
     }
 
     // This doesn't work very well with pure white 16x16 images for both textures
@@ -100,11 +92,5 @@ public class ClientEventHandlers {
                 DyeColor.WHITE, // Meaningless in this case
                 ctx -> new WindmillBladeModelJS(ctx.bakeLayer(RenderHelpers.modelIdentifier("windmill_blade")), builder.getColor())
         )));
-    }
-
-    private static void screenInit(ScreenEvent.Init.Pre event) {
-        if (event.getScreen() instanceof TitleScreen || event.getScreen() instanceof SelectWorldScreen) {
-            WorldGenUtils.worldgenHasBeenTransformed = false;
-        }
     }
 }

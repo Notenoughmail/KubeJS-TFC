@@ -4,7 +4,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -28,7 +27,6 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;

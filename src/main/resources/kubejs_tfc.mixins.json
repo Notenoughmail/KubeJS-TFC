@@ -9,6 +9,7 @@
     "GlassOperationMixin",
     "HandHeldItemBuilderMixin",
     "HeatCapabilityMixin",
+    "ChunkMapMixin",
     "RegisteredDataManagerMixin",
     "SelfTestsMixin",
     "TFCChunkGeneratorMixin",

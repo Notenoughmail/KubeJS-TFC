@@ -19,7 +19,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class HeatAttachment implements BlockEntityAttachment, TickableAttachment, IHeatBlock {

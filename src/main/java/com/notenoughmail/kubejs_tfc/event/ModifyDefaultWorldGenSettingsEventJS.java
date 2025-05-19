@@ -1,18 +1,20 @@
 package com.notenoughmail.kubejs_tfc.event;
 
 import com.google.gson.JsonPrimitive;
-import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.*;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
 import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
-import net.dries007.tfc.world.TFCChunkGenerator;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +29,39 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
 
-    private final TFCChunkGenerator generator;
+    public static final MapCodec.ResultFunction<Settings> SETTINGS_TRANSFORMER = new MapCodec.ResultFunction<>() {
+        @Override
+        public <T> DataResult<Settings> apply(DynamicOps<T> ops, MapLike<T> input, DataResult<Settings> a) {
+            // JsonOps means this is likely being called during world creation, the whole point of this event
+            // There is the unfortunate detail of JsonOps being used once during world load, before NBTOps being used again ?
+            if (ops instanceof RegistryOps<T> regOps && regOps.delegate instanceof JsonOps) {
+                return a.map(settings -> {
+                    if (EventHandlers.defaultSettings.hasListeners()) {
+                        final ModifyDefaultWorldGenSettingsEventJS event = new ModifyDefaultWorldGenSettingsEventJS(settings);
+                        EventHandlers.defaultSettings.post(event);
+                        final Settings modified = event.build();
+                        KubeJSTFC.warningLog("Modified worldgen settings: {}", () -> Settings.CODEC.encoder().encodeStart(ops, modified).get().left());
+                        return modified;
+                    } else {
+                        return settings;
+                    }
+                });
+            } else {
+                return a;
+            }
+        }
+
+        @Override
+        public <T> RecordBuilder<T> coApply(DynamicOps<T> ops, Settings input, RecordBuilder<T> t) {
+            return t;
+        }
+
+        @Override
+        public String toString() {
+            return "KubeJS TFC: TFC Settings Transformer";
+        }
+    };
+
     private boolean flatBedrock;
     private int spawnDistance;
     private int spawnCenterX;
@@ -42,10 +76,9 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
     private final Map<String, RockSettings> rocks;
     private final List<String> bottom, oceanFloor, land, volcanic, uplift;
     private final List<RockLayerSettings.LayerData> layers;
+    private final RockLayerSettings oldRockLayerSettings;
 
-    public ModifyDefaultWorldGenSettingsEventJS(TFCChunkGenerator generator) {
-        this.generator = generator;
-        final Settings settings = generator.settings();
+    public ModifyDefaultWorldGenSettingsEventJS(Settings settings) {
         flatBedrock = settings.flatBedrock();
         spawnDistance = settings.spawnDistance();
         spawnCenterX = settings.spawnCenterX();
@@ -56,6 +89,7 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
         rainConstant = settings.rainfallConstant();
         continentalness = settings.continentalness();
         grassDensity = settings.grassDensity();
+        oldRockLayerSettings = settings.rockLayerSettings();
 
         // Copy values to mutable lists and maps
         final RockLayerSettings.Data data = ((RockLayerSettingsAccessor) (Object) settings.rockLayerSettings()).kubejs_tfc$Data();
@@ -282,13 +316,13 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
         return uplift;
     }
 
-    @Override
-    protected void afterPosted(EventResult result) {
-        final boolean validSettings;
+    @HideFromJS
+    public Settings build() {
+        final boolean validRocks;
         if (bottom.isEmpty() || oceanFloor.isEmpty() || land.isEmpty() || volcanic.isEmpty() || uplift.isEmpty()) {
-            validSettings = false;
+            validRocks = false;
             ConsoleJS.SERVER.error("""
-                    Custom rock layer settings are invalid, cannot have an empty layer type, using default settings.
+                    Custom rock layer settings are invalid, cannot have an empty layer type, using default rock settings.
                         bottom=%s
                         ocean_floor=%s
                         land=%s
@@ -296,9 +330,10 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
                         uplift=%s
                     """.formatted(bottom, oceanFloor, land, volcanic, uplift));
         } else {
-            validSettings = true;
+            validRocks = true;
         }
-        generator.applySettings(old -> new Settings(
+
+        return new Settings(
                 flatBedrock,
                 spawnDistance,
                 spawnCenterX,
@@ -307,9 +342,25 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
                 tempConstant,
                 rainScale,
                 rainConstant,
-                validSettings ? new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift).parse() : old.rockLayerSettings(),
+                validRocks ?
+                        KubeJSTFC.tryOrElse(
+                                new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift)::parse,
+                                oldRockLayerSettings,
+                                e -> ConsoleJS.SERVER.error("""
+                                        Error encountered while parsing rock settings:
+                                        %s:
+                                        %s
+                                        \t%s
+                                        Using default rock settings
+                                        """.formatted(
+                                                e.getClass(),
+                                                e.getMessage(),
+                                                String.join("\n\t", Arrays.stream(e.getStackTrace()).map(Object::toString).toArray(String[]::new))
+                                ))
+                        ) :
+                        oldRockLayerSettings,
                 continentalness,
                 grassDensity
-        ));
+        );
     }
 }

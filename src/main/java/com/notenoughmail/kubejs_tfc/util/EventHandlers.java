@@ -5,31 +5,24 @@ import com.notenoughmail.kubejs_tfc.event.*;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.climate.KubeJSClimateModel;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
+import dev.latvian.mods.kubejs.event.Extra;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.util.DispenserBehaviors;
-import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.events.*;
-import net.dries007.tfc.world.ChunkGeneratorExtension;
-import net.dries007.tfc.world.chunkdata.ChunkData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -69,6 +62,7 @@ public class EventHandlers {
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
     public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(PlayerEvents.SUPPORTS_MENU_TYPE.copy().required());
+    public static final EventHandler createChunkDataProvider = TFCEvents.server("createChunkDataProvider", () -> CreateChunkDataProviderEventJS.class).extra(Extra.REQUIRES_STRING);
 
     public static void init() {
         final IEventBus bus = MinecraftForge.EVENT_BUS;
@@ -81,9 +75,7 @@ public class EventHandlers {
         bus.addListener(EventHandlers::limitContainers);
         bus.addListener(EventHandlers::onCollapse);
         bus.addListener(EventHandlers::onDouseFire);
-        bus.addListener(EventHandlers::serverAboutToStart);
         bus.addListener(KubeJSTFCCommands::reg);
-        bus.addListener(EventHandlers::onChunkLoad);
         if (!FMLEnvironment.production) {
             bus.addListener(EventPriority.LOWEST, EventHandlers::reloadListeners);
         }
@@ -217,10 +209,6 @@ public class EventHandlers {
         });
     }
 
-    private static void serverAboutToStart(ServerAboutToStartEvent event) {
-        WorldGenUtils.worldgenHasBeenTransformed = false;
-    }
-
     private static void loadComplete(FMLLoadCompleteEvent event) {
         if (registerFaunas.hasListeners()) {
             registerFaunas.post(new RegisterFaunasEventJS());
@@ -234,16 +222,5 @@ public class EventHandlers {
                 consumer.accept(manager);
             }
         }).forEach(manager -> KubeJSTFC.warningLog("DataManager has not been handled: {} ({})", manager.directory, manager));
-    }
-
-    // TODO: Test/verify
-    private static void onChunkLoad(ChunkEvent.Load event) {
-        if (event.isNewChunk() && event.getChunk() instanceof LevelChunk lc && lc.getLevel() instanceof ServerLevel sl && !(sl.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension) && Climate.model(sl) instanceof KubeJSClimateModel model) {
-            final ChunkData chunkData = new ChunkData(lc.getPos());
-            model.createChunkData(sl, lc, chunkData);
-            if (chunkData.status() == ChunkData.Status.FULL || chunkData.status() == ChunkData.Status.PARTIAL) {
-                ChunkData.update(lc, chunkData);
-            }
-        }
     }
 }

@@ -19,9 +19,10 @@ import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
 import net.dries007.tfc.util.*;
 import net.dries007.tfc.util.registry.RegistryRock;
-import net.dries007.tfc.world.TFCChunkGenerator;
+import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ForestType;
+import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.chunkdata.RockData;
 import net.dries007.tfc.world.noise.Metaballs2D;
 import net.dries007.tfc.world.noise.Metaballs3D;
@@ -264,8 +265,8 @@ public enum MiscBindings {
     })
     @Nullable
     public static RockSettings getRockSettings(LevelAccessor level, Block block) {
-        if (level instanceof ServerLevel serverLevel && serverLevel.getChunkSource().getGenerator() instanceof TFCChunkGenerator tfcGenerator) {
-            return tfcGenerator.settings().rockLayerSettings().getRock(block);
+        if (level instanceof ServerLevel serverLevel && serverLevel.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
+            return ext.settings().rockLayerSettings().getRock(block);
         }
         return null;
     }
@@ -310,6 +311,16 @@ public enum MiscBindings {
     })
     public Metaballs3D newMetaballs3D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
         return new Metaballs3D(random, minBalls, maxBalls, minSize, maxSize, radius);
+    }
+
+    @Info(value = "Creates a `LerpFloatLayer`, an interpolated square of numbers which are known at the corners and interpolated between for intermediate values", params = {
+            @Param(name = "value00", value = "The value at the [low x, low z] corner"),
+            @Param(name = "value01", value = "The value at the [low x, high z] corner"),
+            @Param(name = "value10", value = "The value at the [high x, low z] corner"),
+            @Param(name = "value11", value = "The value at the [high x, high z] corner")
+    })
+    public LerpFloatLayer lerpFloatLayer(float value00, float value01, float value10, float value11) {
+        return new LerpFloatLayer(value00, value01, value10, value11);
     }
 
     @Info(value = "Returns a number, in the range [0, 100], an expression of how hydrated the soil is", params = {
