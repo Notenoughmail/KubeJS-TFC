@@ -13,6 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.StringWriter;
 import java.util.Collection;
 
+/**
+ * <b>Purpose:</b><p>
+ * Insert & deduplicate console errors into the Kube console
+ */
 @Mixin(value = SelfTests.class, remap = false)
 public abstract class SelfTestsMixin {
 

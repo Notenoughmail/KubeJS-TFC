@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.event.*;
 import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -99,6 +100,9 @@ public class EventHandlers {
                 event.setCanceled(true);
             }
         }
+        if (event.getState().getBlock() instanceof ICustomTorchBlock torch) {
+            torch.handleFireStart(event);
+        }
     }
 
     private static void onProspect(ProspectedEvent event) {
@@ -135,6 +139,10 @@ public class EventHandlers {
             if (douseFire.post(new DouseFireEventJS(event)).interruptFalse()) {
                 event.setCanceled(true);
             }
+        }
+
+        if (event.getState().getBlock() instanceof ICustomTorchBlock torch) {
+            torch.handleFireDouse(event);
         }
     }
 

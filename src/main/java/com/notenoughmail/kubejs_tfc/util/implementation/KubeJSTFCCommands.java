@@ -158,10 +158,10 @@ public class KubeJSTFCCommands {
             DataType.append(out, "rainfallConstant", settings.rainfallConstant());
             DataType.append(out, "continentalness", settings.continentalness());
             DataType.append(out, "grassDensity", settings.grassDensity());
-            DataType.append(out, "rockLayerSettings", Component.literal("...").withStyle(s -> s
+            DataType.append(out, "rockLayerSettings", Component.literal("~~~").withStyle(s -> s
                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc print_rock_settings"))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Print rock layer settings")))
-                    .withColor(ChatFormatting.YELLOW))
+                    .withColor(ChatFormatting.AQUA))
             );
             sysMsg(out, ctx);
             return 1;

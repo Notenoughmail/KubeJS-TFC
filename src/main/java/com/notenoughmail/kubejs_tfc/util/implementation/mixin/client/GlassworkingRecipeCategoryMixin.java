@@ -9,6 +9,12 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+/**
+ * <b>Purpose:</b><p>
+ * Allow custom glass operations to show their items in the JEI page
+ * <p>
+ * TODO: 1.21 | Remove, glass operations are a proper registry
+ */
 @Mixin(value = GlassworkingRecipeCategory.class, remap = false)
 public abstract class GlassworkingRecipeCategoryMixin {
 

@@ -70,7 +70,7 @@ public enum MiscBindings {
         return HeatCapability.get(stack);
     }
 
-    @Info(value = "returns true if the stack does have an `IHeat` capability")
+    @Info(value = "Returns true if the stack does have an `IHeat` capability")
     public boolean hasHeat(ItemStack stack) {
         return HeatCapability.has(stack);
     }

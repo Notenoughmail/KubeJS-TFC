@@ -45,6 +45,7 @@ public class KubeJSClimateModel implements ClimateModel {
 
     private final List<Function<OpenSimplex2D, Noise2D>> noiseBuilders = new ArrayList<>();
     private final List<Noise2D> noises = new ArrayList<>();
+    private ClimateModelType modelType;
 
     public KubeJSClimateModel(Builder builder) {
         this.builder = builder;
@@ -60,7 +61,10 @@ public class KubeJSClimateModel implements ClimateModel {
     @NotNull
     @Override
     public ClimateModelType type() {
-        return RegisterClimateModelEventJS.CUSTOM_MODELS.get(builder.name);
+        if (modelType == null) {
+            modelType = RegisterClimateModelEventJS.CUSTOM_MODELS.get(builder.name);
+        }
+        return modelType;
     }
 
     @Override

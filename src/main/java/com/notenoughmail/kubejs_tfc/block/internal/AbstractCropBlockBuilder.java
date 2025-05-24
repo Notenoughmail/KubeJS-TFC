@@ -16,6 +16,7 @@ import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
@@ -63,6 +64,11 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         RegistryUtils.hackBlockEntity(TFCBlockEntities.CROP, this);
         itemBuilder = null;
         noCollision();
+    }
+
+    @HideFromJS
+    public <T extends Enum<T> & DeadCropBlockBuilder.Model> T[] deadModels() {
+        return (T[]) Model.VALUES;
     }
 
     protected boolean hasProduct() {
@@ -136,6 +142,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         for (int i = 0 ; i < 12 ; i++) {
             model(i, m);
         }
+        model = m;
         return this;
     }
 
@@ -308,5 +315,27 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         FLOODED,
         SPREADING,
         PICKABLE
+    }
+
+    public enum Model implements DeadCropBlockBuilder.Model {
+        MATURE,
+        YOUNG;
+
+        public static final Model[] VALUES = values();
+
+        @Override
+        public String variant() {
+            return "mature=" + mature();
+        }
+
+        @Override
+        public boolean mature() {
+            return this == MATURE;
+        }
+
+        @Override
+        public ResourceLocation model(DeadCropBlockBuilder dead) {
+            return dead.newID("", mature() ? "": "_young");
+        }
     }
 }

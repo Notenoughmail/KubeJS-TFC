@@ -30,36 +30,35 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     private float dripChance;
     private float meltChance;
-    private boolean drips;
     private float dripTemp;
     private boolean melts;
     private float meltTemp;
-    private ResourceLocation dripParticle;
+    private Supplier<Optional<ParticleOptions>> particle;
     private FluidStack meltFluid;
     private String tipModel;
 
     public ThinSpikeBlockBuilder(ResourceLocation i) {
         super(i);
-        drips = false;
         dripChance = 0.15f;
         dripTemp = OverworldClimateModel.ICICLE_DRIP_TEMPERATURE;
         melts = false;
         meltChance = 1f / 60f; // By default, TFC uses Random#nextInt(60) == 0, this is effectively equivalent;
         meltTemp = OverworldClimateModel.ICICLE_MELT_TEMPERATURE;
-        dripParticle = new ResourceLocation("minecraft", "dripping_dripstone_water");
+        particle = Optional::empty;
         meltFluid = new FluidStack(Fluids.WATER, 100);
         tipModel = "";
     }
 
-    @Info(value = "Makes the block drip particles")
+    @Deprecated(since = "1.3.0")
+    @Info(value = "Deprecated, please use `#dripParticle` to make the block drip and have specify the drip particle")
     public ThinSpikeBlockBuilder drips() {
-        drips = true;
         return this;
     }
 
@@ -94,8 +93,8 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Info(value = "The registry name of a particle that will drip from the block")
-    public ThinSpikeBlockBuilder dripParticle(ResourceLocation particle) {
-        dripParticle = particle;
+    public ThinSpikeBlockBuilder dripParticle(@Nullable ResourceLocation particle) {
+        this.particle = RegistryUtils.getParticleOrLogError(particle);
         return this;
     }
 
@@ -121,22 +120,20 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     public ThinSpikeBlock createObject() {
         return new ThinSpikeBlock(melts ? createProperties().randomTicks() : createProperties()) {
 
-            @Nullable
-            private Optional<ParticleOptions> particle;
-
             @Override
             public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-                if (drips) {
-                    final float temperature = Climate.getTemperature(level, pos);
-                    if (state.getValue(TIP) && state.getValue(FLUID).getFluid() == Fluids.EMPTY && temperature > dripTemp && random.nextFloat() < dripChance) {
+                particle.get().ifPresent(p -> {
+                    if (
+                            state.getValue(TIP) &&
+                            state.getValue(FLUID).getFluid() == Fluids.EMPTY &&
+                            Climate.getTemperature(level, pos) > dripTemp &&
+                            random.nextFloat() < dripChance
+                    ) {
                         if (random.nextFloat() < dripChance) { // Weird but TFC does it
-                            if (particle == null) {
-                                particle = RegistryUtils.getParticleOrLogError(dripParticle);
-                            }
-                            particle.ifPresent(options -> spawnParticle(level, pos, state, options));
+                            spawnParticle(level, pos, state, p);
                         }
                     }
-                }
+                });
             }
 
             /**

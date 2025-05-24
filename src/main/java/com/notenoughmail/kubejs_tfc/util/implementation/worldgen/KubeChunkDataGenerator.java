@@ -40,7 +40,7 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
                     for (int z = 0 ; z < 16 ; z++) {
                         final int height = access.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
                         elevations[x + 16 * z] = height;
-                        data[Math.floorDiv(x, 4)][Math.floorDiv(z, 4)][(x % 4) | ((z % 4) << 2)] = height;
+                        data[x / 4][z / 4][(x & 0b11) | ((z & 0b11) << 2)] = height;
                     }
                 }
                 for (int x = 0 ; x < 4 ; x++) {

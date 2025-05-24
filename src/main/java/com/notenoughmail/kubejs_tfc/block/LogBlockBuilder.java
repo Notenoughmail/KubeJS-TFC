@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-// TODO: Fix item model being empty under conditions of "log_test_with_stripped"
+// TODO: 1.3.0 | Fix item model being empty under conditions of "log_test_with_stripped"
 public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Nullable

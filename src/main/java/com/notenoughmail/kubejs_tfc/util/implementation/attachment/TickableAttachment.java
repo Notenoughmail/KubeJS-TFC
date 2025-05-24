@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 
+import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachment;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityInfo;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJSTicker;
@@ -8,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public interface TickableAttachment {
+public interface TickableAttachment extends BlockEntityAttachment {
 
     default void wrapScriptTicker(BlockEntityJS entity, boolean server) {
         final BlockEntityInfo info = entity.info;

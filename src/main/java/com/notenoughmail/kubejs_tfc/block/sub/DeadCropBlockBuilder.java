@@ -2,13 +2,17 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.crop.DeadClimbingCropBlock;
 import net.dries007.tfc.common.blocks.crop.DeadCropBlock;
@@ -17,9 +21,12 @@ import net.dries007.tfc.common.blocks.crop.FloodedDeadCropBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+import java.util.function.BiConsumer;
+
 public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private final AbstractCropBlockBuilder alive;
+    public transient BiConsumer<Model, ModelGenerator> models;
 
     public DeadCropBlockBuilder(ResourceLocation i, AbstractCropBlockBuilder alive) {
         super(i);
@@ -27,6 +34,20 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         renderType("cutout");
         itemBuilder = null;
         noCollision();
+        models = (t, m) -> {
+            if (t instanceof DoubleCropBlockBuilder.Models mo && !mo.mature() && mo.requiresStick() && mo.stick() && !mo.bottom()) {
+                m.parent("tfc:block/crop/stick");
+            } else {
+                m.parent("block/crop");
+                m.texture("crop", t.model(this).withPrefix("block/").toString());
+            }
+        };
+    }
+
+    // TODO: 1.3.0 | Document, coherently
+    public DeadCropBlockBuilder models(BiConsumer<? extends Model, ModelGenerator> models) {
+        this.models = this.models.andThen(UtilsJS.cast(models));
+        return this;
     }
 
     @Override
@@ -59,12 +80,12 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         } else if (alive.type != AbstractCropBlockBuilder.Type.DOUBLE) {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addEntry(alternatives(matureEntry(1, 3, false), notMatureEntry(false)));
+                p.addEntry(alternatives(matureEntry(false), notMatureEntry(false)));
             });
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addEntry(alternatives(notMatureEntry(true), matureEntry(1, 3, true)));
+                p.addEntry(alternatives(notMatureEntry(true), matureEntry(true)));
             });
             if (alive.requiresStick) {
                 lootBuilder.addPool(p -> {
@@ -91,7 +112,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return json;
     }
 
-    private JsonObject matureEntry(int min, int max, boolean tall) {
+    private JsonObject matureEntry(boolean tall) {
         return ResourceUtils.createEntry(alive.seeds.id.toString())
                 .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "true");
@@ -99,7 +120,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                         j.addProperty("part", "bottom");
                     }
                 }))
-                .addFunction(ResourceUtils.simpleSetCountFunction(min, max))
+                .addFunction(ResourceUtils.simpleSetCountFunction(1, 3))
                 .json;
     }
 
@@ -116,54 +137,25 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String base = newID("block/", "").toString();
-        if (alive.type != AbstractCropBlockBuilder.Type.DOUBLE) {
-            generator.blockModel(id, m -> {
-                m.parent("block/crop");
-                m.texture("crop", base);
-            });
-            generator.blockModel(newID("", "_young"), m -> {
-                m.parent("block/crop");
-                m.texture("crop", base + "_young");
-            });
-        } else {
-            if (alive.requiresStick) {
-                generator.blockModel(newID("", "_young_stick"), m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", base + "_young_stick");
-                });
-            }
-            generator.blockModel(newID("", "_bottom"), m -> {
-                m.parent("block/crop");
-                m.texture("crop", base + "_bottom");
-            });
-            generator.blockModel(newID("", "_top"), m -> {
-                m.parent("block/crop");
-                m.texture("crop", base + "_top");
-            });
-            generator.blockModel(newID("", "_young"), m -> {
-                m.parent("block/crop");
-                m.texture("crop", base + "_young");
+        for (Model t : alive.deadModels()) {
+            generator.blockModel(t.model(this), m -> {
+                models.accept(t, m);
             });
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String baseModel = newID("block/", "").toString();
-        if (alive.type != AbstractCropBlockBuilder.Type.DOUBLE) {
-            bs.simpleVariant("mature=true", baseModel);
-            bs.simpleVariant("mature=false", baseModel + "_young");
-        } else {
-            if (alive.requiresStick) {
-                bs.simpleVariant("mature=false,stick=false", baseModel + "_young");
-                bs.simpleVariant("mature=false,stick=true,part=top", "tfc:block/crop/stick");
-                bs.simpleVariant("mature=false,stick=true,part=bottom", baseModel + "_young_stick");
-            } else {
-                bs.simpleVariant("mature=false", baseModel + "_young");
-            }
-            bs.simpleVariant("mature=true,part=bottom", baseModel + "_bottom");
-            bs.simpleVariant("mature=true,part=top", baseModel + "_top");
+        for (Model t : alive.deadModels()) {
+            bs.simpleVariant(t.variant(), t.model(this).withPrefix("block/").toString());
         }
+    }
+
+    public interface Model {
+
+        String variant();
+        boolean mature();
+        @HideFromJS
+        ResourceLocation model(DeadCropBlockBuilder dead);
     }
 }

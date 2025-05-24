@@ -6,6 +6,10 @@ import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+/**
+ * <b>Purpose:</b><p>
+ * Enable easy, general use of TFC's attack damage calculation script-side
+ */
 @Mixin(value = HandheldItemBuilder.class, remap = false)
 public abstract class HandHeldItemBuilderMixin implements IKubeJSTFCHandHeldItemBuilderExtension {
 

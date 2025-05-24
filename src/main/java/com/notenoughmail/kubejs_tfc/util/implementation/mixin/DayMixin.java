@@ -9,6 +9,10 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Map;
 
+/**
+ * <b>Purpose:</b><p>
+ * Enable adding/removing birthdays to the in-game calendar screen
+ */
 @Mixin(value = Day.class, remap = false)
 public abstract class DayMixin implements IDayMixin {
 

@@ -62,7 +62,6 @@ public class CreateChunkDataProviderEventJS extends EventJS {
         createAquifer = maker;
     }
 
-    // TODO: If its possible to include a Level or ChunkAccess param somehow, do a get-or-default for settings at given pos and mention that here
     @Info("""
             Sets the rock settings generator. Does not affect world generation without intervention, but some TFC features (boulders, erosion, fissure) may use this for selecting blocks.
             
@@ -72,7 +71,6 @@ public class CreateChunkDataProviderEventJS extends EventJS {
         generateRock = rocksGetter;
     }
 
-    // TODO: Investigate the safety of including a Level parameter
     @FunctionalInterface
     public interface RocksGetter {
         @Info(params = {
@@ -83,6 +81,7 @@ public class CreateChunkDataProviderEventJS extends EventJS {
                 @Param(name = "cache", value = "A nullable cache of rock layer elevations"),
                 @Param(name = "rockLayers", value = "The rock settings defined in the generator")
         })
+        @Nullable
         RockSettings generate(int x, int y, int z, int surfaceY, @Nullable ChunkRockDataCache cache, RockLayerSettings rockLayers);
     }
 

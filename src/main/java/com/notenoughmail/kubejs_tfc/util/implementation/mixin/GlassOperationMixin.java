@@ -30,6 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <b>Purpose:</b><p>
+ * Enables custom glass operation creation with custom heat and sounds
+ * <p>
+ * TODO: 1.21 | Remove, glass operations are a proper registry
+ */
 @Mixin(value = GlassOperation.class, remap = false)
 public abstract class GlassOperationMixin {
 

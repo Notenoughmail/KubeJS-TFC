@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+/**
+ * <b>Purpose:</b><p>
+ * Inserts & deduplicates console errors into the Kube console
+ */
 @Mixin(value = RegisteredDataManager.class, remap = false)
 public abstract class RegisteredDataManagerMixin {
 

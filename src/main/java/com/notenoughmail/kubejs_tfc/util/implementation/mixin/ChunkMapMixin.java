@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * <bold>Purpose</bold><p>
+ * <b>Purpose:</b><p>
  * {@link ChunkMap} special cases the {@link NoiseGeneratorSettings} passed to its {@link net.minecraft.world.level.levelgen.RandomState RandomState}
  * for noise based generators.
  * <p>

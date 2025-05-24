@@ -1,9 +1,17 @@
 ### 1.3.0 (W.I.P.)
-- Add heat block entity attachment
 - Add commands to print TFC's level settings and chunk data
 - Add setting (default enabled) to deduplicate TFc datapack validation errors that are inserted into the KubeJS console
 - Add chunk generator type `kubejs_tfc:wrapped` which enables adding chunk data to levels without proper TFC-like level generators
 - New event for creating chunk data, depends on above chunk generator type
+- De-hardcode dead crop model generation
+- Add `tfc:torch` block builder type
+- Add `tfc:heat` block entity attachment type
+- Add `tfc:calendar` block entity attachment type
+- Deprecated:
+  - `#drips` in `tfc:thin_spike` block type, same functionality handled by nullable parameter of `#dripParticle`
+  - `#hasBubbles` & `#hasSteam` in `tfc:spring` fluid type, same functionality handled by nullable parameter of `#bubbleParticle` & `#steamParticle`
+- Remove deprecated methods in custom climate model event
+- Remove old, non-functional chunk-data creation mechanism for custom climate models that was added in 1.2.6
 
 ### 1.2.6
 - Add TFC Log block builder

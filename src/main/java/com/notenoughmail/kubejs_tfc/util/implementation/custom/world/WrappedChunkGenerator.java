@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.custom.world;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IChunkGenWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.mixin.accessor.ChunkMapAccessor;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -55,6 +56,11 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
                     .forGetter(c -> c.settings)
     ).apply(instance, WrappedChunkGenerator::new));
 
+    public static ChunkGenerator getWrapper(ChunkGenerator gen) {
+        final WrappedChunkGenerator wrapper = ((IChunkGenWrapper) gen).kubejs_tfc$getWrapper();
+        return wrapper == null ? gen : wrapper;
+    }
+
     private final ChunkGenerator wrapped;
     private final String key;
     private Settings settings;
@@ -65,6 +71,7 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
         this.wrapped = wrapped;
         this.key = key;
         this.settings = settings;
+        ((IChunkGenWrapper) wrapped).kubejs_tfc$SetWrapper(this);
     }
 
     public ChunkGenerator getWrapped() {

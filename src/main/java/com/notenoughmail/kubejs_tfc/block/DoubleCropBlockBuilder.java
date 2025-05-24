@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -10,6 +11,7 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +32,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         stages = 4;
         doubleStages = 4;
         type = Type.DOUBLE;
+    }
+
+    @Override
+    public <T extends Enum<T> & DeadCropBlockBuilder.Model> T[] deadModels() {
+        return (T[]) (requiresStick ? Models.VALUES_STICK : Models.VALUES_NO_STICK);
     }
 
     @Override
@@ -163,6 +170,99 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 bs.simpleVariant(baseKey + ",part=bottom", baseModel + i + "_bottom");
                 bs.simpleVariant(baseKey + ",part=top", baseModel + i + "_top");
             }
+        }
+    }
+
+    public enum Models implements DeadCropBlockBuilder.Model {
+        YOUNG_STICK(false, false, true, false),
+        YOUNG_TOP(true, false, true, false),
+        YOUNG_BOTTOM(true, true, true, false),
+        YOUNG(false, false),
+        MATURE_BOTTOM(true, true),
+        MATURE_TOP(false, true)
+        ;
+
+        public static final Models[] VALUES_STICK = {
+                YOUNG_STICK,
+                YOUNG_TOP,
+                YOUNG_BOTTOM,
+                MATURE_BOTTOM,
+                MATURE_TOP
+        };
+        public static final Models[] VALUES_NO_STICK = {
+                YOUNG,
+                MATURE_BOTTOM,
+                MATURE_TOP
+        };
+
+        private final boolean stick, bottom, mature, requiresStick;
+        private final String variant;
+
+        Models(boolean bottom, boolean mature) {
+            this(false, bottom, false, mature);
+        }
+
+        Models(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
+            this(stick, bottom, mature, requiresStick, makeVariant(stick, bottom, requiresStick, mature));
+        }
+
+        private static String makeVariant(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
+            if (requiresStick) {
+                if (stick) {
+                    return "mature=false,stick=true,part=" + (bottom ? "bottom" : "top");
+                } else {
+                    return "mature=false,stick=false";
+                }
+            } else {
+                if (mature) {
+                    return "mature=true,part=" + (bottom ? "bottom" : "top");
+                } else {
+                    return "mature=false";
+                }
+            }
+        }
+
+        Models(boolean stick, boolean bottom, boolean mature, boolean requiresStick, String variant) {
+            this.stick = stick;
+            this.bottom = bottom;
+            this.mature = mature;
+            this.requiresStick = requiresStick;
+            this.variant = variant;
+        }
+
+        @Override
+        public String variant() {
+            return variant;
+        }
+
+        @Override
+        public boolean mature() {
+            return mature;
+        }
+
+        @Override
+        public ResourceLocation model(DeadCropBlockBuilder dead) {
+            if (mature) {
+                return dead.newID("", "_" + (bottom ? "bottom" : "top"));
+            } else {
+                if (requiresStick && stick) {
+                    return dead.newID("", "_young_stick" + (bottom ? "" : "_top"));
+                }
+                return dead.newID("", "_young");
+            }
+        }
+
+        public boolean bottom() {
+            return bottom;
+        }
+
+        public boolean stick() {
+            return stick;
+        }
+
+        @HideFromJS
+        public boolean requiresStick() {
+            return requiresStick;
         }
     }
 }

@@ -17,6 +17,7 @@ import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
@@ -128,6 +129,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:encased_axle", EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:log", LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
+        RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -179,6 +181,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.POT_SOUP.getId().getPath(), SoupPotSchema.SCHEMA)
                 .register(TFCRecipeSerializers.QUERN.getId().getPath(), BasicSchema.SCHEMA)
                 .register(TFCRecipeSerializers.SCRAPING.getId().getPath(), ScrapingSchema.SCHEMA)
+                // TODO: 1.3.0 | Get kube recipe modifiers working with this/these
                 .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPED)
                 .register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPELESS)
                 .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))
@@ -261,6 +264,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
         types.add(TFCInventoryAttachment.TYPE);
         types.add(HeatAttachment.TYPE);
+        types.add(CalendarTrackingAttachment.TYPE);
     }
 
     @Override
