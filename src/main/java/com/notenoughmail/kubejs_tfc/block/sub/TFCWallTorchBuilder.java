@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.TFCTorchBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -36,8 +37,12 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
     public TFCWallTorchBuilder(ResourceLocation i, TFCTorchBlockBuilder parent) {
         super(i);
         noItem();
+        lootTable = null;
         this.parent = parent;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
+        textureAll("minecraft:block/torch");
+        lightLevel(14F / 15F);
+        renderType("cutout");
     }
 
     @Override
@@ -49,12 +54,14 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
     public ExtendedProperties createExtendedProperties() {
         return super.createExtendedProperties()
                 .randomTicks()
-                .blockEntity(TFCBlockEntities.TICK_COUNTER);
+                .blockEntity(TFCBlockEntities.TICK_COUNTER)
+                .dropsLike(parent);
     }
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        return super.textureAll(tex);
+        texture("particle", tex);
+        return texture("torch", tex);
     }
 
     @Override
@@ -62,18 +69,23 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        super.generateBlockModelJsons(generator);
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
+            m.parent("minecraft:block/wall_torch");
+            m.textures(textures);
+        });
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        super.generateBlockStateJson(bs);
+        final String m = ResourceUtils.plainModel(this);
+        bs.simpleVariant("facing=east", m);
+        bs.variant("facing=north", v -> v.model(m).y(270));
+        bs.variant("facing=south", v -> v.model(m).y(90));
+        bs.variant("facing=west", v -> v.model(m).y(180));
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        super.generateDataJsons(generator);
-    }
+    public void generateDataJsons(DataJsonGenerator generator) {}
 
     private class Impl extends TFCWallTorchBlock implements ICustomTorchBlock {
 
@@ -83,7 +95,7 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
         @Override
         public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
-            final Direction dir = pState.getValue(FACING);
+            final Direction dir = pState.getValue(FACING).getOpposite();
             final double
                     x = pPos.getX() + 0.5D + 0.27D * (double) dir.getStepX(),
                     y = pPos.getY() + 0.92D,
@@ -96,6 +108,11 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
         public void handleFireDouse(DouseFireEvent event) {
             event.getLevel().setBlockAndUpdate(event.getPos(), parent.deadWall.get().withPropertiesOf(event.getState()));
             event.setCanceled(true);
+        }
+
+        @Override
+        public int getTotalTicks() {
+            return parent.decayLength.get();
         }
 
         @Override

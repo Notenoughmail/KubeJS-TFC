@@ -16,7 +16,6 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
         texture("texture", tex);
         return texture("particle", tex);
     }

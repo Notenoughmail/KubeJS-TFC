@@ -61,7 +61,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("all", tex);
         return this;
     }

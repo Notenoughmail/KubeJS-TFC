@@ -24,7 +24,8 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public BlockBuilder textureAll(String tex) {
         texture("side", tex);
         texture("end", tex);
-        return super.textureAll(tex);
+        texture("particle", tex);
+        return this;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
             m.parent("tfc:block/ore_column");
             m.textures(textures);
         });
@@ -48,9 +49,9 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
-        bs.simpleVariant("axis=y", model);
-        bs.variant("axis=z", v -> v.model(model).x(90));
-        bs.variant("axis=x", v -> v.model(model).x(90).y(90));
+        final String m = ResourceUtils.plainModel(this);
+        bs.simpleVariant("axis=y", m);
+        bs.variant("axis=z", v -> v.model(m).x(90));
+        bs.variant("axis=x", v -> v.model(m).x(90).y(90));
     }
 }

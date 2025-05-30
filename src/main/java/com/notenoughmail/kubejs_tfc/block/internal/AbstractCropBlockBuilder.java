@@ -207,7 +207,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         return texture("crop", tex);
     }
 

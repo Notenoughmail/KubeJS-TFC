@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AnvilBlockEntityMixin",
+    "BlockEntityTooltipsMixin",
     "ChunkGeneratorMixin",
     "ChunkMapMixin",
     "DayMixin",
@@ -16,6 +17,7 @@
     "StructureMixin",
     "StructureMixin$StructureStartMixin",
     "TFCChunkGeneratorMixin",
+    "TorchItemMixin",
     "accessor.BlockEntityTypeAccessor",
     "accessor.ClimatePlacementAccessor",
     "accessor.DataManagerAccessor",

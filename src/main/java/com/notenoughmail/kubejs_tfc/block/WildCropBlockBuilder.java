@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         return texture("crop", tex);
     }
 
@@ -174,7 +175,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                     p.survivesExplosion();
                     p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
                             .addCondition((type == Type.DOUBLE || type == Type.SPREADING) ? doubleFoodCondition() : defaultFoodCondition())
-                            .addFunction(ResourceUtils.simpleSetCountFunction(1, 3));
+                            .count(UniformGenerator.between(1, 3));
                 });
             }
         }

@@ -4,6 +4,7 @@ import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -43,6 +44,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
 
     @Override
     public BlockBuilder textureAll(String tex) {
+        texture("particle", tex);
         texture("surface", tex);
         texture("particle", tex);
         texture("down", tex);
@@ -114,7 +116,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String blockModelLoc = model.isEmpty() ? (id.getNamespace() + ":block/" + id.getPath()) : model;
+        final String blockModelLoc = ResourceUtils.plainModel(this);
         for (int i = 1 ; i < 5 ; i++) {
             for (String age : ages) {
                 bs.simpleVariant("age=" + age + ",count=" + i, blockModelLoc + "_" + age + "_" + i);

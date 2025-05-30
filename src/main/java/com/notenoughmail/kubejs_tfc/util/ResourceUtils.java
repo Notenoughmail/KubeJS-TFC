@@ -306,14 +306,14 @@ public class ResourceUtils {
         }));
     }
 
-    public static JsonObject simpleSetCountFunction(int min, int max) {
+    public static JsonObject alternatives(LootTableEntry... entries) {
         return buildJson(json -> {
-            json.addProperty("function", "minecraft:set_count");
-            json.add("count", buildJson(count -> {
-                count.addProperty("min", min);
-                count.addProperty("max", max);
-                count.addProperty("type", "minecraft:uniform");
-            }));
+            json.addProperty("type", "minecraft:alternatives");
+            final JsonArray arr = new JsonArray(entries.length);
+            for (LootTableEntry entry : entries) {
+                arr.add(entry.json);
+            }
+            json.add("children", arr);
         });
     }
 
@@ -346,11 +346,21 @@ public class ResourceUtils {
     }
 
     public static void hasModelOrElse(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
-        if (builder.model.isEmpty()) {
-            generator.blockModel(builder.id, m);
-        } else {
+        if (ifModelEmpty(generator, builder, m)) {
             hasModel(generator, builder);
         }
+    }
+
+    public static boolean ifModelEmpty(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
+        if (builder.model.isEmpty()) {
+            generator.blockModel(builder.id, m);
+            return false;
+        }
+        return true;
+    }
+
+    public static String plainModel(BlockBuilder builder) {
+        return builder.model.isEmpty() ? (builder.id.getNamespace() + ":block/" + builder.id.getPath()) : builder.model;
     }
 
     public static final String[] cardinalDirections = {"north", "east", "south", "west"};

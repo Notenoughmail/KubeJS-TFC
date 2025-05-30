@@ -27,7 +27,7 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         return texture("all", tex);
     }
 

@@ -58,7 +58,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("metal", tex);
         texture("chain", tex);
         return this;

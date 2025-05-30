@@ -42,7 +42,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("texture", tex);
         if (itemBuilder != null) {
             itemBuilder.texture("block", tex);

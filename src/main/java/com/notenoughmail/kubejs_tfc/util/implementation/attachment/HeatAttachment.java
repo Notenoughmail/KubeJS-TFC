@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-// TODO: 1.3.0 | Investigate crucibles having ludicrously high temps on world load when heated by this
 public class HeatAttachment implements TickableAttachment, IHeatBlock {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(

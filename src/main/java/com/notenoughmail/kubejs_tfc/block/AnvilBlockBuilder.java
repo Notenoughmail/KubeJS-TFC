@@ -31,7 +31,7 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         return texture("all", tex);
     }
 
@@ -60,7 +60,7 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
             m.parent("tfc:block/anvil");
             m.textures(textures);
         });
@@ -68,11 +68,11 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
-        bs.variant("facing=north", v -> v.model(model).y(90));
-        bs.variant("facing=east", v -> v.model(model).y(180));
-        bs.variant("facing=south", v -> v.model(model).y(270));
-        bs.simpleVariant("facing=west", model);
+        final String m = ResourceUtils.plainModel(this);
+        bs.variant("facing=north", v -> v.model(m).y(90));
+        bs.variant("facing=east", v -> v.model(m).y(180));
+        bs.variant("facing=south", v -> v.model(m).y(270));
+        bs.simpleVariant("facing=west", m);
     }
 
     public static class AnvilBlockJS extends AnvilBlock {

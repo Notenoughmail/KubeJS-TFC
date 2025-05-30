@@ -16,4 +16,5 @@ public interface ICustomTorchBlock {
         event.getLevel().getBlockEntity(event.getPos(), TFCBlockEntities.TICK_COUNTER.get()).ifPresent(TickCounterBlockEntity::resetCounter);
         event.setCanceled(true);
     }
+    default int getTotalTicks() { return 0; }
 }

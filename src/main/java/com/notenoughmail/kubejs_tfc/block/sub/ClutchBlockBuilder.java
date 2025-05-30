@@ -42,7 +42,8 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public BlockBuilder textureAll(String tex) {
         texture("side", tex);
         texture("end", tex);
-        return super.textureAll(tex);
+        texture("particle", tex);
+        return this;
     }
 
     @Override

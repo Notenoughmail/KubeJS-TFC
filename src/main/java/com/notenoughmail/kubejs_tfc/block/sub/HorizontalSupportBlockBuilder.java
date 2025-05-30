@@ -11,7 +11,6 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 @SuppressWarnings("unused")
@@ -41,7 +40,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
         if (lootTable != null) {
             lootTable.accept(lootBuilder);
-        } else if (parent.get().asItem() != Items.AIR) {
+        } else if (parent.itemBuilder != null) {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(parent.get()));
@@ -53,7 +52,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        bs.part("", parent.newID("block/", "_horizontal").toString());
+        bs.part("", ResourceUtils.plainModel(this));
         bs.part("north=true", p -> p.model(parent.connection).y(270));
         bs.part("east=true", parent.connection);
         bs.part("south=true", p -> p.model(parent.connection).y(90));
@@ -62,13 +61,9 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        if (model.isEmpty()) {
-            generator.blockModel(parent.newID("", "_horizontal"), m -> {
-                m.parent("tfc:block/wood/support/horizontal");
-                m.textures(textures);
-            });
-        } else {
-            ResourceUtils.hasModel(generator, this);
-        }
+        ResourceUtils.ifModelEmpty(generator, this,  m -> {
+            m.parent("tfc:block/wood/support/horizontal");
+            m.textures(textures);
+        });
     }
 }

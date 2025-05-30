@@ -46,7 +46,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("top", tex);
         texture("dirt", tex);
         return this;
@@ -89,7 +89,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
             m.parent("block/template_farmland");
             m.textures(textures);
         });

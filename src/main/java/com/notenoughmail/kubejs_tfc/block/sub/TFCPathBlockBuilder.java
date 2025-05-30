@@ -38,7 +38,7 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("top", tex);
         texture("side", tex);
         texture("dirt", tex);
@@ -81,7 +81,7 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
            m.parent("tfc:block/grass_path");
            m.textures(textures);
         });
@@ -89,13 +89,12 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
-
+        final String m = ResourceUtils.plainModel(this);
         bs.variant("", v -> {
-            v.model(model);
-            v.model(model).y(90);
-            v.model(model).y(180);
-            v.model(model).y(270);
+            v.model(m);
+            v.model(m).y(90);
+            v.model(m).y(180);
+            v.model(m).y(270);
         });
     }
 }

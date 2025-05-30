@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-// TODO: 1.3.0 | Fix item model being empty under conditions of "log_test_with_stripped"
 public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Nullable
@@ -25,6 +25,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         super(i);
         this.stripped = stripped;
         blockItemModel = false;
+        itemBuilder.texture("layer0", newID("item/", "").toString());
     }
 
     @Override
@@ -49,7 +50,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
             m.parent("block/cube_column");
             m.textures(textures);
         });
@@ -57,24 +58,23 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String modelLoc = model.isEmpty() ? newID("block/", "").toString() : model;
-        bs.simpleVariant("axis=y", modelLoc);
-        bs.variant("axis=z", v -> v.model(modelLoc).x(90));
-        bs.variant("axis=x", v -> v.model(modelLoc).x(90).y(90));
+        final String m = ResourceUtils.plainModel(this);
+        bs.simpleVariant("axis=y", m);
+        bs.variant("axis=z", v -> v.model(m).x(90));
+        bs.variant("axis=x", v -> v.model(m).x(90).y(90));
     }
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("side", tex);
-        texture("end", tex);
-        return this;
+        return texture("end", tex);
     }
 
     @Override
     protected void generateItemModelJson(ModelGenerator m) {
         if (blockItemModel) {
-            super.generateItemModelJson(m);
+            m.parent(ResourceUtils.plainModel(this));
         } else {
             m.parent("item/generated");
             m.textures(itemBuilder.textureJson);

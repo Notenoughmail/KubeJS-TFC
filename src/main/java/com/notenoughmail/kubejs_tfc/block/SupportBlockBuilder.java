@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -20,15 +21,21 @@ import java.util.function.Consumer;
 public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
     public transient final HorizontalSupportBlockBuilder horizontal;
-    public transient final String connection;
+    public transient String connection;
 
     public SupportBlockBuilder(ResourceLocation i) {
         super(i);
         horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
-        connection = newID("block/", "_connection").toString();
+        connection = "";
         tag(TFCTags.Blocks.SUPPORT_BEAM.location());
         horizontal.textureAll(id.getNamespace() + ":block/" + id.getPath());
+    }
+
+    @Info("Sets the model used by this and the horizontal block for sideways connections")
+    public SupportBlockBuilder connectionModel(String model) {
+        this.connection = model;
+        return this;
     }
 
     @Info(value = "Sets the properties of the horizontal support block")
@@ -51,11 +58,12 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        bs.part("", newID("block/", "_vertical").toString());
-        bs.part("north=true", p -> p.model(connection).y(270));
-        bs.part("east=true", connection);
-        bs.part("south=true", p -> p.model(connection).y(90));
-        bs.part("west=true", p -> p.model(connection).y(180));
+        final String c = connection.isEmpty() ? newID("block/", "_connection").toString() : connection;
+        bs.part("", ResourceUtils.plainModel(this));
+        bs.part("north=true", p -> p.model(c).y(270));
+        bs.part("east=true", c);
+        bs.part("south=true", p -> p.model(c).y(90));
+        bs.part("west=true", p -> p.model(c).y(180));
     }
 
     @Override
@@ -70,17 +78,15 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(newID("", "_vertical"), m -> {
-            if (model.isEmpty()) {
-                m.parent("tfc:block/wood/support/vertical");
-                m.textures(textures);
-            } else {
-                m.parent(model);
-            }
-        });
-        generator.blockModel(newID("", "_connection"), m -> {
-            m.parent("tfc:block/wood/support/connection");
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
+            m.parent("tfc:block/wood/support_vertical");
             m.textures(textures);
         });
+        if (connection.isEmpty()) {
+            generator.blockModel(newID("", "_connection"), m -> {
+                m.parent("tfc:block/wood/support/connection");
+                m.textures(textures);
+            });
+        }
     }
 }

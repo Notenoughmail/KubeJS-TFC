@@ -1,7 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.DoubleCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
@@ -11,6 +9,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -20,6 +19,7 @@ import net.dries007.tfc.common.blocks.crop.DeadDoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.FloodedDeadCropBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.function.BiConsumer;
 
@@ -80,12 +80,12 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         } else if (alive.type != AbstractCropBlockBuilder.Type.DOUBLE) {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addEntry(alternatives(matureEntry(false), notMatureEntry(false)));
+                p.addEntry(ResourceUtils.alternatives(matureEntry(false), notMatureEntry(false)));
             });
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addEntry(alternatives(notMatureEntry(true), matureEntry(true)));
+                p.addEntry(ResourceUtils.alternatives(notMatureEntry(true), matureEntry(true)));
             });
             if (alive.requiresStick) {
                 lootBuilder.addPool(p -> {
@@ -102,37 +102,25 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
     }
 
-    private JsonObject alternatives(JsonObject o0, JsonObject o1) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:alternatives");
-        final JsonArray array = new JsonArray(2);
-        array.add(o0);
-        array.add(o1);
-        json.add("children", array);
-        return json;
-    }
-
-    private JsonObject matureEntry(boolean tall) {
-        return ResourceUtils.createEntry(alive.seeds.id.toString())
+    private LootTableEntry matureEntry(boolean tall) {
+        return (LootTableEntry) ResourceUtils.createEntry(alive.seeds.id.toString())
                 .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "true");
                     if (tall) {
                         j.addProperty("part", "bottom");
                     }
                 }))
-                .addFunction(ResourceUtils.simpleSetCountFunction(1, 3))
-                .json;
+                .count(UniformGenerator.between(1, 3));
     }
 
-    private JsonObject notMatureEntry(boolean tall) {
+    private LootTableEntry notMatureEntry(boolean tall) {
         return ResourceUtils.createEntry(alive.seeds.id.toString())
                 .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "false");
                     if (tall) {
                         j.addProperty("part", "bottom");
                     }
-                }))
-                .json;
+                }));
     }
 
     @Override

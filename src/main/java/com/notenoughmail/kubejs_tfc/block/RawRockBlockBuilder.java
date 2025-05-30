@@ -94,7 +94,7 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
 
     @Override
     public RawRockBlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         texture("all", tex);
         texture("side", tex);
         texture("end", tex);

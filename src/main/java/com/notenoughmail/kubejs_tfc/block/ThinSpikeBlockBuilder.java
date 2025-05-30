@@ -112,7 +112,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        super.textureAll(tex);
+        texture("particle", tex);
         return texture("0", tex);
     }
 
@@ -201,14 +201,11 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, m -> {
+        ResourceUtils.ifModelEmpty(generator, this, m -> {
             m.parent("tfc:block/thin_spike");
             m.textures(textures);
         });
-
-        if (!tipModel.isEmpty()) {
-            generator.blockModel(newID("", "_tip"), m -> m.parent(tipModel));
-        } else {
+        if (tipModel.isEmpty()) {
             generator.blockModel(newID("", "_tip"), m -> {
                 m.parent("tfc:block/thin_spike_tip");
                 m.textures(textures);
@@ -218,8 +215,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String blockModelLoc = newID("block/", "").toString();
-        bs.simpleVariant("tip=true", blockModelLoc + "_tip");
-        bs.simpleVariant("tip=false", blockModelLoc);
+        bs.simpleVariant("tip=true", tipModel.isEmpty() ? newID("block/", "_tip").toString() : tipModel);
+        bs.simpleVariant("tip=false", ResourceUtils.plainModel(this));
     }
 }
