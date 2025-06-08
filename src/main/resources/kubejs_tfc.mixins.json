@@ -25,6 +25,7 @@
     "accessor.IndirectHashCollectionAccessor",
     "accessor.ItemDamageResistanceAccessor",
     "accessor.ItemDefinitionAccessor",
+    "accessor.KubeJSCraftingRecipeAccessor",
     "accessor.NetherFertilizerAccessor",
     "accessor.OverworldClimateModelAccessor",
     "accessor.PlantableAccessor",

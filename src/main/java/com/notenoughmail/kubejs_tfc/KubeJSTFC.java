@@ -18,6 +18,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChun
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
+import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -160,6 +161,7 @@ public class KubeJSTFC {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         COMMAND_ARGS.register(modBus);
         CHUNK_GENERATOR.register(modBus);
+        KubeJSTFCRecipeSerializers.REG.register(modBus);
 
         reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production
     }

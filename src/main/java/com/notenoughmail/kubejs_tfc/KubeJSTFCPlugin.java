@@ -23,6 +23,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryA
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
+import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
@@ -191,6 +192,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.NO_REMAINDER_SHAPELESS_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("no_remainder"))
                 .register(TFCRecipeSerializers.SEWING.getId().getPath(), SewingSchema.SCHEMA)
+                ;
+
+        event.namespace(KubeJSTFC.MODID)
+                .register(KubeJSTFCRecipeSerializers.SHAPED.getId().getPath(), AdvancedCraftingSchema.SHAPED)
+                .register(KubeJSTFCRecipeSerializers.SHAPELESS.getId().getPath(), AdvancedCraftingSchema.SHAPELESS)
                 ;
     }
 
