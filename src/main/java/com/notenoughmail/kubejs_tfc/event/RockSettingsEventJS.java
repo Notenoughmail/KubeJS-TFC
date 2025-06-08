@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-@Info(value = "Define new rocks which can be referenced in a world preset json")
+@Info("Define new rocks which can be referenced in a world preset json")
 @SuppressWarnings("unused")
 public class RockSettingsEventJS extends StartupEventJS {
 

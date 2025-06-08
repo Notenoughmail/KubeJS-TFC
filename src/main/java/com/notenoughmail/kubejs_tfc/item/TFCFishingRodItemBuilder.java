@@ -33,29 +33,29 @@ public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
         castTexture = newID("item/", "_cast").toString();
     }
 
-    @Info(value = "Sets the rod's fishing strength, defaults the a value based on the speed of the rod's tier")
+    @Info("Sets the rod's fishing strength, defaults the a value based on the speed of the rod's tier")
     public TFCFishingRodItemBuilder fishingStrength(float f) {
         fishingStrength = f;
         return this;
     }
 
-    @Info(value = "Sets the rod's model when cast")
+    @Info("Sets the rod's model when cast")
     public TFCFishingRodItemBuilder castModel(String model) {
         customCastModel = model;
         return this;
     }
 
-    @Info(value = "Allows this rod to hold small fishing bait by adding it to the correct tag")
+    @Info("Allows this rod to hold small fishing bait by adding it to the correct tag")
     public TFCFishingRodItemBuilder smallBait() {
         return (TFCFishingRodItemBuilder) tag(TFCTags.Items.HOLDS_SMALL_FISHING_BAIT.location());
     }
 
-    @Info(value = "Allows this rod to hold large fishing bait by adding it the correct tag")
+    @Info("Allows this rod to hold large fishing bait by adding it the correct tag")
     public TFCFishingRodItemBuilder largeBait() {
         return (TFCFishingRodItemBuilder) tag(TFCTags.Items.HOLDS_LARGE_FISHING_BAIT.location());
     }
 
-    @Info(value = "Sets the texture used when the rod is cast")
+    @Info("Sets the texture used when the rod is cast")
     public TFCFishingRodItemBuilder castTexture(String tex) {
         castTexture = tex;
         return this;

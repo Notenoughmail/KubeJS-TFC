@@ -33,7 +33,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         return new LogBlock(createExtendedProperties(), stripped);
     }
 
-    @Info(value = "If the item model should default to the block model, like vanilla logs")
+    @Info("If the item model should default to the block model, like vanilla logs")
     public LogBlockBuilder useFullBlockForItemModel() {
         blockItemModel = true;
         return this;

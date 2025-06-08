@@ -842,7 +842,7 @@ public class DairyAnimalJS extends DairyAnimal implements IAnimatableJS {
     }
 
 
-    @Info(value = """
+    @Info("""
             Calls a triggerable animation to be played anywhere.
             """)
     public void triggerAnimation(String controllerName, String animName) {

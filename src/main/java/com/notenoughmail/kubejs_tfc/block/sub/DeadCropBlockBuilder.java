@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -26,7 +27,7 @@ import java.util.function.BiConsumer;
 public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private final AbstractCropBlockBuilder alive;
-    public transient BiConsumer<Model, ModelGenerator> models;
+    public transient BiConsumer<DeadModelVariant, ModelGenerator> models;
 
     public DeadCropBlockBuilder(ResourceLocation i, AbstractCropBlockBuilder alive) {
         super(i);
@@ -35,7 +36,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         itemBuilder = null;
         noCollision();
         models = (t, m) -> {
-            if (t instanceof DoubleCropBlockBuilder.Models mo && !mo.mature() && mo.requiresStick() && mo.stick() && !mo.bottom()) {
+            if (t instanceof DoubleCropBlockBuilder.DeadModels mo && !mo.mature() && mo.requiresStick() && mo.stick() && !mo.bottom()) {
                 m.parent("tfc:block/crop/stick");
             } else {
                 m.parent("block/crop");
@@ -44,8 +45,18 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         };
     }
 
-    // TODO: 1.3.0 | Document, coherently
-    public DeadCropBlockBuilder models(BiConsumer<? extends Model, ModelGenerator> models) {
+    @Info("""
+            Sets the model generation of the dead crop block, accepts a `BiConsumer` of a model generator and a `DeadModelVariant`.
+            The generator is unique for each variant.
+            
+            For non-double crops, the variant has two methods: `.variant()`, which returns a string of the model
+            variant used in the block state file; and `.mature()`, which returns a boolean--if the variant represents a mature state.
+            
+            For double crops, the above mentioned methods are available in addition to: `.bottom()`, which returns a boolean for if the
+            variant represents a bottom state; and `.stick()`, which returns a boolean for if the variant represents a stick state.
+            `.stick()` will always return false for double crops that do not require sticks.
+            """)
+    public DeadCropBlockBuilder models(BiConsumer<? extends DeadModelVariant, ModelGenerator> models) {
         this.models = this.models.andThen(UtilsJS.cast(models));
         return this;
     }
@@ -125,23 +136,23 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (Model t : alive.deadModels()) {
-            generator.blockModel(t.model(this), m -> {
-                models.accept(t, m);
-            });
+        for (DeadModelVariant t : alive.deadModels()) {
+            generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        for (Model t : alive.deadModels()) {
+        for (DeadModelVariant t : alive.deadModels()) {
             bs.simpleVariant(t.variant(), t.model(this).withPrefix("block/").toString());
         }
     }
 
-    public interface Model {
+    public interface DeadModelVariant {
 
+        @Info("The variant selector representing the block state this model is used for")
         String variant();
+        @Info("If the mature state property is true for this variant")
         boolean mature();
         @HideFromJS
         ResourceLocation model(DeadCropBlockBuilder dead);

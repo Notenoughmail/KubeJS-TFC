@@ -29,7 +29,7 @@ public enum TFCIngredientBindings {
         return HeatableIngredient.of(delegate, min == null ? Integer.MIN_VALUE : min, max == null ? Integer.MAX_VALUE : max);
     }
 
-    @Info(value = "Creates an ingredient of type 'tfc:not'")
+    @Info("Creates an ingredient of type 'tfc:not'")
     public Ingredient not() {
         return NotIngredient.alwaysTrue();
     }
@@ -78,7 +78,7 @@ public enum TFCIngredientBindings {
         return LacksTraitIngredient.of(delegate, FoodTrait.getTraitOrThrow(trait));
     }
 
-    @Info(value = "Creates an ingredient of type 'tfc:not_rotten'")
+    @Info("Creates an ingredient of type 'tfc:not_rotten'")
     public Ingredient notRotten() {
         return NotRottenIngredient.of((Ingredient) null); // Cast because there are multiple static 'of' methods
     }

@@ -88,7 +88,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;

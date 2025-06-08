@@ -30,13 +30,13 @@ public class WindMillBladeItemBuilder extends ItemBuilder {
         thisList.add(this);
     }
 
-    @Info(value = "Sets the color of the windmill blade's sail")
+    @Info("Sets the color of the windmill blade's sail")
     public WindMillBladeItemBuilder bladeColor(Color color) {
         bladeColor = color;
         return this;
     }
 
-    @Info(value = "Sets the texture of the whole windmill blade, defaults to `tfc:textures/entity/misc/windmill_blade.png`")
+    @Info("Sets the texture of the whole windmill blade, defaults to `tfc:textures/entity/misc/windmill_blade.png`")
     public WindMillBladeItemBuilder bladeTexture(ResourceLocation texture) {
         bladeTexture = texture;
         return this;

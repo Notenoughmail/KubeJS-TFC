@@ -34,18 +34,18 @@ public class MoldItemBuilder extends ItemBuilder {
         return texture("fluid", tex + "_overlay");
     }
 
-    @Info(value = "Sets the capacity, in mB, of the mold")
+    @Info("Sets the capacity, in mB, of the mold")
     public MoldItemBuilder capacity(int capacity) {
         this.capacity = () -> capacity;
         return this;
     }
-    @Info(value = "Sets the capacity, in mB, supplier of the mold")
+    @Info("Sets the capacity, in mB, supplier of the mold")
     public MoldItemBuilder capacitySupplier(Supplier<Integer> capacity) {
         this.capacity = capacity::get;
         return this;
     }
 
-    @Info(value = "Sets the fluid tag that the mold item is allowed to hold")
+    @Info("Sets the fluid tag that the mold item is allowed to hold")
     public MoldItemBuilder fluidTagAccept(ResourceLocation fluidTag) {
         this.acceptableFluids = TagKey.create(Registries.FLUID, fluidTag);
         return this;

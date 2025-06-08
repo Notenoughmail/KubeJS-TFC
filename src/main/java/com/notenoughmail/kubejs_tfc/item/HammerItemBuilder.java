@@ -27,7 +27,7 @@ public class HammerItemBuilder extends HandheldItemBuilder {
         tag(TFCTags.Items.HAMMERS.location());
     }
 
-    @Info(value = "Sets the texture location used when the hammer is in a trip hammer")
+    @Info("Sets the texture location used when the hammer is in a trip hammer")
     public HammerItemBuilder metalTexture(ResourceLocation texture) {
         metalTexture = texture;
         return this;

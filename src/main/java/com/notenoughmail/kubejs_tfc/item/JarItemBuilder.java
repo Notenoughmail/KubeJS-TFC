@@ -16,7 +16,7 @@ public class JarItemBuilder extends ItemBuilder {
         model = id;
     }
 
-    @Info(value = "Sets the model to be used when this jar item is placed in a jar shelf")
+    @Info("Sets the model to be used when this jar item is placed in a jar shelf")
     public JarItemBuilder placedModel(ResourceLocation id) {
         model = id;
         return this;

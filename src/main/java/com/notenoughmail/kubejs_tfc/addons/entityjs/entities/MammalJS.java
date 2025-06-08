@@ -836,7 +836,7 @@ public class MammalJS extends Mammal implements IAnimatableJS {
     }
 
 
-    @Info(value = """
+    @Info("""
             Calls a triggerable animation to be played anywhere.
             """)
     public void triggerAnimation(String controllerName, String animName) {

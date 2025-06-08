@@ -43,19 +43,19 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         texture(newID("item/", "").toString());
     }
 
-    @Info(value = "Sets the model used when throwing")
+    @Info("Sets the model used when throwing")
     public JavelinItemBuilder throwingModel(String model) {
         throwingModel = model;
         return this;
     }
 
-    @Info(value = "Sets the javelin's thrown damage")
+    @Info("Sets the javelin's thrown damage")
     public JavelinItemBuilder thrownDamage(float damage) {
         thrownDamage = damage;
         return this;
     }
 
-    @Info(value = "Adds this to the 'tfc:skeleton_weapons' tag")
+    @Info("Adds this to the 'tfc:skeleton_weapons' tag")
     public JavelinItemBuilder skeletonWeapon() {
         tag(TFCTags.Items.SKELETON_WEAPONS.location());
         return this;
@@ -70,7 +70,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         return this;
     }
 
-    @Info(value = "Sets the model to be used for the 'none', 'fixed', 'ground', and 'gui' display contexts")
+    @Info("Sets the model to be used for the 'none', 'fixed', 'ground', and 'gui' display contexts")
     public JavelinItemBuilder guiModel(String model) {
         perspectives.put(ItemDisplayContext.NONE, model);
         perspectives.put(ItemDisplayContext.FIXED, model);

@@ -54,35 +54,35 @@ import java.util.function.Supplier;
 public enum MiscBindings {
     INSTANCE;
 
-    @Info(value = "A map associating the name of a rock to its `RegistryRock`")
-    @Generics(value = {String.class, RegistryRock.class})
+    @Info("A map associating the name of a rock to its `RegistryRock`")
+    @Generics({String.class, RegistryRock.class})
     public Map<String, RegistryRock> getRock() { return rock.get(); }
     private static final Supplier<Map<String, RegistryRock>> rock = Lazy.of(KubeJSTFC::registerRocks);
 
-    @Info(value = "A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
-    @Generics(value = {String.class, NamedRegistryWood.class})
+    @Info("A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
+    @Generics({String.class, NamedRegistryWood.class})
     public Map<String, NamedRegistryWood> getWood() { return wood.get(); }
     private static final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(KubeJSTFC::registerWoods);
 
     @Nullable
-    @Info(value = "Returns the stack's `IHeat` capability if present, else null")
+    @Info("Returns the stack's `IHeat` capability if present, else null")
     public IHeat getHeat(ItemStack stack) {
         return HeatCapability.get(stack);
     }
 
-    @Info(value = "Returns true if the stack does have an `IHeat` capability")
+    @Info("Returns true if the stack does have an `IHeat` capability")
     public boolean hasHeat(ItemStack stack) {
         return HeatCapability.has(stack);
     }
 
-    @Info(value = "Returns the `Heat` that describes the given temperature. Returns null for temperatures less than 1°C")
+    @Info("Returns the `Heat` that describes the given temperature. Returns null for temperatures less than 1°C")
     @Nullable
     public Heat getHeatLevel(float temperature) {
         return Heat.getHeat(temperature);
     }
 
-    @Info(value = "A map associating the name of a heat level to its Heat")
-    @Generics(value = {String.class, Heat.class})
+    @Info("A map associating the name of a heat level to its Heat")
+    @Generics({String.class, Heat.class})
     public final Map<String, Heat> heatLevels = Util.make(new ImmutableMap.Builder<String, Heat>(), b -> {
         for (Heat heatLevel : Heat.values()) {
             b.put(heatLevel.name().toLowerCase(Locale.ROOT), heatLevel);
@@ -90,33 +90,33 @@ public enum MiscBindings {
     }).build();
 
     @Nullable
-    @Info(value = "Returns the stack's `IFood` capability if present, else null")
+    @Info("Returns the stack's `IFood` capability if present, else null")
     public IFood getFood(ItemStack stack) {
         return FoodCapability.get(stack);
     }
 
-    @Info(value = "Returns true if the stack does have an IFood capability")
+    @Info("Returns true if the stack does have an IFood capability")
     public boolean hasFood(ItemStack stack) {
         return FoodCapability.has(stack);
     }
 
-    @Info(value = "Makes the provided stack rotten if possible and returns it")
+    @Info("Makes the provided stack rotten if possible and returns it")
     public ItemStack setRotten(ItemStack stack) {
         return FoodCapability.setRotten(stack);
     }
 
-    @Info(value = "Sets the provided stack to never expires if possible")
+    @Info("Sets the provided stack to never expires if possible")
     public void setNeverExpires(ItemStack stack) {
         FoodCapability.setNeverExpires(stack);
     }
 
     @Nullable
-    @Info(value = "Returns the `FoodTrait` with the given registry name if it exists, else null")
+    @Info("Returns the `FoodTrait` with the given registry name if it exists, else null")
     public FoodTrait getFoodTrait(ResourceLocation id) {
         return FoodTrait.getTrait(id);
     }
 
-    @Info(value = "Returns the registry name of the given food trait")
+    @Info("Returns the registry name of the given food trait")
     public ResourceLocation getFoodTraitId(FoodTrait trait) {
         return FoodTrait.getId(trait);
     }
@@ -143,12 +143,12 @@ public enum MiscBindings {
         }
     }
 
-    @Info(value = "Returns the `Size` value of the provided stack")
+    @Info("Returns the `Size` value of the provided stack")
     public Size getSize(ItemStack stack) {
         return ItemSizeManager.get(stack).getSize(stack);
     }
 
-    @Info(value = "Returns the `Weight` value of the provided stack")
+    @Info("Returns the `Weight` value of the provided stack")
     public Weight getWeight(ItemStack stack) {
         return ItemSizeManager.get(stack).getWeight(stack);
     }
@@ -197,28 +197,28 @@ public enum MiscBindings {
         return Support.findUnsupportedPositions(level, center.offset(-horizontal, down, -horizontal), center.offset(horizontal, up, horizontal));
     }
 
-    @Info(value = "Returns true if the position is supported")
+    @Info("Returns true if the position is supported")
     public boolean isSupported(BlockGetter level, BlockPos pos) {
         return Support.isSupported(level, pos);
     }
 
-    @Info(value = "Returns an iterable of all positions that could possibly be supported around the min and max points")
+    @Info("Returns an iterable of all positions that could possibly be supported around the min and max points")
     public Iterable<BlockPos> getMaximumSupportedAreaAround(BlockPos minPoint, BlockPos maxPoint) {
         return Support.getMaximumSupportedAreaAround(minPoint, maxPoint);
     }
 
-    @Info(value = "Gets the `SupportRange` that is used as a maximum for checking if an area is supported")
+    @Info("Gets the `SupportRange` that is used as a maximum for checking if an area is supported")
     public Support.SupportRange getSupportCheckRange() {
         return Support.getSupportCheckRange();
     }
 
-    @Info(value = "Gets the support from the block, or null if it is not a supporting block")
+    @Info("Gets the support from the block, or null if it is not a supporting block")
     @Nullable
     public Support getSupport(BlockState state) {
         return Support.get(state);
     }
 
-    @Info(value = "Gets the support from the block, or null if it is not a supporting block")
+    @Info("Gets the support from the block, or null if it is not a supporting block")
     @Nullable
     public Support getSupport(BlockGetter level, BlockPos pos) {
         return Support.get(level.getBlockState(pos));
@@ -279,12 +279,12 @@ public enum MiscBindings {
         return getChunkData(level, pos).getForestType();
     }
 
-    @Info(value = "Creates a new `OpenSimplex2D` noise, the implementation of 2D noise TFC uses for its worldgen")
+    @Info("Creates a new `OpenSimplex2D` noise, the implementation of 2D noise TFC uses for its worldgen")
     public OpenSimplex2D newOpenSimplex2D(long seed) {
         return new OpenSimplex2D(seed);
     }
 
-    @Info(value = "Creates a new `OpenSimplex3D` noise, the implementation of 3D noise TFC uses for its worldgen")
+    @Info("Creates a new `OpenSimplex3D` noise, the implementation of 3D noise TFC uses for its worldgen")
     public OpenSimplex3D newOpenSimplex3D(long seed) {
         return new OpenSimplex3D(seed);
     }
@@ -331,55 +331,55 @@ public enum MiscBindings {
         return FarmlandBlock.getHydration(level, pos);
     }
 
-    @Info(value = "Returns the `Metal` associated with the given fluid, may be null")
+    @Info("Returns the `Metal` associated with the given fluid, may be null")
     @Nullable
     public Metal getMetal(Fluid fluid) {
         return Metal.get(fluid);
     }
 
-    @Info(value = "Returns the first `Metal` whose ingots match the given stack, may be null")
+    @Info("Returns the first `Metal` whose ingots match the given stack, may be null")
     @Nullable
     public Metal getMetalFromIngot(ItemStack ingot) {
         return Metal.getFromIngot(ingot);
     }
 
-    @Info(value = "Returns the first `Metal` whose sheets match the given stack, may be null")
+    @Info("Returns the first `Metal` whose sheets match the given stack, may be null")
     @Nullable
     public Metal getMetalFromSheet(ItemStack sheet) {
         return Metal.getFromSheet(sheet);
     }
 
-    @Info(value = "Returns the first `LampFuel` that matches the given fluid and state, may be null")
+    @Info("Returns the first `LampFuel` that matches the given fluid and state, may be null")
     @Nullable
     public LampFuel getLampFuel(Fluid fluid, BlockState state) {
         return LampFuel.get(fluid, state);
     }
 
-    @Info(value = "Returns the first `Drinkable` that matches the given fluid, may be null")
+    @Info("Returns the first `Drinkable` that matches the given fluid, may be null")
     @Nullable
     public Drinkable getDrinkable(Fluid fluid) {
         return Drinkable.get(fluid);
     }
 
-    @Info(value = "Returns the first `Fertilizer` that matches the given stack, may be null")
+    @Info("Returns the first `Fertilizer` that matches the given stack, may be null")
     @Nullable
     public Fertilizer getFertilizer(ItemStack stack) {
         return Fertilizer.get(stack);
     }
 
-    @Info(value = "Returns the first `Fuel` that matches the given stack, may be null")
+    @Info("Returns the first `Fuel` that matches the given stack, may be null")
     @Nullable
     public Fuel getFuel(ItemStack stack) {
         return Fuel.get(stack);
     }
 
-    @Info(value = "Returns the first `Pannable` that matches the given state, may be null")
+    @Info("Returns the first `Pannable` that matches the given state, may be null")
     @Nullable
     public Pannable getPannable(BlockState state) {
         return Pannable.get(state);
     }
 
-    @Info(value = "Returns the first `Sluiceable` that matches the given stack, may be null")
+    @Info("Returns the first `Sluiceable` that matches the given stack, may be null")
     @Nullable
     public Sluiceable getSluiceable(ItemStack stack) {
         return Sluiceable.get(stack);

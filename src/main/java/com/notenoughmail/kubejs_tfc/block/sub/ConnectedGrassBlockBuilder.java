@@ -56,7 +56,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;
@@ -67,7 +67,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         return this;
     }
 
-    @Info(value = "Makes the grass block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
+    @Info("Makes the grass block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public ConnectedGrassBlockBuilder uniqueDirtTexture() {
         texture("texture", id.getNamespace() + ":block/" + id.getPath());
         return this;

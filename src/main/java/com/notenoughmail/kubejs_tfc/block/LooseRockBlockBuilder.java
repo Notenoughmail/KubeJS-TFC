@@ -29,13 +29,13 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         rockType = "metamorphic";
     }
 
-    @Info(value = "Rotates the models by the given amount")
+    @Info("Rotates the models by the given amount")
     public LooseRockBlockBuilder rotateModel(int i) {
         rotate = i;
         return this;
     }
 
-    @Info(value = "Makes the block collide with entities")
+    @Info("Makes the block collide with entities")
     public LooseRockBlockBuilder collision() {
         noCollision = false;
         return this;

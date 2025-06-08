@@ -66,15 +66,15 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         return this;
     }
 
-    @Info(value = "Modifies the block's slice item")
-    @Generics(value = ItemBuilder.class)
+    @Info("Modifies the block's slice item")
+    @Generics(ItemBuilder.class)
     public CheeseWheelBlockBuilder sliceItem(Consumer<ItemBuilder> slice) {
         slice.accept(sliceItem);
         return this;
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null; // Do not set lootTable to EMPTY

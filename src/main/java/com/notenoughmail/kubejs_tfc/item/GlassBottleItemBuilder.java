@@ -36,7 +36,7 @@ public class GlassBottleItemBuilder extends ItemBuilder {
         FluidContainerItemBuilder.dispenserList.add(this);
     }
 
-    @Info(value = "Sets the display name to used when a fluid is in the bottle")
+    @Info("Sets the display name to used when a fluid is in the bottle")
     public GlassBottleItemBuilder filledDisplayName(Component c) {
         filledDisplayName = c;
         return this;
@@ -48,31 +48,31 @@ public class GlassBottleItemBuilder extends ItemBuilder {
         return texture("fluid", tex + "_overlay");
     }
 
-    @Info(value = "Sets the capacity, in mB, of the bottle")
+    @Info("Sets the capacity, in mB, of the bottle")
     public GlassBottleItemBuilder capacity(int capacity) {
         this.capacity = () -> capacity;
         return this;
     }
 
-    @Info(value = "Sets the capacity, in mB, supplier of the bottle")
+    @Info("Sets the capacity, in mB, supplier of the bottle")
     public GlassBottleItemBuilder capacitySupplier(Supplier<Integer> capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    @Info(value = "Sets the break chance, in the range [0, 1], of the bottle")
+    @Info("Sets the break chance, in the range [0, 1], of the bottle")
     public GlassBottleItemBuilder breakChance(double chance) {
         breakChance = () -> chance;
         return this;
     }
 
-    @Info(value = "Sets the break chance, in the range [0, 1], supplier of the bottle")
+    @Info("Sets the break chance, in the range [0, 1], supplier of the bottle")
     public GlassBottleItemBuilder breakChanceSupplier(Supplier<Double> chance) {
         breakChance = chance;
         return this;
     }
 
-    @Info(value = "Sets the fluid tag that the bottle is allowed to hold")
+    @Info("Sets the fluid tag that the bottle is allowed to hold")
     public GlassBottleItemBuilder fluidTagAccept(ResourceLocation tag) {
         acceptableFluids = TagKey.create(Registries.FLUID, tag);
         return this;

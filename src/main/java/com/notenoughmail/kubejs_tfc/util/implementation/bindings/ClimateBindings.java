@@ -22,7 +22,7 @@ public enum ClimateBindings {
     INSTANCE;
 
     @Nullable
-    @Info(value = "Tries to get the climate model of the provided object. Returns null if it cannot do so")
+    @Info("Tries to get the climate model of the provided object. Returns null if it cannot do so")
     public ClimateModel getModel(Object o) {
         if (o instanceof ClimateModel climate) {
             return climate;
@@ -42,7 +42,7 @@ public enum ClimateBindings {
         return null;
     }
 
-    @Info(value = "Returns the name of the provided climate model")
+    @Info("Returns the name of the provided climate model")
     public ResourceLocation getName(ClimateModel model) {
         return Climate.getId(model);
     }

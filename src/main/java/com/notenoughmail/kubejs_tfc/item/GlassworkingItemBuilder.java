@@ -17,7 +17,7 @@ public class GlassworkingItemBuilder extends ItemBuilder {
         operation = GlassOperation.SAW;
     }
 
-    @Info(value = "Sets the glassworking operation type this item is capable of doing")
+    @Info("Sets the glassworking operation type this item is capable of doing")
     public GlassworkingItemBuilder operation(GlassOperation operation) {
         this.operation = operation;
         return this;

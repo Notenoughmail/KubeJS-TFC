@@ -149,7 +149,7 @@ public class KubeJSClimateModel implements ClimateModel {
         return getClass().getName() + "[" + builder.name + "]";
     }
 
-    @Info(value = "A callback which takes a LevelReader and a BlockPos and returns a number")
+    @Info("A callback which takes a LevelReader and a BlockPos and returns a number")
     @FunctionalInterface
     public interface LevelPos2FloatCallback {
         @Info(params = {
@@ -159,7 +159,7 @@ public class KubeJSClimateModel implements ClimateModel {
         float getValue(LevelReader level, BlockPos pos);
     }
 
-    @Info(value = "A callback which takes a LevelReader, a BlockPos, a number, and a number and returns a number")
+    @Info("A callback which takes a LevelReader, a BlockPos, a number, and a number and returns a number")
     @FunctionalInterface
     public interface TemperatureCallback {
         @Info(params = {
@@ -215,125 +215,125 @@ public class KubeJSClimateModel implements ClimateModel {
             model = new KubeJSClimateModel(this);
         }
 
-        @Info(value = "Gets the temperature scale of the dimension, defaults to 20000 if it does not have a TFC-like chunk generator")
+        @Info("Gets the temperature scale of the dimension, defaults to 20000 if it does not have a TFC-like chunk generator")
         public float getTemperatureScale() {
             return tempScale;
         }
 
-        @Info(value = "Gets the rainfall scale of the dimension, defaults to 20000 if it does not have a TFC-like chunk generator")
+        @Info("Gets the rainfall scale of the dimension, defaults to 20000 if it does not have a TFC-like chunk generator")
         public float getRainfallScale() {
             return rainScale;
         }
 
-        @Info(value = "Returns the climate seed being used")
+        @Info("Returns the climate seed being used")
         public long getClimateSeed() {
             return climateSeed;
         }
 
-        @Info(value = "Creates a new vector for use in wind calculations")
+        @Info("Creates a new vector for use in wind calculations")
         public Vec2 vector(float x, float z) {
             return new Vec2(x, z);
         }
 
-        @Info(value = "Sets how the model will determine the current temperature at a given position and time")
+        @Info("Sets how the model will determine the current temperature at a given position and time")
         public void setCurrentTemperatureCalculation(TemperatureCallback callback) {
             model.currentTemperature = callback;
         }
 
-        @Info(value = "Sets how the model will determine the average temperature at a given position")
+        @Info("Sets how the model will determine the average temperature at a given position")
         public void setAverageTemperatureCalculation(LevelPos2FloatCallback callback) {
             model.averageTemp = callback;
         }
 
-        @Info(value = "Sets how the model will determine the average rainfall at a given position")
+        @Info("Sets how the model will determine the average rainfall at a given position")
         public void setAverageRainfallCalculation(LevelPos2FloatCallback callback) {
             model.averageRain = callback;
         }
 
-        @Info(value = "Sets how the model will determine the fogginess at a given position and time")
+        @Info("Sets how the model will determine the fogginess at a given position and time")
         public void setAirFog(LevelPosLong2FloatCallback callback) {
             model.airFog = callback;
         }
 
-        @Info(value = "Sets how the model will determine the fogginess in water at a given position and time")
+        @Info("Sets how the model will determine the fogginess in water at a given position and time")
         public void setWaterFog(LevelPosLong2FloatCallback callback) {
             model.waterFog = callback;
         }
 
-        @Info(value = "Sets how the model will determine the wind strength at the given position and time")
+        @Info("Sets how the model will determine the wind strength at the given position and time")
         public void setWindVector(WindVectorCallback callback) {
             model.wind = callback;
         }
 
-        @Info(value = "Sets the model's behavior when loading into a world")
-        @Generics(value = ServerLevel.class)
+        @Info("Sets the model's behavior when loading into a world")
+        @Generics(ServerLevel.class)
         public void setOnWorldLoad(Consumer<ServerLevel> callback) {
             model.worldLoad = callback;
         }
 
-        @Info(value = "Sets the model's behavior on chunk load")
+        @Info("Sets the model's behavior on chunk load")
         public void setOnChunkLoad(OnChunkLoadCallback callback) {
             model.chunkLoad = callback;
         }
 
-        @Info(value = "Adds a new Noise2D to the model, which can be retrieved later via the returned index")
+        @Info("Adds a new Noise2D to the model, which can be retrieved later via the returned index")
         public int newNoise(Function<OpenSimplex2D, Noise2D> builder) {
             model.noiseBuilders.add(builder);
             model.noises.add(builder.apply(new OpenSimplex2D(0))); // Just so *something* exists in the case that the noises are loaded before a sync is made (fog on login...)
             return model.noiseBuilders.size() - 1;
         }
 
-        @Info(value = "Gets the noise at the specified index")
+        @Info("Gets the noise at the specified index")
         public Noise2D noise(int index) {
             return model.noises.get(index);
         }
 
-        @Info(value = "Returns the callback used by TFC for its wind")
+        @Info("Returns the callback used by TFC for its wind")
         public WindVectorCallback getTfcWind() {
             return defaults::getWindVector;
         }
 
-        @Info(value = "Returns the callback used by TFC for its chunk loading")
+        @Info("Returns the callback used by TFC for its chunk loading")
         public OnChunkLoadCallback getTfcChunkLoad() {
             return defaults::onChunkLoad;
         }
 
-        @Info(value = "Returns the callback used by TFC for its current temperature")
+        @Info("Returns the callback used by TFC for its current temperature")
         public TemperatureCallback getTfcCurrentTemperature() {
             return defaults::getTemperature;
         }
 
-        @Info(value = "Returns the callback used by TFC for its average temperature")
+        @Info("Returns the callback used by TFC for its average temperature")
         public LevelPos2FloatCallback getTfcAverageTemperature() {
             return defaults::getAverageTemperature;
         }
 
-        @Info(value = "Returns the callback used by TFC for its average rainfall")
+        @Info("Returns the callback used by TFC for its average rainfall")
         public LevelPos2FloatCallback getTfcAverageRainfall() {
             return defaults::getRainfall;
         }
 
-        @Info(value = "Returns the callback used by TFC for its air fog")
+        @Info("Returns the callback used by TFC for its air fog")
         public LevelPosLong2FloatCallback getTfcAirFog() {
             return defaults::getFogginess;
         }
 
-        @Info(value = "Returns the callback used by TFC for its water fog")
+        @Info("Returns the callback used by TFC for its water fog")
         public LevelPosLong2FloatCallback getTfcWaterFog() {
             return defaults::getWaterFogginess;
         }
 
-        @Info(value = "A getter for the model's current temperature")
+        @Info("A getter for the model's current temperature")
         public float currentTemperature(LevelReader level, BlockPos pos, long calendarTicks) {
             return model.getTemperature(level, pos, calendarTicks, Calendars.get(level).getCalendarDaysInMonth());
         }
 
-        @Info(value = "A getter for the model's average temperature")
+        @Info("A getter for the model's average temperature")
         public float averageTemperature(LevelReader level, BlockPos pos) {
             return model.getAverageTemperature(level, pos);
         }
 
-        @Info(value = "A getter for the model's average rainfall")
+        @Info("A getter for the model's average rainfall")
         public float averageRainfall(LevelReader level, BlockPos pos) {
             return model.getRainfall(level, pos);
         }

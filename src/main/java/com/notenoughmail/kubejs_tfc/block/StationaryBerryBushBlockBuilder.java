@@ -82,14 +82,14 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
         return this;
     }
 
-    @Info(value = "Modifies the bush's product item")
-    @Generics(value = ItemBuilder.class)
+    @Info("Modifies the bush's product item")
+    @Generics(ItemBuilder.class)
     public StationaryBerryBushBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
         productItem.accept(this.productItem);
         return this;
     }
 
-    @Info(value = "Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
+    @Info("Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
     public StationaryBerryBushBlockBuilder productItem(ResourceLocation productId) {
         product = productId;
         return this;

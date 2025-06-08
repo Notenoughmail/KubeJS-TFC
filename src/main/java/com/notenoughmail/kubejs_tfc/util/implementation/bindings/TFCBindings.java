@@ -7,45 +7,45 @@ import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
 @SuppressWarnings("unused")
-@Info(value = "All of KubeJS TFC's bindings")
+@Info("All of KubeJS TFC's bindings")
 public class TFCBindings {
 
-    @Info(value = "Provides access to all climate bindings")
+    @Info("Provides access to all climate bindings")
     public static final ClimateBindings climate = ClimateBindings.INSTANCE;
-    @Info(value = "Provides access to all calendar bindings")
+    @Info("Provides access to all calendar bindings")
     public static final CalendarBindings calendar = CalendarBindings.INSTANCE;
-    @Info(value = "Provides access to all ingredient bindings")
+    @Info("Provides access to all ingredient bindings")
     public static final TFCIngredientBindings ingredient = TFCIngredientBindings.INSTANCE;
-    @Info(value = "Provides access to all item stack provider bindings")
+    @Info("Provides access to all item stack provider bindings")
     public static final ItemStackProviderBindings itemStackProvider = ItemStackProviderBindings.INSTANCE;
-    @Info(value = "Provides access to all item stack provider bindings")
+    @Info("Provides access to all item stack provider bindings")
     public static final ItemStackProviderBindings isp = ItemStackProviderBindings.INSTANCE;
-    @Info(value = "A collection of various un-categorized features and utilities")
+    @Info("A collection of various un-categorized features and utilities")
     public static final MiscBindings misc = MiscBindings.INSTANCE;
 
     // These look useless, but type wrappers and IngredientHelpers exist
-    @Info(value = "Explicitly creates a block ingredient")
+    @Info("Explicitly creates a block ingredient")
     public static BlockIngredient blockIngredient(BlockIngredient blockIngredient) {
         return blockIngredient;
     }
 
-    @Info(value = "Explicitly creates a fluid ingredient")
+    @Info("Explicitly creates a fluid ingredient")
     public static FluidIngredient fluidIngredient(FluidIngredient fluidIngredient) {
         return fluidIngredient;
     }
 
-    @Info(value = "Explicitly creates a fluid stack ingredient")
+    @Info("Explicitly creates a fluid stack ingredient")
     public static FluidStackIngredient fluidStackIngredient(FluidStackIngredient fluidStackIngredient) {
         return fluidStackIngredient;
     }
 
-    @Info(value = "Explicitly creates a fluid stack ingredient")
+    @Info("Explicitly creates a fluid stack ingredient")
     public static FluidStackIngredient fluidStackIngredient(FluidIngredient fluidIngredient, int amount) {
         return new FluidStackIngredient(fluidIngredient, amount);
     }
 
     // Possibly move this into a recipe sub-binding
-    @Info(value = "Creates an alloy part, used in creating alloying recipes")
+    @Info("Creates an alloy part, used in creating alloying recipes")
     public static AlloyPartComponent.AlloyPart alloyPart(String metal, double min, double max) {
         return new AlloyPartComponent.AlloyPart(metal, min, max);
     }

@@ -26,7 +26,7 @@ public class ScytheItemBuilder extends HandheldItemBuilder {
         this.mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_SCYTHE;
     }
 
-    @Info(value = "sets the block tag that the scythe can properly dig at full speed")
+    @Info("sets the block tag that the scythe can properly dig at full speed")
     public ScytheItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
         this.mineableBlocks = TagKey.create(Registries.BLOCK, blockTag);
         return this;

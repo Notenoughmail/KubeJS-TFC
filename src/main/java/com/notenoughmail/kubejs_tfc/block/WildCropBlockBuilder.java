@@ -56,7 +56,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;
@@ -69,7 +69,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Info(value = "Specifies the model to use when the crop is dead/immature, also see doubleDeadModels and spreadingDeadModels")
+    @Info("Specifies the model to use when the crop is dead/immature, also see doubleDeadModels and spreadingDeadModels")
     public WildCropBlockBuilder deadModel(String model) {
         if (type == Type.DEFAULT || type == Type.FLOODED) {
             deadModels = new String[]{model};
@@ -105,25 +105,25 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                 .randomTicks();
     }
 
-    @Info(value = "Sets the block to use as the crop's fruit block, only applicable to the spreading type")
+    @Info("Sets the block to use as the crop's fruit block, only applicable to the spreading type")
     public WildCropBlockBuilder spreadingFruitBlock(ResourceLocation fruitBlock) {
         spreadingFruitBlock = () -> () -> RegistryInfo.BLOCK.getValue(fruitBlock);
         return this;
     }
 
-    @Info(value = "Sets the type of wild crop being made, may be 'default', 'double', 'flooded', or 'spreading'")
+    @Info("Sets the type of wild crop being made, may be 'default', 'double', 'flooded', or 'spreading'")
     public WildCropBlockBuilder type(Type type) {
         this.type = type;
         return this;
     }
 
-    @Info(value = "Sets the seeds that the crop drops when broken")
+    @Info("Sets the seeds that the crop drops when broken")
     public WildCropBlockBuilder seeds(ResourceLocation seedItem) {
         this.seedItem = seedItem;
         return this;
     }
 
-    @Info(value = "Sets the food item that the crop drops when broken")
+    @Info("Sets the food item that the crop drops when broken")
     public WildCropBlockBuilder food(ResourceLocation foodItem) {
         this.foodItem = foodItem;
         return this;

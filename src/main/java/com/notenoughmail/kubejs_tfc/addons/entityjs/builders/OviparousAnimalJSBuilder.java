@@ -26,19 +26,19 @@ public class OviparousAnimalJSBuilder extends TFCAnimalBuilder<OviparousAnimalJS
         productReadyMessage = null;
     }
 
-    @Info(value = "Allows for setting the default values of the animal's config")
+    @Info("Allows for setting the default values of the animal's config")
     public OviparousAnimalJSBuilder configs(Consumer<AnimalConfigBuilder.Oviparous> configBuilder) {
         configBuilder.accept(config);
         return this;
     }
 
-    @Info(value = "If this animal should crow every so often")
+    @Info("If this animal should crow every so often")
     public OviparousAnimalJSBuilder crows(boolean crows) {
         this.crows = crows;
         return this;
     }
 
-    @Info(value = "Sets the message displayed when the animal has a product ready (by default an egg)")
+    @Info("Sets the message displayed when the animal has a product ready (by default an egg)")
     public OviparousAnimalJSBuilder productReadyMessage(MutableComponent message) {
         productReadyMessage = message;
         return this;

@@ -33,7 +33,7 @@ public class JugItemBuilder extends ItemBuilder {
         FluidContainerItemBuilder.dispenserList.add(this);
     }
 
-    @Info(value = "Sets the display name to use when the jug is filled")
+    @Info("Sets the display name to use when the jug is filled")
     public JugItemBuilder filledDisplayName(Component c) {
         filledDisplayName = c;
         return this;
@@ -45,19 +45,19 @@ public class JugItemBuilder extends ItemBuilder {
         return texture("fluid", tex + "_overlay");
     }
 
-    @Info(value = "Sets the capacity, in mB, of the jug")
+    @Info("Sets the capacity, in mB, of the jug")
     public JugItemBuilder capacity(int capacity) {
         this.capacity = () -> capacity;
         return this;
     }
 
-    @Info(value = "Sets the capacity, in mB, supplier of the jug")
+    @Info("Sets the capacity, in mB, supplier of the jug")
     public JugItemBuilder capacitySupplier(Supplier<Integer> capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    @Info(value = "Sets the fluid tag that the jug is allowed to hold")
+    @Info("Sets the fluid tag that the jug is allowed to hold")
     public JugItemBuilder fluidTagAccept(ResourceLocation tag) {
         acceptableFluids = TagKey.create(Registries.FLUID, tag);
         return this;

@@ -23,25 +23,25 @@ public class BuildFaunaData {
         this.climate = climate;
     }
 
-    @Info(value = "Sets the chance in 1/N chunks that something will spawn")
+    @Info("Sets the chance in 1/N chunks that something will spawn")
     public BuildFaunaData chance(int i) {
         this.chance = i;
         return this;
     }
 
-    @Info(value = "Sets the distance below sea level something must spawn, should only be set for underwater creatures")
+    @Info("Sets the distance below sea level something must spawn, should only be set for underwater creatures")
     public BuildFaunaData distanceBelowSeaLevel(int i) {
         this.belowSeaLevel = i;
         return this;
     }
 
-    @Info(value = "If the mob is required to spawn on a block tagged 'minecraft:valid_spawn', defaults to false")
+    @Info("If the mob is required to spawn on a block tagged 'minecraft:valid_spawn', defaults to false")
     public BuildFaunaData solidGround(boolean b) {
         this.solidGround = b;
         return this;
     }
 
-    @Info(value = "Sets the maximum brightness the mob may spawn at")
+    @Info("Sets the maximum brightness the mob may spawn at")
     public BuildFaunaData maxBrightness(int i) {
         this.brightness = i;
         return this;

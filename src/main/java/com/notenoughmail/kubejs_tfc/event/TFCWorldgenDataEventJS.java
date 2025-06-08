@@ -55,7 +55,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "innerValues", value = "A list of weight block state in string form, sets the inner state of the geode"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {String.class, PlacedFeatureProperties.class})
+    @Generics({String.class, PlacedFeatureProperties.class})
     public void geode(String name, String outer, String middle, List<String> innerValues, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:geode", name, ResourceUtils.buildJson(config -> {
             config.add("outer", blockStateToLenient(outer));
@@ -73,7 +73,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "states", value = "A list of {Block -> BlockState[]} objects in string form that define the boulder's state property"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
     public void boulder(String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
         boulder("tfc:boulder", name, states, placement);
     }
@@ -83,7 +83,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "states", value = "A list of {Block -> BlockState[]} objects in string form that define the baby boulder's state property"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToBlockStatesMapEntry.class, PlacedFeatureProperties.class})
     public void babyBoulder(String name, List<WorldGenUtils.BlockToBlockStatesMapEntry> states, Consumer<PlacedFeatureProperties> placement) {
         boulder("tfc:baby_boulder", name, states, placement);
     }
@@ -105,7 +105,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "maxHeight", value = "Sets the 'max_height' property of the modifier"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void thinSpike(String name, String state, int radius, int tries, int minHeight, int maxHeight, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:thin_spike", name, ResourceUtils.buildJson(config -> {
             config.add("state", blockStateToLenient(state));
@@ -127,7 +127,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Cluster.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Cluster.class, PlacedFeatureProperties.class})
     public void clusterVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, Consumer<BuildVeinProperties.Cluster> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Cluster cluster = new BuildVeinProperties.Cluster(replacementMap, rarity, density, minY, maxY, name, size);
         optionals.accept(cluster);
@@ -152,7 +152,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Pipe.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Pipe.class, PlacedFeatureProperties.class})
     public void pipeVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign, Consumer<BuildVeinProperties.Pipe> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Pipe pipe = new BuildVeinProperties.Pipe(replacementMap, rarity, density, minY, maxY, name, height, radius, minSkew, maxSkew, minSlant, maxSlant, sign);
         optionals.accept(pipe);
@@ -172,7 +172,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "optionals", value = "Sets the optional values of the vein through a consumer"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Disc.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, BuildVeinProperties.Disc.class, PlacedFeatureProperties.class})
     public void discVein(String name, List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacementMap, int rarity, float density, int minY, int maxY, int size, int height, Consumer<BuildVeinProperties.Disc> optionals, Consumer<PlacedFeatureProperties> placement) {
         final BuildVeinProperties.Disc disc = new BuildVeinProperties.Disc(replacementMap, rarity, density, minY, maxY, name, size, height);
         optionals.accept(disc);
@@ -186,7 +186,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "then", value = "A placed feature id, that will only place if the first feature is placed"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void ifThen(String name, String if_, String then, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:if_then", name, ResourceUtils.buildJson(config -> {
             config.addProperty("if", if_);
@@ -203,7 +203,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "integrity", value = "A number, in the range [0, 1], the specifies the probability of any given block will place, may be null to specify the default value of 1"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToBlockStateMapEntry.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToBlockStateMapEntry.class, PlacedFeatureProperties.class})
     public void soilDisc(String name, List<WorldGenUtils.BlockToBlockStateMapEntry> replacementMap, int minRadius, int maxRadius, int height, @Nullable Float integrity, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:soil_disc", name, ResourceUtils.buildJson(config -> {
             config.addProperty("min_radius", minRadius);
@@ -228,7 +228,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "decoration", value = "A fissure decoration object, may be null to not have one present"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = {WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, PlacedFeatureProperties.class})
+    @Generics({WorldGenUtils.BlockToWeightedBlockStateMapEntry.class, PlacedFeatureProperties.class})
     public void hotSpring(String name, @Nullable String wallState, String fluidState, int radius, boolean allowUnderwater, @Nullable List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> replacesOnFluidContact, @Nullable WorldGenUtils.FissureDecoration decoration, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:hot_spring", name, ResourceUtils.buildJson(config -> {
             if (wallState != null) {
@@ -253,7 +253,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "blockState", value = "The string representation of a block state, the state to be placed"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void simpleBlockState(String name, String blockState, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("minecraft:simple_block", name, ResourceUtils.buildJson(config -> {
             config.add("to_place", ResourceUtils.buildJson(toPlace -> {
@@ -271,7 +271,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "feature", value = "The feature to attempt to place for the patch"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void randomPatch(String name, @Nullable Integer tries, @Nullable Integer xzSpread, @Nullable Integer ySpread, String feature, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("minecraft:random_patch", name, ResourceUtils.buildJson(config -> {
             if (tries != null) {
@@ -292,7 +292,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "block", value = "The block to placed, must be an instanceof WildDoubleCropBlock"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void tallWildCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:tall_wild_crop", name, ResourceUtils.buildJson(config -> config.addProperty("block", block)), placement);
     }
@@ -302,7 +302,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "block", value = "The block to placed, must be an instanceof WildSpreadingCropBlock"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void spreadingCrop(String name, String block, Consumer<PlacedFeatureProperties> placement) {
         finishFeature("tfc:spreading_crop", name, ResourceUtils.buildJson(config -> config.addProperty("block", block)), placement);
     }
@@ -322,7 +322,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "featureConfig", value = "The config json object for the feature"),
             @Param(name = "placement", value = "The placement properties")
     })
-    @Generics(value = PlacedFeatureProperties.class)
+    @Generics(PlacedFeatureProperties.class)
     public void generic(String name, String type, JsonObject featureConfig, Consumer<PlacedFeatureProperties> placement) {
         finishFeature(type, name, featureConfig, placement);
     }
@@ -331,7 +331,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "block", value = "The registry name of a block to be replaced"),
             @Param(name = "blockStates", value = "A list of string representations of a block state")
     })
-    @Generics(value = String.class)
+    @Generics(String.class)
     public WorldGenUtils.BlockToBlockStatesMapEntry boulderState(String rock, List<String> blockStates) {
         return new WorldGenUtils.BlockToBlockStatesMapEntry(rock, blockStates);
     }
@@ -340,7 +340,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
             @Param(name = "blocks", value = "A list of strings, the registry names of blocks to be replaced"),
             @Param(name = "blockStates", value = "A list of string representations of weighted block states")
     })
-    @Generics(value = {String.class, String.class})
+    @Generics({String.class, String.class})
     public WorldGenUtils.BlockToWeightedBlockStateMapEntry blockToWeightedBlockState(List<String> replace, List<String> with) {
         return new WorldGenUtils.BlockToWeightedBlockStateMapEntry(replace, with);
     }

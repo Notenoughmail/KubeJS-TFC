@@ -42,20 +42,20 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
         preexistingItem = null;
     }
 
-    @Info(value = "Sets the block to have the same bounding box as TFC's ore pieces")
+    @Info("Sets the block to have the same bounding box as TFC's ore pieces")
     public GroundCoverBlockBuilder ore() {
         type = Type.ORE;
         return this;
     }
 
-    @Info(value = "Sets the block to have the same bounding box as TFC's twigs")
+    @Info("Sets the block to have the same bounding box as TFC's twigs")
     public GroundCoverBlockBuilder twig() {
         type = Type.TWIG;
         props = props.andThen(p -> p.flammable(60, 30));
         return this;
     }
 
-    @Info(value = """
+    @Info("""
             Set's the block's parent model
             
             Sets the parent model to 'kubejs_tfc:block/ground_cover/' + the given string
@@ -65,19 +65,19 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Info(value = "Rotates the default models by 45 degrees")
+    @Info("Rotates the default models by 45 degrees")
     public GroundCoverBlockBuilder notAxisAligned() {
         rotate = 45;
         return this;
     }
 
-    @Info(value = "Makes the block collide with entities")
+    @Info("Makes the block collide with entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
         return this;
     }
 
-    @Info(value = "Sets the 'block item' of this bloc kto an existing item")
+    @Info("Sets the 'block item' of this bloc kto an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         itemBuilder = null;
         preexistingItem = Lazy.of(() -> RegistryInfo.ITEM.getValue(item));

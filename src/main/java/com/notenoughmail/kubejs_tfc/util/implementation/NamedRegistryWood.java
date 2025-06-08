@@ -21,55 +21,55 @@ public class NamedRegistryWood implements RegistryWood {
         this.parent = parent;
     }
 
-    @Info(value = "The mod this wood originates from")
+    @Info("The mod this wood originates from")
     @SuppressWarnings("unused")
     public String getMod() {
         return mod;
     }
 
-    @Info(value = "The MapColor of the wood")
+    @Info("The MapColor of the wood")
     @Override
     public MapColor woodColor() {
         return parent.woodColor();
     }
 
-    @Info(value = "The MapColor of the wood's bark")
+    @Info("The MapColor of the wood's bark")
     @Override
     public MapColor barkColor() {
         return parent.barkColor();
     }
 
-    @Info(value = "The TFCTreeGrower of the wood")
+    @Info("The TFCTreeGrower of the wood")
     @Override
     public TFCTreeGrower tree() {
         return parent.tree();
     }
 
-    @Info(value = "The number of days it takes for the wood's sapling to grow")
+    @Info("The number of days it takes for the wood's sapling to grow")
     @Override
     public int daysToGrow() {
         return parent.daysToGrow();
     }
 
-    @Info(value = "The vertical coordinate (from 0-255) on the foliage_fall colormap for this wood type's leaves.")
+    @Info("The vertical coordinate (from 0-255) on the foliage_fall colormap for this wood type's leaves.")
     @Override
     public int autumnIndex() {
         return parent.autumnIndex();
     }
 
-    @Info(value = "A block of this wood, of the provided type")
+    @Info("A block of this wood, of the provided type")
     @Override
     public Supplier<Block> getBlock(Wood.BlockType type) {
         return parent.getBlock(type);
     }
 
-    @Info(value = "The BlockSetType this wood uses")
+    @Info("The BlockSetType this wood uses")
     @Override
     public BlockSetType getBlockSet() {
         return parent.getBlockSet();
     }
 
-    @Info(value = "The WoodType the wood uses")
+    @Info("The WoodType the wood uses")
     @Override
     public WoodType getVanillaWoodType() {
         return parent.getVanillaWoodType();

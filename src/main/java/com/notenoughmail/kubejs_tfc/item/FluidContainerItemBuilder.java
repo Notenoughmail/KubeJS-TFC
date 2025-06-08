@@ -51,38 +51,38 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         return texture("fluid", tex + "_overlay");
     }
 
-    @Info(value = "Determines if the item can place fluids in world")
+    @Info("Determines if the item can place fluids in world")
     public FluidContainerItemBuilder canPlaceLiquid(boolean b) {
         canPlaceLiquid = b;
         return this;
     }
 
-    @Info(value = "Determines if the item can place source blocks when placing fluid blocks in world")
+    @Info("Determines if the item can place source blocks when placing fluid blocks in world")
     public FluidContainerItemBuilder canPlaceLiquidSource(boolean b) {
         canPlaceSource = b;
         return this;
     }
 
-    @Info(value = "Sets the capacity, in mB, of the fluid container")
+    @Info("Sets the capacity, in mB, of the fluid container")
     public FluidContainerItemBuilder capacity(int i) {
         capacity = () -> i;
         return this;
     }
 
-    @Info(value = "Sets the capacity, in mB, supplier of the fluid container")
-    @Generics(value = Integer.class)
+    @Info("Sets the capacity, in mB, supplier of the fluid container")
+    @Generics(Integer.class)
     public FluidContainerItemBuilder capacitySupplier(Supplier<Integer> capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    @Info(value = "Sets the fluid tag that the item is allowed to hold")
+    @Info("Sets the fluid tag that the item is allowed to hold")
     public FluidContainerItemBuilder fluidTagAccept(ResourceLocation tag) {
         whitelist = TagKey.create(Registries.FLUID, tag);
         return this;
     }
 
-    @Info(value = """
+    @Info("""
             Sets the display name for this object when filled
             
             This will be overridden by a lang file if it exists

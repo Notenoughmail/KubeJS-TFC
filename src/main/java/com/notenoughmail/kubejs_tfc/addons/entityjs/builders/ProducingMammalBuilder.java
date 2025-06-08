@@ -21,7 +21,7 @@ public abstract class ProducingMammalBuilder<T extends ProducingMammal & IAnimat
         config = new AnimalConfigBuilder.ProducingMammal(configName());
     }
 
-    @Info(value = "Sets the message that is shown when the mammal has a product")
+    @Info("Sets the message that is shown when the mammal has a product")
     public ProducingMammalBuilder<T> productMessage(MutableComponent message) {
         productMessage = message;
         return this;

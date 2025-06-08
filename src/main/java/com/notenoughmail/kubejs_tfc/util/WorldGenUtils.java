@@ -73,7 +73,7 @@ public class WorldGenUtils {
      * Used by:
      * - Boulders
      */
-    @Generics(value = String.class)
+    @Generics(String.class)
     public record BlockToBlockStatesMapEntry(String block, List<String> blockStates) {
 
         public JsonObject toJson() {
@@ -91,7 +91,7 @@ public class WorldGenUtils {
      * - Veins
      * - Hot springs
      */
-    @Generics(value = {String.class, String.class})
+    @Generics({String.class, String.class})
     public record BlockToWeightedBlockStateMapEntry(List<String> blocks, List<String> blockStates) {
 
         public JsonObject toJson() {

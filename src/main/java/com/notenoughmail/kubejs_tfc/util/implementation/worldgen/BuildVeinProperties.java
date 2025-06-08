@@ -48,7 +48,7 @@ public abstract class BuildVeinProperties {
             @Param(name = "undergroundRarity", value = "Sets the rarity of the indicator blocks when underground"),
             @Param(name = "indicators", value = "A list of string representations of weighted block states, the blocks to be used as indicators")
     })
-    @Generics(value = String.class)
+    @Generics(String.class)
     public BuildVeinProperties indicator(int depth, int rarity, int undergroundRarity, int undergroundCount, List<String> indicators) {
         final JsonObject indicatorJson = new JsonObject();
         indicatorJson.addProperty("depth", depth);
@@ -64,13 +64,13 @@ public abstract class BuildVeinProperties {
         return this;
     }
 
-    @Info(value = "Determines if the vein should project itself to the surface, defaults to false")
+    @Info("Determines if the vein should project itself to the surface, defaults to false")
     public BuildVeinProperties project(boolean b) {
         project = b;
         return this;
     }
 
-    @Info(value = "Determines if the projection of the vein should be offset in the x and z directions, defaults to false")
+    @Info("Determines if the projection of the vein should be offset in the x and z directions, defaults to false")
     public BuildVeinProperties projectOffset(boolean b) {
         projectOffset = b;
         return this;
@@ -86,7 +86,7 @@ public abstract class BuildVeinProperties {
         return this;
     }
 
-    @Info(value = "Determines if the vein should be near lava in order to spawn")
+    @Info("Determines if the vein should be near lava in order to spawn")
     public BuildVeinProperties nearLava(boolean b) {
         nearLava = b;
         return this;

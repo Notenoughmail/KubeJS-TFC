@@ -22,7 +22,7 @@ public enum CalendarBindings {
     public final float TICKS_IN_MINUTE = ICalendar.TICKS_IN_MINUTE;
 
     // TODO: 1.21 | Add context param so guessing is not needed?
-    @Info(value = "Returns the best guess on the appropriate calendar")
+    @Info("Returns the best guess on the appropriate calendar")
     public ICalendar getCalendar() {
         return Calendars.get();
     }
@@ -32,42 +32,42 @@ public enum CalendarBindings {
         return Calendars.get(isClientSide);
     }
 
-    @Info(value = "Returns the level's calendar")
+    @Info("Returns the level's calendar")
     public ICalendar getCalendar(LevelReader level) {
         return Calendars.get(level);
     }
 
-    @Info(value = "Returns the calendar of the entity's level")
+    @Info("Returns the calendar of the entity's level")
     public ICalendar getCalendar(Entity entity) {
         return Calendars.get(entity.level());
     }
 
-    @Info(value = "Returns the calendar of the block entity's level or the best guess on the calendar if it does not have a level")
+    @Info("Returns the calendar of the block entity's level or the best guess on the calendar if it does not have a level")
     public ICalendar getCalendar(BlockEntity blockEntity) {
         return blockEntity.hasLevel() ? Calendars.get(blockEntity.getLevel()) : Calendars.get();
     }
 
-    @Info(value = "Returns the number of calendar ticks in a month based on the number of days in a month")
+    @Info("Returns the number of calendar ticks in a month based on the number of days in a month")
     public long getCalendarTicksInMonth(int daysInMonth) {
         return ICalendar.getCalendarTicksInMonth(daysInMonth);
     }
 
-    @Info(value = "Returns the number of calendar ticks in a year based on the number of days in a month")
+    @Info("Returns the number of calendar ticks in a year based on the number of days in a month")
     public long getCalendarTicksInYear(int daysInMonth) {
         return ICalendar.getCalendarTicksInYear(daysInMonth);
     }
 
-    @Info(value = "Returns the number of minutes for the provided number of ticks")
+    @Info("Returns the number of minutes for the provided number of ticks")
     public float getTotalMinutes(long time) {
         return ICalendar.getTotalMinutes(time);
     }
 
-    @Info(value = "Returns the number of hours for the provided number of ticks")
+    @Info("Returns the number of hours for the provided number of ticks")
     public long getTotalHours(long time) {
         return ICalendar.getTotalHours(time);
     }
 
-    @Info(value = "Returns the number of days for the provided number of ticks")
+    @Info("Returns the number of days for the provided number of ticks")
     public long getTotalDays(long time) {
         return ICalendar.getTotalDays(time);
     }
@@ -88,12 +88,12 @@ public enum CalendarBindings {
         return ICalendar.getTotalYears(time, daysInMonth);
      }
 
-    @Info(value = "Returns the minute of the hour for the given number of ticks")
+    @Info("Returns the minute of the hour for the given number of ticks")
     public int getMinuteOfHour(long time) {
         return ICalendar.getMinuteOfHour(time);
     }
 
-    @Info(value = "Returns the hour of the day for the given number of ticks")
+    @Info("Returns the hour of the day for the given number of ticks")
     public int getHourOfDay(long time) {
         return ICalendar.getHourOfDay(time);
     }

@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-@Info(value = """
+@Info("""
         This event is fired whenever a player closes a menu that is not the player's own inventory
         
         A full list of valid menus can be obtained by running the command `/kubejs dump_registry minecraft:menu`
@@ -33,7 +33,7 @@ public class ContainerLimiterEventJS extends EventJS {
         this.spawnPos = spawnPos;
     }
 
-    @Info(value = "Limits the entire container to the given size, disallowing items with a size greater than the given size")
+    @Info("Limits the entire container to the given size, disallowing items with a size greater than the given size")
     public void limit(Size size) {
         limit(size, true);
     }
@@ -73,7 +73,7 @@ public class ContainerLimiterEventJS extends EventJS {
         }
     }
 
-    @Info(value = "Limits items in the container to a size equal to or greater than the provided size")
+    @Info("Limits items in the container to a size equal to or greater than the provided size")
     public void lowerLimit(Size size) {
         lowerLimit(size, true);
     }

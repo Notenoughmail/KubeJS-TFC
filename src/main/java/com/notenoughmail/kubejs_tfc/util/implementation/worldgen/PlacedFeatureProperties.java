@@ -24,7 +24,7 @@ public class PlacedFeatureProperties {
         feature = ResourceUtils.normalizeResourceLocation(name).toString();
     }
 
-    @Info(value = "Adds a placement with the provided type and no extra arguments")
+    @Info("Adds a placement with the provided type and no extra arguments")
     public PlacedFeatureProperties simplePlacement(String type) {
         final JsonObject json = new JsonObject();
         json.addProperty("type", type);
@@ -32,25 +32,25 @@ public class PlacedFeatureProperties {
         return this;
     }
 
-    @Info(value = "Adds the provided json object to the list of placement modifiers")
+    @Info("Adds the provided json object to the list of placement modifiers")
     public PlacedFeatureProperties jsonPlacement(JsonObject json) {
         placements.add(json);
         return this;
     }
 
-    @Info(value = "Adds the 'tfc:biome' placement modifier")
+    @Info("Adds the 'tfc:biome' placement modifier")
     public PlacedFeatureProperties tfcBiome() {
         return simplePlacement("tfc:biome");
     }
 
     @Info(value = "Adds a 'tfc:climate' placement modifier", params = @Param(name = "climate", value = "The climate placement properties"))
-    @Generics(value = Climate.class)
+    @Generics(Climate.class)
     public PlacedFeatureProperties climate(Consumer<Climate> climate) {
         return jsonPlacement(Util.make(new Climate(), climate).toJson());
     }
 
     @Info(value = "Adds a 'tfc:flat_enough' placement modifier", params = @Param(name = "flatness", value = "The flatness placement properties"))
-    @Generics(value = Flatness.class)
+    @Generics(Flatness.class)
     public PlacedFeatureProperties flatEnough(Consumer<Flatness> flatness) {
         return jsonPlacement(Util.make(new Flatness(), flatness).toJson());
     }
@@ -71,7 +71,7 @@ public class PlacedFeatureProperties {
         return jsonPlacement(json);
     }
 
-    @Info(value = "Adds a 'tfc:underground' placement modifier")
+    @Info("Adds a 'tfc:underground' placement modifier")
     public PlacedFeatureProperties underground() {
         return simplePlacement("tfc:underground");
     }
@@ -89,7 +89,7 @@ public class PlacedFeatureProperties {
     }
 
     // Some of the vanilla modifiers that I can make heads or tails of
-    @Info(value = "Adds a 'minecraft:in_square' placement modifier")
+    @Info("Adds a 'minecraft:in_square' placement modifier")
     public PlacedFeatureProperties inSquare() {
         return simplePlacement("minecraft:in_square");
     }
@@ -130,43 +130,43 @@ public class PlacedFeatureProperties {
             json.addProperty("type", "tfc:climate");
         }
 
-        @Info(value = "Sets the minimum temperature of the climate decorator")
+        @Info("Sets the minimum temperature of the climate decorator")
         public Climate minTemp(float f) {
             json.addProperty("min_temperature", f);
             return this;
         }
 
-        @Info(value = "Sets the maximum temperature of the climate decorator")
+        @Info("Sets the maximum temperature of the climate decorator")
         public Climate maxTemp(float f) {
             json.addProperty("max_temperature", f);
             return this;
         }
 
-        @Info(value = "Sets the minimum rainfall of the climate decorator")
+        @Info("Sets the minimum rainfall of the climate decorator")
         public Climate minRain(float f) {
             json.addProperty("min_rainfall", f);
             return this;
         }
 
-        @Info(value = "Sets the maximum rainfall of the climate decorator")
+        @Info("Sets the maximum rainfall of the climate decorator")
         public Climate maxRain(float f) {
             json.addProperty("max_rainfall", f);
             return this;
         }
 
-        @Info(value = "Sets the minimum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
+        @Info("Sets the minimum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
         public Climate minForest(ForestType type) {
             json.addProperty("min_forest", type.getSerializedName());
             return this;
         }
 
-        @Info(value = "Sets the maximum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
+        @Info("Sets the maximum forest type of the climate decorator. Accepts 'none', 'sparse', 'edge', 'normal', and 'old_growth'")
         public Climate maxForest(ForestType type) {
             json.addProperty("max_forest", type.getSerializedName());
             return this;
         }
 
-        @Info(value = "Determines if the temperature and rainfall requirements will be probabilistic relative to the center point")
+        @Info("Determines if the temperature and rainfall requirements will be probabilistic relative to the center point")
         public Climate fuzzy(boolean b) {
             json.addProperty("fuzzy", b);
             return this;
@@ -186,19 +186,19 @@ public class PlacedFeatureProperties {
         private int radius = 2;
         private int maxDepth = 4;
 
-        @Info(value = "Sets the required flatness of the surrounding area, in the range [0, 1]. Defaults to 0.5")
+        @Info("Sets the required flatness of the surrounding area, in the range [0, 1]. Defaults to 0.5")
         public Flatness flatness(float f) {
             flatness = f;
             return this;
         }
 
-        @Info(value = "The radius around the initial position the area is checked for when calculation flatness, defaults to 2")
+        @Info("The radius around the initial position the area is checked for when calculation flatness, defaults to 2")
         public Flatness radius(int i) {
             radius = i;
             return this;
         }
 
-        @Info(value = "How deep from the initial position the decorator should search, defaults to 4")
+        @Info("How deep from the initial position the decorator should search, defaults to 4")
         public Flatness maxDepth(int i) {
             maxDepth = i;
             return this;

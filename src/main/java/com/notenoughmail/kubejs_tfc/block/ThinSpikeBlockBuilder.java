@@ -57,54 +57,54 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Deprecated(since = "1.3.0")
-    @Info(value = "Deprecated, please use `#dripParticle` to make the block drip and have specify the drip particle")
+    @Info("Deprecated, please use `#dripParticle` to make the block drip and have specify the drip particle")
     public ThinSpikeBlockBuilder drips() {
         return this;
     }
 
-    @Info(value = "Sets the chance, in the range [0, 1], the block will drip per tick")
+    @Info("Sets the chance, in the range [0, 1], the block will drip per tick")
     public ThinSpikeBlockBuilder dripChance(float chance) {
         dripChance = chance;
         return this;
     }
 
-    @Info(value = "Sets the temperature above which the block must be to begin dripping")
+    @Info("Sets the temperature above which the block must be to begin dripping")
     public ThinSpikeBlockBuilder dripTemp(float temp) {
         dripTemp = temp;
         return this;
     }
 
-    @Info(value = "Allows the block to melt under certain situations")
+    @Info("Allows the block to melt under certain situations")
     public ThinSpikeBlockBuilder melts() {
         melts = true;
         return this;
     }
 
-    @Info(value = "Sets the chance, in the range [0, 1], that the block will drip per random tick")
+    @Info("Sets the chance, in the range [0, 1], that the block will drip per random tick")
     public ThinSpikeBlockBuilder meltChance(float chance) {
         meltChance = chance;
         return this;
     }
 
-    @Info(value = "Sets the temperature above which the block can melt")
+    @Info("Sets the temperature above which the block can melt")
     public ThinSpikeBlockBuilder meltTemp(float temp) {
         meltTemp = temp;
         return this;
     }
 
-    @Info(value = "The registry name of a particle that will drip from the block")
+    @Info("The registry name of a particle that will drip from the block")
     public ThinSpikeBlockBuilder dripParticle(@Nullable ResourceLocation particle) {
         this.particle = RegistryUtils.getParticleOrLogError(particle);
         return this;
     }
 
-    @Info(value = "The fluid the block melts into")
+    @Info("The fluid the block melts into")
     public ThinSpikeBlockBuilder meltFluid(FluidStackJS fluid) {
         meltFluid = new FluidStack(fluid.getFluid(), (int) fluid.getAmount());
         return this;
     }
 
-    @Info(value = "Sets the model of the tip state")
+    @Info("Sets the model of the tip state")
     public ThinSpikeBlockBuilder tipModel(String s) {
         tipModel = s;
         return this;

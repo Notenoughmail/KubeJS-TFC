@@ -33,7 +33,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
         texture("dirt", parent.textures.get("particle").getAsString()); // Parent does not yet exist when #textureAll is called in super constructor
     }
 
-    @Info(value = "Makes the farmland block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
+    @Info("Makes the farmland block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public TFCFarmlandBlockBuilder uniqueDirtTexture() {
         texture("dirt", id.getNamespace() + ":block/" + id.getPath());
         return this;
@@ -53,7 +53,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;

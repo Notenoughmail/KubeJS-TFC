@@ -18,7 +18,7 @@ public class MammalJSBuilder extends TFCAnimalBuilder<MammalJS> {
         config = new AnimalConfigBuilder.Mammal(configName());
     }
 
-    @Info(value = "Allows for setting the default values of the mammal's config")
+    @Info("Allows for setting the default values of the mammal's config")
     public MammalJSBuilder configs(Consumer<AnimalConfigBuilder.Mammal> configBuilder) {
         configBuilder.accept(config);
         return this;

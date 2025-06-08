@@ -36,7 +36,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
         texture("chain", id.getNamespace() + ":block/" + id.getPath() + "_chain");
     }
 
-    @Info(value = "Sets the light level the lamp gives off when it is lit")
+    @Info("Sets the light level the lamp gives off when it is lit")
     public LampBlockBuilder lightLevel(int i) {
         lightLevel = i;
         return this;

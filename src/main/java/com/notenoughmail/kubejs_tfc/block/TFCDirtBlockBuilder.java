@@ -41,23 +41,23 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         mud = null;
     }
 
-    @Info(value = "Sets the properties of the dirt's grass block")
-    @Generics(value = ConnectedGrassBlockBuilder.class)
+    @Info("Sets the properties of the dirt's grass block")
+    @Generics(ConnectedGrassBlockBuilder.class)
     public TFCDirtBlockBuilder grass(Consumer<ConnectedGrassBlockBuilder> grass) {
         grass.accept(this.grass);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the dirt's path block")
-    @Generics(value = TFCPathBlockBuilder.class)
+    @Info("Creates and sets the properties of the dirt's path block")
+    @Generics(TFCPathBlockBuilder.class)
     public TFCDirtBlockBuilder path(Consumer<TFCPathBlockBuilder> path) {
         this.path = new TFCPathBlockBuilder(newID("", "_path"), this);
         path.accept(this.path);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the dirt's farmland block")
-    @Generics(value = TFCFarmlandBlockBuilder.class)
+    @Info("Creates and sets the properties of the dirt's farmland block")
+    @Generics(TFCFarmlandBlockBuilder.class)
     public TFCDirtBlockBuilder farmland(Consumer<TFCFarmlandBlockBuilder> farmland) {
         this.farmland = new TFCFarmlandBlockBuilder(newID("", "_farmland"), this);
         farmland.accept(this.farmland);
@@ -65,16 +65,16 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the dirt's rooted dirt block")
-    @Generics(value = TFCRootedDirtBlockBuilder.class)
+    @Info("Creates and sets the properties of the dirt's rooted dirt block")
+    @Generics(TFCRootedDirtBlockBuilder.class)
     public TFCDirtBlockBuilder rooted(Consumer<TFCRootedDirtBlockBuilder> rooted) {
         this.rooted = new TFCRootedDirtBlockBuilder(newID("", "_rooted"), this);
         rooted.accept(this.rooted);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the dirt's mud block")
-    @Generics(value = BlockBuilder.class)
+    @Info("Creates and sets the properties of the dirt's mud block")
+    @Generics(BlockBuilder.class)
     public TFCDirtBlockBuilder mud(Consumer<BlockBuilder> mud) {
         this.mud = new BasicBlockJS.Builder(newID("", "_mud"));
         mud.accept(this.mud);

@@ -27,8 +27,8 @@ public interface ISupportExtendedProperties {
 
     BlockBehaviour.Properties createProperties();
 
-    @Info(value = "Allows editing some of TFC's extended block properties")
-    @Generics(value = ExtendedPropertiesJS.class)
+    @Info("Allows editing some of TFC's extended block properties")
+    @Generics(ExtendedPropertiesJS.class)
     BlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties);
 
     @HideFromJS
@@ -66,7 +66,7 @@ public interface ISupportExtendedProperties {
         @Info(value = "Sets the enchantment power of the block based off of its block state", params = {
                 @Param(name = "function", value = "A BlockState to number function")
         })
-        @Generics(value = BlockState.class)
+        @Generics(BlockState.class)
         public ExtendedPropertiesJS enchantPowerFunction(ToDoubleFunction<BlockState> function) {
             delegate.enchantPower(function);
             return this;

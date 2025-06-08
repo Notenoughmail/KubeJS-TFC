@@ -30,7 +30,7 @@ public class TFCPathBlockBuilder extends BlockBuilder {
         texture("dirt", parent.textures.get("particle").getAsString());
     }
 
-    @Info(value = "Makes the path block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
+    @Info("Makes the path block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
     public TFCPathBlockBuilder uniqueDirtTexture() {
         texture("dirt", id.getNamespace() + ":block/" + id.getPath());
         return this;
@@ -51,7 +51,7 @@ public class TFCPathBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    @Generics(value = BlockItemBuilder.class)
+    @Generics(BlockItemBuilder.class)
     public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
         if (i == null) {
             itemBuilder = null;

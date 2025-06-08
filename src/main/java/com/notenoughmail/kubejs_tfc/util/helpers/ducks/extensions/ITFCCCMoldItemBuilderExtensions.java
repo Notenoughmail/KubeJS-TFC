@@ -11,14 +11,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface ITFCCCMoldItemBuilderExtensions {
 
-    @Info(value = "Allows the mold item to be placed in a TFC Casting With Channels mold table")
+    @Info("Allows the mold item to be placed in a TFC Casting With Channels mold table")
     @RemapForJS("tfcccAllowedInMoldTable")
     MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable();
 
     @Info(value = "Allows the mold item to be placed in a TFC Casting With Channels mold table", params = {
             @Param(name = "model", value = "A list of 14 strings, each 14 chars long, creates the default model for the item when in the mold table")
     })
-    @Generics(value = String.class)
+    @Generics(String.class)
     @RemapForJS("tfcccAllowedInMoldTable")
     MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable(List<String> model);
 }

@@ -25,13 +25,13 @@ public class PickableCropBlockBuilder extends AbstractCropBlockBuilder {
         type = Type.PICKABLE;
     }
 
-    @Info(value = "Sets the item to be given to the player when they pick the block")
+    @Info("Sets the item to be given to the player when they pick the block")
     public PickableCropBlockBuilder fruit(ResourceLocation fruit) {
         this.fruit = () -> () -> RegistryInfo.ITEM.getValue(fruit);
         return this;
     }
 
-    @Info(value = "Sets the item to be given to the player when the pick the block and the crop is mature, defaults to 'minecraft:apple'")
+    @Info("Sets the item to be given to the player when the pick the block and the crop is mature, defaults to 'minecraft:apple'")
     public PickableCropBlockBuilder matureFruit(ResourceLocation matureFruit) {
         this.matureFruit = () -> () -> RegistryInfo.ITEM.getValue(matureFruit);
         return this;

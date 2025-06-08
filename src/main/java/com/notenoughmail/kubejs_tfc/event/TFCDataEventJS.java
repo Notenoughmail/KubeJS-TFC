@@ -102,7 +102,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "fluidIngredient", value = "The fluids this drinkable applies to"),
             @Param(name = "drinkableData", value = "The drinkable properties that are applied to the fluid ingredient")
     })
-    @Generics(value = BuildDrinkableData.class)
+    @Generics(BuildDrinkableData.class)
     public void drinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
@@ -114,7 +114,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "drinkableData", value = "The drinkable properties that are applied to the fluid ingredient"),
             @Param(name = "name", value = "The name of the drinkable data")
     })
-    @Generics(value = BuildDrinkableData.class)
+    @Generics(BuildDrinkableData.class)
     public void drinkable(FluidIngredient fluidIngredient, Consumer<BuildDrinkableData> drinkableData, ResourceLocation name) {
         var data = new BuildDrinkableData(fluidIngredient);
         drinkableData.accept(data);
@@ -152,7 +152,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "ingredient", value = "The ingredient the food definition applies to"),
             @Param(name = "foodItemData", value = "The food item properties that are applied to the ingredient")
     })
-    @Generics(value = BuildFoodItemData.class)
+    @Generics(BuildFoodItemData.class)
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData) {
         var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
@@ -164,7 +164,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "foodItemData", value = "The food item properties that are applied to the ingredient"),
             @Param(name = "name", value = "The name of the food item data")
     })
-    @Generics(value = BuildFoodItemData.class)
+    @Generics(BuildFoodItemData.class)
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData, ResourceLocation name) {
         var data = new BuildFoodItemData(ingredient);
         foodItemData.accept(data);
@@ -387,7 +387,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "lootTable", value = "The location of a loot table to be dropped by the ingredient"),
             @Param(name = "models", value = "A list of model locations to be iterated through as panning progresses")
     })
-    @Generics(value = String.class)
+    @Generics(String.class)
     public void panning(BlockIngredient blockIngredient, String lootTable, List<String> models) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
@@ -404,7 +404,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "models", value = "A list of model locations to be iterated through as panning progresses"),
             @Param(name = "name", value = "The name of the panning definition")
     })
-    @Generics(value = String.class)
+    @Generics(String.class)
     public void panning(BlockIngredient blockIngredient, String lootTable, List<String> models, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
@@ -420,7 +420,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "fauna", value = "Additional fauna properties for the given fauna"),
             @Param(name = "name", value = "The name of the fauna definition")
     })
-    @Generics(value = {PlacedFeatureProperties.Climate.class, BuildFaunaData.class})
+    @Generics({PlacedFeatureProperties.Climate.class, BuildFaunaData.class})
     public void fauna(Consumer<PlacedFeatureProperties.Climate> climate, Consumer<BuildFaunaData> fauna, ResourceLocation name) {
         var climateObj = new PlacedFeatureProperties.Climate();
         climate.accept(climateObj);
@@ -433,7 +433,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "climateRange", value = "Climate range properties for the given climate range"),
             @Param(name = "name", value = "The name of the climate range")
     })
-    @Generics(value = BuildClimateRangeData.class)
+    @Generics(BuildClimateRangeData.class)
     public void climateRange(Consumer<BuildClimateRangeData> climateRange, ResourceLocation name) {
         var climateRageObj = new BuildClimateRangeData();
         climateRange.accept(climateRageObj);

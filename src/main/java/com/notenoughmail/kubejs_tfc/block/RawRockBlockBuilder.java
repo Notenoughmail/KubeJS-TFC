@@ -29,13 +29,13 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
         itemBuilder.parentModel = id.getNamespace() + ":block/" + id.getPath();
     }
 
-    @Info(value = "Makes the default model generator use the 'side' and 'end' textures instead of just the 'end'")
+    @Info("Makes the default model generator use the 'side' and 'end' textures instead of just the 'end'")
     public RawRockBlockBuilder uniqueSideTextures() {
         uniqueSideTextures = true;
         return this;
     }
 
-    @Info(value = "Determines if the block is considered to be naturally supported for the purposes of spawning particles indicating unsupported regions")
+    @Info("Determines if the block is considered to be naturally supported for the purposes of spawning particles indicating unsupported regions")
     public RawRockBlockBuilder naturallySupported(boolean supported) {
         naturallySupported = supported;
         return this;

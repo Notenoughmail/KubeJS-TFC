@@ -182,7 +182,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 .register(TFCRecipeSerializers.POT_SOUP.getId().getPath(), SoupPotSchema.SCHEMA)
                 .register(TFCRecipeSerializers.QUERN.getId().getPath(), BasicSchema.SCHEMA)
                 .register(TFCRecipeSerializers.SCRAPING.getId().getPath(), ScrapingSchema.SCHEMA)
-                // TODO: 1.3.0 | Get kube recipe modifiers working with this/these
                 .register(TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPED)
                 .register(TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.getId().getPath(), AdvancedCraftingSchema.SHAPELESS)
                 .register(TFCRecipeSerializers.DAMAGE_INPUT_SHAPED_CRAFTING.getId().getPath(), DelegateCraftingSchema.schema("damage"))

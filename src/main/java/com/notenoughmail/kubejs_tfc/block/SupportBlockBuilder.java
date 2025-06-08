@@ -38,7 +38,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         return this;
     }
 
-    @Info(value = "Sets the properties of the horizontal support block")
+    @Info("Sets the properties of the horizontal support block")
     @Generics(HorizontalSupportBlockBuilder.class)
     public SupportBlockBuilder horizontal(Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
         horizontalSupport.accept(horizontal);

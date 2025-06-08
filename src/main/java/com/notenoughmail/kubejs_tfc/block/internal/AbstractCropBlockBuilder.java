@@ -67,15 +67,15 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     }
 
     @HideFromJS
-    public <T extends Enum<T> & DeadCropBlockBuilder.Model> T[] deadModels() {
-        return (T[]) Model.VALUES;
+    public <T extends Enum<T> & DeadCropBlockBuilder.DeadModelVariant> T[] deadModels() {
+        return (T[]) DeadModels.VALUES;
     }
 
     protected boolean hasProduct() {
         return true;
     }
 
-    @Info(value = "Determines how many growth stages the crop will have")
+    @Info("Sets how many growth stages the crop will have")
     public AbstractCropBlockBuilder stages(int i) {
         if (i >= 1 && i <= 8) {
             stages = i;
@@ -83,22 +83,22 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Modifies the crop's dead block")
-    @Generics(value = DeadCropBlockBuilder.class)
+    @Info("Modifies the crop's dead block")
+    @Generics(DeadCropBlockBuilder.class)
     public AbstractCropBlockBuilder deadBlock(Consumer<DeadCropBlockBuilder> deadCrop) {
         deadCrop.accept(dead);
         return this;
     }
 
-    @Info(value = "Modifies the crop's seed item")
-    @Generics(value = ItemBuilder.class)
+    @Info("Modifies the crop's seed item")
+    @Generics(ItemBuilder.class)
     public AbstractCropBlockBuilder seedItem(Consumer<SeedItemBuilder> seedItem) {
         seedItem.accept(seeds);
         return this;
     }
 
-    @Info(value = "Modifies the crop's 'product' item")
-    @Generics(value = ItemBuilder.class)
+    @Info("Modifies the crop's 'product' item")
+    @Generics(ItemBuilder.class)
     public AbstractCropBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
         if (hasProduct()) {
             productItem.accept(product);
@@ -106,7 +106,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the crop's 'product' item to be an existing item")
+    @Info("Sets the crop's 'product' item to be an existing item")
     public AbstractCropBlockBuilder productItem(ResourceLocation productItem) {
         if (hasProduct()) {
             this.productItem = productItem;
@@ -114,13 +114,13 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the nutrient the crop uses as fertilizer, defaults to nitrogen")
+    @Info("Sets the nutrient the crop uses as fertilizer, defaults to nitrogen")
     public AbstractCropBlockBuilder nutrient(FarmlandBlockEntity.NutrientType nutrient) {
         this.nutrient = nutrient;
         return this;
     }
 
-    @Info(value = "Texture the block for all growth stages")
+    @Info("Texture the block for all growth stages")
     public AbstractCropBlockBuilder texture(String texture) {
         for (int i = 0 ; i < 12 ; i++) {
             texture(i, texture);
@@ -128,7 +128,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Texture a specific key for all growth stages")
+    @Info("Texture a specific key for all growth stages")
     public AbstractCropBlockBuilder textureAll(String id, String tex) {
         for (int i = 0 ; i < 12 ; i++) {
             texture(i, id, tex);
@@ -136,7 +136,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the model for all growth stages")
+    @Info("Sets the model for all growth stages")
     @Override
     public AbstractCropBlockBuilder model(String m) {
         for (int i = 0 ; i < 12 ; i++) {
@@ -146,7 +146,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the model for all growth stages")
+    @Info("Sets the model for all growth stages")
     public AbstractCropBlockBuilder model(Consumer<ModelGenerator> gen) {
         for (int i = 0 ; i < 12 ; i++) {
             model(i, gen);
@@ -154,19 +154,19 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the model for a specific growth stage")
+    @Info("Sets the model for a specific growth stage")
     public AbstractCropBlockBuilder model(int stage, Consumer<ModelGenerator> gen) {
         models[stage] = gen;
         return this;
     }
 
-    @Info(value = "Sets the model for a specific growth stage")
+    @Info("Sets the model for a specific growth stage")
     public AbstractCropBlockBuilder model(int stage, String model) {
         models[stage] = m -> m.parent(model);
         return this;
     }
 
-    @Info(value = "Textures a specific key for the given stage")
+    @Info("Textures a specific key for the given stage")
     public AbstractCropBlockBuilder texture(int stage, String id, String texture) {
         if (models[stage] == null) {
             models[stage] = m -> {
@@ -179,12 +179,12 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Textures the block for the given growth stage")
+    @Info("Textures the block for the given growth stage")
     public AbstractCropBlockBuilder texture(int stage, String texture) {
         return texture(stage, "crop", texture);
     }
 
-    @Info(value = "Sets the textures for all growth stages")
+    @Info("Sets the textures for all growth stages")
     public AbstractCropBlockBuilder textures(JsonObject textures) {
         for (int i = 0; i < 12 ; i++) {
             textures(i, textures);
@@ -192,7 +192,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return this;
     }
 
-    @Info(value = "Sets the textures for the given growth stage")
+    @Info("Sets the textures for the given growth stage")
     public AbstractCropBlockBuilder textures(int stage, JsonObject textures) {
         if (models[stage] != null) {
             models[stage] = models[stage].andThen(m -> m.textures(textures));
@@ -317,11 +317,11 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         PICKABLE
     }
 
-    public enum Model implements DeadCropBlockBuilder.Model {
+    public enum DeadModels implements DeadCropBlockBuilder.DeadModelVariant {
         MATURE,
         YOUNG;
 
-        public static final Model[] VALUES = values();
+        public static final DeadModels[] VALUES = values();
 
         @Override
         public String variant() {

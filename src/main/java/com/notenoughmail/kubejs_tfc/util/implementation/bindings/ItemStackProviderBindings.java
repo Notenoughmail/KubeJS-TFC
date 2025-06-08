@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 public enum ItemStackProviderBindings {
     INSTANCE;
 
-    @Info(value = "Creates an item stack provider based on the provided item stack")
+    @Info("Creates an item stack provider based on the provided item stack")
     public ItemStackProviderJS of(ItemStack itemStack) {
         return new ItemStackProviderJS(itemStack, new JsonArray(0));
     }
@@ -23,22 +23,22 @@ public enum ItemStackProviderBindings {
         return ItemStackProviderJS.of(itemStack, modifiers);
     }
 
-    @Info(value = "Creates an empty item stack provider with the given item stack modifiers")
+    @Info("Creates an empty item stack provider with the given item stack modifiers")
     public ItemStackProviderJS empty(Object modifiers) {
         return ItemStackProviderJS.of(ItemStack.EMPTY, modifiers);
     }
 
-    @Info(value = "Creates an empty item stack provider")
+    @Info("Creates an empty item stack provider")
     public ItemStackProviderJS empty() {
         return ItemStackProviderJS.EMPTY.copy();
     }
 
-    @Info(value = "Creates an empty item stack provider with the given item stack modifiers and with the 'tfc:copy_input' modifier automatically applied")
+    @Info("Creates an empty item stack provider with the given item stack modifiers and with the 'tfc:copy_input' modifier automatically applied")
     public ItemStackProviderJS copyInput(Object modifiers) {
         return empty(modifiers).copyInput();
     }
 
-    @Info(value = "Creates an empty item stack provider with the 'tfc:copy_input' modifier automatically applied")
+    @Info("Creates an empty item stack provider with the 'tfc:copy_input' modifier automatically applied")
     public ItemStackProviderJS copyInput() {
         return empty().copyInput();
     }

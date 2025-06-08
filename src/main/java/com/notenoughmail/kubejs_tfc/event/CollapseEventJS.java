@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-@Info(value = "Fires whenever a collapse happens for both real and fake collapses")
+@Info("Fires whenever a collapse happens for both real and fake collapses")
 @SuppressWarnings("unused")
 public class CollapseEventJS extends LevelEventJS {
 
@@ -36,12 +36,12 @@ public class CollapseEventJS extends LevelEventJS {
         return event.getLevel();
     }
 
-    @Info(value = "Returns the maximum distance from the center block of collapsing blocks, or 0 if the collapse is fake")
+    @Info("Returns the maximum distance from the center block of collapsing blocks, or 0 if the collapse is fake")
     public double getRadiusSquared() {
         return event.getRadiusSquared();
     }
 
-    @Info(value = "Returns a list of `BlockPos`es where a block collapses or, if the collapse is fake, particles spawn")
+    @Info("Returns a list of `BlockPos`es where a block collapses or, if the collapse is fake, particles spawn")
     public List<BlockPos> getSecondaryPositions() {
         return event.getNextPositions();
     }

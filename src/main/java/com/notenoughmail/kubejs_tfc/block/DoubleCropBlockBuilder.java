@@ -35,10 +35,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     }
 
     @Override
-    public <T extends Enum<T> & DeadCropBlockBuilder.Model> T[] deadModels() {
-        return (T[]) (requiresStick ? Models.VALUES_STICK : Models.VALUES_NO_STICK);
+    public <T extends Enum<T> & DeadCropBlockBuilder.DeadModelVariant> T[] deadModels() {
+        return (T[]) (requiresStick ? DeadModels.VALUES_STICK : DeadModels.VALUES_NO_STICK);
     }
 
+    @Info("Sets how many stages the crop has in its bottom state")
     @Override
     public DoubleCropBlockBuilder stages(int i) {
         if (i >= 1 && i <= 4) {
@@ -47,7 +48,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         return this;
     }
 
-    @Info(value = "Determines how many stages the crop has in its top state")
+    @Info("Sets how many stages the crop has in its top state")
     public DoubleCropBlockBuilder doubleStages(int i) {
         if (i >= 1 && i <= 4) {
             doubleStages = i;
@@ -55,7 +56,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         return this;
     }
 
-    @Info(value = "Determines if the crop needs a stick to grow")
+    @Info("Determines if the crop needs a stick to grow")
     public DoubleCropBlockBuilder requiresStick(boolean requiresStick) {
         this.requiresStick = requiresStick;
         if (requiresStick) {
@@ -173,7 +174,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         }
     }
 
-    public enum Models implements DeadCropBlockBuilder.Model {
+    public enum DeadModels implements DeadCropBlockBuilder.DeadModelVariant {
         YOUNG_STICK(false, false, true, false),
         YOUNG_TOP(true, false, true, false),
         YOUNG_BOTTOM(true, true, true, false),
@@ -182,14 +183,14 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         MATURE_TOP(false, true)
         ;
 
-        public static final Models[] VALUES_STICK = {
+        public static final DeadModels[] VALUES_STICK = {
                 YOUNG_STICK,
                 YOUNG_TOP,
                 YOUNG_BOTTOM,
                 MATURE_BOTTOM,
                 MATURE_TOP
         };
-        public static final Models[] VALUES_NO_STICK = {
+        public static final DeadModels[] VALUES_NO_STICK = {
                 YOUNG,
                 MATURE_BOTTOM,
                 MATURE_TOP
@@ -198,11 +199,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         private final boolean stick, bottom, mature, requiresStick;
         private final String variant;
 
-        Models(boolean bottom, boolean mature) {
+        DeadModels(boolean bottom, boolean mature) {
             this(false, bottom, false, mature);
         }
 
-        Models(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
+        DeadModels(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
             this(stick, bottom, mature, requiresStick, makeVariant(stick, bottom, requiresStick, mature));
         }
 
@@ -222,7 +223,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
             }
         }
 
-        Models(boolean stick, boolean bottom, boolean mature, boolean requiresStick, String variant) {
+        DeadModels(boolean stick, boolean bottom, boolean mature, boolean requiresStick, String variant) {
             this.stick = stick;
             this.bottom = bottom;
             this.mature = mature;
@@ -252,10 +253,12 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
             }
         }
 
+        @Info("If the bottom state property is true for the variant")
         public boolean bottom() {
             return bottom;
         }
 
+        @Info("If the stick state property is true for the variant")
         public boolean stick() {
             return stick;
         }

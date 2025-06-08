@@ -36,41 +36,41 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         RegistryUtils.hackBlockEntity(TFCBlockEntities.AXLE, this);
     }
 
-    @Info(value = "Sets the texture that will be used for the axle")
+    @Info("Sets the texture that will be used for the axle")
     public AxleBlockBuilder axleTexture(ResourceLocation texture) {
         this.texture = texture;
         return this;
     }
 
-    @Info(value = "Sets the properties of the axle's windmill block")
+    @Info("Sets the properties of the axle's windmill block")
     @Generics(WindmillBlockBuilder.class)
     public AxleBlockBuilder windmill(Consumer<WindmillBlockBuilder> windmill) {
         windmill.accept(this.windmill);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the axle's water wheel block")
+    @Info("Creates and sets the properties of the axle's water wheel block")
     @Generics(WaterWheelBlockBuilder.class)
     public AxleBlockBuilder waterWheel(Consumer<WaterWheelBlockBuilder> waterWheel) {
         this.waterWheel = Util.make(new WaterWheelBlockBuilder(newID("", "_waterwheel"), this), waterWheel);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the axle's gear box block")
+    @Info("Creates and sets the properties of the axle's gear box block")
     @Generics(GearBoxBlockBuilder.class)
     public AxleBlockBuilder gearBox(Consumer<GearBoxBlockBuilder> gearBox) {
         this.gearBox = Util.make(new GearBoxBlockBuilder(newID("", "_gearbox"), this), gearBox);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the axle's clutch block")
+    @Info("Creates and sets the properties of the axle's clutch block")
     @Generics(ClutchBlockBuilder.class)
     public AxleBlockBuilder clutch(Consumer<ClutchBlockBuilder> clutch) {
         this.clutch = Util.make(new ClutchBlockBuilder(newID("", "_clutch"), this), clutch);
         return this;
     }
 
-    @Info(value = "Creates and sets the properties of the axle's bladed axle block")
+    @Info("Creates and sets the properties of the axle's bladed axle block")
     @Generics(BladedAxleBlockBuilder.class)
     public AxleBlockBuilder bladedAxle(Consumer<BladedAxleBlockBuilder> bladed) {
         bladedAxle = Util.make(new BladedAxleBlockBuilder(newID("", "_bladed"), this), bladed);

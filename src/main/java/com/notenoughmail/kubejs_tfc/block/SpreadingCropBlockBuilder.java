@@ -30,7 +30,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
         return false;
     }
 
-    @Info(value = "Sets the block that will be used as the block's fruit, defaults to honey blocks")
+    @Info("Sets the block that will be used as the block's fruit, defaults to honey blocks")
     public SpreadingCropBlockBuilder fruitBlock(ResourceLocation fruitBlock) {
         this.fruitBlock = () -> () -> RegistryInfo.BLOCK.getValue(fruitBlock);
         return this;

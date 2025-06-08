@@ -29,19 +29,19 @@ public class BuildDrinkableData {
         this.fluidIngredient = fluidIngredient;
     }
 
-    @Info(value = "Sets the chance to consume the source block when drinking from a source block, in the range [0, 1]. Defaults to 0")
+    @Info("Sets the chance to consume the source block when drinking from a source block, in the range [0, 1]. Defaults to 0")
     public BuildDrinkableData consumeChance(float f) {
         consumeChance = f;
         return this;
     }
 
-    @Info(value = "Sets the thirst the drinkable consumes, per 25mB drank, in the range [0, 100]. Defaults to 0")
+    @Info("Sets the thirst the drinkable consumes, per 25mB drank, in the range [0, 100]. Defaults to 0")
     public BuildDrinkableData thirst(int i) {
         thirst = i;
         return this;
     }
 
-    @Info(value = "The number of ticks the player will be intoxicated from, per 25mB drank. Defaults to 0")
+    @Info("The number of ticks the player will be intoxicated from, per 25mB drank. Defaults to 0")
     public BuildDrinkableData intoxication(int i) {
         intoxication = i;
         return this;
@@ -51,7 +51,7 @@ public class BuildDrinkableData {
             @Param(name = "effect", value = "The name of the effect"),
             @Param(name = "effectData", value = "The effect properties that are applied to the effect")
     })
-    @Generics(value = BuildEffectData.class)
+    @Generics(BuildEffectData.class)
     public BuildDrinkableData effect(String effect, Consumer<BuildEffectData> effectData) {
         var data = new BuildEffectData(effect);
         effectData.accept(data);
@@ -59,7 +59,7 @@ public class BuildDrinkableData {
         return this;
     }
 
-    @Info(value = "Adds the specified effect to the drinkable with default duration, amplifier, and chance")
+    @Info("Adds the specified effect to the drinkable with default duration, amplifier, and chance")
     public BuildDrinkableData effect(String effect) {
         final JsonObject json = new JsonObject();
         json.addProperty("type", effect);
@@ -67,8 +67,8 @@ public class BuildDrinkableData {
         return this;
     }
 
-    @Info(value = "Adds food data to the drinkable")
-    @Generics(value = BuildFoodItemData.class)
+    @Info("Adds food data to the drinkable")
+    @Generics(BuildFoodItemData.class)
     public BuildDrinkableData food(Consumer<BuildFoodItemData> foodData) {
         final BuildFoodItemData data = new BuildFoodItemData(null);
         foodData.accept(data);

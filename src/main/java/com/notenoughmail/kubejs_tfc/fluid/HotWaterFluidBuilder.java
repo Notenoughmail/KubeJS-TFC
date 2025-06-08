@@ -41,20 +41,20 @@ public class HotWaterFluidBuilder extends FluidBuilder {
         return this;
     }
 
-    @Info(value = "Sets the amount of health the liquid heals while a living entity is in it")
+    @Info("Sets the amount of health the liquid heals while a living entity is in it")
     public HotWaterFluidBuilder healingAmount(float healing) {
         healingAmount = healing;
         return this;
     }
 
     @Deprecated(since = "1.3.0")
-    @Info(value = "Deprecated, please pass `null` to `#bubbleParticle` to disable bubble particles instead")
+    @Info("Deprecated, please pass `null` to `#bubbleParticle` to disable bubble particles instead")
     public HotWaterFluidBuilder hasBubbles(boolean b) {
         return this;
     }
 
     @Deprecated(since = "1.3.0")
-    @Info(value = "Deprecated, please pass `null` to `#steamParticle` to disable steam particles instead")
+    @Info("Deprecated, please pass `null` to `#steamParticle` to disable steam particles instead")
     public HotWaterFluidBuilder hasSteam(boolean b) {
         return this;
     }

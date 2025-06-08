@@ -35,13 +35,13 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return texture("all", tex);
     }
 
-    @Info(value = "Sets the tier of recipes the anvil can perform")
+    @Info("Sets the tier of recipes the anvil can perform")
     public AnvilBlockBuilder tier(int i) {
         tier = i;
         return this;
     }
 
-    @Info(value = "Sets the default name of the anvil screen")
+    @Info("Sets the default name of the anvil screen")
     public AnvilBlockBuilder defaultName(Component name) {
         inventoryName = name;
         return this;

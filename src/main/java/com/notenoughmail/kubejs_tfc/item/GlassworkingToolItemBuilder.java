@@ -33,7 +33,7 @@ public class GlassworkingToolItemBuilder extends ToolItemBuilder {
         op = GlassOperation.SAW;
     }
 
-    @Info(value = "Sets the glassworking operation type this item is capable of doing")
+    @Info("Sets the glassworking operation type this item is capable of doing")
     public GlassworkingToolItemBuilder operation(GlassOperation operation) {
         op = operation;
         return this;

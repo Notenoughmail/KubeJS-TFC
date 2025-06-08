@@ -7,15 +7,15 @@ import dev.latvian.mods.rhino.util.RemapForJS;
 @SuppressWarnings("unused")
 public interface IFirmaLifeISPExtensions {
 
-    @Info(value = "Adds a 'firmalife:add_pie_pan' modifier to the ISP")
+    @Info("Adds a 'firmalife:add_pie_pan' modifier to the ISP")
     @RemapForJS("firmaLifeAddPiePan")
     ItemStackProviderJS kubejs_tfc$FirmaLifeAddPiePan();
 
-    @Info(value = "Adds a 'firmalife:copy_dynamic_food' modifier to the ISP")
+    @Info("Adds a 'firmalife:copy_dynamic_food' modifier to the ISP")
     @RemapForJS("firmaLifeCopyDynamicFood")
     ItemStackProviderJS kubejs_tfc$FirmaLifeCopyDynamicFood();
 
-    @Info(value = "Adds a 'firmalife:empty_pan' modifier to the ISP")
+    @Info("Adds a 'firmalife:empty_pan' modifier to the ISP")
     @RemapForJS("firmaLifeEmptyPan")
     ItemStackProviderJS kubejs_tfc$FirmaLifeEmptyPan();
 }

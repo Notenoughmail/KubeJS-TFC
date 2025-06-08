@@ -29,7 +29,7 @@ public class RegisterClimateModelEventJS extends StartupEventJS {
             @Param(name = "name", value = "The name of the climate model"),
             @Param(name = "model", value = "A consumer for a model builder")
     })
-    @Generics(value = KubeJSClimateModel.Builder.class)
+    @Generics(KubeJSClimateModel.Builder.class)
     public void register(ResourceLocation name, Consumer<KubeJSClimateModel.Builder> modelBuilder) {
         CUSTOM_MODELS.put(name, Climate.register(name, () -> Util.make(new KubeJSClimateModel.Builder(name), modelBuilder).build()));
     }
