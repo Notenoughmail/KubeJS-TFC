@@ -13,6 +13,7 @@
 - Remove deprecated methods in custom climate model event
 - Remove old, non-functional chunk-data creation mechanism for custom climate models that was added in 1.2.6
 - Add support for Kube's ingredient and result modifiers to TFC's advanced crafting recipes
+- Fix drinkable description command printing the first effect in place of all-but-the-last effect
 
 ### 1.2.6
 - Add TFC Log block builder

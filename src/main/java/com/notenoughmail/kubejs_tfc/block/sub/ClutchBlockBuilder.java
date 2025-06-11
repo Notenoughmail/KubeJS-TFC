@@ -4,9 +4,13 @@ import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.ClutchBlock;
@@ -14,9 +18,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.function.BiConsumer;
+
 public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final AxleBlockBuilder parent;
+    public transient BiConsumer<ModelType, ModelGenerator> models;
 
     public ClutchBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
@@ -24,6 +31,24 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         RegistryUtils.hackBlockEntity(TFCBlockEntities.CLUTCH, this);
         texture("overlay_end", "tfc:block/axle_casing_front");
         renderType("cutout");
+        models = (m, g) -> {
+            g.parent("tfc:block/ore_column");
+            g.texture("overlay", m.defaultOverlay);
+            g.textures(textures);
+        };
+    }
+
+    @Info("""
+            Sets the model generation of the clutch block, accepts a `BiConsumer` of a `ModelType` and a model generator.
+            The generator is unique for each type.
+            
+            There are 2 types: `POWERED` and `UNPOWERED` with a `.powered()` method which returns a boolean; true if the
+            type in operation is `POWERED`.
+            """)
+    @Generics({ ModelType.class, ModelGenerator.class })
+    public ClutchBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+        this.models = this.models.andThen(models);
+        return this;
     }
 
     @Override
@@ -48,16 +73,9 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> {
-            m.parent("tfc:block/ore_column");
-            m.textures(textures);
-            m.texture("overlay", "tfc:block/axle_casing_unpowered");
-        });
-        generator.blockModel(newID("", "_powered"), m -> {
-            m.parent("tfc:block/ore_column");
-            m.textures(textures);
-            m.texture("overlay", "tfc:block/axle_casing_powered");
-        });
+        for (ModelType t : ModelType.VALUES) {
+            generator.blockModel(t.model(this), m -> models.accept(t, m));
+        }
     }
 
     @Override
@@ -70,5 +88,28 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         bs.variant("axis=z,powered=true", v -> v.model(powered).x(90));
         bs.variant("axis=x,powered=false", v -> v.model(model).y(90).x(90));
         bs.variant("axis=x,powered=true", v -> v.model(powered).y(90).x(90));
+    }
+
+    public enum ModelType {
+        POWERED("tfc:block/axle_casing_powered"),
+        UNPOWERED("tfc:block/axle_casing_unpowered");
+
+        @HideFromJS
+        public final String defaultOverlay;
+
+        ModelType(String defaultOverlay) {
+            this.defaultOverlay = defaultOverlay;
+        }
+
+        public static final ModelType[] VALUES = values();
+
+        public boolean powered() {
+            return this == POWERED;
+        }
+
+        @HideFromJS
+        public ResourceLocation model(BlockBuilder builder) {
+            return powered() ? builder.newID("", "_powered") : builder.id;
+        }
     }
 }

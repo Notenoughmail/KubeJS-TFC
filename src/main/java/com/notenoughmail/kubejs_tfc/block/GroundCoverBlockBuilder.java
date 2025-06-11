@@ -8,14 +8,12 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +75,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Info("Sets the 'block item' of this bloc kto an existing item")
+    @Info("Sets the 'block item' of this block to an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         itemBuilder = null;
         preexistingItem = Lazy.of(() -> RegistryInfo.ITEM.getValue(item));
@@ -150,21 +148,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (itemSupplier() != null) {
-            lootBuilder.addPool(pool -> {
-                pool.survivesExplosion();
-                pool.addItem(new ItemStack(itemSupplier().get()));
-            });
-        }
-
-        var json = lootBuilder.toJson();
-        generator.json(newID("loot_tables/blocks/", ""), json);
+        ResourceUtils.lootTableBasic(generator, this, itemSupplier());
     }
 
     private enum Type {

@@ -9,7 +9,7 @@ import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -22,7 +22,6 @@ import net.dries007.tfc.common.blocks.crop.WildDoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildSpreadingCropBlock;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
@@ -155,32 +154,25 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        final LootBuilder lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
+        ResourceUtils.lootTable(b -> {
             if (seedItem != null) {
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
-                    var item = p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(seedItem)));
+                    final LootTableEntry item = p.addItem(RegistryInfo.ITEM.getValue(seedItem).getDefaultInstance());
                     if (type == Type.DOUBLE || type == Type.SPREADING) {
                         item.addCondition(doubleSeedCondition());
                     }
                 });
             }
             if (foodItem != null) {
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem(new ItemStack(RegistryInfo.ITEM.getValue(foodItem)))
-                            .addCondition((type == Type.DOUBLE || type == Type.SPREADING) ? doubleFoodCondition() : defaultFoodCondition())
+                    p.addItem(RegistryInfo.ITEM.getValue(foodItem).getDefaultInstance())
+                            .addCondition(type == Type.DOUBLE || type == Type.SPREADING ? doubleFoodCondition() : defaultFoodCondition())
                             .count(UniformGenerator.between(1, 3));
                 });
             }
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        }, generator, this);
     }
 
     private JsonObject defaultFoodCondition() {

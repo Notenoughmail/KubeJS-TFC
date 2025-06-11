@@ -8,10 +8,14 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
+import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.BlockBuilderAccessor;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.loot.LootBuilderPool;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +40,7 @@ import java.util.HexFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS},
@@ -284,6 +290,37 @@ public class ResourceUtils {
         return KubeJSTFC.identifier(resourceLocation);
     }
 
+    public static void lootTable(Consumer<LootBuilder> c, DataJsonGenerator generator, BlockBuilder builder) {
+        // Kube uses EMPTY as an indicator that the block should not have a loot table
+        if (builder.lootTable != EMPTY) {
+            final LootBuilder b = new LootBuilder(null);
+            b.type = "minecraft:block";
+
+            if (builder.lootTable != null) {
+                builder.lootTable.accept(b);
+            } else {
+                c.accept(b);
+            }
+
+            generator.json(builder.newID("loot_tables/blocks/", ""), b.toJson());
+        }
+    }
+
+    public static void lootTable(DataJsonGenerator generator, BlockBuilder builder, Consumer<LootBuilderPool> p) {
+        lootTable(c -> c.addPool(p), generator, builder);
+    }
+
+    public static void lootTable(DataJsonGenerator generator, BlockBuilder builder, Supplier<ItemStack> drop) {
+        lootTable(generator, builder, p -> {
+            p.survivesExplosion();
+            p.addItem(drop.get());
+        });
+    }
+
+    public static void lootTableBasic(DataJsonGenerator geenrator, BlockBuilder builder, Supplier<? extends ItemLike> drop) {
+        lootTable(geenrator, builder, drop.get().asItem()::getDefaultInstance);
+    }
+
     public static JsonObject sharpToolsCondition() {
         return buildJson(json -> {
             json.addProperty("condition", "minecraft:match_tool");
@@ -364,4 +401,6 @@ public class ResourceUtils {
     }
 
     public static final String[] cardinalDirections = {"north", "east", "south", "west"};
+
+    public static final Consumer<LootBuilder> EMPTY = BlockBuilderAccessor.kubejs_tfc$GetEmpty();
 }

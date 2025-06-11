@@ -9,7 +9,6 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
@@ -133,18 +132,6 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(ResourceUtils.STICK_STACK);
-            });
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        ResourceUtils.lootTable(generator, this, () -> ResourceUtils.STICK_STACK);
     }
 }

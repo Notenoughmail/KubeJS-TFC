@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +48,7 @@ public class RegistryUtils {
         blockEntityHacks.computeIfAbsent(UtilsJS.cast(be), type -> new ArrayList<>()).add(block);
     }
 
+    @ApiStatus.Internal
     static void hackBlockEntities() {
         blockEntityHacks.forEach((type, blocks) -> {
             KubeJSTFC.warningLog("For BE type {}", () -> BlockEntityType.getKey(type.get()));
@@ -56,12 +58,14 @@ public class RegistryUtils {
             blocks.forEach(block -> blockSet.add(block.get()));
             accessor.kubejs_tfc$SetBlocks(blockSet);
         });
+        blockEntityHacks.clear();
     }
 
     /**
      * Turn fluids and items into their ids so they're useful for errors
      */
     public static String stringify(Object o) {
+        // TODO: 1.21.1 | Pattern matching switch will make this slightly less awful to look at
         // The defaults for these are varying degrees of awful
         if (o instanceof  Fluid fluid) {
             return RegistryInfo.FLUID.getId(fluid).toString();
@@ -69,6 +73,8 @@ public class RegistryUtils {
             return RegistryInfo.ITEM.getId(item).toString();
         } else if (o instanceof ItemStack stack) {
             return stack.getCount() + " " + stringify(stack.getItem());
+        } else if (o instanceof MobEffect effect) {
+            return RegistryInfo.MOB_EFFECT.getId(effect).toString();
         }
         return String.valueOf(o);
     }

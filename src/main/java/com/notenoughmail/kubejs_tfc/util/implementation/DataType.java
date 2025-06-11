@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.serialization.Codec;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.*;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -39,6 +40,7 @@ import net.minecraftforge.common.IExtensibleEnum;
 import net.minecraftforge.common.crafting.MultiItemValue;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.RecordComponent;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -65,26 +67,24 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         append(cmp, "intoxication", d.getIntoxication());
         append(cmp, "mayDrinkWhenFull", d.mayDrinkWhenFull());
         if (d.getFoodStats() != null) {
-            simpleDescriptor(cmp, "food");
-            cmp.append("{\n");
-            foodData(d.getFoodStats(), cmp, 1);
-            cmp.append("}\n");
+            appendMap(cmp, "food", convertRecordToMap(d.getFoodStats()), 0, true);
         } else {
             append(cmp, "food", null);
         }
         simpleDescriptor(cmp, "effects");
-        cmp.append("[\n");
+        cmp.append("[");
         switch (d.getEffects().size()) {
             case 0 -> {}
-            case 1 -> effect(cmp, d.getEffects().iterator().next(), true);
+            case 1 -> appendMap(cmp, "", convertRecordToMap(d.getEffects().iterator().next()), 0, false);
             default -> {
                 var list = (List<Drinkable.Effect>) d.getEffects();
                 int i = 0;
                 while (i < list.size() - 1) {
-                    effect(cmp, list.get(0), false);
+                    appendMap(cmp, "", convertRecordToMap(list.get(i)), 0, false);
+                    cmp.append(",\n");
                     i++;
                 }
-                effect(cmp, list.get(list.size() -1), true);
+                appendMap(cmp, "", convertRecordToMap(list.get(list.size() -1)), 0, false);
             }
         }
         cmp.append("]");
@@ -136,7 +136,16 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
     FOOD(FoodCapability.MANAGER, (fd, cmp) -> {
         append(cmp, "type", fd.getHandlerType());
         if (fd.getHandlerType() == FoodDefinition.HandlerType.STATIC) {
-            foodData(fd.getData(), cmp, 0);
+            final FoodData d = fd.getData();
+            append(cmp, "hunger", d.hunger());
+            append(cmp, "water", d.water());
+            append(cmp, "saturation", d.saturation());
+            append(cmp, "grain", d.grain());
+            append(cmp, "fruit", d.fruit());
+            append(cmp, "vegetables", d.vegetables());
+            append(cmp, "protein", d.protein());
+            append(cmp, "dairy", d.dairy());
+            append(cmp, "decayModifier", d.decayModifier());
         }
         append(cmp, "ingredient", fd, true);
     }, FoodDefinition::matches, FoodCapability.CACHE),
@@ -290,55 +299,6 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         return get(name, ctx).manager;
     }
 
-    public static void effect(MutableComponent text, Drinkable.Effect effect, boolean end) {
-        var line = "    ";
-        text.append("  {\n    ");
-        append(text, "type", RegistryInfo.MOB_EFFECT.getId(effect.type()));
-        text.append(line);
-        append(text, "duration", effect.duration());
-        text.append(line);
-        append(text, "amplifier", effect.amplifier());
-        text.append(line);
-        append(text, "chance", effect.chance());
-        text.append("  }");
-        if (!end) text.append(",");
-        text.append("\n");
-    }
-
-    public static void foodData(FoodData d, MutableComponent text, int indent) {
-        if (indent == 0) {
-            append(text, "hunger", d.hunger());
-            append(text, "water", d.water());
-            append(text, "saturation", d.saturation());
-            append(text, "grain", d.grain());
-            append(text, "fruit", d.fruit());
-            append(text, "vegetables", d.vegetables());
-            append(text, "protein", d.protein());
-            append(text, "dairy", d.dairy());
-            append(text, "decayModifier", d.decayModifier());
-        } else {
-            var line = " ".repeat(indent * 2);
-            text.append(line);
-            append(text, "hunger", d.hunger());
-            text.append(line);
-            append(text, "water", d.water());
-            text.append(line);
-            append(text, "saturation", d.saturation());
-            text.append(line);
-            append(text, "grain", d.grain());
-            text.append(line);
-            append(text, "fruit", d.fruit());
-            text.append(line);
-            append(text, "vegetables", d.vegetables());
-            text.append(line);
-            append(text, "protein", d.protein());
-            text.append(line);
-            append(text, "dairy", d.dairy());
-            text.append(line);
-            append(text, "decayModifier", d.decayModifier());
-        }
-    }
-
     public static void append(MutableComponent text, String desc, Object value) {
         append(text, desc, value, false);
     }
@@ -347,7 +307,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         if (value instanceof FluidIngredient fi) {
             append(text, desc, fi.entries().stream().map(e -> {
                 if (e instanceof IngredientType.ObjEntry<Fluid> obj) {
-                    return RegistryInfo.FLUID.getId(obj.object());
+                    return RegistryUtils.stringify(obj.object());
                 } else {
                     return "#" + ((IngredientType.TagEntry<Fluid>) e).tag().location();
                 }
@@ -355,7 +315,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         } else if (value instanceof BlockIngredient bi) {
             append(text, desc, bi.entries().stream().map(e -> {
                 if (e instanceof IngredientType.ObjEntry<Block> obj) {
-                    return RegistryInfo.BLOCK.getId(obj.object());
+                    return RegistryUtils.stringify(obj.object());
                 } else {
                     return "#" + ((IngredientType.TagEntry<Block>) e).tag().location();
                 }
@@ -366,11 +326,11 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (ing.isVanilla()) {
                 append(text, desc, Arrays.stream(ing.values).mapMulti((v, c) -> {
                     if (v instanceof Ingredient.ItemValue i) {
-                        c.accept(RegistryInfo.ITEM.getId(i.item.getItem()));
+                        c.accept(RegistryUtils.stringify(i.item.getItem()));
                     } else if (v instanceof Ingredient.TagValue t) {
                         c.accept("#" + t.tag.location());
                     } else if (v instanceof MultiItemValue m) {
-                        m.getItems().forEach(s -> c.accept(RegistryInfo.ITEM.getId(s.getItem())));
+                        m.getItems().forEach(s -> c.accept(RegistryUtils.stringify(s.getItem())));
                     } else {
                         c.accept(v);
                     }
@@ -454,6 +414,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
     }
 
     public static ChatFormatting getColor(Object value) {
+        if (value == null) return ChatFormatting.BLACK;
         if (value instanceof Number) return ChatFormatting.GREEN;
         if (value instanceof Boolean) return ChatFormatting.GOLD;
         if (value instanceof CharSequence || value instanceof ResourceLocation) return ChatFormatting.DARK_PURPLE;
@@ -461,13 +422,17 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         return ChatFormatting.GRAY;
     }
 
+    public static <T> void appendMap(MutableComponent out, String desc, Map<String, T> map, int indent, boolean needsDescriptor) {
+        appendMap(out, desc, map, indent, (t, i) -> simpleAdd(out, t), needsDescriptor);
+    }
+
     public static <T> void appendMap(MutableComponent out, String desc, Map<String, T> map, int indent, BiConsumer<T, Integer> forEach, boolean needDescriptor) {
         String mov = " ".repeat(indent * 2);
         if (needDescriptor) {
-            DataType.simpleDescriptor(out, mov + desc);
-            out.append(mov + "{");
+            simpleDescriptor(out, mov + desc);
+            out.append(" {");
         } else {
-            out.append("{");
+            out.append(mov + "{");
         }
         int i = 0;
         final Set<Map.Entry<String, T>> entries = map.entrySet();
@@ -500,6 +465,29 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
 
     private static final Map<String, DataType> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DataType::getSerializedName, d -> d));
     public static final Codec<DataType> CODEC = IExtensibleEnum.createCodecForExtensibleEnum(DataType::values, BY_NAME::get);
+
+    private static final Map<Class<?>, Function<?, Map<String, Object>>> RECORD_CONVERTERS = new IdentityHashMap<>();
+
+    public static <R extends Record> Map<String, Object> convertRecordToMap(R r_) {
+        return RECORD_CONVERTERS.computeIfAbsent(r_.getClass(), c -> {
+            final RecordComponent[] comps = c.getRecordComponents();
+            return (R r) -> {
+                final Map<String, Object> map = new HashMap<>(comps.length);
+                for (RecordComponent com : comps) {
+                    final String name = com.getName();
+                    Object o;
+                    try {
+                        o = com.getAccessor().invoke(r);
+                    } catch (Exception e) {
+                        KubeJSTFC.error("Unable to access '%s' field of %s".formatted(name, com.getDeclaringRecord().getName()), e);
+                        o = null;
+                    }
+                    map.put(name, o);
+                }
+                return map;
+            };
+        }).apply(UtilsJS.cast(r_));
+    }
 
     @Override
     public String getSerializedName() {

@@ -4,20 +4,18 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.LampBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -66,25 +64,12 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        if (itemBuilder == null) {
-            return;
-        }
-
-        final LootBuilder lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (get().asItem() != Items.AIR) {
-            lootBuilder.addPool(pool -> {
-                pool.survivesExplosion();
-                final JsonObject func = new JsonObject();
-                func.addProperty("function", "tfc:copy_fluid");
-                pool.addItem(new ItemStack(get())).addFunction(func);
-            });
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        ResourceUtils.lootTable(generator, this, p -> {
+            p.survivesExplosion();
+            final JsonObject func = new JsonObject();
+            func.addProperty("function", "tfc:copy_fluid");
+            p.addItem(get().asItem().getDefaultInstance()).addFunction(func);
+        });
     }
 
     @Override

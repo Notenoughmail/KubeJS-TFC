@@ -6,11 +6,9 @@ import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.HorizontalSupportBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 @SuppressWarnings("unused")
@@ -35,19 +33,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        final LootBuilder lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (parent.itemBuilder != null) {
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(new ItemStack(parent.get()));
-            });
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        ResourceUtils.lootTableBasic(generator, this, parent);
     }
 
     @Override

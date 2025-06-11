@@ -9,18 +9,19 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -29,6 +30,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     public transient final TFCDirtBlockBuilder parent;
 
     public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
+    public transient BiConsumer<ModelPart, ModelGenerator> models;
 
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
@@ -38,6 +40,24 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         tagBlock(TFCTags.Blocks.GRASS.location());
         texture("texture", parent.textures.get("particle").getAsString());
         itemBuilder.texture("block", textures.get("texture").getAsString());
+        models = (p, m) -> {
+            m.parent(p.defaultParent);
+            m.textures(textures);
+        };
+    }
+
+    @Info("""
+            Sets the model generation of the grass block, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            The generator is unique for each part.
+            
+            There are 5 parts: `BOTTOM`, `TOP`, `SNOWY_TOP`, `SIDE`, and `SNOWY_SIDE`. These have 4 boolean properties
+            which can be used to logically determine the part currently in operation. The properties are `.bottom`,
+            `.top`, `.side`, and `.snowy`.
+            """)
+    @Generics({ ModelPart.class, ModelGenerator.class })
+    public ConnectedGrassBlockBuilder models(BiConsumer<ModelPart, ModelGenerator> models) {
+        this.models = this.models.andThen(models);
+        return this;
     }
 
     @Override
@@ -75,19 +95,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(new ItemStack(parent.get()));
-            });
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        ResourceUtils.lootTableBasic(generator, this, parent);
     }
 
     @Override
@@ -98,35 +106,18 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(newID("", "_bottom"), m -> {
-            m.parent("tfc:block/grass_bottom");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_side"), m -> {
-            m.parent("tfc:block/grass_side");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_snowy_side"), m -> {
-            m.parent("tfc:block/grass_snowy_side");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_snowy_top"), m -> {
-            m.parent("tfc:block/grass_snowy_top");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_top"), m -> {
-            m.parent("tfc:block/grass_top");
-            m.textures(textures);
-        });
+        for (ModelPart p : ModelPart.VALUES) {
+            generator.blockModel(p.model(this), m -> models.accept(p, m));
+        }
     }
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String bottom = newID("block/", "_bottom").toString();
-        final String top = newID("block/", "_top").toString();
-        final String snowyTop = newID("block/", "_snowy_top").toString();
-        final String side = newID("block/", "_side").toString();
-        final String snowySide = newID("block/", "_snowy_side").toString();
+        final String bottom = ModelPart.BOTTOM.modelEx(this);
+        final String top = ModelPart.TOP.modelEx(this);
+        final String snowyTop = ModelPart.SNOWY_TOP.modelEx(this);
+        final String side = ModelPart.SIDE.modelEx(this);
+        final String snowySide = ModelPart.SNOWY_SIDE.modelEx(this);
 
         bs.part("", p -> p.model(bottom).x(90));
         bs.part("snowy=false", p -> {
@@ -150,5 +141,37 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
             bs.part(dir + "=false,snowy=false", p -> p.model(side).y(j * 90));
             bs.part(dir + "=false,snowy=true", p -> p.model(snowySide).y(j * 90));
         }
+    }
+
+    public enum ModelPart {
+        BOTTOM("tfc:block/grass_bottom", false, false, false, true),
+        TOP("tfc:block/grass_top", false, false, true, false),
+        SNOWY_TOP("tfc:block/grass_snowy_top", true, false, true, false),
+        SIDE("tfc:block/grass_side", false, true, false, false),
+        SNOWY_SIDE("tfc:block/grass_snowy_side", true, true, false, false);
+
+        @HideFromJS
+        public final String defaultParent;
+        public final boolean snowy, side, top, bottom;
+
+        ModelPart(String defaultParent, boolean snowy, boolean side, boolean top, boolean bottom) {
+            this.defaultParent = defaultParent;
+            this.snowy = snowy;
+            this.side = side;
+            this.top = top;
+            this.bottom = bottom;
+        }
+
+        @HideFromJS
+        public ResourceLocation model(BlockBuilder builder) {
+            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+        }
+
+        @HideFromJS
+        public String modelEx(BlockBuilder builder) {
+            return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
+        }
+
+        public static final ModelPart[] VALUES = values();
     }
 }

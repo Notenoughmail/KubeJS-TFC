@@ -12,7 +12,6 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.item.custom.BasicItemJS;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -22,8 +21,10 @@ import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.util.climate.ClimateRange;
+import net.dries007.tfc.util.loot.CropYieldProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -233,44 +234,24 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
-            lootBuilder.addPool(p -> {
+        ResourceUtils.lootTable(b -> {
+            b.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(seeds.get()));
+                p.addItem(seeds.get().getDefaultInstance());
             });
-
             if (hasProduct()) {
                 assert product != null;
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
+                    p.addItem((productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()).getDefaultInstance())
                             .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages))))
-                            .addFunction(cropYieldUniformFunction());
+                            .count(new CropYieldProvider(
+                                    ConstantValue.exactly(0.0F),
+                                    UniformGenerator.between(6F, 10F)
+                            ));
                 });
             }
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
-    }
-
-    protected JsonObject cropYieldUniformFunction() {
-        final JsonObject json = new JsonObject();
-        json.addProperty("function", "minecraft:set_count");
-        final JsonObject count = new JsonObject();
-        count.addProperty("type", "tfc:crop_yield_uniform");
-        count.addProperty("min", 0);
-        final JsonObject max = new JsonObject();
-        max.addProperty("type", "minecraft:uniform");
-        max.addProperty("min", 6);
-        max.addProperty("max", 10);
-        count.add("max", max);
-        json.add("count", count);
-        return json;
+        }, generator, this);
     }
 
     @Override

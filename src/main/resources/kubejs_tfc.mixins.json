@@ -18,6 +18,7 @@
     "StructureMixin$StructureStartMixin",
     "TFCChunkGeneratorMixin",
     "TorchItemMixin",
+    "accessor.BlockBuilderAccessor",
     "accessor.BlockEntityTypeAccessor",
     "accessor.ClimatePlacementAccessor",
     "accessor.DataManagerAccessor",

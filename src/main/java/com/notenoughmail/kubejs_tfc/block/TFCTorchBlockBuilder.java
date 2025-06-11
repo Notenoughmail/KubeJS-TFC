@@ -14,7 +14,6 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -194,26 +193,19 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        final LootBuilder builder = new LootBuilder(null);
-        builder.type = "minecraft:block";
-        if (lootTable != null) {
-            lootTable.accept(builder);
-        } else {
-            builder.addPool(pool -> {
-                pool.survivesExplosion();
-                pool.addEntry(ResourceUtils.alternatives(
-                        (LootTableEntry) ResourceUtils.createEntry("minecraft:stick")
-                                .addCondition(burntOut())
-                                .randomChance(0.25D),
-                        (LootTableEntry) ResourceUtils.createEntry("tfc:powder/wood_ash")
-                                .addCondition(burntOut())
-                                .randomChance(0.25D),
-                        ResourceUtils.createEntry(id.toString())
-                                .addCondition(notBurntOut())
-                ));
-            });
-        }
-        generator.json(newID("loot_tables/blocks/", ""), builder.toJson());
+        ResourceUtils.lootTable(generator, this, p -> {
+            p.survivesExplosion();
+            p.addEntry(ResourceUtils.alternatives(
+                    (LootTableEntry) ResourceUtils.createEntry("minecraft:stick")
+                            .addCondition(burntOut())
+                            .randomChance(0.25D),
+                    (LootTableEntry) ResourceUtils.createEntry("tfc:powder/wood_ash")
+                            .addCondition(burntOut())
+                            .randomChance(0.25D),
+                    ResourceUtils.createEntry(id.toString())
+                            .addCondition(notBurntOut())
+            ));
+        });
     }
 
     private JsonObject burntOut() {

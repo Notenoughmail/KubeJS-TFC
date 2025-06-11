@@ -6,7 +6,6 @@ import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorc
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import net.dries007.tfc.common.blocks.DeadTorchBlock;
 import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.resources.ResourceLocation;
@@ -46,18 +45,11 @@ public class DeadTorchBuilder extends BlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        final LootBuilder builder = new LootBuilder(null);
-        builder.type = "minecraft:block";
-        if (lootTable != null) {
-            lootTable.accept(builder);
-        } else {
-            builder.addPool(pool -> {
-                pool.survivesExplosion();
-                pool.addItem(ResourceUtils.STICK_STACK)
-                        .randomChance(0.5D);
-            });
-        }
-        generator.json(newID("loot_tables/blocks/", ""), builder.toJson());
+        ResourceUtils.lootTable(generator, this, p -> {
+            p.survivesExplosion();
+            p.addItem(ResourceUtils.STICK_STACK)
+                    .randomChance(0.5D);
+        });
     }
 
     private class Impl extends DeadTorchBlock implements ICustomTorchBlock {

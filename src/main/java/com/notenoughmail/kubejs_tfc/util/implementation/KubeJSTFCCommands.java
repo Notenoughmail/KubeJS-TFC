@@ -148,16 +148,11 @@ public class KubeJSTFCCommands {
             final Settings settings = ext.settings();
             final MutableComponent out = Component.empty();
             out.append("TFC world settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
-            DataType.append(out, "flatBedrock", settings.flatBedrock());
-            DataType.append(out, "spawnDistance", settings.spawnDistance());
-            DataType.append(out, "spawnCenterX", settings.spawnCenterX());
-            DataType.append(out, "spawnCenterZ", settings.spawnCenterZ());
-            DataType.append(out, "temperatureScale", settings.temperatureScale());
-            DataType.append(out, "temperatureConstant", settings.temperatureConstant());
-            DataType.append(out, "rainfallScale", settings.rainfallScale());
-            DataType.append(out, "rainfallConstant", settings.rainfallConstant());
-            DataType.append(out, "continentalness", settings.continentalness());
-            DataType.append(out, "grassDensity", settings.grassDensity());
+            DataType.convertRecordToMap(settings).forEach((name, value) -> {
+                if (!name.equals("rockLayerSettings")) {
+                    DataType.append(out, name, value);
+                }
+            });
             DataType.append(out, "rockLayerSettings", Component.literal("~~~").withStyle(s -> s
                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc print_rock_settings"))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Print rock layer settings")))
@@ -185,7 +180,7 @@ public class KubeJSTFCCommands {
             DataType.appendMap(out, "rocks", rockData.rocks(), 0, (rs, indent) -> DataType.simpleAdd(out, rs.raw().getName()), true);
             final Map<String, Map<String, String>> expanded = new HashMap<>();
             rockData.layers().forEach(ld -> expanded.put(ld.id(), ld.layers()));
-            DataType.appendMap(out, "layers", expanded, 0, (map, indent) -> DataType.appendMap(out, "", map, indent, (layer, i) -> DataType.simpleAdd(out, layer), false), true);
+            DataType.appendMap(out, "layers", expanded, 0, (map, indent) -> DataType.appendMap(out, "", map, indent, false), true);
 
             sysMsg(out, ctx);
             return 1;
@@ -209,21 +204,21 @@ public class KubeJSTFCCommands {
             DataType.append(msg, "forestType", data.getForestType());
             final ChunkWatchPacket pkt = data.getUpdatePacket();
             final LerpFloatLayer rain = pkt.rainfallLayer(), temp = pkt.temperatureLayer();
-            DataType.append(msg, "rainfallLayer", (new ArrayPrinter(new float[] {
+            DataType.append(msg, "rainfallLayer", new ArrayPrinter(new float[] {
                     rain.value00(),
                     rain.value01(),
                     rain.value10(),
                     rain.value11()
-            })).print());
-            DataType.append(msg, "temperatureLayer", (new ArrayPrinter(new float[] {
+            }).print());
+            DataType.append(msg, "temperatureLayer", new ArrayPrinter(new float[] {
                     temp.value00(),
                     temp.value01(),
                     temp.value10(),
                     temp.value11()
-            })).print());
+            }).print());
             if (data.status() == ChunkData.Status.FULL) {
-                DataType.append(msg, "surfaceHeight", (new ArrayPrinter(data.getRockData().getSurfaceHeight())).print());
-                DataType.append(msg, "aquiferHeight", (new ArrayPrinter(data.getAquiferSurfaceHeight())).print());
+                DataType.append(msg, "surfaceHeight", new ArrayPrinter(data.getRockData().getSurfaceHeight()).print());
+                DataType.append(msg, "aquiferHeight", new ArrayPrinter(data.getAquiferSurfaceHeight()).print());
             }
         }
         sysMsg(msg, ctx);

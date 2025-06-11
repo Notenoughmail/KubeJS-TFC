@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.sub.SpreadingCaneBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
@@ -9,7 +8,7 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
+import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -87,73 +86,30 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
-            lootBuilder.addPool(p -> {
+        ResourceUtils.lootTable(b -> {
+            b.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(ResourceUtils.STICK_STACK);
             });
             if (itemBuilder != null) {
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
-                    p.addEntry(lootEntry());
+                    p.addEntry(ResourceUtils.alternatives(
+                            lootEntryBase()
+                                    .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("stage", "2"))),
+                            (LootTableEntry) lootEntryBase()
+                                    .randomChance(0.5D)
+                    ));
                 });
             }
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        }, generator, this);
     }
 
-    private JsonObject lootEntry() {
-        final  JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:alternatives");
-        final JsonArray children = new JsonArray(2);
-
-        // Stage 2
-        {
-            final JsonObject entry = lootEntryBase();
-            final JsonArray conditions = new JsonArray(2);
-            conditions.add(ResourceUtils.sharpToolsCondition());
-
-            final JsonObject stateCondition = new JsonObject();
-            stateCondition.addProperty("condition", "minecraft:block_state_property");
-            stateCondition.addProperty("block", id.toString());
-            final JsonObject properties = new JsonObject();
-            properties.addProperty("stage", "2");
-            stateCondition.add("properties", properties);
-            conditions.add(stateCondition);
-
-            entry.add("conditions", conditions);
-            children.add(entry);
-        }
-        // 50% chance
-        {
-            final JsonObject entry = lootEntryBase();
-            final JsonArray conditions = new JsonArray(2);
-            conditions.add(ResourceUtils.sharpToolsCondition());
-
-            final JsonObject chanceCondition = new JsonObject();
-            chanceCondition.addProperty("condition", "minecraft:random_chance");
-            chanceCondition.addProperty("chance", 0.5);
-            conditions.add(chanceCondition);
-
-            entry.add("conditions", conditions);
-            children.add(entry);
-        }
-
-        json.add("children", children);
-        return json;
-    }
-
-    private JsonObject lootEntryBase() {
+    private LootTableEntry lootEntryBase() {
         final JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:item");
         json.addProperty("name", itemBuilder.id.toString());
-        return json;
+        return new LootTableEntry(json).addCondition(ResourceUtils.sharpToolsCondition());
     }
 
     @Override

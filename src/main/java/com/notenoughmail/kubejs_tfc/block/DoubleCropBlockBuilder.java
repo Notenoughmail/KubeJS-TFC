@@ -8,7 +8,6 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
@@ -82,29 +81,23 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else {
-            lootBuilder.addPool(p -> {
+        assert product != null;
+        ResourceUtils.lootTable(b -> {
+            b.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(seeds.get()))
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
             });
-            assert product != null;
-            lootBuilder.addPool(p -> {
+            b.addPool(p -> {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                             j.addProperty("age", Integer.toString(stages + doubleStages - 1));
                             j.addProperty("part", "bottom");
-                        }))
-                        .addFunction(cropYieldUniformFunction());
+                        }));
             });
             if (requiresStick) {
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
                     p.addItem(ResourceUtils.STICK_STACK)
                             .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
@@ -113,9 +106,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                             }));
                 });
             }
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        }, generator, this);
     }
 
     @Override

@@ -8,7 +8,6 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.UtilsJS;
@@ -83,23 +82,14 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (alive.type != AbstractCropBlockBuilder.Type.DOUBLE) {
-            lootBuilder.addPool(p -> {
+        final boolean tall = alive.type == AbstractCropBlockBuilder.Type.DOUBLE;
+        ResourceUtils.lootTable(b -> {
+            b.addPool(p -> {
                 p.survivesExplosion();
-                p.addEntry(ResourceUtils.alternatives(matureEntry(false), notMatureEntry(false)));
-            });
-        } else {
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addEntry(ResourceUtils.alternatives(notMatureEntry(true), matureEntry(true)));
+                p.addEntry(ResourceUtils.alternatives(matureEntry(tall), notMatureEntry(tall)));
             });
             if (alive.requiresStick) {
-                lootBuilder.addPool(p -> {
+                b.addPool(p -> {
                     p.survivesExplosion();
                     p.addItem(ResourceUtils.STICK_STACK)
                             .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
@@ -108,9 +98,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                             }));
                 });
             }
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        }, generator, this);
     }
 
     private LootTableEntry matureEntry(boolean tall) {

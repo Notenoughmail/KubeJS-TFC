@@ -9,7 +9,6 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.item.custom.BasicItemJS;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -24,7 +23,6 @@ import net.dries007.tfc.util.calendar.Month;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
@@ -162,20 +160,11 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        var lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (itemBuilder != null) {
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(new ItemStack(itemBuilder.get()))
-                        .addCondition(ResourceUtils.sharpToolsCondition());
-            });
-        }
-
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
+        ResourceUtils.lootTable(generator, this, p -> {
+            p.survivesExplosion();
+            p.addItem(itemBuilder.get().getDefaultInstance())
+                    .addCondition(ResourceUtils.sharpToolsCondition());
+        });
     }
 
     @Override
