@@ -12,6 +12,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@ApiStatus.Internal
 public class KubeChunkDataGenerator implements ChunkDataGenerator {
 
     private static final LerpFloatLayer EMPTY_LERP = new LerpFloatLayer(0F, 0F, 0F, 0F);

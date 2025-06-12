@@ -13,6 +13,8 @@ import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 @SuppressWarnings("unused")
 public class LooseRockBlockBuilder extends BlockBuilder {
@@ -97,22 +99,25 @@ public class LooseRockBlockBuilder extends BlockBuilder {
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         final String blockModelLocation = newID("block/", "").toString();
         bs.variant("count=1", v -> {
-            v.model(blockModelLocation + "_pebble").y(rotate);
-            v.model(blockModelLocation + "_pebble").y(90 + rotate);
-            v.model(blockModelLocation + "_pebble").y(180 + rotate);
-            v.model(blockModelLocation + "_pebble").y(270 + rotate);
+            final String m = blockModelLocation + "_pebble";
+            v.model(m).y(rotate);
+            v.model(m).y(90 + rotate);
+            v.model(m).y(180 + rotate);
+            v.model(m).y(270 + rotate);
         });
         bs.variant("count=2", v -> {
-            v.model(blockModelLocation + "_rubble").y(rotate);
-            v.model(blockModelLocation + "_rubble").y(90 + rotate);
-            v.model(blockModelLocation + "_rubble").y(180 + rotate);
-            v.model(blockModelLocation + "_rubble").y(270 + rotate);
+            final String m = blockModelLocation + "_rubble";
+            v.model(m).y(rotate);
+            v.model(m).y(90 + rotate);
+            v.model(m).y(180 + rotate);
+            v.model(m).y(270 + rotate);
         });
         bs.variant("count=3", v -> {
-            v.model(blockModelLocation + "_boulder").y(rotate);
-            v.model(blockModelLocation + "_boulder").y(90 + rotate);
-            v.model(blockModelLocation + "_boulder").y(180 + rotate);
-            v.model(blockModelLocation + "_boulder").y(270 + rotate);
+            final String m = blockModelLocation + "_boulder";
+            v.model(m).y(rotate);
+            v.model(m).y(90 + rotate);
+            v.model(m).y(180 + rotate);
+            v.model(m).y(270 + rotate);
         });
     }
 
@@ -132,34 +137,21 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     @Override
     public void generateDataJsons(DataJsonGenerator generator) {
-        final LootBuilder lootBuilder = new LootBuilder(null);
-        lootBuilder.type = "minecraft:block";
-
-        if (lootTable != null) {
-            lootTable.accept(lootBuilder);
-        } else if (itemBuilder != null) {
+        ResourceUtils.lootTable(generator, this, p -> {
             final JsonObject decay = new JsonObject();
             decay.addProperty("function", "minecraft:explosion_decay");
-            lootBuilder.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(new ItemStack(itemBuilder.get()))
-                        .addFunction(setCountFunction(2))
-                        .addFunction(setCountFunction(3))
-                        .addFunction(decay);
-            });
-        }
+            p.survivesExplosion();
+            p.addItem(new ItemStack(itemBuilder.get()))
+                    .addConditionalFunction(func -> {
+                        func.count(ConstantValue.exactly(2F));
+                        func.addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", "2")));
+                    })
+                    .addConditionalFunction(func -> {
+                        func.count(ConstantValue.exactly(3F));
+                        func.addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", "3")));
+                    })
+                    .addFunction(decay);
 
-        generator.json(newID("loot_tables/blocks/", ""), lootBuilder.toJson());
-    }
-
-    private JsonObject setCountFunction(int count) {
-        final JsonObject function = new JsonObject();
-        function.addProperty("function", "minecraft:set_count");
-        function.addProperty("count", count);
-
-        final JsonArray conditions = new JsonArray();
-        conditions.add(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("count", Integer.toString(count))));
-        function.add("conditions", conditions);
-        return function;
+        });
     }
 }

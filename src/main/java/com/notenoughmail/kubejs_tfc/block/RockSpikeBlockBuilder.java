@@ -4,14 +4,39 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Locale;
+import java.util.function.BiConsumer;
+
 public class RockSpikeBlockBuilder extends BlockBuilder {
+
+    public transient BiConsumer<ModelType, ModelGenerator> models;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
         renderType("cutout");
+        models = (t, m) -> {
+            m.parent(t.defaultParent);
+            m.textures(textures);
+        };
+    }
+
+    @Info("""
+            Sets the model generation of the spike, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            The generator is unique for each type.
+            
+            There are 3 parts: `BASE`, `MIDDLE`, and `TIP` all with `.base()`, `.middle()`, and `.tip()` methods which
+            return true if the type is in operation is the one indicated by the method.
+            """)
+    @Generics({ ModelType.class, ModelGenerator.class })
+    public RockSpikeBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+        this.models = this.models.andThen(models);
+        return this;
     }
 
     @Override
@@ -33,25 +58,44 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(newID("", "_base"), m -> {
-            m.parent("tfc:block/rock/spike_base");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_middle"), m -> {
-            m.parent("tfc:block/rock/spike_middle");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_tip"), m -> {
-            m.parent("tfc:block/rock/spike_tip");
-            m.textures(textures);
-        });
+        for (ModelType t : ModelType.VALUES) {
+            generator.blockModel(t.model(this), m -> models.accept(t, m));
+        }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String blockModelLoc = newID("block/", "").toString();
-        bs.variant("part=base", v -> v.model(blockModelLoc + "_base"));
-        bs.variant("part=middle", v -> v.model(blockModelLoc + "_middle"));
-        bs.variant("part=tip", v -> v.model(blockModelLoc + "_tip"));
+        bs.simpleVariant("part=base", ModelType.BASE.modelEx(this));
+        bs.simpleVariant("part=middle", ModelType.MIDDLE.modelEx(this));
+        bs.simpleVariant("part=tip", ModelType.TIP.modelEx(this));
+    }
+
+    public enum ModelType {
+        BASE,
+        MIDDLE,
+        TIP;
+
+        @HideFromJS
+        public final String defaultParent;
+
+        ModelType() {
+            defaultParent = "tfc:block/rock/spike_" + name().toLowerCase(Locale.ROOT);
+        }
+
+        public static final ModelType[] VALUES = values();
+
+        public boolean base() { return this == BASE; }
+        public boolean middle() { return this == MIDDLE; }
+        public boolean tip() { return this == TIP; }
+
+        @HideFromJS
+        public String modelEx(BlockBuilder builder) {
+            return builder.newID("block/", "_") + name().toLowerCase(Locale.ROOT);
+        }
+
+        @HideFromJS
+        public ResourceLocation model(BlockBuilder builder) {
+            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+        }
     }
 }

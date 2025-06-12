@@ -41,7 +41,7 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
             Sets the model generation of the gear box, accepts a `BiConsumer` of a `ModelPart` and a model generator.
             The generator is unique for each part.
             
-            There are 2 parts `PORT` and `FACE` with a `.port()` method which returns a boolean; true if the part in
+            There are 2 parts: `PORT` and `FACE` with a `.port()` method which returns a boolean; true if the part in
             operation is `PORT`.
             """)
     @Generics({ ModelPart.class, ModelGenerator.class })

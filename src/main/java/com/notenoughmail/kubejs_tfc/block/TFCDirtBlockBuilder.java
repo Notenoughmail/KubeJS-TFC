@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.block.sub.TFCFarmlandBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.TFCPathBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.TFCRootedDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.BasicBlockJS;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -111,7 +112,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
+        final String model = ResourceUtils.plainModel(this);
 
         bs.variant("", v -> {
             v.model(model);

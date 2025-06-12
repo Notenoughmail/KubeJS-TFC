@@ -1,11 +1,14 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.fluids.FluidProperty;
 import net.minecraft.core.BlockPos;
@@ -17,17 +20,37 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("unused")
 public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient FluidProperty fluidProperty;
     public transient List<Object> fluids; // List<Object> so the fluid property builder doesn't complain at compile time
+    public transient BiConsumer<ModelPart, ModelGenerator> models;
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
         renderType("cutout");
         fluidProperty = AqueductBlock.FLUID;
+        models = (p, m) -> {
+            m.parent(p.defaultParent);
+            m.textures(textures);
+        };
+    }
+
+    @Info("""
+            Sets the model generation of the aqueduct, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            The generator is unique for each part.
+            
+            There are 5 parts: `BASE`, `NORTH`, `SOUTH`, `EAST`, and `WEST` all with `.base()`, `.north()`, `.south()`,
+            `.east()`, and `.west()` methods which return true if the part in operation is the one indicated by the method.
+            """)
+    @Generics({ ModelPart.class, ModelGenerator.class })
+    public AqueductBlockBuilder models(BiConsumer<ModelPart, ModelGenerator> models) {
+        this.models = this.models.andThen(models);
+        return this;
     }
 
     @Info(value = "Sets the fluids that the aqueduct may hold", params = {
@@ -62,41 +85,18 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String base = newID("block/", "/base").toString();
-        final String east = newID("block/", "/east").toString();
-        final String west = newID("block/", "/west").toString();
-        final String north = newID("block/", "/north").toString();
-        final String south = newID("block/", "/south").toString();
-
-        bs.part("", base);
-        bs.part("east=false", east);
-        bs.part("west=false", west);
-        bs.part("north=false", north);
-        bs.part("south=false", south);
+        bs.part("", ModelPart.BASE.modelEx(this));
+        bs.part("east=false", ModelPart.EAST.modelEx(this));
+        bs.part("west=false", ModelPart.WEST.modelEx(this));
+        bs.part("north=false", ModelPart.NORTH.modelEx(this));
+        bs.part("south=false", ModelPart.SOUTH.modelEx(this));
     }
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(newID("", "/base"), m -> {
-            m.parent("tfc:block/aqueduct/base");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "/east"), m -> {
-            m.parent("tfc:block/aqueduct/east");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "/west"), m -> {
-            m.parent("tfc:block/aqueduct/west");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "/north"), m -> {
-            m.parent("tfc:block/aqueduct/north");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "/south"), m -> {
-            m.parent("tfc:block/aqueduct/south");
-            m.textures(textures);
-        });
+        for (ModelPart p : ModelPart.VALUES) {
+            generator.blockModel(p.model(this), m -> models.accept(p, m));
+        }
     }
 
     @Override
@@ -104,7 +104,40 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
         if (!model.isEmpty()) {
             m.parent(model);
         } else {
-            m.parent(newID("block/", "/base").toString());
+            m.parent(ModelPart.BASE.modelEx(this));
+        }
+    }
+
+    public enum ModelPart {
+        BASE,
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST;
+
+        @HideFromJS
+        public final String defaultParent;
+
+        ModelPart() {
+            this.defaultParent = "tfc:block/aqueduct/" + name().toLowerCase(Locale.ROOT);
+        }
+
+        public static final ModelPart[] VALUES = values();
+
+        public boolean base() { return this == BASE; }
+        public boolean north() { return this == NORTH; }
+        public boolean south() { return this == SOUTH; }
+        public boolean east() { return this == EAST; }
+        public boolean west() { return this == WEST; }
+
+        @HideFromJS
+        public ResourceLocation model(BlockBuilder builder) {
+            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+        }
+
+        @HideFromJS
+        public String modelEx(BlockBuilder builder) {
+            return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
         }
     }
 }

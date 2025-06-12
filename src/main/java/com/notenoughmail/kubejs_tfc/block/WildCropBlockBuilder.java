@@ -160,7 +160,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                     p.survivesExplosion();
                     final LootTableEntry item = p.addItem(RegistryInfo.ITEM.getValue(seedItem).getDefaultInstance());
                     if (type == Type.DOUBLE || type == Type.SPREADING) {
-                        item.addCondition(doubleSeedCondition());
+                        item.addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
                     }
                 });
             }
@@ -168,28 +168,17 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                 b.addPool(p -> {
                     p.survivesExplosion();
                     p.addItem(RegistryInfo.ITEM.getValue(foodItem).getDefaultInstance())
-                            .addCondition(type == Type.DOUBLE || type == Type.SPREADING ? doubleFoodCondition() : defaultFoodCondition())
+                            .addCondition(type == Type.DOUBLE || type == Type.SPREADING ? ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
+                                j.addProperty("part", "bottom");
+                                j.addProperty("mature", "true");
+                            }) : ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("mature", "true")))
                             .count(UniformGenerator.between(1, 3));
                 });
             }
         }, generator, this);
     }
 
-    private JsonObject defaultFoodCondition() {
-        return ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("mature", "true"));
-    }
-
-    private JsonObject doubleSeedCondition() {
-        return ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom"));
-    }
-
-    private JsonObject doubleFoodCondition() {
-        return ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
-            j.addProperty("part", "bottom");
-            j.addProperty("mature", "true");
-        });
-    }
-
+    // TODO: 1.3.0 | This should probably be changed
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         final String base = newID("block/", "").toString();

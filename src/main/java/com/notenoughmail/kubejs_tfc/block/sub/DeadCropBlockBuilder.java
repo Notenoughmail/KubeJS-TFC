@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
@@ -55,6 +56,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
             variant represents a bottom state; and `.stick()`, which returns a boolean for if the variant represents a stick state.
             `.stick()` will always return false for double crops that do not require sticks.
             """)
+    @Generics({ DeadModelVariant.class, ModelGenerator.class })
     public DeadCropBlockBuilder models(BiConsumer<? extends DeadModelVariant, ModelGenerator> models) {
         this.models = this.models.andThen(UtilsJS.cast(models));
         return this;

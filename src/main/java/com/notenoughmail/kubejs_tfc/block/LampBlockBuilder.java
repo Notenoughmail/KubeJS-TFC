@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
@@ -19,10 +20,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.Locale;
+import java.util.function.BiConsumer;
+
 @SuppressWarnings("unused")
 public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient int lightLevel;
+    public transient BiConsumer<ModelType, ModelGenerator> models;
 
     public LampBlockBuilder(ResourceLocation i) {
         super(i);
@@ -32,6 +37,19 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
         renderType("cutout");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.LAMP, this);
         texture("chain", id.getNamespace() + ":block/" + id.getPath() + "_chain");
+        models = (t, m) -> {
+            m.parent(t.hanging ? "tfc:block/lamp_hanging" : "tfc;block/lamp");
+            m.texture("lamp", t.on ? "tfc:block/lamp" : "tfc:block/lamp_off");
+            m.textures(textures);
+        };
+    }
+
+    @Info("""
+            
+            """)
+    public LampBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+        this.models = this.models.andThen(models);
+        return this;
     }
 
     @Info("Sets the light level the lamp gives off when it is lit")
@@ -89,33 +107,42 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(newID("", "_off"), m -> {
-            m.parent("tfc:block/lamp");
-            m.texture("lamp", "tfc:block/lamp_off");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_hanging_off"), m -> {
-            m.parent("tfc:block/lamp_hanging");
-            m.texture("lamp", "tfc:block/lamp_off");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_on"), m -> {
-            m.parent("tfc:block/lamp");
-            m.texture("lamp", "tfc:block/lamp");
-            m.textures(textures);
-        });
-        generator.blockModel(newID("", "_hanging_on"), m -> {
-            m.parent("tfc:block/lamp_hanging");
-            m.texture("lamp", "tfc:block/lamp");
-            m.textures(textures);
-        });
+        for (ModelType t : ModelType.VALUES) {
+            generator.blockModel(t.model(this), m -> models.accept(t, m));
+        }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-       bs.simpleVariant("hanging=false,lit=false", newID("block/", "_off").toString());
-       bs.simpleVariant("hanging=true,lit=false", newID("block/", "_hanging_off").toString());
-       bs.simpleVariant("hanging=false,lit=true", newID("block/", "_on").toString());
-       bs.simpleVariant("hanging=true,lit=true", newID("block/", "_hanging_on").toString());
+       bs.simpleVariant("hanging=false,lit=false", ModelType.OFF.modelEx(this));
+       bs.simpleVariant("hanging=true,lit=false", ModelType.HANGING_OFF.modelEx(this));
+       bs.simpleVariant("hanging=false,lit=true", ModelType.ON.modelEx(this));
+       bs.simpleVariant("hanging=true,lit=true", ModelType.HANGING_ON.modelEx(this));
+    }
+
+    public enum ModelType {
+        OFF(false, false),
+        HANGING_OFF(false, true),
+        ON(true, false),
+        HANGING_ON(true, true);
+
+        public final boolean on, hanging;
+
+        ModelType(boolean on, boolean hanging) {
+            this.on = on;
+            this.hanging = hanging;
+        }
+
+        public static final ModelType[] VALUES = values();
+
+        @HideFromJS
+        public ResourceLocation model(BlockBuilder builder) {
+            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+        }
+
+        @HideFromJS
+        public String modelEx(BlockBuilder builder) {
+            return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
+        }
     }
 }

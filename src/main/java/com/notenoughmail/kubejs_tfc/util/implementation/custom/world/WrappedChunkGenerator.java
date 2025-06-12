@@ -51,9 +51,7 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
     public static final Codec<WrappedChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ChunkGenerator.CODEC.fieldOf("generator").forGetter(c -> c.wrapped),
             Codec.STRING.fieldOf("event_key").forGetter(c -> c.key),
-            RockLayerSettings.CODEC.fieldOf("rock_layers")
-                    .xmap(l -> new Settings(false, 0, 0, 0, 0, 0F, 0, 0F, l, 0F, 0F), Settings::rockLayerSettings)
-                    .forGetter(c -> c.settings)
+            Settings.CODEC.fieldOf("settings").forGetter(c -> c.settings)
     ).apply(instance, WrappedChunkGenerator::new));
 
     public static ChunkGenerator getWrapper(ChunkGenerator gen) {

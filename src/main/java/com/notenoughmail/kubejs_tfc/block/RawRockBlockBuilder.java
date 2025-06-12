@@ -101,6 +101,7 @@ public class RawRockBlockBuilder extends ShapedBlockBuilder {
         return this;
     }
 
+    // I guess this is okay
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         if (!model.isEmpty()) {

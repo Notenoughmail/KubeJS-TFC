@@ -365,15 +365,15 @@ public class ResourceUtils {
                     m.parent(builder.parentModel);
                 } else {
                     m.parent("kubejs_tfc:item/generated_fluid_container");
-                }
 
-                if (builder.textureJson.size() == 0) {
-                    final String tex = builder.id.getNamespace() + ":item/" + builder.id.getPath();
-                    builder.texture("base", tex);
-                    builder.texture("fluid", tex + "_overlay");
-                }
+                    if (builder.textureJson.size() == 0) {
+                        final String tex = builder.id.getNamespace() + ":item/" + builder.id.getPath();
+                        builder.texture("base", tex);
+                        builder.texture("fluid", tex + "_overlay");
+                    }
 
-                m.textures(builder.textureJson);
+                    m.textures(builder.textureJson);
+                }
             });
         }
     }
