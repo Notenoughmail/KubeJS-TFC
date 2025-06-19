@@ -36,9 +36,10 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         RegistryUtils.hackBlockEntity(TFCBlockEntities.AXLE, this);
     }
 
-    @Info("Sets the texture that will be used for the axle")
+    @Info("Sets the texture used for the axle")
     public AxleBlockBuilder axleTexture(ResourceLocation texture) {
         this.texture = texture;
+        texture("wood", texture.toString());
         return this;
     }
 

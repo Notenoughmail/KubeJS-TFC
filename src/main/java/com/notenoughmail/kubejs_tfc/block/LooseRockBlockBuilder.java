@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
@@ -8,13 +7,11 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 @SuppressWarnings("unused")
 public class LooseRockBlockBuilder extends BlockBuilder {

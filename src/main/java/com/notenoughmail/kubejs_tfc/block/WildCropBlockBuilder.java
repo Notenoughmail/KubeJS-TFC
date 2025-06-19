@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
@@ -178,38 +177,38 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         }, generator, this);
     }
 
-    // TODO: 1.3.0 | This should probably be changed
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String base = newID("block/", "").toString();
-        switch (type) {
-            case DEFAULT, FLOODED -> generator.blockModel(id, m -> {
-                if (model.isEmpty()) {
-                    m.parent("tfc:block/wild_crop/crop");
-                    m.textures(textures);
-                } else {
-                    m.parent(model);
+        // All block state generators are based on the model, or the id if not present
+        if (model.isEmpty()) {
+            final String base = newID("block/", "").toString();
+            switch (type) {
+                case DEFAULT, FLOODED -> {
+                    generator.blockModel(id, m -> {
+                        m.parent("tfc:block/wild_crop/crop");
+                        m.textures(textures);
+                    });
                 }
-            });
-            case DOUBLE -> {
-                generator.blockModel(newID("", "_top"), m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", base + "_top");
-                });
-                generator.blockModel(newID("", "_bottom"), m -> {
-                    m.parent("tfc:block/wild_crop/crop");
-                    m.texture("crop", base + "_bottom");
-                });
-            }
-            case SPREADING -> {
-                generator.blockModel(id, m -> {
-                    m.parent("tfc:block/wild_crop/crop");
-                    m.texture("crop", base);
-                });
-                generator.blockModel(newID("", "_side"), m -> {
-                    m.parent("tfc:block/crop/spreading_crop_side");
-                    m.texture("crop", base + "_side");
-                });
+                case DOUBLE -> {
+                    generator.blockModel(newID("", "_top"), m -> {
+                        m.parent("block/crop");
+                        m.texture("crop", base + "_top");
+                    });
+                    generator.blockModel(newID("", "_bottom"), m -> {
+                        m.parent("tfc:block/wild_crop/crop");
+                        m.texture("crop", base + "_bottom");
+                    });
+                }
+                case SPREADING -> {
+                    generator.blockModel(id, m -> {
+                        m.parent("tfc:block/wild_crop/crop");
+                        m.texture("crop", base);
+                    });
+                    generator.blockModel(newID("", "_side"), m -> {
+                        m.parent("tfc:block/crop/spreading_crop_side");
+                        m.texture("crop", base + "_side");
+                    });
+                }
             }
         }
     }
@@ -217,7 +216,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         if (type != Type.SPREADING) {
-            final String baseModel = newID("block/", "").toString();
+            final String baseModel = ResourceUtils.plainModel(this);
             switch (type) {
                 case DEFAULT, FLOODED -> {
                     bs.simpleVariant("mature=true", baseModel);
@@ -236,7 +235,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     private void spreadingBlockState(MultipartBlockStateGenerator ms) {
-        final String baseModel = newID("block/", "").toString();
+        final String baseModel = ResourceUtils.plainModel(this);
         final String side = baseModel + "_side";
         ms.part("mature=true", baseModel);
         ms.part("mature=false", deadModels == null ? baseModel : deadModels[0]);

@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: 1.3.0 | Investigate reviving May '24 aspirations: https://github.com/Notenoughmail/KubeJS-TFC/commit/7e3c826ba11ff2b11302e36db8d07921285e753c#diff-feb7a7ba6d79523a00c232e81174e611bbb33c9ba750f5a4f36164760814a013
 public interface TickableAttachment extends BlockEntityAttachment {
 
     default void wrapScriptTicker(BlockEntityJS entity, boolean server) {

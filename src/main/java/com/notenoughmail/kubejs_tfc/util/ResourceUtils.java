@@ -22,6 +22,7 @@ import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.Util;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -400,7 +401,7 @@ public class ResourceUtils {
         return builder.model.isEmpty() ? (builder.id.getNamespace() + ":block/" + builder.id.getPath()) : builder.model;
     }
 
-    public static final String[] cardinalDirections = {"north", "east", "south", "west"};
+    public static final Direction[] CARDINAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
     public static final Consumer<LootBuilder> EMPTY = BlockBuilderAccessor.kubejs_tfc$GetEmpty();
 }

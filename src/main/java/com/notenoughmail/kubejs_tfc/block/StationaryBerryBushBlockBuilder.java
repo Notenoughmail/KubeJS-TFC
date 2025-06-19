@@ -37,24 +37,22 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     public transient final Lifecycle[] lifecycles;
     public transient final ItemBuilder productItem;
-    public static final String[] lc = {"healthy", "dormant", "fruiting", "flowering"};
     @Nullable
     public transient ResourceLocation product;
-    public transient final Consumer<ModelGenerator>[][] models;
+    public transient ModelFunc models;
 
     public StationaryBerryBushBlockBuilder(ResourceLocation i) {
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
         productItem = new BasicItemJS.Builder(newID("", "_product"));
         product = null;
-        models = new Consumer[4][3];
-        initModels();
+        models = initModels();
         renderType("cutout_mipped");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
     }
 
-    protected void initModels() {
-        allModels((lc, stage) -> m -> {
+    protected ModelFunc initModels() {
+        return (lc, stage, m) -> {
             m.parent("tfc:block/plant/stationary_bush_" + stage);
             m.texture(
                     "bush",
@@ -63,7 +61,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
                             newID("block/", "_" + lc.getSerializedName())
                     ).toString()
             );
-        });
+        };
     }
 
     @HideFromJS
@@ -95,21 +93,28 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Info("Sets the model for the given lifecycle and stage")
     public StationaryBerryBushBlockBuilder model(Lifecycle lifecycle, int stage, Consumer<ModelGenerator> modelGenerator) {
-        models[lifecycle.ordinal()][stage] = modelGenerator;
+        models = models.andThen((l, s, m) -> {
+            if (l == lifecycle && s == stage) {
+                modelGenerator.accept(m);
+            }
+        });
         return this;
     }
 
-    @Info("Sets the model for all lifecycle and stage combinations via a callback")
-    public StationaryBerryBushBlockBuilder allModels(BushModelsCreator modelsCreator) {
-        for (Lifecycle lc : LC_VALUES) {
-            for (int i = 0 ; i < 3 ; i++) {
-                final var m = modelsCreator.getFor(lc, i);
-                if (m != null) {
-                    models[lc.ordinal()][i] = m;
-                }
-            }
-        }
+    @Info("""
+            Sets the model generation of the berry block, accepts a `TriConsumer` of a `Lifecycle`, an integer in the
+            range [0, 2] representing the growth stage, and a model generator.
+            The generator is unique for each lifecycle & stage combination.
+            """)
+    public StationaryBerryBushBlockBuilder models(ModelFunc models) {
+        this.models = this.models.andThen(models);
         return this;
+    }
+
+    @Deprecated
+    @Info("Deprecated, please use `#models` and its new syntax")
+    public StationaryBerryBushBlockBuilder allModels(BushModelsCreator modelsCreator) {
+        return models(modelsCreator.upgrade());
     }
 
     @Info("Sets the texture for the given lifecycle and stage")
@@ -142,18 +147,19 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (int i = 0 ; i < 4 ; i++) {
-            for (int j = 0 ; j < 3 ; j++) {
-                generator.blockModel(newID("", "_" + lc[i] + "_" + j), models[i][j]);
+        for (Lifecycle l : LC_VALUES) {
+            for (int i = 0 ; i < 3 ; i++) {
+                final int stage = i;
+                generator.blockModel(newID("", "_" + l.getSerializedName() + "_" + i), m -> models.apply(l, stage, m));
             }
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        for (String lifecycle : lc) {
+        for (Lifecycle lc : LC_VALUES) {
             for (int i = 0 ; i < 3 ; i++) {
-                bs.simpleVariant("lifecycle=" + lifecycle + ",stage=" + i, newID("block/", "_" + lifecycle + "_" + i).toString());
+                bs.simpleVariant("lifecycle=" + lc.getSerializedName() + ",stage=" + i, newID("block/", "_" + lc.getSerializedName() + "_" + i).toString());
             }
         }
     }
@@ -177,9 +183,36 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     }
 
     @FunctionalInterface
+    public interface ModelFunc {
+        void apply(Lifecycle lifecycle, int stage, ModelGenerator generator);
+
+        default ModelFunc andThen(ModelFunc func) {
+            return (l, s, m) -> {
+                apply(l, s, m);
+                func.apply(l, s, m);
+            };
+        }
+    }
+
+    @Deprecated
+    @FunctionalInterface
     public interface BushModelsCreator {
         @Nullable
         @Generics({ ModelGenerator.class })
         Consumer<ModelGenerator> getFor(Lifecycle lifecycle, int stage);
+
+        // The consumers must be 'precomputed' so there is a top level context for interface adaption
+        default ModelFunc upgrade() {
+            final Consumer<ModelGenerator>[][] gens = new Consumer[4][3];
+            for (Lifecycle lc : LC_VALUES) {
+                for (int i = 0 ; i < 3 ; i++) {
+                    gens[lc.ordinal()][i] = getFor(lc, i);
+                }
+            }
+            return (l, s, m) -> {
+                final Consumer<ModelGenerator> gen = gens[l.ordinal()][s];
+                if (gen != null) gen.accept(m);
+            };
+        }
     }
 }

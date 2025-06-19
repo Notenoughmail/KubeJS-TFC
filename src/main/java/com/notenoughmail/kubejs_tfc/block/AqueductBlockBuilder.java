@@ -64,6 +64,12 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        texture("texture", tex);
+        return texture("particle", tex);
+    }
+
+    @Override
     public Block createObject() {
         return new AqueductBlock(createProperties()) {
             @Override

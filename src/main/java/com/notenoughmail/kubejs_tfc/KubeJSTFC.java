@@ -50,10 +50,6 @@ import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
 
-// TODO: 1.3.0 | Complete audit of resource generation customizability for all builders: #textureAll, models, & loot tables
-// Loot tables: Done
-// Models: Done
-// #textureAll: Essentially untouched
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {

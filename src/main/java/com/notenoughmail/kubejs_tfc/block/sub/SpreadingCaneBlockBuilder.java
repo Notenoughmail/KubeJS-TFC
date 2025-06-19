@@ -23,13 +23,12 @@ import java.util.function.Consumer;
 public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     private final SpreadingBushBlockBuilder bush;
-    public transient final Consumer<ModelGenerator>[][] models;
+    public transient StationaryBerryBushBlockBuilder.ModelFunc models;
 
     public SpreadingCaneBlockBuilder(ResourceLocation i, SpreadingBushBlockBuilder bush) {
         super(i);
         this.bush = bush;
-        models = new Consumer[4][3];
-        allModels((lc, stage) -> m -> {
+        models = (lc, stage, m) -> {
             m.parent("tfc:block/plant/berry_bush_side_" + stage);
             m.texture(
                     "cane",
@@ -47,7 +46,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
                                     newID("block/", "_bush_" + lc.getSerializedName())
                     ).toString()
             );
-        });
+        };
         noItem();
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.ANY_SPREADING_BUSH.location());
@@ -56,21 +55,28 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
     @Info("Sets the model for the given lifecycle and stage")
     @Generics({ ModelGenerator.class })
     public SpreadingCaneBlockBuilder model(Lifecycle lifecycle, int stage, Consumer<ModelGenerator> modelGenerator) {
-        models[lifecycle.ordinal()][stage] = modelGenerator;
+        models = models.andThen((l, s, m) -> {
+            if (l == lifecycle && s == stage) {
+                modelGenerator.accept(m);
+            }
+        });
         return this;
     }
 
-    @Info("Sets the model for all lifecycle and stage combinations via a callback")
-    public SpreadingCaneBlockBuilder allModels(StationaryBerryBushBlockBuilder.BushModelsCreator modelsCreator) {
-        for (Lifecycle lc : StationaryBerryBushBlockBuilder.LC_VALUES) {
-            for (int i = 0 ; i < 3 ; i++) {
-                final var m = modelsCreator.getFor(lc, i);
-                if (m != null) {
-                    models[lc.ordinal()][i] = m;
-                }
-            }
-        }
+    @Info("""
+            Sets the model generation of the cane block, accepts a `TriConsumer` of a `Lifecycle`, an integer in the
+            range [0, 2] representing the growth stage, and a model generator.
+            The generator is unique for each lifecycle & stage combination.
+            """)
+    public SpreadingCaneBlockBuilder models(StationaryBerryBushBlockBuilder.ModelFunc models) {
+        this.models = this.models.andThen(models);
         return this;
+    }
+
+    @Deprecated
+    @Info("Deprecated, please use `#models` and its new syntax")
+    public SpreadingCaneBlockBuilder allModels(StationaryBerryBushBlockBuilder.BushModelsCreator modelsCreator) {
+        return models(modelsCreator.upgrade());
     }
 
     @Info("Sets the cane texture for the given lifecycle and stage")
@@ -107,23 +113,24 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (int i = 0 ; i < 4 ; i ++) {
-            for (int j = 0 ; j < 3 ; j++) {
-                generator.blockModel(bush.newID("", "_side_" + StationaryBerryBushBlockBuilder.lc[i] + "_" + j), models[i][j]);
+        for (Lifecycle lc : StationaryBerryBushBlockBuilder.LC_VALUES) {
+            for (int i = 0 ; i < 3 ; i++) {
+                final int j = i;
+                generator.blockModel(bush.newID("", "_side_" + lc.getSerializedName() + "_" + i), m -> models.apply(lc, j, m));
             }
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        for (String lifecycle : StationaryBerryBushBlockBuilder.lc) {
+        for (Lifecycle lc : StationaryBerryBushBlockBuilder.LC_VALUES) {
             for (int i = 0 ; i < 4 ; i++) {
-                final String dir = ResourceUtils.cardinalDirections[i];
+                final String dir = ResourceUtils.CARDINAL_DIRECTIONS[i].getSerializedName();
                 final int finalI = i;
                 for (int j = 0 ; j < 3 ; j++) {
                     final int finalJ = j; // Lambda stuff
-                    bs.variant("lifecycle=" + lifecycle + ",facing=" + dir + ",stage=" + j, v ->
-                        v.model(bush.newID("block/", "_side_" + lifecycle + "_" + finalJ).toString()).y(finalI * 90)
+                    bs.variant("lifecycle=" + lc.getSerializedName() + ",facing=" + dir + ",stage=" + j, v ->
+                        v.model(bush.newID("block/", "_side_" + lc.getSerializedName() + "_" + finalJ).toString()).y(finalI * 90)
                     );
                 }
             }

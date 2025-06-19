@@ -10,7 +10,6 @@ import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.RandomStateExtension;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkDataProvider;
-import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;

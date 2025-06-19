@@ -45,7 +45,11 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("""
+            Sets the model generation of he lamp block, accepts a `BiConsumer` of a `ModelType` and a model generator.
+            The generator is unique for each type.
             
+            There are 4 types: `OFF`, HANGING_OFF`, `ON`, and `HANGING_ON`. There have 2 boolean properties which can
+            be used to determine the type currently in operation. The properties are `.on` and `.hanging`.
             """)
     public LampBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);

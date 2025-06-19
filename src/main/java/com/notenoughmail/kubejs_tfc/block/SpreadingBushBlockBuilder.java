@@ -42,8 +42,8 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
     }
 
     @Override
-    protected void initModels() {
-        allModels((lc, stage) -> m -> {
+    protected ModelFunc initModels() {
+        return (lc, stage, m) -> {
             m.parent("tfc:block/plant/berry_bush_" + stage); // The only difference from super
             m.texture(
                     "bush",
@@ -52,7 +52,14 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
                             newID("block/", "_" + lc.getSerializedName())
                     ).toString()
             );
-        });
+        };
+    }
+
+    @Info("Sets the properties of the cane block")
+    @Generics(SpreadingCaneBlockBuilder.class)
+    public SpreadingBushBlockBuilder cane(Consumer<SpreadingCaneBlockBuilder> cane) {
+        cane.accept(this.cane);
+        return this;
     }
 
     @Info("Sets the maximum height this bush can grow to, defaults to 3")

@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import dev.latvian.mods.kubejs.script.ScriptType;
-import dev.latvian.mods.kubejs.typings.desc.OrDescJS;
 import dev.latvian.mods.kubejs.typings.desc.PrimitiveDescJS;
 import dev.latvian.mods.kubejs.typings.desc.TypeDescJS;
 import dev.latvian.mods.rhino.BaseFunction;
@@ -26,7 +25,7 @@ public class HeatAttachment implements TickableAttachment, IHeatBlock {
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(
             "tfc:heat",
             TypeDescJS.object()
-                    .add("temperatureCallback", new OrDescJS(new TypeDescJS[]{ TypeDescJS.NUMBER, new PrimitiveDescJS("QuadFunction<BlockEntityJS, number, number, number, number>")}))
+                    .add("temperatureCallback", new PrimitiveDescJS("QuadFunction").withGenerics(new PrimitiveDescJS("BlockEntityJS"), TypeDescJS.NUMBER, TypeDescJS.NUMBER, TypeDescJS.NUMBER, TypeDescJS.NUMBER).or(TypeDescJS.NUMBER))
                     .add("providesHeat", TypeDescJS.BOOLEAN, true),
             map -> {
                 final TempCallback temp = getTemp(map);
