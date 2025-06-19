@@ -28,7 +28,7 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient FluidProperty fluidProperty;
     public transient List<Object> fluids; // List<Object> so the fluid property builder doesn't complain at compile time
-    public transient BiConsumer<ModelPart, ModelGenerator> models;
+    public transient BiConsumer<AqueductModelPart, ModelGenerator> models;
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
@@ -41,14 +41,14 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of the aqueduct, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            Sets the model generation of the aqueduct, accepts a `BiConsumer` of a `AqueductModelPart` and a model generator.
             The generator is unique for each part.
             
             There are 5 parts: `BASE`, `NORTH`, `SOUTH`, `EAST`, and `WEST` all with `.base()`, `.north()`, `.south()`,
             `.east()`, and `.west()` methods which return true if the part in operation is the one indicated by the method.
             """)
-    @Generics({ ModelPart.class, ModelGenerator.class })
-    public AqueductBlockBuilder models(BiConsumer<ModelPart, ModelGenerator> models) {
+    @Generics({ AqueductModelPart.class, ModelGenerator.class })
+    public AqueductBlockBuilder models(BiConsumer<AqueductModelPart, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -91,16 +91,16 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        bs.part("", ModelPart.BASE.modelEx(this));
-        bs.part("east=false", ModelPart.EAST.modelEx(this));
-        bs.part("west=false", ModelPart.WEST.modelEx(this));
-        bs.part("north=false", ModelPart.NORTH.modelEx(this));
-        bs.part("south=false", ModelPart.SOUTH.modelEx(this));
+        bs.part("", AqueductModelPart.BASE.modelEx(this));
+        bs.part("east=false", AqueductModelPart.EAST.modelEx(this));
+        bs.part("west=false", AqueductModelPart.WEST.modelEx(this));
+        bs.part("north=false", AqueductModelPart.NORTH.modelEx(this));
+        bs.part("south=false", AqueductModelPart.SOUTH.modelEx(this));
     }
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (ModelPart p : ModelPart.VALUES) {
+        for (AqueductModelPart p : AqueductModelPart.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
@@ -110,11 +110,11 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
         if (!model.isEmpty()) {
             m.parent(model);
         } else {
-            m.parent(ModelPart.BASE.modelEx(this));
+            m.parent(AqueductModelPart.BASE.modelEx(this));
         }
     }
 
-    public enum ModelPart {
+    public enum AqueductModelPart {
         BASE,
         NORTH,
         SOUTH,
@@ -124,11 +124,11 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
         @HideFromJS
         public final String defaultParent;
 
-        ModelPart() {
+        AqueductModelPart() {
             this.defaultParent = "tfc:block/aqueduct/" + name().toLowerCase(Locale.ROOT);
         }
 
-        public static final ModelPart[] VALUES = values();
+        public static final AqueductModelPart[] VALUES = values();
 
         public boolean base() { return this == BASE; }
         public boolean north() { return this == NORTH; }

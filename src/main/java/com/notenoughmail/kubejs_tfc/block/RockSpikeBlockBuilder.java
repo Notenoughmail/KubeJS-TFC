@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
-    public transient BiConsumer<ModelType, ModelGenerator> models;
+    public transient BiConsumer<SpikeModelType, ModelGenerator> models;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -27,14 +27,14 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of the spike, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            Sets the model generation of the spike, accepts a `BiConsumer` of a `SpikeModelPart` and a model generator.
             The generator is unique for each type.
             
             There are 3 parts: `BASE`, `MIDDLE`, and `TIP` all with `.base()`, `.middle()`, and `.tip()` methods which
             return true if the type is in operation is the one indicated by the method.
             """)
-    @Generics({ ModelType.class, ModelGenerator.class })
-    public RockSpikeBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+    @Generics({ SpikeModelType.class, ModelGenerator.class })
+    public RockSpikeBlockBuilder models(BiConsumer<SpikeModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -58,19 +58,19 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (ModelType t : ModelType.VALUES) {
+        for (SpikeModelType t : SpikeModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        bs.simpleVariant("part=base", ModelType.BASE.modelEx(this));
-        bs.simpleVariant("part=middle", ModelType.MIDDLE.modelEx(this));
-        bs.simpleVariant("part=tip", ModelType.TIP.modelEx(this));
+        for (SpikeModelType t : SpikeModelType.VALUES) {
+            bs.simpleVariant("part=" + t.name().toLowerCase(Locale.ROOT), t.modelEx(this));
+        }
     }
 
-    public enum ModelType {
+    public enum SpikeModelType {
         BASE,
         MIDDLE,
         TIP;
@@ -78,11 +78,11 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         @HideFromJS
         public final String defaultParent;
 
-        ModelType() {
+        SpikeModelType() {
             defaultParent = "tfc:block/rock/spike_" + name().toLowerCase(Locale.ROOT);
         }
 
-        public static final ModelType[] VALUES = values();
+        public static final SpikeModelType[] VALUES = values();
 
         public boolean base() { return this == BASE; }
         public boolean middle() { return this == MIDDLE; }

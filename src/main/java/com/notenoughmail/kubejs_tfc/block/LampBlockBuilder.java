@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient int lightLevel;
-    public transient BiConsumer<ModelType, ModelGenerator> models;
+    public transient BiConsumer<LampModelType, ModelGenerator> models;
 
     public LampBlockBuilder(ResourceLocation i) {
         super(i);
@@ -45,13 +45,13 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of he lamp block, accepts a `BiConsumer` of a `ModelType` and a model generator.
+            Sets the model generation of he lamp block, accepts a `BiConsumer` of a `LampModelType` and a model generator.
             The generator is unique for each type.
             
             There are 4 types: `OFF`, HANGING_OFF`, `ON`, and `HANGING_ON`. There have 2 boolean properties which can
             be used to determine the type currently in operation. The properties are `.on` and `.hanging`.
             """)
-    public LampBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+    public LampBlockBuilder models(BiConsumer<LampModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -111,20 +111,19 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (ModelType t : ModelType.VALUES) {
+        for (LampModelType t : LampModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
 
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-       bs.simpleVariant("hanging=false,lit=false", ModelType.OFF.modelEx(this));
-       bs.simpleVariant("hanging=true,lit=false", ModelType.HANGING_OFF.modelEx(this));
-       bs.simpleVariant("hanging=false,lit=true", ModelType.ON.modelEx(this));
-       bs.simpleVariant("hanging=true,lit=true", ModelType.HANGING_ON.modelEx(this));
+        for (LampModelType t : LampModelType.VALUES) {
+            bs.simpleVariant("hanging=" + t.hanging + ",lit=" + t.on, t.modelEx(this));
+        }
     }
 
-    public enum ModelType {
+    public enum LampModelType {
         OFF(false, false),
         HANGING_OFF(false, true),
         ON(true, false),
@@ -132,12 +131,12 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
         public final boolean on, hanging;
 
-        ModelType(boolean on, boolean hanging) {
+        LampModelType(boolean on, boolean hanging) {
             this.on = on;
             this.hanging = hanging;
         }
 
-        public static final ModelType[] VALUES = values();
+        public static final LampModelType[] VALUES = values();
 
         @HideFromJS
         public ResourceLocation model(BlockBuilder builder) {

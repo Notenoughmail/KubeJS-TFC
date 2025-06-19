@@ -18,12 +18,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.Locale;
 import java.util.function.BiConsumer;
 
 public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final AxleBlockBuilder parent;
-    public transient BiConsumer<ModelType, ModelGenerator> models;
+    public transient BiConsumer<ClutchModelType, ModelGenerator> models;
 
     public ClutchBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
@@ -39,14 +40,14 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of the clutch block, accepts a `BiConsumer` of a `ModelType` and a model generator.
+            Sets the model generation of the clutch block, accepts a `BiConsumer` of a `ClutchModelType` and a model generator.
             The generator is unique for each type.
             
             There are 2 types: `POWERED` and `UNPOWERED` with a `.powered()` method which returns a boolean; true if the
             type in operation is `POWERED`.
             """)
-    @Generics({ ModelType.class, ModelGenerator.class })
-    public ClutchBlockBuilder models(BiConsumer<ModelType, ModelGenerator> models) {
+    @Generics({ ClutchModelType.class, ModelGenerator.class })
+    public ClutchBlockBuilder models(BiConsumer<ClutchModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -73,7 +74,7 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (ModelType t : ModelType.VALUES) {
+        for (ClutchModelType t : ClutchModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
@@ -90,18 +91,18 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         bs.variant("axis=x,powered=true", v -> v.model(powered).y(90).x(90));
     }
 
-    public enum ModelType {
-        POWERED("tfc:block/axle_casing_powered"),
-        UNPOWERED("tfc:block/axle_casing_unpowered");
+    public enum ClutchModelType {
+        POWERED,
+        UNPOWERED;
 
         @HideFromJS
         public final String defaultOverlay;
 
-        ModelType(String defaultOverlay) {
-            this.defaultOverlay = defaultOverlay;
+        ClutchModelType() {
+            this.defaultOverlay = "tfc:block/axle_casing_" + name().toLowerCase(Locale.ROOT);
         }
 
-        public static final ModelType[] VALUES = values();
+        public static final ClutchModelType[] VALUES = values();
 
         public boolean powered() {
             return this == POWERED;

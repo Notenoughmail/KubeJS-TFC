@@ -23,8 +23,7 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
 
     private final long defaultDuration;
     private final LongSupplier timeGetter;
-    private long calendarTick = -1L;
-    private long duration;
+    private long calendarTick = -1L, duration;
 
     public CalendarTrackingAttachment(long defaultDuration, BlockEntityJS be) {
         this.defaultDuration = defaultDuration;

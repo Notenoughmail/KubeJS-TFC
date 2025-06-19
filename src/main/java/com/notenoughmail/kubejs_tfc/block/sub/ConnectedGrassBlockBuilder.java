@@ -30,7 +30,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     public transient final TFCDirtBlockBuilder parent;
 
     public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
-    public transient BiConsumer<ModelPart, ModelGenerator> models;
+    public transient BiConsumer<GrassModelPart, ModelGenerator> models;
 
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
@@ -47,15 +47,15 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of the grass block, accepts a `BiConsumer` of a `ModelPart` and a model generator.
+            Sets the model generation of the grass block, accepts a `BiConsumer` of a `GrassModelPart` and a model generator.
             The generator is unique for each part.
             
             There are 5 parts: `BOTTOM`, `TOP`, `SNOWY_TOP`, `SIDE`, and `SNOWY_SIDE`. These have 4 boolean properties
             which can be used to logically determine the part currently in operation. The properties are `.bottom`,
             `.top`, `.side`, and `.snowy`.
             """)
-    @Generics({ ModelPart.class, ModelGenerator.class })
-    public ConnectedGrassBlockBuilder models(BiConsumer<ModelPart, ModelGenerator> models) {
+    @Generics({ GrassModelPart.class, ModelGenerator.class })
+    public ConnectedGrassBlockBuilder models(BiConsumer<GrassModelPart, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -106,18 +106,18 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (ModelPart p : ModelPart.VALUES) {
+        for (GrassModelPart p : GrassModelPart.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String bottom = ModelPart.BOTTOM.modelEx(this);
-        final String top = ModelPart.TOP.modelEx(this);
-        final String snowyTop = ModelPart.SNOWY_TOP.modelEx(this);
-        final String side = ModelPart.SIDE.modelEx(this);
-        final String snowySide = ModelPart.SNOWY_SIDE.modelEx(this);
+        final String bottom = GrassModelPart.BOTTOM.modelEx(this);
+        final String top = GrassModelPart.TOP.modelEx(this);
+        final String snowyTop = GrassModelPart.SNOWY_TOP.modelEx(this);
+        final String side = GrassModelPart.SIDE.modelEx(this);
+        final String snowySide = GrassModelPart.SNOWY_SIDE.modelEx(this);
 
         bs.part("", p -> p.model(bottom).x(90));
         bs.part("snowy=false", p -> {
@@ -143,19 +143,19 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         }
     }
 
-    public enum ModelPart {
-        BOTTOM("tfc:block/grass_bottom", false, false, false, true),
-        TOP("tfc:block/grass_top", false, false, true, false),
-        SNOWY_TOP("tfc:block/grass_snowy_top", true, false, true, false),
-        SIDE("tfc:block/grass_side", false, true, false, false),
-        SNOWY_SIDE("tfc:block/grass_snowy_side", true, true, false, false);
+    public enum GrassModelPart {
+        BOTTOM(false, false, false, true),
+        TOP(false, false, true, false),
+        SNOWY_TOP(true, false, true, false),
+        SIDE(false, true, false, false),
+        SNOWY_SIDE(true, true, false, false);
 
         @HideFromJS
         public final String defaultParent;
         public final boolean snowy, side, top, bottom;
 
-        ModelPart(String defaultParent, boolean snowy, boolean side, boolean top, boolean bottom) {
-            this.defaultParent = defaultParent;
+        GrassModelPart(boolean snowy, boolean side, boolean top, boolean bottom) {
+            this.defaultParent = "tfc:block/grass_" + name().toLowerCase(Locale.ROOT);
             this.snowy = snowy;
             this.side = side;
             this.top = top;
@@ -172,6 +172,6 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
             return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
         }
 
-        public static final ModelPart[] VALUES = values();
+        public static final GrassModelPart[] VALUES = values();
     }
 }
