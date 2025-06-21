@@ -38,7 +38,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
         RegistryUtils.hackBlockEntity(TFCBlockEntities.LAMP, this);
         texture("chain", id.getNamespace() + ":block/" + id.getPath() + "_chain");
         models = (t, m) -> {
-            m.parent(t.hanging ? "tfc:block/lamp_hanging" : "tfc;block/lamp");
+            m.parent(t.hanging ? "tfc:block/lamp_hanging" : "tfc:block/lamp");
             m.texture("lamp", t.on ? "tfc:block/lamp" : "tfc:block/lamp_off");
             m.textures(textures);
         };

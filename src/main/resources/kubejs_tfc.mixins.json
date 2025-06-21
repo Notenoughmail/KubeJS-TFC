@@ -20,6 +20,7 @@
     "TorchItemMixin",
     "accessor.BlockBuilderAccessor",
     "accessor.BlockEntityTypeAccessor",
+    "accessor.ChunkDataAccessor",
     "accessor.ClimatePlacementAccessor",
     "accessor.DataManagerAccessor",
     "accessor.EntityDamageResistanceAccessor",

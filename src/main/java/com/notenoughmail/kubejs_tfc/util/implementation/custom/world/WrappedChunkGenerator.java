@@ -136,12 +136,11 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
 
     @Override
     public CompletableFuture<ChunkAccess> fillFromNoise(Executor pExecutor, Blender pBlender, RandomState pRandom, StructureManager pStructureManager, ChunkAccess pChunk) {
-        final ChunkData chunkData = chunkDataGenerator.get(pChunk);
+        final ChunkData data = chunkDataGenerator.generate(pChunk);
         return wrapped.fillFromNoise(pExecutor, pBlender, pRandom, pStructureManager, pChunk)
                 .thenApplyAsync(chunkAccess -> {
-                    chunkDataGenerator.generatePartialIfNot(chunkData, chunkAccess);
-                    chunkDataGenerator.generateFullIfNot(chunkData, chunkAccess);
-                    chunkData.getRockData().useCache(chunkAccess.getPos());
+                    chunkDataGenerator.generateFullIfNot(data, chunkAccess);
+                    data.getRockData().useCache(chunkAccess.getPos());
                     return chunkAccess;
                 }, Util.backgroundExecutor());
     }
@@ -180,8 +179,7 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
     public CompletableFuture<ChunkAccess> createBiomes(Executor pExecutor, RandomState pRandomState, Blender pBlender, StructureManager pStructureManager, ChunkAccess pChunk) {
         return wrapped.createBiomes(pExecutor, pRandomState, pBlender, pStructureManager, pChunk)
                 .thenApplyAsync(chunk -> {
-                    final ChunkData data = chunkDataGenerator.get(chunk);
-                    chunkDataGenerator.generatePartialIfNot(data, chunk);
+                    chunkDataGenerator.generate(chunk);
                     return chunk;
                 }, Util.backgroundExecutor());
     }
@@ -214,8 +212,8 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
 
     @Override
     public void createStructures(RegistryAccess pRegistryAccess, ChunkGeneratorStructureState pStructureState, StructureManager pStructureManager, ChunkAccess pChunk, StructureTemplateManager pStructureTemplateManager) {
-        final ChunkData data = chunkDataGenerator.get(pChunk);
-        chunkDataGenerator.generatePartialIfNot(data, pChunk);
+        final ChunkData data = chunkDataGenerator.generate(pChunk);
+        chunkDataGenerator.saveForStructureUse(data);
         wrapped.createStructures(pRegistryAccess, pStructureState, pStructureManager, pChunk, pStructureTemplateManager);
     }
 

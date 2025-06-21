@@ -73,7 +73,9 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         if (!model.isEmpty()) {
             m.parent(model);
         } else {
-            m.parent(GearBoxModelPart.PORT.model(this).withPrefix("block/").toString());
+            m.parent("tfc:block/ore");
+            m.texture("overlay", GearBoxModelPart.PORT.defaultOverlay);
+            m.textures(textures);
         }
     }
 

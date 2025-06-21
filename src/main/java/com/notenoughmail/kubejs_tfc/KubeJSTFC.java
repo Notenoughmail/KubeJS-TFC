@@ -74,6 +74,7 @@ public class KubeJSTFC {
         info.accept("KubeJS TFC configuration:");
         info.accept("- Debug mode enabled: %s".formatted(debug));
         info.accept("- Self tests console insertion enabled: %s".formatted(insertIntoConsole));
+        info.accept("- Self tests warnings deduplicated: %s".formatted(deduplicateConsoleErrors));
     }
 
     public static void info(String message) {
