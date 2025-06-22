@@ -1,4 +1,4 @@
-### 1.3.0 (W.I.P.)
+### 1.3.0
 - Add commands to print TFC's level settings and chunk data
 - Add setting (default enabled) to deduplicate TFC datapack validation errors that are inserted into the KubeJS console
 - Add chunk generator type `kubejs_tfc:wrapped` which enables adding chunk data to levels without proper TFC-like level generators
