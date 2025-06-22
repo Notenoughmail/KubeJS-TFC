@@ -11,12 +11,12 @@
   - `#drips` in `tfc:thin_spike` block type, same functionality handled by nullable parameter of `#dripParticle`
   - `#hasBubbles` & `#hasSteam` in `tfc:spring` fluid type, same functionality handled by nullable parameter of `#bubbleParticle` & `#steamParticle`
   - `#allModels` in berry bushes, superseded by `#models`
-  - Deprecated methods in custom climate model event
+- Remove deprecated methods in custom climate model event
 - Remove old, non-functional chunk-data creation mechanism for custom climate models that was added in 1.2.6
 - Add support for Kube's ingredient and result modifiers to TFC's advanced crafting recipes
 - Fix drinkable description command printing the first effect in place of all-but-the-last effect
 - Fix being unable to modify the cane block of spreading bushes
-- Add the ability to properly modify the model generation of multi-model blocks (aqueducts, supports, gearboxes, etc.)
+- Add the ability to properly modify the model generation of multi-model blocks (aqueducts, grass, gearboxes, etc.)
 
 ### 1.2.6
 - Add TFC Log block builder

@@ -72,12 +72,12 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
         return sum / a.length;
     }
 
-    public static KubeChunkDataGenerator create(String levelKey, RockLayerSettings rockLayers) {
+    public static KubeChunkDataGenerator create(String levelKey, RockLayerSettings rockLayers, long worldSeed) {
         BiConsumer<ChunkData, ChunkAccess> partial = GEN_PARTIAL, full = GEN_FULL;
         Function<ChunkAccess, Aquifer> aquifer = AQUIFER;
         CreateChunkDataProviderEventJS.RocksGetter rock = ROCK;
         if (EventHandlers.createChunkDataProvider.hasListeners(levelKey)) {
-            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS();
+            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS(worldSeed);
             EventHandlers.createChunkDataProvider.post(event, levelKey);
             if (event.generatePartial != null) partial = event.generatePartial;
             if (event.generateFull != null) full = event.generateFull;

@@ -48,6 +48,10 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
         return (timeGetter.getAsLong() - calendarTick) > duration;
     }
 
+    public void reset() {
+        calendarTick = -1L;
+    }
+
     @Override
     public CompoundTag writeAttachment() {
         final CompoundTag tag = BlockEntityAttachment.super.writeAttachment();

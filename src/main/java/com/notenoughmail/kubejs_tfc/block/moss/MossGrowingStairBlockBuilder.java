@@ -41,9 +41,11 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
     public Block createObject() {
         return new MossGrowingStairsBlock(Blocks.OAK_PLANKS::defaultBlockState, createProperties(), () -> null) {
 
+            Block mossBlock;
+
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
+                mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof StairBlock)) {
                     mossBlock = Blocks.OAK_STAIRS;
                     KubeJSTFC.error("The provided 'mossy' block: \"{}\" is not a stair block or does not exist!", mossyBlock);

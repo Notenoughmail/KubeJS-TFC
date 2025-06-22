@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
+package com.notenoughmail.kubejs_tfc.util.helpers.ducks;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
 import org.jetbrains.annotations.Nullable;

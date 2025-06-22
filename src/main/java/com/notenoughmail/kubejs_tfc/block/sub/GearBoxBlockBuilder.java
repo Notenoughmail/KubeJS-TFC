@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
     public transient final AxleBlockBuilder parent;
-    public transient BiConsumer<GearBoxModelPart, ModelGenerator> models;
+    public transient BiConsumer<GearBoxModelType, ModelGenerator> models;
 
     public GearBoxBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
@@ -38,14 +38,14 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     }
 
     @Info("""
-            Sets the model generation of the gear box, accepts a `BiConsumer` of a `GearBoxModelPart` and a model generator.
+            Sets the model generation of the gear box, accepts a `BiConsumer` of a `GearBoxModelType` and a model generator.
             The generator is unique for each part.
             
             There are 2 parts: `PORT` and `FACE` with a `.port()` method which returns a boolean; true if the part in
             operation is `PORT`.
             """)
-    @Generics({ GearBoxModelPart.class, ModelGenerator.class })
-    public GearBoxBlockBuilder models(BiConsumer<GearBoxModelPart, ModelGenerator> models) {
+    @Generics({ GearBoxModelType.class, ModelGenerator.class })
+    public GearBoxBlockBuilder models(BiConsumer<GearBoxModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -74,14 +74,14 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
             m.parent(model);
         } else {
             m.parent("tfc:block/ore");
-            m.texture("overlay", GearBoxModelPart.PORT.defaultOverlay);
+            m.texture("overlay", GearBoxModelType.PORT.defaultOverlay);
             m.textures(textures);
         }
     }
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (GearBoxModelPart p : GearBoxModelPart.VALUES) {
+        for (GearBoxModelType p : GearBoxModelType.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
@@ -104,19 +104,19 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         bs.part("up=false", v -> v.model(face).x(270));
     }
 
-    public enum GearBoxModelPart {
+    public enum GearBoxModelType {
         PORT("front"),
         FACE("round");
 
         @HideFromJS
         public final String defaultOverlay, defaultParent;
 
-        GearBoxModelPart(String defaultOverlay) {
+        GearBoxModelType(String defaultOverlay) {
             this.defaultOverlay = "tfc:block/axle_casing_" + defaultOverlay;
             defaultParent = "tfc:block/gear_box_" + name().toLowerCase(Locale.ROOT);
         }
 
-        public static final GearBoxModelPart[] VALUES = values();
+        public static final GearBoxModelType[] VALUES = values();
 
         public boolean port() {
             return this == PORT;

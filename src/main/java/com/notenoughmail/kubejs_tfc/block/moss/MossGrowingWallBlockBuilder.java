@@ -41,9 +41,11 @@ public class MossGrowingWallBlockBuilder extends WallBlockBuilder {
     public Block createObject() {
         return new MossGrowingWallBlock(createProperties(), () -> null) {
 
+            Block mossBlock;
+
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
+                mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof WallBlock)) {
                     mossBlock = Blocks.COBBLESTONE_WALL;
                     KubeJSTFC.error("The provided 'mossy' block \"{}\" is not a wall block or does not exist!", mossyBlock);

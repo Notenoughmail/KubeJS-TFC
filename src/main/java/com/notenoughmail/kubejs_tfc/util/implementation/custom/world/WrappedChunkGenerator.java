@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.custom.world;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.IChunkGenWrapper;
+import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IChunkGenWrapper;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.mixin.accessor.ChunkMapAccessor;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -104,7 +104,7 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
             return;
         }
 
-        chunkDataGenerator = KubeChunkDataGenerator.create(key, settings.rockLayerSettings());
+        chunkDataGenerator = KubeChunkDataGenerator.create(key, settings.rockLayerSettings(), level.getSeed());
 
         ((RandomStateExtension) (Object) ((ChunkMapAccessor) chunkMap).accessor$getRandomState()).tfc$setChunkGeneratorExtension(this);
     }

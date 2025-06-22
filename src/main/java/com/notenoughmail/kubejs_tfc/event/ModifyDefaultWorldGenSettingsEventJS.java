@@ -346,17 +346,20 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
                         KubeJSTFC.tryOrElse(
                                 new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift)::parse,
                                 oldRockLayerSettings,
-                                e -> ConsoleJS.SERVER.error("""
+                                e -> {
+                                    KubeJSTFC.error("Error encountered while parsing rock settings", e);
+                                    ConsoleJS.SERVER.error("""
                                         Error encountered while parsing rock settings:
                                         %s:
                                         %s
                                         \t%s
                                         Using default rock settings
                                         """.formatted(
-                                                e.getClass(),
-                                                e.getMessage(),
-                                                String.join("\n\t", Arrays.stream(e.getStackTrace()).map(Object::toString).toArray(String[]::new))
-                                ))
+                                            e.getClass(),
+                                            e.getMessage(),
+                                            String.join("\n\t", Arrays.stream(e.getStackTrace()).map(Object::toString).toArray(String[]::new))
+                                    ));
+                                }
                         ) :
                         oldRockLayerSettings,
                 continentalness,

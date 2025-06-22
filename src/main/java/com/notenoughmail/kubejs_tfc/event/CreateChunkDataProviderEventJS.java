@@ -21,6 +21,17 @@ public class CreateChunkDataProviderEventJS extends EventJS {
     public transient BiConsumer<ChunkData, ChunkAccess> generatePartial, generateFull;
     public transient Function<ChunkAccess, Aquifer> createAquifer;
 
+    private final long seed;
+
+    public CreateChunkDataProviderEventJS(long seed) {
+        this.seed = seed;
+    }
+
+    @Info("Returns the seed for the world the chunk data provider is being applied to")
+    public long getWorldSeed() {
+        return seed;
+    }
+
     @Info("""
             Sets the partial calculation for a chunk's `ChunkData`.
             

@@ -55,9 +55,11 @@ public class MossGrowingSlabBlockBuilder extends SlabBlockBuilder {
     public Block createObject() {
         return new MossGrowingSlabBlock(createProperties(), () -> null) {
 
+            Block mossBlock;
+
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
+                mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (!(mossBlock instanceof SlabBlock)) {
                     mossBlock = Blocks.OAK_SLAB;
                     KubeJSTFC.error("The provided 'mossy' block: \"{}\" is not a slab block or does not exist!", mossyBlock);

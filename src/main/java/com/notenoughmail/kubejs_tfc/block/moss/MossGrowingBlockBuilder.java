@@ -39,9 +39,11 @@ public class MossGrowingBlockBuilder extends BlockBuilder {
     public Block createObject() {
         return new MossGrowingBlock(createProperties(), () -> null) {
 
+            Block mossBlock;
+
             @Override
             public void convertToMossy(Level worldIn, BlockPos pos, BlockState state, boolean needsWater) {
-                Block mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
+                mossBlock = RegistryInfo.BLOCK.getValue(mossyBlock);
                 if (mossBlock == null) {
                     mossBlock = Blocks.AIR;
                     KubeJSTFC.error("The provided 'mossy' block: \"{}\" does not exist!", mossyBlock);
