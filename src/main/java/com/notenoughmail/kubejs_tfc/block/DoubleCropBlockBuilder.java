@@ -156,7 +156,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 bs.simpleVariant(baseKey + (requiresStick ? ",stick=false" : ""), baseModel + i);
                 if (requiresStick) {
                     bs.simpleVariant(baseKey + ",stick=true,part=bottom", baseModel + i + "_stick");
-                    bs.simpleVariant(baseKey + "stick=true,part=top", "tfc:block/crop/stick");
+                    bs.simpleVariant(baseKey + ",stick=true,part=top", "tfc:block/crop/stick");
                 }
             } else {
                 bs.simpleVariant(baseKey + ",part=bottom", baseModel + i + "_bottom");

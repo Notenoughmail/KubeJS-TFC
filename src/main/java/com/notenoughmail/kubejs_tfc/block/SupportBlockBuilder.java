@@ -22,12 +22,14 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     public transient final HorizontalSupportBlockBuilder horizontal;
     public transient String connection;
+    public transient boolean defaultConnection;
 
     public SupportBlockBuilder(ResourceLocation i) {
         super(i);
         horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
-        connection = "";
+        connection = newID("block/", "_connection").toString();
+        defaultConnection = true;
         tag(TFCTags.Blocks.SUPPORT_BEAM.location());
         horizontal.textureAll(id.getNamespace() + ":block/" + id.getPath());
     }
@@ -35,6 +37,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     @Info("Sets the model used by this and the horizontal block for sideways connections")
     public SupportBlockBuilder connectionModel(String model) {
         this.connection = model;
+        defaultConnection = false;
         return this;
     }
 
@@ -58,12 +61,11 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     @Override
     protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String c = connection.isEmpty() ? newID("block/", "_connection").toString() : connection;
         bs.part("", ResourceUtils.plainModel(this));
-        bs.part("north=true", p -> p.model(c).y(270));
-        bs.part("east=true", c);
-        bs.part("south=true", p -> p.model(c).y(90));
-        bs.part("west=true", p -> p.model(c).y(180));
+        bs.part("north=true", p -> p.model(connection).y(270));
+        bs.part("east=true", connection);
+        bs.part("south=true", p -> p.model(connection).y(90));
+        bs.part("west=true", p -> p.model(connection).y(180));
     }
 
     @Override
@@ -79,10 +81,10 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("tfc:block/wood/support_vertical");
+            m.parent("tfc:block/wood/support/vertical");
             m.textures(textures);
         });
-        if (connection.isEmpty()) {
+        if (defaultConnection) {
             generator.blockModel(newID("", "_connection"), m -> {
                 m.parent("tfc:block/wood/support/connection");
                 m.textures(textures);

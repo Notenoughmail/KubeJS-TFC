@@ -24,3 +24,8 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+
+# Test files
+!run/kubejs/server_scripts/test
+!run/kubejs/startup_scripts/test
+!run/kubejs/client_scripts/test
