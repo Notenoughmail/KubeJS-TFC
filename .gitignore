@@ -20,12 +20,21 @@ build
 
 # other
 eclipse
-run
+run/config
+run/crash-reports
+run/defaultconfigs
+run/local
+run/logs
+run/mods
+run/patchouli_books
+run/resourcepacks
+run/saves
+run/screenshots
+run/**/*.json
+run/**/*.txt
+run/**/*.properties
+run/**/*.png
+run/**/hide.js
 
 # Files from Forge MDK
 forge*changelog.txt
-
-# Test files
-!run/kubejs/server_scripts/test
-!run/kubejs/startup_scripts/test
-!run/kubejs/client_scripts/test

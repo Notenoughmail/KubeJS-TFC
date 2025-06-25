@@ -56,10 +56,9 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
             m.parent("tfc:block/plant/stationary_bush_" + stage);
             m.texture(
                     "bush",
-                    (textures.has("#" + lc.ordinal() + "_" + stage) ?
-                            textures.get("#" + lc.ordinal() + "_" + stage) :
-                            newID("block/", "_" + lc.getSerializedName())
-                    ).toString()
+                    textures.has("#" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#" + lc.ordinal() + "_" + stage).getAsString() :
+                            newID("block/", "_" + lc.getSerializedName()).toString()
             );
         };
     }
