@@ -22,33 +22,39 @@ public class AnimalConfigBuilder {
         cache = null;
     }
 
-    @Info(value = "Sets the name of the animal in the config")
+    @Info("Sets the name of the animal in the config")
     public AnimalConfigBuilder animalName(String name) {
         this.name = name;
         return this;
     }
 
-    @Info(value = "Sets the number of days before the animal becomes an adult")
+    @Info("Sets the number of days before the animal becomes an adult")
     public AnimalConfigBuilder daysToAdult(int days) {
         adulthoodDays = days;
         return this;
     }
 
-    @Info(value = "Sets the number of uses the animal has")
+    @Info("Sets the number of uses the animal has")
     public AnimalConfigBuilder uses(int uses) {
         this.uses = uses;
         return this;
     }
 
-    @Info(value = "Sets the maximum familiarity, in the range [0, 1], that an adult mammal may be brought up to")
+    @Info("Sets the maximum familiarity, in the range [0, 1], that an adult mammal may be brought up to")
     public AnimalConfigBuilder maxFamiliarity(double max) {
         familiarityCap = max;
         return this;
     }
 
-    @Info(value = "If the mammal will eat rotten food")
+    @Deprecated(since = "1.3.1", forRemoval = true)
+    @Info("Deprecated, use the correctly spelled one")
     public AnimalConfigBuilder eastRottenFood(boolean eatsRottenFoods) {
-        eatsRotten = eatsRottenFoods;
+        return eatsRottenFood(eatsRottenFoods);
+    }
+
+    @Info("If the mammal will eat rotten food")
+    public AnimalConfigBuilder eatsRottenFood(boolean eatsRottenFood) {
+        eatsRotten = eatsRottenFood;
         return this;
     }
 
@@ -67,7 +73,6 @@ public class AnimalConfigBuilder {
         return (AnimalConfig) cache;
     }
 
-    @HideFromJS
     public static class Mammal extends AnimalConfigBuilder {
 
         protected int gestationDays, childCount;
@@ -78,13 +83,13 @@ public class AnimalConfigBuilder {
             childCount = 2;
         }
 
-        @Info(value = "Sets for how many days the mammal will gestate")
+        @Info("Sets the number of days the mammal will gestate for")
         public AnimalConfigBuilder gestationDays(int days) {
             gestationDays = days;
             return this;
         }
 
-        @Info(value = "Sets the number of children this mammal has")
+        @Info("Sets the number of children this mammal will have")
         public AnimalConfigBuilder childCount(int count) {
             childCount = count;
             return this;
@@ -119,11 +124,13 @@ public class AnimalConfigBuilder {
             produceFamiliarity = 0.2D;
         }
 
+        @Info("Sets the number of ticks until produce is ready")
         public Producing ticksTillProduce(int ticks) {
             produceTicks = ticks;
             return this;
         }
 
+        @Info("Sets the minimum familiarity, in the range [0, 1], needed to produce. Set above 1 to disable")
         public Producing produceFamiliarity(double familiarity) {
             produceFamiliarity = familiarity;
             return this;
@@ -156,6 +163,7 @@ public class AnimalConfigBuilder {
             hatchDays = 20;
         }
 
+        @Info("Sets the number of days until an egg hatches")
         public Oviparous hatchDays(int days) {
             hatchDays = days;
             return this;
@@ -191,11 +199,13 @@ public class AnimalConfigBuilder {
             produceFamiliarity = 0.2D;
         }
 
+        @Info("Sets the number of ticks until produce is ready")
         public ProducingMammal ticksTillProduce(int ticks) {
             produceTicks = ticks;
             return this;
         }
 
+        @Info("Sets the minimum familiarity, in the range [0, 1], needed to produce. Set above 1 to disable")
         public ProducingMammal produceFamiliarity(double familiarity) {
             produceFamiliarity = familiarity;
             return this;

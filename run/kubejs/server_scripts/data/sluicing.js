@@ -1,0 +1,35 @@
+TFCEvents.data(e => {
+    e.sluicing(
+        'minecraft:dirt',
+        'minecraft:egg'
+    );
+    e.sluicing(
+        'minecraft:stone',
+        'minecraft:cow',
+        'kubejs:sluicing'
+    );
+    e.sluicing(
+        [
+            'minecraft:cobblestone',
+            '#minecraft:flowers'
+        ],
+        'minecraft:empty',
+        'kubejs:sluicing_ingredient_print'
+    );
+
+    e.panning(
+        'minecraft:gravel',
+        'kubejs:gravel_panning',
+        [
+            'minecraft:cube'
+        ]
+    );
+    e.panning(
+        'minecraft:sand',
+        'kubejs:sand_panning',
+        [
+            'minecraft:cube'
+        ],
+        'kubejs:panning'
+    );
+})

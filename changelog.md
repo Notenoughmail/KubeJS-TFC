@@ -1,5 +1,6 @@
 ### 1.3.1 (W.I.P.)
 - Fix supports having broken connecting models by default
+- Fix mammals being unable to define their configs
 
 ### 1.3.0
 - Add commands to print TFC's level settings and chunk data

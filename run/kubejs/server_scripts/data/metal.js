@@ -1,0 +1,21 @@
+TFCEvents.data(e => {
+    e.metal(
+        'minecraft:lava',
+        1500,
+        0.5,
+        null,
+        null,
+        null,
+        5
+    );
+    e.metal(
+        'minecraft:milk',
+        2,
+        0.1,
+        null,
+        null,
+        null,
+        2,
+        'kubejs:metal'
+    );
+})

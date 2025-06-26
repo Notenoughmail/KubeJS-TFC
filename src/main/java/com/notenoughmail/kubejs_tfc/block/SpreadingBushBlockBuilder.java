@@ -47,10 +47,9 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
             m.parent("tfc:block/plant/berry_bush_" + stage); // The only difference from super
             m.texture(
                     "bush",
-                    (textures.has("#" + lc.ordinal() + "_" + stage) ?
-                            textures.get("#" + lc.ordinal() + "_" + stage) :
-                            newID("block/", "_" + lc.getSerializedName())
-                    ).toString()
+                    textures.has("#" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#" + lc.ordinal() + "_" + stage).getAsString() :
+                            newID("block/", "_" + lc.getSerializedName()).toString()
             );
         };
     }

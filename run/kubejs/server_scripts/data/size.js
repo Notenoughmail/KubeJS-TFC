@@ -1,0 +1,22 @@
+TFCEvents.data(e => {
+    e.itemSize(
+        'minecraft:gold_ingot',
+        'huge',
+        'very_heavy'
+    );
+    e.itemSize(
+        'minecraft:iron_ingot',
+        'tiny',
+        null,
+        'kubejs:size'
+    );
+    e.itemSize(
+        [
+            'minecraft:cobblestone',
+            '#minecraft:flowers'
+        ],
+        null,
+        'very_heavy',
+        'kubejs:size_print'
+    );
+})

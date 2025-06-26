@@ -32,19 +32,17 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
             m.parent("tfc:block/plant/berry_bush_side_" + stage);
             m.texture(
                     "cane",
-                    (textures.has("#cane_" + lc.ordinal() + "_" + stage) ?
-                            textures.get("#cane_" + lc.ordinal() + "_" + stage) :
-                            newID("block/", "_cane_" + lc.getSerializedName())
-                    ).toString()
+                    textures.has("#cane_" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#cane_" + lc.ordinal() + "_" + stage).getAsString() :
+                            newID("block/", "_cane_" + lc.getSerializedName()).toString()
             );
             m.texture(
                     "bush",
-                    (textures.has("#bush_" + lc.ordinal() + "_" + stage) ?
-                            textures.get("#bush_" + lc.ordinal() + "_" + stage) :
+                    textures.has("#bush_" + lc.ordinal() + "_" + stage) ?
+                            textures.get("#bush_" + lc.ordinal() + "_" + stage).getAsString() :
                             bush.textures.has("#" + lc.ordinal() + "_" + stage) ?
-                                    bush.textures.get("#" + lc.ordinal() + "_" + stage) :
-                                    newID("block/", "_bush_" + lc.getSerializedName())
-                    ).toString()
+                                    bush.textures.get("#" + lc.ordinal() + "_" + stage).getAsString() :
+                                    newID("block/", "_bush_" + lc.getSerializedName()).toString()
             );
         };
         noItem();
