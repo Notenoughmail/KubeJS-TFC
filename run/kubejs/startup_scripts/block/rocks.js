@@ -6,7 +6,7 @@ StartupEvents.registry('block', e => {
     e.create('rock_spike', 'tfc:rock_spike')
         .textureAll('tfc:block/alabaster/raw/pink');
     e.create('thin_spike', 'tfc:thin_spike')
-        .textureAll('tfc:block/alabaster/smooth/red');
+        .textureAll('tfc:block/alabaster/polished/red');
     e.create('raw', 'tfc:raw_rock')
         .stoneSoundType()
         .felsicIgneousExtrusive()
@@ -16,6 +16,7 @@ StartupEvents.registry('block', e => {
         .naturallySupported(true)
         .textureAll('tfc:block/rock/cracked_bricks/gabbro');
     e.create('ore', 'tfc:ground_cover')
+        .textureAll('minecraft:block/gold_block')
         .collision()
         .ore()
         .withPreexistingItem('minecraft:gold_nugget')

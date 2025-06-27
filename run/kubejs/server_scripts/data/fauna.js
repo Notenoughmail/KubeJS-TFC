@@ -1,3 +1,3 @@
 TFCEvents.data(e => {
-    e.fauna(c => {}, f => {}, 'kubejs:mammal');
+    e.fauna(c => {}, f => {}, 'kubejs:mammal_test');
 })

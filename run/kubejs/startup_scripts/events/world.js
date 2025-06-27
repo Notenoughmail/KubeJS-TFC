@@ -1,7 +1,7 @@
 TFCEvents.rockSettings(e => {
-    e.defineRock('kubejs:test', 'minecraft:sponge', 'minecraft:dirt', 'minecraft:gravel', 'minecraft:cobblestone', 'minecraft:red_sand', 'minecraft:sandstone', 'kubejs:rock_spike_test', null, null);
+    e.defineRock('kubejs:test', 'minecraft:light_gray_stained_glass', 'minecraft:dirt', 'minecraft:gravel', 'minecraft:cobblestone', 'minecraft:red_sand', 'minecraft:sandstone', 'kubejs:rock_spike', null, null);
     global.test = e.defineRock('kubejs:test2', 'minecraft:stone', 'minecraft:oak_planks', 'minecraft:spruce_planks', 'minecraft:acacia_planks', 'minecraft:red_sandstone', 'minecraft:wet_sponge', null, null, null);
-    global.netherRockSettings = e.defineRock('kubejs:netherrack', 'minecraft:netherrack', 'beneath:crackrack', 'minecraft:gravel', 'minecraft:basalt', 'minecraft:soul_sand', 'minecraft:soul_soil', 'beneath:haunted_spike', 'beneath:nether_pebble', 'beneath:blackstone_pebble');
+    global.netherRockSettings = e.defineRock('kubejs:netherrack', 'minecraft:netherrack', 'minecraft:bricks', 'minecraft:gravel', 'minecraft:basalt', 'minecraft:soul_sand', 'minecraft:soul_soil', 'kubejs:rock_spike', null, null);
 })
 
 TFCEvents.defaultWorldSettings(e => {

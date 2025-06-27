@@ -1,3 +1,5 @@
+// requires precision_prospecting
+
 StartupEvents.registry('item', e => {
     e.create('custom_pros_test', 'precpros:custom');
     e.create('pros_hammer_test', 'precpros:hammer');

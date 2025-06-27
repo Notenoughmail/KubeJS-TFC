@@ -1,7 +1,10 @@
 ServerEvents.tags('block', e => {
     e.add('tfc:any_spreading_bush', [
         'kubejs:plant/goldenleaf_bush'
-    ])
+    ]);
+    e.add('minecraft:replaceable', [
+        'kubejs:spring'
+    ]);
 })
 
 ServerEvents.tags('item', e => {

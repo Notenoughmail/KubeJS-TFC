@@ -1,3 +1,5 @@
+// requires firmalife
+
 function firmalife(f) {
     f.drying(
         'minecraft:dirt',
@@ -61,3 +63,9 @@ function firmalife(f) {
         decay_modifier: 0.9
     }).id('kubejs:bowl_pot_1');
 }
+
+ServerEvents.recipes(e => {
+    let { firmalife } = e.recipes;
+
+    firmalife(firmalife);
+})

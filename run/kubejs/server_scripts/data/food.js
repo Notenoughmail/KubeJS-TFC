@@ -7,5 +7,5 @@ TFCEvents.data(e => {
     e.foodItem('minecraft:apple', d => {
         d.fruit(4);
         d.hunger(5);
-    }. 'kubejs:food_item');
+    }, 'kubejs:food_item');
 })

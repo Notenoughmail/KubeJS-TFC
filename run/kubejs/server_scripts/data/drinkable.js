@@ -1,6 +1,6 @@
 TFCEvents.data(e => {
     e.drinkable('tfc:metal/steel', d => {
-        d.consumerChance(1);
+        d.consumeChance(1);
         d.thirst(3);
         d.intoxication(500000);
         d.effect('minecraft:night_vision');

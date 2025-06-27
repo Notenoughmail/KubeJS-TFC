@@ -13,7 +13,7 @@ StartupEvents.registry('block', e => {
                 m.texture('particle', 'tfc:block/mud/silt');
             }
         })
-        .texture('flowering', 2, 'minecraft:flowering_azalea_leaves');
+        .texture('flowering', 2, 'minecraft:block/flowering_azalea_leaves');
     e.create('spreading_bush', 'tfc:spreading_berry_bush')
         .productItem('minecraft:glow_berries')
         .maxHeight(7)
@@ -41,5 +41,5 @@ StartupEvents.registry('block', e => {
         .model('healthy', 0, m => {
             m.parent('minecraft:block/cobblestone');
         })
-        .texture('flowering', 2, 'minecraft:flowering_azalea_leaves');
+        .texture('flowering', 2, 'minecraft:block/flowering_azalea_leaves');
 })

@@ -1,3 +1,5 @@
+// requires beneath
+
 TFCEvents.data(e => {
     e.beneathLostPage(
         'minecraft:cobblestone',

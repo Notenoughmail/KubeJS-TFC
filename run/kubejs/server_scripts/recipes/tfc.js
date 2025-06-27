@@ -251,3 +251,9 @@ function tfc(tfc, mc) {
             )
     ).id('kubejs:isp_meal');
 }
+
+ServerEvents.recipes(e => {
+    let { tfc, minecraft } = e.recipes
+
+    tfc(tfc, minecraft);
+})

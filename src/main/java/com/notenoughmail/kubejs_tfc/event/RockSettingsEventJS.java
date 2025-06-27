@@ -3,11 +3,15 @@ package com.notenoughmail.kubejs_tfc.event;
 import dev.latvian.mods.kubejs.event.StartupEventJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
+import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
+import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
+import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 @Info("Define new rocks which can be referenced in a world preset json")
@@ -45,10 +49,30 @@ public class RockSettingsEventJS extends StartupEventJS {
                 cobble,
                 sand,
                 sandstone,
-                Optional.ofNullable(spike),
-                Optional.ofNullable(loose),
-                Optional.ofNullable(mossyLoose)
+                Optional.ofNullable(validate(spike, true)),
+                Optional.ofNullable(validate(loose, false)),
+                Optional.ofNullable(validate(mossyLoose, false))
         );
         return RockSettings.register(id, settings);
+    }
+
+    @Nullable
+    private static Block validate(@Nullable Block block, boolean spike) {
+        if (block != null) {
+            if (spike) {
+                if (block instanceof RockSpikeBlock || block.getStateDefinition().getProperties().contains(TFCBlockStateProperties.ROCK_SPIKE_PART)) {
+                    return block;
+                } else {
+                    ConsoleJS.STARTUP.error("Spike block %s was missing required property!".formatted(block));
+                }
+            } else {
+                if (block instanceof LooseRockBlock || block.getStateDefinition().getProperties().contains(TFCBlockStateProperties.COUNT_1_3)) {
+                    return block;
+                } else {
+                    ConsoleJS.STARTUP.error("Loose block %s was missing required property!".formatted(block));
+                }
+            }
+        }
+        return null;
     }
 }
