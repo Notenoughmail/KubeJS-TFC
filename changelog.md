@@ -1,4 +1,4 @@
-### 1.3.1 (W.I.P.)
+### 1.3.1
 - Fix supports having broken connecting models by default
 - Fix mammals being unable to define their configs
 - Add some flexibility to custom waterwheel texture paths

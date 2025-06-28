@@ -236,7 +236,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerClasses(ScriptType type, ClassFilter filter) {
-        // KubeJSTFC
+        // KubeJS TFC
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
         filter.deny(KubeJSTFCPlugin.class);
