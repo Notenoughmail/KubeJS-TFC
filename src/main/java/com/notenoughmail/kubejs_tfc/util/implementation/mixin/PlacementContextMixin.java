@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  * This ensures the wrapper generator is used for feature placement modifiers which rely on {@link net.dries007.tfc.world.ChunkGeneratorExtension ChunkGeneratorExtensions}.
  */
 @Mixin(PlacementContext.class)
-public class PlacementContextMixin {
+public abstract class PlacementContextMixin {
 
     @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true)
     private static ChunkGenerator kubejs_tfc$UseWrapperGen(ChunkGenerator value) {

@@ -3,6 +3,7 @@
 - Fix mammals being unable to define their configs
 - Add some flexibility to custom waterwheel texture paths
 - Add validation to spike and loose blocks of custom defined `RockSettings`
+- Fix noise settings of wrapped chunk generators not being used in production environments
 
 ### 1.3.0
 - Add commands to print TFC's level settings and chunk data

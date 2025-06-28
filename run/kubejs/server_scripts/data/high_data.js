@@ -222,7 +222,7 @@ ServerEvents.highPriorityData(e => {
                     min_temperature: 50
                 }
             },
-            structure: [
+            structures: [
                 {
                     structure: 'minecraft:igloo',
                     weight: 1

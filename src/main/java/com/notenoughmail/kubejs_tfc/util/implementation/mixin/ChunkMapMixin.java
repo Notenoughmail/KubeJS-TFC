@@ -28,5 +28,4 @@ public abstract class ChunkMapMixin {
         }
         return original.call();
     }
-
 }

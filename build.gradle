@@ -151,10 +151,11 @@ dependencies {
     compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}+${minecraft_version}:api")
     runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}+${minecraft_version}")
 
+    // This *must* be before mixin's annotation processor (for version lower than 0.2.0-rc.3, which we are due to Kube and will not jij an upgraded version out of principle) as refmaps will be incomplete otherwise
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
     if (System.getProperty("idea.sync.active") != "true") {
         annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
     }
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
 }
 
 tasks.named('processResources', ProcessResources).configure {
