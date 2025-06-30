@@ -3,7 +3,9 @@ package com.notenoughmail.kubejs_tfc.util;
 import com.eerussianguy.beneath.misc.LostPage;
 import com.eerussianguy.firmalife.common.blocks.greenhouse.PlanterType;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
@@ -24,6 +26,7 @@ import net.dries007.tfc.common.capabilities.size.Weight;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,6 +44,7 @@ import java.util.HexFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -64,6 +68,36 @@ public class ResourceUtils {
 
     public static ResourceLocation dataID(String namespace, String path, String mod, String category) {
         return new ResourceLocation(namespace, mod + "/" + category + "/" + path);
+    }
+
+    public static <T> void nullable(JsonObject obj, String key, @Nullable T t, Function<T, JsonElement> serializer) {
+        if (t != null) {
+            obj.add(key, serializer.apply(t));
+        }
+    }
+
+    public static <T> void nullableStr(JsonObject obj, String key, @Nullable T t, Function<T, String> func) {
+        nullable(obj, key, t, func.andThen(JsonPrimitive::new));
+    }
+
+    public static void nullable(JsonObject obj, String key, @Nullable String value) {
+        nullable(obj, key, value, JsonPrimitive::new);
+    }
+
+    public static <T extends Number> void nullable(JsonObject obj, String key, @Nullable T number) {
+        nullable(obj, key, number, JsonPrimitive::new);
+    }
+
+    public static void nullable(JsonObject obj, String key, @Nullable Boolean bool) {
+        nullable(obj, key, bool, JsonPrimitive::new);
+    }
+
+    public static <T extends JsonElement> void nullable(JsonObject obj, String key, @Nullable T t) {
+        nullable(obj, key, t, Function.identity());
+    }
+
+    public static <T extends Enum<T> & StringRepresentable> void nullable(JsonObject obj, String key, @Nullable T t) {
+        nullableStr(obj, key, t, StringRepresentable::getSerializedName);
     }
 
     public static String simplifyObject(Object object) {
@@ -106,50 +140,30 @@ public class ResourceUtils {
     }
 
     public static void handleResistances(JsonObject json, @Nullable Integer piercing, @Nullable Integer slashing, @Nullable Integer crushing) {
-        if (piercing != null) {
-            json.addProperty("piercing", piercing);
-        }
-        if (slashing != null) {
-            json.addProperty("slashing", slashing);
-        }
-        if (crushing != null) {
-            json.addProperty("crushing", crushing);
-        }
+        nullable(json, "piercing", piercing);
+        nullable(json, "slashing", slashing);
+        nullable(json, "crushing", crushing);
     }
 
     public static void handleFertilizers(JsonObject json, @Nullable Number nitrogen, @Nullable Number phosphorus, @Nullable Number potassium) {
-        if (nitrogen != null) {
-            json.addProperty("nitrogen", nitrogen);
-        }
-        if (phosphorus != null) {
-            json.addProperty("phosphorus", phosphorus);
-        }
-        if (potassium != null) {
-            json.addProperty("potassium", potassium);
-        }
+        nullable(json, "nitrogen", nitrogen);
+        nullable(json, "phosphorus", phosphorus);
+        nullable(json, "potassium", potassium);
     }
 
     public static JsonObject buildHeat(Ingredient ingredient, float heatCap, @Nullable Float forgeTemp, @Nullable Float weldTemp) {
         return buildJson(json -> {
             json.add("ingredient", ingredient.toJson());
             json.addProperty("heat_capacity", heatCap);
-            if (forgeTemp != null) {
-                json.addProperty("forging_temperature", forgeTemp);
-            }
-            if (weldTemp != null) {
-                json.addProperty("welding_temperature", weldTemp);
-            }
+            nullable(json, "forging_temperature", forgeTemp);
+            nullable(json, "welding_temperature", weldTemp);
         });
     }
 
     // Should have been this way from the beginning
     public static void handleItemSize(JsonObject json, @Nullable Size size, @Nullable Weight weight) {
-        if (size != null) {
-            json.addProperty("size", size.name);
-        }
-        if (weight != null) {
-            json.addProperty("weight", weight.name);
-        }
+        nullableStr(json, "size", size, s -> s.name);
+        nullableStr(json, "weight", weight, w -> w.name);
     }
 
     public static JsonObject knappingType(Ingredient ingredient, int ingredientCount, int amountToConsume, ResourceLocation clickSound, boolean consumeAfterComplete, boolean useDisabledTexture, boolean spawnsParticles, ItemStack jeiIconItem) {
@@ -173,15 +187,9 @@ public class ResourceUtils {
             json.addProperty("fluid", RegistryInfo.FLUID.getId(fluid).toString());
             json.addProperty("melt_temperature", meltTemp);
             json.addProperty("specific_heat_capacity", heatCap);
-            if (ingot != null) {
-                json.add("ingots", ingot.toJson());
-            }
-            if (doubleIngot != null) {
-                json.add("double_ingots", doubleIngot.toJson());
-            }
-            if (sheet != null) {
-                json.add("sheets", sheet.toJson());
-            }
+            nullable(json, "ingots", ingot, Ingredient::toJson);
+            nullable(json, "double_ingots", doubleIngot, Ingredient::toJson);
+            nullable(json, "sheets", sheet, Ingredient::toJson);
         });
     }
 
@@ -199,25 +207,13 @@ public class ResourceUtils {
     ) {
         return buildJson(json -> {
             json.add("ingredient", ingredient.toJson());
-            if (planterType != null) {
-                json.addProperty("planter", planterType.name());
-            }
-            if (tier != null) {
-                json.addProperty("tier", tier);
-            }
-            if (stages != null) {
-                json.addProperty("stages", stages);
-            }
-            if (extraSeedChance != null) {
-                json.addProperty("extra_seed_chance", extraSeedChance);
-            }
-            if (seed != null) {
-                json.add("seed", IngredientHelpers.itemStackToJson(seed));
-            }
+            nullableStr(json, "planter", planterType, Enum::name);
+            nullable(json, "tier", tier);
+            nullable(json, "stages", stages);
+            nullable(json, "extra_seed_chance", extraSeedChance);
+            nullable(json, "seed", seed, IngredientHelpers::itemStackToJson);
             json.add("crop", IngredientHelpers.itemStackToJson(crop));
-            if (nutrient != null) {
-                json.addProperty("nutrient", nutrient.name());
-            }
+            nullableStr(json, "nutrient", nutrient, Enum::name);
             final JsonArray textureArray = new JsonArray(textures.length);
             for (String s : textures) {
                 textureArray.add(s);
@@ -235,21 +231,11 @@ public class ResourceUtils {
     }
 
     public static void handleNetherFertilizers(JsonObject json, @Nullable Float death, @Nullable Float destruction, @Nullable Float decay, @Nullable Float sorrow, @Nullable Float flame) {
-        if (death != null) {
-            json.addProperty("death", death);
-        }
-        if (destruction != null) {
-            json.addProperty("destruction", destruction);
-        }
-        if (decay != null) {
-            json.addProperty("decay", decay);
-        }
-        if (sorrow != null) {
-            json.addProperty("sorrow", sorrow);
-        }
-        if (flame != null) {
-            json.addProperty("flame", flame);
-        }
+        nullable(json, "death", death);
+        nullable(json, "destruction", destruction);
+        nullable(json, "decay", death);
+        nullable(json, "sorrow", sorrow);
+        nullable(json, "flame", flame);
     }
 
     public static JsonObject lostPage(Ingredient cost, Item reward, int[] costs, int[] rewards, LostPage.Punishment[] punishments, @Nullable String langKey) {
@@ -269,9 +255,7 @@ public class ResourceUtils {
                 punishmentsArray.add(punishment.getSerializedName());
             }
             json.add("punishments", punishmentsArray);
-            if (langKey != null) {
-                json.addProperty("ingredient_translation", langKey);
-            }
+            nullable(json, "ingredient_translation", langKey);
         });
     }
 

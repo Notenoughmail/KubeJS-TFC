@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class BuildVeinProperties {
 
     // Common values
-    private final List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks;
+    private final WorldGenUtils.BlockToWeightedBlockStateMapEntry[] blocks;
     @Nullable
     private JsonObject indicator;
     private final int rarity;
@@ -33,7 +33,7 @@ public abstract class BuildVeinProperties {
     @Nullable
     private Boolean nearLava;
 
-    public BuildVeinProperties(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName) {
+    public BuildVeinProperties(WorldGenUtils.BlockToWeightedBlockStateMapEntry[] blocks, int rarity, float density, int minY, int maxY, String randomName) {
         this.blocks = blocks;
         this.rarity = rarity;
         this.density = density;
@@ -94,29 +94,17 @@ public abstract class BuildVeinProperties {
 
     protected JsonObject baseConfig() {
         return ResourceUtils.buildJson(config -> {
-            final JsonArray blocksArray = new JsonArray(blocks.size());
-            blocks.forEach(entry -> blocksArray.add(entry.toJson()));
-            config.add("blocks", blocksArray);
-            if (indicator != null) {
-                config.add("indicator", indicator);
-            }
+            WorldGenUtils.BlockToWeightedBlockStateMapEntry.toJson(config, "blocks", blocks);
+            ResourceUtils.nullable(config, "indicator", indicator);
             config.addProperty("rarity", rarity);
             config.addProperty("density", density);
             config.addProperty("min_y", minY);
             config.addProperty("max_y", maxY);
-            if (project != null) {
-                config.addProperty("project", project);
-            }
-            if (projectOffset != null) {
-                config.addProperty("project_offset", projectOffset);
-            }
+            ResourceUtils.nullable(config, "project", project);
+            ResourceUtils.nullable(config, "project_offset", projectOffset);
             config.addProperty("random_name", random_name);
-            if (biomes != null) {
-                config.addProperty("biomes", biomes);
-            }
-            if (nearLava != null) {
-                config.addProperty("near_lava", nearLava);
-            }
+            ResourceUtils.nullable(config, "biomes", biomes);
+            ResourceUtils.nullable(config, "near_lava", nearLava);
         });
     }
 
@@ -126,7 +114,7 @@ public abstract class BuildVeinProperties {
 
         private final int size;
 
-        public Cluster(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size) {
+        public Cluster(WorldGenUtils.BlockToWeightedBlockStateMapEntry[] blocks, int rarity, float density, int minY, int maxY, String randomName, int size) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.size = size;
         }
@@ -152,7 +140,7 @@ public abstract class BuildVeinProperties {
         private final int maxSlant;
         private final float sign;
 
-        public Pipe(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign) {
+        public Pipe(WorldGenUtils.BlockToWeightedBlockStateMapEntry[] blocks, int rarity, float density, int minY, int maxY, String randomName, int height, int radius, int minSkew, int maxSkew, int minSlant, int maxSlant, float sign) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.height = height;
             this.radius = radius;
@@ -185,7 +173,7 @@ public abstract class BuildVeinProperties {
         private final int size;
         private final int height;
 
-        public Disc(List<WorldGenUtils.BlockToWeightedBlockStateMapEntry> blocks, int rarity, float density, int minY, int maxY, String randomName, int size, int height) {
+        public Disc(WorldGenUtils.BlockToWeightedBlockStateMapEntry[] blocks, int rarity, float density, int minY, int maxY, String randomName, int size, int height) {
             super(blocks, rarity, density, minY, maxY, randomName);
             this.size = size;
             this.height = height;

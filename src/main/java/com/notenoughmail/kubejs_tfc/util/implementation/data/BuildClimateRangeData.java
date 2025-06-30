@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.typings.Info;
 
 import javax.annotation.Nullable;
@@ -59,24 +60,12 @@ public class BuildClimateRangeData {
 
     public JsonObject toJson() {
         var json = new JsonObject();
-        if (minHydro != null) {
-            json.addProperty("min_hydration", minHydro);
-        }
-        if (maxHydro != null) {
-            json.addProperty("max_hydration", maxHydro);
-        }
-        if (hydroWiggle != null) {
-            json.addProperty("hydration_wiggle_range", hydroWiggle);
-        }
-        if (minTemp != null) {
-            json.addProperty("min_temperature", minTemp);
-        }
-        if (maxTemp != null) {
-            json.addProperty("max_temperature", maxTemp);
-        }
-        if (tempWiggle != null) {
-            json.addProperty("temperature_wiggle_range", tempWiggle);
-        }
+        ResourceUtils.nullable(json, "min_hydration", minHydro);
+        ResourceUtils.nullable(json, "max_hydration", maxHydro);
+        ResourceUtils.nullable(json, "hydration_wiggle_range", hydroWiggle);
+        ResourceUtils.nullable(json, "min_temperature", minTemp);
+        ResourceUtils.nullable(json, "max_temperature", maxTemp);
+        ResourceUtils.nullable(json, "temperature_wiggle_range", tempWiggle);
         return json;
     }
 }

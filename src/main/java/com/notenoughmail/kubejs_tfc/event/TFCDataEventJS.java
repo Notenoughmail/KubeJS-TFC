@@ -422,9 +422,7 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     })
     @Generics({PlacedFeatureProperties.Climate.class, BuildFaunaData.class})
     public void fauna(Consumer<PlacedFeatureProperties.Climate> climate, Consumer<BuildFaunaData> fauna, ResourceLocation name) {
-        var climateObj = new PlacedFeatureProperties.Climate();
-        climate.accept(climateObj);
-        var faunaObj = new BuildFaunaData(climateObj);
+        var faunaObj = new BuildFaunaData(PlacedFeatureProperties.buildClimate(climate));
         fauna.accept(faunaObj);
         addJson(ResourceUtils.dataID(name, "tfc", "fauna"), faunaObj.toJson());
     }

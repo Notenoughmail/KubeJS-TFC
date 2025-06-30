@@ -17,6 +17,10 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class PlacedFeatureProperties {
 
+    public static Climate buildClimate(Consumer<Climate> c) {
+        return Util.make(new Climate(), c);
+    }
+
     private final String feature;
     private final List<JsonObject> placements = new ArrayList<>();
 
@@ -46,7 +50,7 @@ public class PlacedFeatureProperties {
     @Info(value = "Adds a 'tfc:climate' placement modifier", params = @Param(name = "climate", value = "The climate placement properties"))
     @Generics(Climate.class)
     public PlacedFeatureProperties climate(Consumer<Climate> climate) {
-        return jsonPlacement(Util.make(new Climate(), climate).toJson());
+        return jsonPlacement(buildClimate(climate).toJson());
     }
 
     @Info(value = "Adds a 'tfc:flat_enough' placement modifier", params = @Param(name = "flatness", value = "The flatness placement properties"))
