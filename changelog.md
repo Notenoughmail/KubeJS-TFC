@@ -1,6 +1,10 @@
 ### 1.3.2 (W.I.P.)
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties
 - Add fissure, forest, forest entry, overlay tree, random tree, stacked tree, and krummholz worldgen builders
+- Add direct wrapper for TFC's `ItemStackProvider`
+- Fix double crops not having yield multipliers in their loot tables
+- Add convenience method for setting the dead model of torches
+- Add sapling block builder
 
 ### 1.3.1
 - Fix supports having broken connecting models by default

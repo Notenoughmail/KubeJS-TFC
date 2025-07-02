@@ -19,4 +19,21 @@ StartupEvents.registry('block', e => {
             })
         })
         .textureAll('tfc:block/metal/block/copper');
+
+    event.create('calendar_example')
+        .blockEntity(be => {
+            be.attach('tfc:calendar', {
+                defaultDuration: 500
+            })
+            be.serverTick(be => {
+                let cal = be.attachments[0];
+                if (cal.calendarTick != -1 && cal.hasDurationElapsed()) {
+                    be.level.playSound(null, be.x, be.y, be.z, 'minecraft:block.anvil.place', 'blocks', 1, 1);
+                    cal.reset();
+                }
+            })
+        })
+        .rightClick(event => {
+            event.block.enttiy.attachments[0].startTiming();
+        });
 })

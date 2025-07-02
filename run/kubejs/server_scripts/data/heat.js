@@ -6,7 +6,7 @@ TFCEvents.data(e => {
         54
     );
     e.itemHeat(
-        'minecraft:stone',
+        'minecraft:cobblestone',
         0.2,
         500,
         null,

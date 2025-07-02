@@ -1,4 +1,6 @@
-function tfc(tfc, mc) {
+ServerEvents.recipes(e => {
+    let { tfc, minecraft } = e.recipes
+
     tfc.alloy('tfc:zinc', [
         TFC.alloyPart('tfc:copper', 0.2, 0.3),
         TFC.alloyPart('tfc:cast_iron', 0.5, 0.7),
@@ -13,7 +15,7 @@ function tfc(tfc, mc) {
 
     tfc.anvil(
         'minecraft:iron_block',
-        'tfc:metal/double_ingot.wrought_iron',
+        'tfc:metal/double_ingot/wrought_iron',
         [
             'hit_not_last',
             'upset_any'
@@ -28,7 +30,7 @@ function tfc(tfc, mc) {
 
     tfc.barrel_instant()
         .outputItem('minecraft:dirt')
-        .inputs('3x minecraft:oak_log')
+        .inputs('3x minecraft:oak_log', Fluid.of('minecraft:lava', 50))
         .id('kubejs:instant_barrel');
 
     tfc.barrel_sealed(5000)
@@ -200,17 +202,17 @@ function tfc(tfc, mc) {
         .damageIngredient('#tfc:saws', 10)
         .id('kubejs:ingredient_action_shapeless');
 
-    tfc.damage_inputs_shaped_crafting(mc.crafting_shaped('minecraft:dirt', [
+    tfc.damage_inputs_shaped_crafting(minecraft.crafting_shaped('minecraft:dirt', [
         'MMN'
     ], {
         M: 'minecraft:stone',
         N: '#tfc:knives'
     })).id('kubejs:dmg_shaped');
 
-    tfc.damage_inputs_shapeless_crafting(mc.crafting_shapeless('minecraft:stone', ['#minecraft:flowers', '#minecraft:axes']))
+    tfc.damage_inputs_shapeless_crafting(minecraft.crafting_shapeless('minecraft:stone', ['#minecraft:flowers', '#minecraft:axes']))
         .id('kubejs:dmg_shapeless');
 
-    tfc.extra_products_shaped_crafting('3x minecraft:red_stained_glass', mc.crafting_shaped('minecraft:dirt', [
+    tfc.extra_products_shaped_crafting('3x minecraft:red_stained_glass', minecraft.crafting_shaped('minecraft:dirt', [
         'GHJ'
     ], {
         G: '#minecraft:flowers',
@@ -218,7 +220,7 @@ function tfc(tfc, mc) {
         J: 'tfc:rock/raw/diorite'
     })).id('kubejs:extra_shaped');
 
-    tfc.extra_products_shapeless_crafting('4x minecraft:green_stained_glass_pane', mc.crafting_shapeless('minecraft:red_stained_glass', ['minecraft:dirt', '#minecraft:flowers']))
+    tfc.extra_products_shapeless_crafting('4x minecraft:green_stained_glass_pane', minecraft.crafting_shapeless('minecraft:red_stained_glass', ['minecraft:dirt', '#minecraft:flowers']))
         .id('kubejs:extra_shapeless');
 
     tfc.no_remainder_shaped_crafting(minecraft.crafting_shaped('3x minecraft:ice', [
@@ -250,10 +252,8 @@ function tfc(tfc, mc) {
                 'tfc:food/cod'
             )
     ).id('kubejs:isp_meal');
-}
 
-ServerEvents.recipes(e => {
-    let { tfc, minecraft } = e.recipes
-
-    tfc(tfc, minecraft);
+    if (e.addedRecipes.stream().filter(r => r.getId().startsWith('kubejs:')).toList().isEmpty()) {
+        console.error('No added recipes, somehow')
+    }
 })

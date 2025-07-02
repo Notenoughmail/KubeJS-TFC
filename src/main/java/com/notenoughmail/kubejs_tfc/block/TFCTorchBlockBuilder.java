@@ -106,6 +106,15 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         return this;
     }
 
+    @Info("Sets the model for the dead block")
+    public TFCTorchBlockBuilder deadModel(String model) {
+        if (deadTorchItem != null) {
+            deadTorchItem.parentModel(model);
+        }
+        dead.model(model);
+        return this;
+    }
+
     @Info("Sets the time, in ticks, the torch will burn for")
     public TFCTorchBlockBuilder decayLength(int length) {
         decayLength = () -> length;

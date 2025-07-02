@@ -5,10 +5,29 @@ ServerEvents.tags('block', e => {
     e.add('minecraft:replaceable', [
         'kubejs:spring'
     ]);
+    e.add('tfc:can_collapse', [
+        'minecraft:coarse_dirt'
+    ]);
+    e.add('tfc:can_landslide', [
+        'minecraft:stone'
+    ]);
 })
 
 ServerEvents.tags('item', e => {
     e.add('tfc:powders', 'minecraft:dirt');
+})
+
+ServerEvents.tags('fluid', e => {
+    e.add('tfc:usable_in_pot', [
+        'minecraft:lava'
+    ]);
+    e.add('tfc:usable_in_barrel', [
+        'minecraft:lava',
+        'minecraft:flowing_lava'
+    ]);
+    e.add('tfc:usable_in_ingot_mold', [
+        'minecraft:lava'
+    ]);
 })
 
 ServerEvents.tags('worldgen/biome', e => {

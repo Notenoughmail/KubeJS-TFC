@@ -50,6 +50,7 @@ import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
@@ -132,6 +133,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:encased_axle", EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:log", LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
         RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:sapling", TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
@@ -231,6 +233,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
+        typeWrappers.registerSimple(ItemStackProvider.class, o -> ItemStackProviderJS.of(o).asCanonClass());
         typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
     }
 

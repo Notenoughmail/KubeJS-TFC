@@ -13,9 +13,12 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
+import net.dries007.tfc.util.loot.CropYieldProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +97,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                             j.addProperty("age", Integer.toString(stages + doubleStages - 1));
                             j.addProperty("part", "bottom");
-                        }));
+                        }))
+                        .count(new CropYieldProvider(
+                                ConstantValue.exactly(0.0F),
+                                UniformGenerator.between(6, 10)
+                        ));
             });
             if (requiresStick) {
                 b.addPool(p -> {
