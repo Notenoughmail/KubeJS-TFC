@@ -108,7 +108,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     }
 
     @Info("Sets the crop's 'product' item to be an existing item")
-    public AbstractCropBlockBuilder productItem(ResourceLocation productItem) {
+    public AbstractCropBlockBuilder existingProductItem(ResourceLocation productItem) {
         if (hasProduct()) {
             this.productItem = productItem;
         }

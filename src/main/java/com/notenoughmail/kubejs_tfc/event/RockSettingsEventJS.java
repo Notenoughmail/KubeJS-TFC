@@ -10,8 +10,8 @@ import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 @Info("Define new rocks which can be referenced in a world preset json")

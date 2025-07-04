@@ -6,12 +6,11 @@ import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;
-import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
 @SuppressWarnings("unused")
-public class SealedBarrelRecipeJS extends RecipeJS {
+public class SealedBarrelRecipeJS extends BarrelRecipeJS {
 
     @Override
     public JsonElement writeInputItem(InputItem value) {

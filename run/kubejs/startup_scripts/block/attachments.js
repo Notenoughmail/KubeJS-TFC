@@ -20,7 +20,7 @@ StartupEvents.registry('block', e => {
         })
         .textureAll('tfc:block/metal/block/copper');
 
-    event.create('calendar_example')
+    e.create('calendar_example')
         .blockEntity(be => {
             be.attach('tfc:calendar', {
                 defaultDuration: 500
@@ -34,6 +34,6 @@ StartupEvents.registry('block', e => {
             })
         })
         .rightClick(event => {
-            event.block.enttiy.attachments[0].startTiming();
+            event.block.entity.attachments[0].startTiming();
         });
 })

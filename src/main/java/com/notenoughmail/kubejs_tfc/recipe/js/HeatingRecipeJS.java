@@ -4,6 +4,11 @@ import com.notenoughmail.kubejs_tfc.recipe.schema.HeatingSchema;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
+import net.dries007.tfc.common.recipes.HeatingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class HeatingRecipeJS extends TFCProviderRecipeJS {
@@ -37,5 +42,17 @@ public class HeatingRecipeJS extends TFCProviderRecipeJS {
     public HeatingRecipeJS chance(float chance) {
         setValue(HeatingSchema.CHANCE, chance);
         return this;
+    }
+
+    @Override
+    public List<Ingredient> getOriginalRecipeIngredients() {
+        if (getOriginalRecipe() instanceof HeatingRecipe h) {
+            return List.of(h.getIngredient());
+        } else if (getOriginalRecipe() == null) {
+            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            return List.of();
+        } else {
+            throw new IllegalStateException("Original recipe was not a heating recipe?");
+        }
     }
 }

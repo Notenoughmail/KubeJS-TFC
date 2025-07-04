@@ -10,7 +10,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 
 @SuppressWarnings("unused")
-public class InstantBarrelRecipeJS extends TFCProviderRecipeJS {
+public class InstantBarrelRecipeJS extends BarrelRecipeJS {
 
     @Override
     public JsonElement writeInputItem(InputItem value) {

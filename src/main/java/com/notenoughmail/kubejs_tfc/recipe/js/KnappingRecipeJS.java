@@ -3,6 +3,11 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 import com.notenoughmail.kubejs_tfc.recipe.schema.KnappingSchema;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
+import net.dries007.tfc.common.recipes.KnappingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class KnappingRecipeJS extends TFCRecipeJS {
@@ -17,5 +22,17 @@ public class KnappingRecipeJS extends TFCRecipeJS {
     public KnappingRecipeJS outsideSlotRequired(boolean required) {
         setValue(KnappingSchema.OUTSIDE_REQUIRED, required);
         return this;
+    }
+
+    @Override
+    public List<Ingredient> getOriginalRecipeIngredients() {
+        if (getOriginalRecipe() instanceof KnappingRecipe k) {
+            return k.getIngredient() == null ? List.of() : List.of(k.getIngredient());
+        } else if (getOriginalRecipe() == null) {
+            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            return List.of();
+        } else {
+            throw new IllegalStateException("Original recipe was not a knapping recipe?");
+        }
     }
 }

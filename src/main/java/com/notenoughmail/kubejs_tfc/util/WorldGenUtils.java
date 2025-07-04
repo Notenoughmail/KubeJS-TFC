@@ -6,13 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import dev.latvian.mods.kubejs.typings.Generics;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.minecraft.util.valueproviders.IntProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Function;
 
 /**

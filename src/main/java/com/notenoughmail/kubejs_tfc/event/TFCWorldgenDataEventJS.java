@@ -24,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.*;
+import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.blockStateToLenient;
+import static com.notenoughmail.kubejs_tfc.util.WorldGenUtils.weightedBlockState;
 
 /**
  * TODO: [Future] Move to WorldJS compat | more of TFC's types

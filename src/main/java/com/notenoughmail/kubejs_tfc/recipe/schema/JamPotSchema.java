@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
-import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
+import com.notenoughmail.kubejs_tfc.recipe.js.PotRecipeJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.item.OutputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
@@ -20,5 +20,5 @@ public interface JamPotSchema {
     RecipeKey<OutputItem> RESULT = ItemComponents.OUTPUT.key("result");
     RecipeKey<String> TEXTURE = StringComponent.ID.key("texture");
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RESULT, INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE, TEXTURE);
+    RecipeSchema SCHEMA = new RecipeSchema(PotRecipeJS.class, PotRecipeJS::new, RESULT, INGREDIENTS, FLUID_INGREDIENT, DURATION, TEMPERATURE, TEXTURE);
 }

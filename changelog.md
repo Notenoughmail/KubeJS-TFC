@@ -5,6 +5,8 @@
 - Fix double crops not having yield multipliers in their loot tables
 - Add convenience method for setting the dead model of torches
 - Add sapling block builder
+- Rename `#productItem(ResourceLocation)` to `#existingProductItem(ResourceLocation)` in crop block builders to prevent Rhino throwing a fit
+- Allow `RecipeJS#getOriginalRecipeIngredients()` to work with TFC recipe types
 
 ### 1.3.1
 - Fix supports having broken connecting models by default
