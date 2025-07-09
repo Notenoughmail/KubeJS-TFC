@@ -26,4 +26,8 @@ TFCEvents.data(e => {
         c.minTemperature(5);
         c.temperatureWiggle(0.4);
     }, 'kubejs:stationary_bush');
+
+    e.climateRange(c => {}, 'kubejs:crop_2');
+    e.climateRange(c => {}, 'kubejs:crop_4');
+    e.climateRange(c => {}, 'kubejs:crop_8');
 })

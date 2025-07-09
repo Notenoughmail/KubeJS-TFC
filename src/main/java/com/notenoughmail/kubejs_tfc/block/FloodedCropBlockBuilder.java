@@ -14,6 +14,6 @@ public class FloodedCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.floodedCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange);
+        return CropUtils.floodedCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, growthMod, expiryMod);
     }
 }

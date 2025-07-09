@@ -14,6 +14,6 @@ public class DefaultCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.defaultCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange);
+        return CropUtils.defaultCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, growthMod, expiryMod);
     }
 }

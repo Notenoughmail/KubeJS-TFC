@@ -33,7 +33,38 @@ StartupEvents.registry('block', e => {
                 }
             })
         })
+        .textureAll('minecraft:block/gold_block')
         .rightClick(event => {
             event.block.entity.attachments[0].startTiming();
         });
+
+    e.create('sealable_example')
+        .blockEntity(be => {
+            be.attach('tfc:sealable_inventory', {
+                width: 9,
+                height: 1,
+                trait: 'kubejs:sealed'
+            });
+        })
+        .rightClick(event => {
+            let { player } = event;
+            let be = event.block.entity;
+            if (!player.shiftKeyDown) {
+                player.openInventoryGUI(be.inventory, event.block.blockState.block.name);
+            } else {
+                be.inventory.toggleSeal();
+            }
+        })
+        .textureAll('minecraft:block/iron_block');
+    e.create('preserve_example')
+        .blockEntity(be => {
+            be.attach('tfc:sealable_inventory', {
+                width: 9,
+                height: 1,
+                requiresSeal: false,
+                trait: 'kubejs:sealed'
+            });
+            be.rightClickOpensInventory();
+        })
+        .textureAll('tfc:block/metal/block/wrought_iron');
 })

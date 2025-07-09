@@ -29,9 +29,7 @@ public class HeatAttachment implements TickableAttachment, IHeatBlock {
                     .add("providesHeat", TypeDescJS.BOOLEAN, true),
             map -> {
                 final TempCallback temp = getTemp(map);
-                @Nullable
-                final Object p = map.get("providesHeat");
-                final boolean provide = p != null && (Boolean) JavaAdapter.convertResult(ScriptType.STARTUP.manager.get().context, p, Boolean.class);
+                final boolean provide = TickableAttachment.getBool("providesHeat", map, false);
                 return entity -> new HeatAttachment(temp, provide, entity);
             }
     );

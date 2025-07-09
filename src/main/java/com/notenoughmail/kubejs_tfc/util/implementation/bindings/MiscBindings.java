@@ -132,7 +132,7 @@ public enum MiscBindings {
         }
     }
 
-    @Info(value = "Removes the given food trait to the stack", params = {
+    @Info(value = "Removes the given food trait from the stack", params = {
             @Param(name = "stack", value = "The stack to take the trait from. **Important**: This stack *will* be modified"),
             @Param(name = "trait", value = "the id of the trait to be removed")
     })

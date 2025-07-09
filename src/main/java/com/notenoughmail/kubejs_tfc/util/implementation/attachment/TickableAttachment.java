@@ -4,12 +4,20 @@ import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachment;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityInfo;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJSTicker;
+import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.rhino.JavaAdapter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public interface TickableAttachment extends BlockEntityAttachment {
+
+    static boolean getBool(String name, Map<String, Object> map, boolean defaultVal)  {
+        return map.containsKey(name) ? (Boolean) JavaAdapter.convertResult(ScriptType.STARTUP.manager.get().context, map.get(name), Boolean.class) : defaultVal;
+    }
 
     default void wrapScriptTicker(BlockEntityJS entity, boolean server) {
         final BlockEntityInfo info = entity.info;

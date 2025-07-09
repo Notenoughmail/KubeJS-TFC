@@ -38,7 +38,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.spreadingCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, fruitBlock);
+        return CropUtils.spreadingCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, fruitBlock, growthMod, expiryMod);
     }
 
     @Override

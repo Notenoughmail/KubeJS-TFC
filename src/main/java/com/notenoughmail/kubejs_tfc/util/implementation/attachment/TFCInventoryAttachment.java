@@ -44,7 +44,7 @@ public class TFCInventoryAttachment extends InventoryAttachment {
             );
 
     @Nullable
-    private static SizePredicate sizePredicate(Map<String, Object> map) {
+    public static SizePredicate sizePredicate(Map<String, Object> map) {
         final Object possibleFunction = map.get("size");
         if (possibleFunction instanceof BaseFunction func) {
             return (SizePredicate) NativeJavaObject.createInterfaceAdapter(ScriptType.STARTUP.manager.get().context, SizePredicate.class, func);
@@ -53,7 +53,7 @@ public class TFCInventoryAttachment extends InventoryAttachment {
     }
 
     @Nullable
-    private static WeightPredicate weightPredicate(Map<String, Object> map) {
+    public static WeightPredicate weightPredicate(Map<String, Object> map) {
         final Object possibleFunction = map.get("weight");
         if (possibleFunction instanceof BaseFunction func) {
             return (WeightPredicate) NativeJavaObject.createInterfaceAdapter(ScriptType.STARTUP.manager.get().context, WeightPredicate.class, func);

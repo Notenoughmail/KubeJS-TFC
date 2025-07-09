@@ -45,6 +45,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Nullable
     public transient ResourceLocation productItem;
     public transient final Consumer<ModelGenerator>[] models = new Consumer[12];
+    public transient Supplier<Double> growthMod = () -> 1D, expiryMod = () -> 1D;
 
     public AbstractCropBlockBuilder(ResourceLocation i) {
         super(i);
@@ -148,15 +149,15 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     }
 
     @Info("Sets the model for all growth stages")
-    public AbstractCropBlockBuilder model(Consumer<ModelGenerator> gen) {
+    public AbstractCropBlockBuilder setModel(Consumer<ModelGenerator> gen) {
         for (int i = 0 ; i < 12 ; i++) {
-            model(i, gen);
+            setModel(i, gen);
         }
         return this;
     }
 
     @Info("Sets the model for a specific growth stage")
-    public AbstractCropBlockBuilder model(int stage, Consumer<ModelGenerator> gen) {
+    public AbstractCropBlockBuilder setModel(int stage, Consumer<ModelGenerator> gen) {
         models[stage] = gen;
         return this;
     }
@@ -203,6 +204,30 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
                 m.textures(textures);
             };
         }
+        return this;
+    }
+
+    @Info("Sets the growth modifier of the crop, a higher value means it takes longer to grow")
+    public AbstractCropBlockBuilder growthModifier(double mod) {
+        growthMod = () -> mod;
+        return this;
+    }
+
+    @Info("Sets the growth modifier supplier of the crop, a higher value means it takes longer to grow")
+    public AbstractCropBlockBuilder growthModifierSupplier(Supplier<Double> mod) {
+        growthMod = mod;
+        return this;
+    }
+
+    @Info("sets the expiry modifier of the crop, a higher value means it takes longer for the crop to die")
+    public AbstractCropBlockBuilder expiryModifier(double mod) {
+        expiryMod = () -> mod;
+        return this;
+    }
+
+    @Info("Sets the expiry modifier supplier of the crop, a higher value means it takes longer for the crop to die")
+    public AbstractCropBlockBuilder expiryModifierSupplier(Supplier<Double> mod) {
+        expiryMod = mod;
         return this;
     }
 

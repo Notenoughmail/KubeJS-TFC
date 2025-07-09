@@ -79,7 +79,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.doubleCrop(createExtendedProperties(), stages, doubleStages, dead, seeds, nutrient, climateRange, requiresStick);
+        return CropUtils.doubleCrop(createExtendedProperties(), stages, doubleStages, dead, seeds, nutrient, climateRange, requiresStick, growthMod, expiryMod);
     }
 
     @Override

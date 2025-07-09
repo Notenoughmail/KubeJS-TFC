@@ -9,6 +9,7 @@
     "ChunkDataProviderMixin",
     "ChunkGeneratorMixin",
     "ChunkMapMixin",
+    "CropHelpersMixin",
     "DayMixin",
     "GlassOperationMixin",
     "HandHeldItemBuilderMixin",

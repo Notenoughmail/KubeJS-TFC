@@ -19,6 +19,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
+import com.notenoughmail.kubejs_tfc.util.implementation.attachment.SealableInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
@@ -274,6 +275,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         types.add(TFCInventoryAttachment.TYPE);
         types.add(HeatAttachment.TYPE);
         types.add(CalendarTrackingAttachment.TYPE);
+        types.add(SealableInventoryAttachment.TYPE);
     }
 
     @Override

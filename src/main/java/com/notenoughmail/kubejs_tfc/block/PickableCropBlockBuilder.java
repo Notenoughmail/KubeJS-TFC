@@ -39,6 +39,6 @@ public class PickableCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.pickableCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, fruit, matureFruit);
+        return CropUtils.pickableCrop(createExtendedProperties(), stages, dead, seeds, nutrient, climateRange, fruit, matureFruit, growthMod, expiryMod);
     }
 }
