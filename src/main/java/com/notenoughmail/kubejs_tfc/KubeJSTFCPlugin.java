@@ -135,6 +135,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:log", LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
         RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:sapling", TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
+        RegistryInfo.BLOCK.addType("tfc:leaves", TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
 
         RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }

@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.mod.util.color.Color;
@@ -11,13 +12,9 @@ import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings("unused")
 public class WindMillBladeItemBuilder extends ItemBuilder {
 
-    public static final List<WindMillBladeItemBuilder> thisList = new ArrayList<>();
     private static final ResourceLocation defaultTex = Helpers.identifier("textures/entity/misc/windmill_blade.png");
 
     public transient Color bladeColor;
@@ -27,7 +24,7 @@ public class WindMillBladeItemBuilder extends ItemBuilder {
         super(i);
         bladeColor = ColorWrapper.BLACK;
         tag(TFCTags.Items.ALL_WINDMILL_BLADES.location());
-        thisList.add(this);
+        BuilderRefs.windmills.add(this);
     }
 
     @Info("Sets the color of the windmill blade's sail")

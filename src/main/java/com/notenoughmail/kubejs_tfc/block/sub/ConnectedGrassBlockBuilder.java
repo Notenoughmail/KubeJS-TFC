@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -18,8 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -29,13 +28,11 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
 
-    public static final List<ConnectedGrassBlockBuilder> thisList = new ArrayList<>();
     public transient BiConsumer<GrassModelPart, ModelGenerator> models;
 
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        thisList.add(this);
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.GRASS.location());
         texture("texture", parent.textures.get("particle").getAsString());
@@ -44,6 +41,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
             m.parent(p.defaultParent);
             m.textures(textures);
         };
+        BuilderRefs.grassBlockColor.add(this);
     }
 
     @Info("""

@@ -11,4 +11,12 @@ StartupEvents.registry('block', e => {
         .texture('side', 'minecraft:block/dirt')
         .texture('end', 'minecraft:block/diorite')
         .stripped(null);
+
+    e.create('leaves', 'tfc:leaves')
+        .twig('kubejs:ore')
+        .autumnIndex(23)
+        .textureAll('minecraft:block/oak_leaves')
+        .fallenLeaves(fallen => {
+            fallen.textureAll('minecraft:block/spruce_leaves');
+        });
 })

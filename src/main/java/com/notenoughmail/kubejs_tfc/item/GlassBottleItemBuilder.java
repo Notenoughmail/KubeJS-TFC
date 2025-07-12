@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -32,8 +33,8 @@ public class GlassBottleItemBuilder extends ItemBuilder {
         capacity = () -> 100;
         breakChance = () -> 0.01;
         acceptableFluids = TFCTags.Fluids.USABLE_IN_JUG;
-        FluidContainerItemBuilder.colorList.add(this);
-        FluidContainerItemBuilder.dispenserList.add(this);
+        BuilderRefs.fluidContainerDispenser.add(this);
+        BuilderRefs.fluidContainerColor.add(this);
     }
 
     @Info("Sets the display name to used when a fluid is in the bottle")

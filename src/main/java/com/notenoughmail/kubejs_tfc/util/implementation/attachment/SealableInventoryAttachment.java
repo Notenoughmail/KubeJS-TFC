@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.attachment;
 
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
+import dev.latvian.mods.kubejs.core.InventoryKJS;
 import dev.latvian.mods.kubejs.item.ingredient.IngredientJS;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -24,8 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-// TODO: 1.3.2 | Fix shift clicking bypassing the seal and removal of trait
-public class SealableInventoryAttachment extends TFCInventoryAttachment {
+public class SealableInventoryAttachment extends TFCInventoryAttachment implements InventoryKJS {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(
             "tfc:sealable_inventory",
@@ -36,6 +36,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
                     .add("size", new PrimitiveDescJS("Predicate<Size>"), true)
                     .add("weight", new PrimitiveDescJS("Predicate<Weight>"), true)
                     .add("requiresSeal", TypeDescJS.BOOLEAN, true)
+                    .add("canSeal", TypeDescJS.BOOLEAN, true)
                     .add("trait", new PrimitiveDescJS("FoodTrait"), true),
             map -> {
                 final int width = ((Number) map.get("width")).intValue();
@@ -44,49 +45,68 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
                 final SizePredicate size = sizePredicate(map);
                 final WeightPredicate weight = weightPredicate(map);
                 final boolean requiresSealing = TickableAttachment.getBool("requiresSeal", map, true);
+                final boolean canSeal = TickableAttachment.getBool("canSeal", map, true);
+                if (requiresSealing && !canSeal) throw new IllegalArgumentException("Inventory requires sealing to apply trait, yet sealing was disabled!");
                 final ResourceLocation traitId = map.containsKey("trait") ? (ResourceLocation) JavaAdapter.convertResult(ScriptType.STARTUP.manager.get().context, map.get("trait"), ResourceLocation.class): FoodTrait.getId(FoodTraits.PRESERVED);
                 final Supplier<FoodTrait> trait = Lazy.of(() -> FoodTrait.getTraitOrThrow(traitId)); // Defer to allow addons to register traits after this happens. I honestly have no idea when this code runs, early I presume
-                return entity -> new SealableInventoryAttachment(entity, width, height, inputFilter, size, weight, requiresSealing, trait);
+                return entity -> new SealableInventoryAttachment(entity, width, height, inputFilter, size, weight, requiresSealing, canSeal, trait);
             }
     );
 
     private boolean sealed;
+    private final boolean canSeal;
     public final boolean requiresSeal;
     public final Supplier<FoodTrait> trait;
 
-    public SealableInventoryAttachment(BlockEntityJS blockEntity, int width, int height, @Nullable Ingredient inputFilter, @Nullable SizePredicate size, @Nullable WeightPredicate weight, boolean requriesSeal, Supplier<FoodTrait> trait) {
+    public SealableInventoryAttachment(BlockEntityJS blockEntity, int width, int height, @Nullable Ingredient inputFilter, @Nullable SizePredicate size, @Nullable WeightPredicate weight, boolean requiresSeal, boolean canSeal, Supplier<FoodTrait> trait) {
         super(blockEntity, width, height, inputFilter, size, weight);
-        this.requiresSeal = requriesSeal;
+        this.requiresSeal = requiresSeal;
+        this.canSeal = canSeal;
         this.trait = trait;
     }
 
     @Info("Seals the inventory if not already")
     public void seal() {
-        sealed = true;
-        preserveAll();
+        if (canSeal) {
+            sealed = true;
+            preserveAll();
+        }
+        blockEntity.sync();
     }
 
     @Info("Unseals the inventory, if not already")
     public void unSeal() {
         sealed = false;
-        if (requiresSeal) {
+        if (requiresSeal && canSeal) {
             unPreserveAll();
         }
+        blockEntity.sync();
     }
 
     @Info("Toggles the sealed state of the inventory. Returns the sealed state of the inventory after toggling")
     public boolean toggleSeal() {
-        if (sealed) {
-            unSeal();
+        if (canSeal) {
+            if (sealed) {
+                unSeal();
+            } else {
+                seal();
+            }
         } else {
-            seal();
+            sealed = false;
         }
+        blockEntity.sync();
         return sealed;
     }
 
     @Info("Returns the seled state of the inventory")
     public boolean isSealed() { return sealed; }
 
+    @Override
+    public boolean kjs$isMutable() {
+        return !sealed;
+    }
+
+    // Preservation
     private void unPreserveAll() {
         for (int i = 0 ; i < getContainerSize() ; i++) {
             super.setItem(i, remove(super.removeItemNoUpdate(i)));

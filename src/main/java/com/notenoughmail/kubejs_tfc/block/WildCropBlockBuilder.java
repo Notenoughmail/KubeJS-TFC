@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -26,15 +27,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
-
-    public static final List<WildCropBlockBuilder> thisList = new ArrayList<>();
 
     public transient Type type;
     public transient Supplier<Supplier<? extends Block>> spreadingFruitBlock;
@@ -49,8 +46,8 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         seedItem = null;
         foodItem = null;
         renderType("cutout");
-        thisList.add(this);
         noCollision();
+        BuilderRefs.grassColor.add(this);
     }
 
     @Override

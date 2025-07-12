@@ -62,6 +62,7 @@ StartupEvents.registry('block', e => {
                 width: 9,
                 height: 1,
                 requiresSeal: false,
+                canSeal: false,
                 trait: 'kubejs:sealed'
             });
             be.rightClickOpensInventory();

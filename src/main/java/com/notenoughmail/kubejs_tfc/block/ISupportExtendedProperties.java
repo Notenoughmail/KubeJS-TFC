@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
+import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +28,7 @@ public interface ISupportExtendedProperties {
 
     BlockBehaviour.Properties createProperties();
 
-    @Info("Allows editing some of TFC's extended block properties")
+    @Info("Allows for editing of TFC's extended block properties")
     @Generics(ExtendedPropertiesJS.class)
     BlockBuilder extendedProperties(Consumer<ExtendedPropertiesJS> extendedProperties);
 
@@ -37,6 +38,8 @@ public interface ISupportExtendedProperties {
     }
 
     record ExtendedPropertiesJS(@HideFromJS ExtendedProperties delegate) {
+
+        private static final BlockBehaviour.StatePredicate ALWAYS = TFCBlocks::always, NEVER = TFCBlocks::never;
 
         @Info(value = "Sets the flammability and fire spread speed of the block", params = {
                 @Param(name = "flammability", value = "The flammability of the block"),
@@ -92,10 +95,20 @@ public interface ISupportExtendedProperties {
         @Generics(EntityType.class)
         public ExtendedPropertiesJS isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> isValidSpawn) { delegate.isValidSpawn(isValidSpawn); return this; }
         public ExtendedPropertiesJS isRedstoneConductor(BlockBehaviour.StatePredicate isRedstoneConductor) { delegate.isRedstoneConductor(isRedstoneConductor); return this; }
+        public ExtendedPropertiesJS alwaysIsRedstoneConductor() { return isRedstoneConductor(ALWAYS); }
+        public ExtendedPropertiesJS neverIsRedstoneConductor() { return isRedstoneConductor(NEVER); }
         public ExtendedPropertiesJS isSuffocating(BlockBehaviour.StatePredicate isSuffocating) { delegate.isSuffocating(isSuffocating); return this; }
+        public ExtendedPropertiesJS alwaysSuffocating() { return isSuffocating(ALWAYS); }
+        public ExtendedPropertiesJS neverSuffocating() { return isSuffocating(NEVER); }
         public ExtendedPropertiesJS isViewBlocking(BlockBehaviour.StatePredicate isViewBlocking) { delegate.isViewBlocking(isViewBlocking); return this; }
+        public ExtendedPropertiesJS alwaysViewBlocking() { return isViewBlocking(ALWAYS); }
+        public ExtendedPropertiesJS neverViewBlocking() { return isViewBlocking(NEVER); }
         public ExtendedPropertiesJS hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { delegate.hasPostProcess(hasPostProcess); return this; }
+        public ExtendedPropertiesJS alwaysHasPostProcess() { return hasPostProcess(ALWAYS); }
+        public ExtendedPropertiesJS neverHasPostProcess() { return hasPostProcess(NEVER); }
         public ExtendedPropertiesJS emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering) { delegate.emissiveRendering(emissiveRendering); return this; }
+        public ExtendedPropertiesJS alwaysEmissiveRendering() { return emissiveRendering(ALWAYS); }
+        public ExtendedPropertiesJS neverEmissiveRendering() { return emissiveRendering(NEVER); }
         public ExtendedPropertiesJS requiresCorrectToolForDrops() { delegate.requiresCorrectToolForDrops(); return this; }
         public ExtendedPropertiesJS mapColor(MapColor color) { delegate.mapColor(color); return this; }
         public ExtendedPropertiesJS mapColor(MapColorFunction mapColor) { delegate.mapColor(mapColor); return this; }

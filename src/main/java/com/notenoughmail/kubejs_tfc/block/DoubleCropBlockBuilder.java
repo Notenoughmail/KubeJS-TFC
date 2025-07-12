@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -20,14 +21,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings("unused")
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient int doubleStages;
-    public static final List<DoubleCropBlockBuilder> ghostRenders = new ArrayList<>();
 
     public DoubleCropBlockBuilder(ResourceLocation i) {
         super(i);
@@ -62,11 +59,9 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     public DoubleCropBlockBuilder requiresStick(boolean requiresStick) {
         this.requiresStick = requiresStick;
         if (requiresStick) {
-            if (!ghostRenders.contains(this)) {
-                ghostRenders.add(this);
-            }
+            BuilderRefs.ghostRenders.add(this);
         } else {
-            ghostRenders.remove(this);
+            BuilderRefs.ghostRenders.remove(this);
         }
         return this;
     }

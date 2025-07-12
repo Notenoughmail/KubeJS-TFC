@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -25,7 +26,7 @@ public class MoldItemBuilder extends ItemBuilder {
         super(i);
         this.capacity = () -> 100;
         this.acceptableFluids = TFCTags.Fluids.USABLE_IN_INGOT_MOLD;
-        FluidContainerItemBuilder.colorList.add(this);
+        BuilderRefs.fluidContainerColor.add(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
@@ -19,9 +20,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -29,18 +28,16 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     public float thrownDamage;
 
-    public static final List<JavelinItemBuilder> thisList = new ArrayList<>();
-
     public transient final Map<ItemDisplayContext, String> perspectives = new HashMap<>(4);
     public transient String throwingModel = "";
 
     public JavelinItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
         thrownDamage = 0.3f;
-        thisList.add(this);
         guiModel(newID("item/", "_gui").toString());
         parentModel = "";
         texture(newID("item/", "").toString());
+        BuilderRefs.javelinThrow.add(this);
     }
 
     @Info("Sets the model used when throwing")

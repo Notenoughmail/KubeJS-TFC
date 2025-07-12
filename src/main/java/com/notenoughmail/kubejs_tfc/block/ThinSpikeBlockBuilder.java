@@ -191,12 +191,12 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
             m.parent(model);
         } else {
             m.parent("item/generated");
-        }
 
-        if (itemBuilder.textureJson.size() == 0) {
-            itemBuilder.texture(newID("item/", "").toString());
+            if (itemBuilder.textureJson.size() == 0) {
+                itemBuilder.texture(newID("item/", "").toString());
+            }
+            m.textures(itemBuilder.textureJson);
         }
-        m.textures(itemBuilder.textureJson);
     }
 
     @Override

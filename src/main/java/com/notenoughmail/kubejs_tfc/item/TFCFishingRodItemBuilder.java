@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.item;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -14,23 +15,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings("unused")
 public class TFCFishingRodItemBuilder extends HandheldItemBuilder {
 
     @Nullable
     public transient Float fishingStrength;
-    public static final List<TFCFishingRodItemBuilder> thisList = new ArrayList<>();
     public transient String customCastModel, castTexture;
 
     public TFCFishingRodItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
         fishingStrength = null;
-        thisList.add(this);
         customCastModel = "";
         castTexture = newID("item/", "_cast").toString();
+        BuilderRefs.rodCast.add(this);
     }
 
     @Info("Sets the rod's fishing strength, defaults the a value based on the speed of the rod's tier")

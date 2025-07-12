@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.item.FluidContainerItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
@@ -213,7 +212,7 @@ public class EventHandlers {
                 birthdays.post(new BirthdayEventJS());
             }
             RegistryUtils.hackBlockEntities();
-            FluidContainerItemBuilder.dispenserList.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
+            BuilderRefs.fluidContainerDispenser.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
         });
     }
 
@@ -221,6 +220,7 @@ public class EventHandlers {
         if (registerFaunas.hasListeners()) {
             registerFaunas.post(new RegisterFaunasEventJS());
         }
+        event.enqueueWork(BuilderRefs::clear);
     }
 
     private static void reloadListeners(AddReloadListenerEvent event) {

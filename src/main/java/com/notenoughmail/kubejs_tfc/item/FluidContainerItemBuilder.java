@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.item;
 
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.LangEventJS;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -17,8 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -31,9 +30,6 @@ public class FluidContainerItemBuilder extends ItemBuilder {
     @Nullable
     public transient Component filledDisplayName;
 
-    public static final List<Supplier<Item>> dispenserList = new ArrayList<>();
-    public static final List<Supplier<Item>> colorList = new ArrayList<>();
-
     public FluidContainerItemBuilder(ResourceLocation i) {
         super(i);
         canPlaceLiquid = false;
@@ -41,8 +37,8 @@ public class FluidContainerItemBuilder extends ItemBuilder {
         capacity = () -> 100;
         whitelist = TFCTags.Fluids.USABLE_IN_JUG;
         filledDisplayName = null;
-        colorList.add(this);
-        dispenserList.add(this);
+        BuilderRefs.fluidContainerDispenser.add(this);
+        BuilderRefs.fluidContainerColor.add(this);
     }
 
     @Override
