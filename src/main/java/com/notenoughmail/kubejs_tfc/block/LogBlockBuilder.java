@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         this.stripped = stripped;
         blockItemModel = false;
         itemBuilder.texture("layer0", newID("item/", "").toString());
+        tag(BlockTags.LOGS.location());
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IChunkGenWrapper;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.mixin.accessor.ChunkMapAccessor;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -14,6 +15,7 @@ import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
@@ -27,10 +29,7 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
-import net.minecraft.world.level.levelgen.Aquifer;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
@@ -121,7 +120,17 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
 
     @Override
     public void buildSurface(WorldGenRegion pLevel, StructureManager pStructureManager, RandomState pRandom, ChunkAccess pChunk) {
-        wrapped.buildSurface(pLevel, pStructureManager, pRandom, pChunk);
+        if (wrapped instanceof NoiseBasedChunkGenerator noise) {
+            // Noise based generators use a WorldGenerationContext for depth information
+            // Replicate that but with access to the generator and thus the ChunkDataProvider
+            // for use with RockSurfaceRuleSources
+            //
+            // This will not work with subclasses of NoiseBasedChunkGenerator that do not make use of the extended #buildSurface
+            final WorldGenerationContext ctx = new ChunkGenAwareWorldGenerationContext(this, pLevel);
+            noise.buildSurface(pChunk, ctx, pRandom, pStructureManager, pLevel.getBiomeManager(), pLevel.registryAccess().registryOrThrow(Registries.BIOME), Blender.of(pLevel));
+        } else {
+            wrapped.buildSurface(pLevel, pStructureManager, pRandom, pChunk);
+        }
     }
 
     @Override

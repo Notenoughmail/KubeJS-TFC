@@ -14,11 +14,13 @@ import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.TreeSolver;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSurfaceRuleSource;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -33,6 +35,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -140,6 +143,7 @@ public class KubeJSTFC {
 
     private static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, MODID);
     private static final DeferredRegister<Codec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
+    private static final DeferredRegister<Codec<? extends SurfaceRules.RuleSource>> SURFACE_RULE_SOURCE = DeferredRegister.create(Registries.MATERIAL_RULE, MODID);
 
     static {
         COMMAND_ARGS.register("data_type", () ->
@@ -149,6 +153,7 @@ public class KubeJSTFC {
                 )
         );
         CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
+        SURFACE_RULE_SOURCE.register("rock", RockSurfaceRuleSource.CODEC::codec);
     }
 
     public KubeJSTFC() {
@@ -163,6 +168,7 @@ public class KubeJSTFC {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         COMMAND_ARGS.register(modBus);
         CHUNK_GENERATOR.register(modBus);
+        SURFACE_RULE_SOURCE.register(modBus);
         KubeJSTFCRecipeSerializers.REG.register(modBus);
 
         reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production

@@ -36,6 +36,7 @@
     "accessor.PlantableAccessor",
     "accessor.RockLayerSettingsAccessor",
     "accessor.SupportAccessor",
+    "accessor.SurfaceRulesContextAccessor",
     "extensions.BeneathDataEventMixin",
     "extensions.EntityJSBaseLivingEntityBuilderFaunaMixin",
     "extensions.FirmaLifeDataEventMixin",
