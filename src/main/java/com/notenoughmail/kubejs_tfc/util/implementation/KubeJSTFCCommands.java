@@ -1,9 +1,11 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
+import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -16,12 +18,14 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.StringRepresentableArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
 import java.util.HashMap;
@@ -68,6 +72,28 @@ public class KubeJSTFCCommands {
                         )
                         .then(literal("print_chunk_data")
                                 .executes(KubeJSTFCCommands::printChunkData)
+                        )
+                        .then(literal("tree_solver")
+                                .then(argument("trunk_size", IntegerArgumentType.integer(1, 2))
+                                        .then(argument("log_block", TreeSolver.arg(event.getBuildContext(), true))
+                                                .then(argument("leaves_block", TreeSolver.arg(event.getBuildContext(), false))
+                                                        .then(argument("from", BlockPosArgument.blockPos())
+                                                                .then(argument("to", BlockPosArgument.blockPos())
+                                                                        .executes(ctx -> TreeSolver.solve(
+                                                                                ctx.getSource(),
+                                                                                BoundingBox.fromCorners(
+                                                                                        BlockPosArgument.getLoadedBlockPos(ctx, "from"),
+                                                                                        BlockPosArgument.getLoadedBlockPos(ctx, "to")
+                                                                                ),
+                                                                                TreeSolver.get("log_block", ctx),
+                                                                                (TFCLeavesBlock) TreeSolver.get("leaves_block", ctx),
+                                                                                IntegerArgumentType.getInteger(ctx, "trunk_size")
+                                                                        ))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
                         )
         );
     }

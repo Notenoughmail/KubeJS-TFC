@@ -7,6 +7,7 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.util.GreenhouseType;
 import com.eerussianguy.firmalife.common.util.Plantable;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
@@ -24,6 +25,9 @@ import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSurfaceRule
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.util.UtilsJS;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.config.ConfigBuilder;
 import net.dries007.tfc.util.ItemDefinition;
 import net.dries007.tfc.util.registry.RegistryRock;
@@ -47,6 +51,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -66,6 +73,7 @@ public class KubeJSTFC {
 
     private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {};
     private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {};
+    private static final Map<Class<?>, BiConsumer<?, JsonObject>> ISM_CONVERTERS = new IdentityHashMap<>();
 
     public static void reloadConfig(DevProperties props) {
         debug = props.debugInfo;
@@ -152,6 +160,12 @@ public class KubeJSTFC {
                         SingletonArgumentInfo.contextFree(KubeJSTFCCommands.DataTypeArgument::create)
                 )
         );
+        COMMAND_ARGS.register("tree_solver", () ->
+                ArgumentTypeInfos.registerByClass(
+                        TreeSolver.ArgType.class,
+                        TreeSolver.TypeInfo.INST
+                )
+        );
         CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
         SURFACE_RULE_SOURCE.register("rock", RockSurfaceRuleSource.CODEC::codec);
     }
@@ -194,6 +208,22 @@ public class KubeJSTFC {
 
     public static void registerWoodListener(Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> listener) {
         woodListeners = woodListeners.andThen(listener);
+    }
+
+    public static <T extends ItemStackModifier> void registerISMConverter(Class<T> type, BiConsumer<T, JsonObject> converter) {
+        ISM_CONVERTERS.put(type, converter);
+    }
+
+    public static <T extends ItemStackModifier> JsonObject convertISM(T mod) {
+        final JsonObject json = new JsonObject();
+        json.addProperty("type", ItemStackModifiers.getId(mod.serializer()).toString());
+        final BiConsumer<T, JsonObject> converter = UtilsJS.cast(ISM_CONVERTERS.get(mod.getClass()));
+        if (converter != null) {
+            converter.accept(mod, json);
+        } else {
+            throw new IllegalArgumentException("Unknown ISP modifier! Cannot convert to json for use wrapper ISP object");
+        }
+        return json;
     }
 
     @ApiStatus.Internal

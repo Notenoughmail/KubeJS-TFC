@@ -37,6 +37,7 @@
     "accessor.RockLayerSettingsAccessor",
     "accessor.SupportAccessor",
     "accessor.SurfaceRulesContextAccessor",
+    "accessor.TFCLeavesBlockAccessor",
     "extensions.BeneathDataEventMixin",
     "extensions.EntityJSBaseLivingEntityBuilderFaunaMixin",
     "extensions.FirmaLifeDataEventMixin",

@@ -1,8 +1,12 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
+import com.notenoughmail.kubejs_tfc.event.RegisterISMConvertersEventJS;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -46,16 +50,18 @@ import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.capabilities.glass.GlassOperation;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
-import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
+import net.dries007.tfc.common.recipes.outputs.*;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.registry.RegistryRock;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
@@ -155,6 +161,9 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         // Load the class and do something with the values so the compiler doesn't strip it out
         for (GlassOperation op : GlassOperation.VALUES) {
             KubeJSTFC.infoLog("GlassOperation: {} exists", op);
+        }
+        if (EventHandlers.registerISMConverter.hasListeners()) {
+            EventHandlers.registerISMConverter.post(new RegisterISMConvertersEventJS());
         }
     }
 
@@ -301,6 +310,26 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         }
         KubeJSTFC.registerRockListener(KubeJSTFCPlugin::addRocks);
         KubeJSTFC.registerWoodListener(KubeJSTFCPlugin::addWoods);
+        KubeJSTFC.registerISMConverter(AddHeatModifier.class, (heat, json) -> json.addProperty("temperature", heat.temperature()));
+        KubeJSTFC.registerISMConverter(AddRemoveTraitModifier.class, (trait, json) -> json.addProperty("trait", FoodTrait.getId(trait.trait()).toString()));
+        KubeJSTFC.registerISMConverter(DyeLeatherModifier.class, (dye, json) -> json.addProperty("color", dye.color().getName()));
+        KubeJSTFC.registerISMConverter(MealModifier.class, (meal, json) -> {
+            json.add("food", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, meal.baseFood().write()));
+            if (!meal.portions().isEmpty()) {
+                final JsonArray array = new JsonArray(meal.portions().size());
+                for (MealModifier.MealPortion portion : meal.portions()) {
+                    final JsonObject obj = new JsonObject();
+                    if (portion.ingredient() != null) {
+                        obj.add("ingredient", portion.ingredient().toJson());
+                        obj.addProperty("nutrient_modifier", portion.nutrientModifier());
+                        obj.addProperty("water_modifier", portion.waterModifier());
+                        obj.addProperty("saturation_modifier", portion.saturationModifier());
+                    }
+                    array.add(obj);
+                }
+                json.add("portions", array);
+            }
+        });
     }
 
     private static void addWoods(ImmutableMap.Builder<String, NamedRegistryWood> builder) {

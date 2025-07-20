@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
@@ -19,6 +20,7 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.nbt.CompoundTag;
@@ -53,6 +55,12 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
             return new ItemStackProviderJS(ItemStack.EMPTY, parseModifierList(list));
         } else if (o instanceof JsonObject json) {
             return fromJson(json);
+        } else if (o instanceof ItemStackProvider isp) {
+            final JsonArray array = new JsonArray(isp.modifiers().length);
+            for (ItemStackModifier mod : isp.modifiers()) {
+                array.add(KubeJSTFC.convertISM(mod));
+            }
+            return new ItemStackProviderJS(isp.stack().get(), array);
         }
 
         return new ItemStackProviderJS(ItemStackJS.of(o), new JsonArray());

@@ -51,6 +51,7 @@ public class EventHandlers {
     public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
     public static final EventHandler registerFaunas = TFCEvents.startup("registerFaunas", () -> RegisterFaunasEventJS.class);
     public static final EventHandler createGlassOperations = TFCEvents.startup("createGlassOperations", () -> CreateGlassOperationsEventJS.class);
+    public static final EventHandler registerISMConverter = TFCEvents.startup("registerItemStackModifierConverters", () -> RegisterItemStackModifierEventJS.class);
 
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
