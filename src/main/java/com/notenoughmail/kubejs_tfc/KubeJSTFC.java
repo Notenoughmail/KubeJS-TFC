@@ -60,7 +60,6 @@ import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
 
-// TODO: 1.3.2 | Tree solver command
 // TODO: [Future] | Custom recipe filters
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
@@ -217,11 +216,13 @@ public class KubeJSTFC {
     public static <T extends ItemStackModifier> JsonObject convertISM(T mod) {
         final JsonObject json = new JsonObject();
         json.addProperty("type", ItemStackModifiers.getId(mod.serializer()).toString());
-        final BiConsumer<T, JsonObject> converter = UtilsJS.cast(ISM_CONVERTERS.get(mod.getClass()));
-        if (converter != null) {
-            converter.accept(mod, json);
-        } else {
-            throw new IllegalArgumentException("Unknown ISP modifier! Cannot convert to json for use wrapper ISP object");
+        if (!(mod instanceof ItemStackModifier.SingleInstance<?>)) {
+            final BiConsumer<T, JsonObject> converter = UtilsJS.cast(ISM_CONVERTERS.get(mod.getClass()));
+            if (converter != null) {
+                converter.accept(mod, json);
+            } else {
+                throw new IllegalArgumentException("Unknown ISP modifier! Cannot convert to json for use wrapper ISP object");
+            }
         }
         return json;
     }

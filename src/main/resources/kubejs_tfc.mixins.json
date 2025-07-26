@@ -34,6 +34,7 @@
     "accessor.NetherFertilizerAccessor",
     "accessor.OverworldClimateModelAccessor",
     "accessor.PlantableAccessor",
+    "accessor.RockDataAccessor",
     "accessor.RockLayerSettingsAccessor",
     "accessor.SupportAccessor",
     "accessor.SurfaceRulesContextAccessor",

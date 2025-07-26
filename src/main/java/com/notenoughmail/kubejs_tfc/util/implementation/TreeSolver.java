@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 
 public class TreeSolver {
 
-    private static final DynamicCommandExceptionType INVALID_LARGE_TRUNK = exc("Log marked as trunk, yet did not have trunk logs in two perpendicular directions at [%s, %s, %s]");
+    private static final DynamicCommandExceptionType INVALID_LARGE_TRUNK = exc("Trunk root marker at [%s, %s, %s] was not 2x2");
     private static final DynamicCommandExceptionType UNATTENDED_ROOT_MARKER = exc("Root marker present at [%s, %s, %s], but no log marker was above it");
     private static final DynamicCommandExceptionType MISMATCHED_ORDER = exc("Branch direction at [%s, %s, %s] did not match expected order?");
 
@@ -107,8 +107,10 @@ public class TreeSolver {
         final IntegerProperty distProp = leafAccessor.kubejs_tfc$AccessDistProp();
         final int maxDist = leafAccessor.kubejs_tfc$MaxDist();
 
+        int blocks = logDir.size();
+
         final Queue<BlockPos> leavesQueue = new ArrayDeque<>();
-        logDir.keySet().forEach(logPos -> offer(logPos, leavesQueue, level));
+        logDir.keySet().forEach(logPos -> offerLeaves(logPos, leavesQueue, level));
         while (leavesQueue.peek() != null) {
             final BlockPos pos = leavesQueue.poll();
             final int dist = leafAccessor.kubejs_tfc$UpdateDistance(level, pos);
@@ -117,19 +119,20 @@ public class TreeSolver {
                         pos,
                         leaves.defaultBlockState().setValue(distProp, dist)
                 );
-                offer(pos, leavesQueue, level);
+                offerLeaves(pos, leavesQueue, level);
+                blocks++;
             }
         }
 
-        return logDir.size();
+        return blocks;
     }
 
-    private static void offer(BlockPos centerPos, Queue<BlockPos> queue, ServerLevel level) {
+    private static void offerLeaves(BlockPos centerPos, Queue<BlockPos> queue, ServerLevel level) {
         cardinal(centerPos).forEach(pos -> {
             if (level.getBlockState(pos).getBlock() == LEAVES_MARKER) {
                 pos = pos.immutable();
                 if (!queue.contains(pos)) {
-                    queue.offer(pos.immutable());
+                    queue.offer(pos);
                 }
             }
         });
@@ -143,21 +146,19 @@ public class TreeSolver {
                 for (int z = scanArea.minZ() ; z < scanArea.maxZ() ; z++) {
                     cursor.set(x, y, z);
                     if (level.getBlockState(cursor).getBlock() == ROOT_MARKER) {
-                        final BlockPos above = cursor.above().immutable();
-                        if (level.getBlockState(above).getBlock() == LOG_MARKER) {
-                            logDir.put(above, BranchDirection.DOWN);
-                            if (logAxis != null) {
-                                logAxis.put(above, Direction.Axis.Y);
-                            }
+                        checkLogAboveRoot(cursor, level);
 
-                            final Queue<BlockPos> queue = new ArrayDeque<>();
-                            queue.add(above);
-                            while (queue.peek() != null) {
-                                final BlockPos pos = queue.poll();
-                                solveLog(level, pos, logDir, logAxis, queue);
-                            }
-                        } else {
-                            throw UNATTENDED_ROOT_MARKER.create(cursor);
+                        final BlockPos above = cursor.above();
+                        logDir.put(above, BranchDirection.DOWN);
+                        if (logAxis != null) {
+                            logAxis.put(above, Direction.Axis.Y);
+                        }
+
+                        final Queue<BlockPos> queue = new ArrayDeque<>();
+                        queue.add(above);
+                        while (queue.peek() != null) {
+                            final BlockPos pos = queue.poll();
+                            solveLog(level, pos, logDir, logAxis, queue);
                         }
                     }
                 }
@@ -166,7 +167,125 @@ public class TreeSolver {
     }
 
     private static void logLarge(ServerLevel level, BoundingBox scanArea, Map<BlockPos, BranchDirection> logDir, @Nullable Map<BlockPos, Direction.Axis> logAxis) throws CommandSyntaxException {
+        final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 
+        final List<BlockPos> rootPositions = new ArrayList<>();
+
+        for (int y = scanArea.minY() ; y < scanArea.maxY() ; y++) {
+            for (int x = scanArea.minX() ; x < scanArea.maxX() ; x++) {
+                for (int z = scanArea.minZ() ; z < scanArea.maxZ() ; z++) {
+                    cursor.set(x, y, z);
+
+                    if (rootPositions.contains(cursor)) {
+                        continue;
+                    }
+
+                    if (level.getBlockState(cursor).getBlock() == ROOT_MARKER) {
+                        final BlockPos[] roots = findRootPositions(cursor, level);
+                        for (BlockPos root : roots) {
+                            checkLogAboveRoot(root, level);
+                            rootPositions.add(root);
+                        }
+
+                        final Queue<BlockPos> queue = new ArrayDeque<>();
+                        climbTrunk(
+                                roots[0].above(),
+                                roots[1].above(),
+                                roots[2].above(),
+                                roots[3].above(),
+                                level,
+                                logDir,
+                                logAxis,
+                                queue
+                        );
+                        while (queue.peek() != null) {
+                            final BlockPos pos = queue.poll();
+                            solveLog(level, pos, logDir, logAxis, queue);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Order: nw, ne, sw, se
+    private static BlockPos[] findRootPositions(BlockPos initialPos, ServerLevel level) throws CommandSyntaxException {
+        final BlockPos[] positions = new BlockPos[4];
+        if (level.getBlockState(initialPos.east()).getBlock() == ROOT_MARKER) {
+            if (level.getBlockState(initialPos.south()).getBlock() == ROOT_MARKER) {
+                if (level.getBlockState(initialPos.east().south()).getBlock() == ROOT_MARKER) {
+                    positions[0] = initialPos.immutable();
+                    positions[1] = initialPos.east();
+                    positions[2] = initialPos.south();
+                    positions[3] = positions[2].east();
+                    return positions;
+                }
+            } else if (level.getBlockState(initialPos.north()).getBlock() == ROOT_MARKER) {
+                if (level.getBlockState(initialPos.east().north()).getBlock() == ROOT_MARKER) {
+                    positions[2] = initialPos.immutable();
+                    positions[0] = initialPos.north();
+                    positions[3] = initialPos.east();
+                    positions[1] = positions[3].north();
+                    return positions;
+                }
+            }
+        } else if (level.getBlockState(initialPos.west()).getBlock() == ROOT_MARKER) {
+            if (level.getBlockState(initialPos.south()).getBlock() == ROOT_MARKER) {
+                if (level.getBlockState(initialPos.west().south()).getBlock() == ROOT_MARKER) {
+                    positions[1] = initialPos.immutable();
+                    positions[0] = initialPos.west();
+                    positions[3] = initialPos.south();
+                    positions[2] = positions[3].west();
+                    return positions;
+                }
+            } else if (level.getBlockState(initialPos.north()).getBlock() == ROOT_MARKER) {
+                if (level.getBlockState(initialPos.west().north()).getBlock() == ROOT_MARKER) {
+                    positions[3] = initialPos.immutable();
+                    positions[1] = initialPos.north();
+                    positions[2] = initialPos.west();
+                    positions[0] = positions[1].west();
+                    return positions;
+                }
+            }
+        }
+        throw INVALID_LARGE_TRUNK.create(initialPos);
+    }
+
+    private static void climbTrunk(BlockPos nw, BlockPos ne, BlockPos sw, BlockPos se, ServerLevel level, Map<BlockPos, BranchDirection> logDir, @Nullable Map<BlockPos, Direction.Axis> logAxis, Queue<BlockPos> queue) throws CommandSyntaxException {
+        while (
+                level.getBlockState(nw).getBlock() == LOG_MARKER &&
+                level.getBlockState(ne).getBlock() == LOG_MARKER &&
+                level.getBlockState(sw).getBlock() == LOG_MARKER &&
+                level.getBlockState(se).getBlock() == LOG_MARKER
+        ) {
+            logDir.put(nw, BranchDirection.TRUNK_SOUTH_EAST);
+            logDir.put(ne, BranchDirection.TRUNK_SOUTH_WEST);
+            logDir.put(sw, BranchDirection.TRUNK_NORTH_EAST);
+            logDir.put(se, BranchDirection.TRUNK_NORTH_WEST);
+
+            if (logAxis != null) {
+                logAxis.put(nw, Direction.Axis.Y);
+                logAxis.put(ne, Direction.Axis.Y);
+                logAxis.put(sw, Direction.Axis.Y);
+                logAxis.put(se, Direction.Axis.Y);
+            }
+
+            queue.offer(nw);
+            queue.offer(ne);
+            queue.offer(sw);
+            queue.offer(se);
+
+            nw = nw.above();
+            ne = ne.above();
+            sw = sw.above();
+            se = se.above();
+        }
+    }
+
+    private static void checkLogAboveRoot(BlockPos rootPos, ServerLevel level) throws CommandSyntaxException {
+        if (level.getBlockState(rootPos.above()).getBlock() != LOG_MARKER) {
+            throw UNATTENDED_ROOT_MARKER.create(rootPos);
+        }
     }
 
     // Breadth-first solve the dir & axis of a log at a position
@@ -220,7 +339,7 @@ public class TreeSolver {
             if (order(dir) == orders.get(nextPos)) {
                 logDir.put(nextPos, dir);
                 if (logAxis != null) {
-                    logAxis.put(nextPos, logAxis(dir, currentPos, logAxis));
+                    logAxis.put(nextPos, logAxis(dir));
                 }
                 queue.offer(nextPos);
             } else {
@@ -270,7 +389,7 @@ public class TreeSolver {
         return ALL[dy][dz][dx];
     }
 
-    private static Direction.Axis logAxis(BranchDirection dir, BlockPos currentPos, Map<BlockPos, Direction.Axis> logAxis) {
+    private static Direction.Axis logAxis(BranchDirection dir) {
         final int order = order(dir);
         return switch (order) {
             case 1 -> {

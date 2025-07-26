@@ -22,7 +22,8 @@ public class GlassOpValidationPacket implements IntSupplier {
         this.serverValues = serverValues;
     }
 
-    // Used by network channel to send info to clients on login
+    // See SimpleChannel#markAsLoginPacket()
+    @SuppressWarnings("unused")
     public GlassOpValidationPacket() {
         this(SYNC_VALIDATION);
     }

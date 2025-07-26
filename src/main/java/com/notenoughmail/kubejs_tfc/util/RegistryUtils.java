@@ -43,6 +43,7 @@ public class RegistryUtils {
         });
     }
 
+    // TODO: 1.21.1 | Neo has an event to do this
     @ApiStatus.Internal
     public static <T extends BlockEntity> void hackBlockEntity(Supplier<BlockEntityType<T>> be, Supplier<Block> block) {
         blockEntityHacks.computeIfAbsent(UtilsJS.cast(be), type -> new ArrayList<>()).add(block);

@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
@@ -16,6 +15,7 @@ import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
@@ -65,6 +65,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -310,6 +311,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         }
         KubeJSTFC.registerRockListener(KubeJSTFCPlugin::addRocks);
         KubeJSTFC.registerWoodListener(KubeJSTFCPlugin::addWoods);
+
         KubeJSTFC.registerISMConverter(AddHeatModifier.class, (heat, json) -> json.addProperty("temperature", heat.temperature()));
         KubeJSTFC.registerISMConverter(AddRemoveTraitModifier.class, (trait, json) -> json.addProperty("trait", FoodTrait.getId(trait.trait()).toString()));
         KubeJSTFC.registerISMConverter(DyeLeatherModifier.class, (dye, json) -> json.addProperty("color", dye.color().getName()));
@@ -318,14 +320,12 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             if (!meal.portions().isEmpty()) {
                 final JsonArray array = new JsonArray(meal.portions().size());
                 for (MealModifier.MealPortion portion : meal.portions()) {
-                    final JsonObject obj = new JsonObject();
-                    if (portion.ingredient() != null) {
-                        obj.add("ingredient", portion.ingredient().toJson());
+                    array.add(ResourceUtils.buildJson(obj -> {
+                        ResourceUtils.nullable(obj, "ingredient", portion.ingredient(), Ingredient::toJson);
                         obj.addProperty("nutrient_modifier", portion.nutrientModifier());
                         obj.addProperty("water_modifier", portion.waterModifier());
                         obj.addProperty("saturation_modifier", portion.saturationModifier());
-                    }
-                    array.add(obj);
+                    }));
                 }
                 json.add("portions", array);
             }
