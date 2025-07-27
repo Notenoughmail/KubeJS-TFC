@@ -104,11 +104,11 @@ public interface ISupportExtendedProperties {
         public ExtendedPropertiesJS alwaysViewBlocking() { return isViewBlocking(ALWAYS); }
         public ExtendedPropertiesJS neverViewBlocking() { return isViewBlocking(NEVER); }
         public ExtendedPropertiesJS hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { delegate.hasPostProcess(hasPostProcess); return this; }
-        public ExtendedPropertiesJS alwaysHasPostProcess() { return hasPostProcess(ALWAYS); }
-        public ExtendedPropertiesJS neverHasPostProcess() { return hasPostProcess(NEVER); }
+        public ExtendedPropertiesJS alwaysPostProcess() { return hasPostProcess(ALWAYS); }
+        public ExtendedPropertiesJS neverPostProcess() { return hasPostProcess(NEVER); }
         public ExtendedPropertiesJS emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering) { delegate.emissiveRendering(emissiveRendering); return this; }
-        public ExtendedPropertiesJS alwaysEmissiveRendering() { return emissiveRendering(ALWAYS); }
-        public ExtendedPropertiesJS neverEmissiveRendering() { return emissiveRendering(NEVER); }
+        public ExtendedPropertiesJS alwaysEmissive() { return emissiveRendering(ALWAYS); }
+        public ExtendedPropertiesJS neverEmissive() { return emissiveRendering(NEVER); }
         public ExtendedPropertiesJS requiresCorrectToolForDrops() { delegate.requiresCorrectToolForDrops(); return this; }
         public ExtendedPropertiesJS mapColor(MapColor color) { delegate.mapColor(color); return this; }
         public ExtendedPropertiesJS mapColor(MapColorFunction mapColor) { delegate.mapColor(mapColor); return this; }

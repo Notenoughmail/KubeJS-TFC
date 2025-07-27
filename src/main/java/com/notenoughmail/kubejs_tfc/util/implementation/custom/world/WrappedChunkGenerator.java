@@ -103,9 +103,11 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
             return;
         }
 
-        chunkDataGenerator = KubeChunkDataGenerator.create(key, settings.rockLayerSettings(), level.getSeed());
+        final RandomState rs = ((ChunkMapAccessor) chunkMap).accessor$getRandomState();
 
-        ((RandomStateExtension) (Object) ((ChunkMapAccessor) chunkMap).accessor$getRandomState()).tfc$setChunkGeneratorExtension(this);
+        chunkDataGenerator = KubeChunkDataGenerator.create(key, settings.rockLayerSettings(), level.getSeed(), rs);
+
+        ((RandomStateExtension) (Object) rs).tfc$setChunkGeneratorExtension(this);
     }
 
     @Override

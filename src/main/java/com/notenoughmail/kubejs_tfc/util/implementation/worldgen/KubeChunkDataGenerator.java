@@ -16,6 +16,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.ApiStatus;
@@ -72,12 +73,12 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
         return sum / a.length;
     }
 
-    public static KubeChunkDataGenerator create(String levelKey, RockLayerSettings rockLayers, long worldSeed) {
+    public static KubeChunkDataGenerator create(String levelKey, RockLayerSettings rockLayers, long worldSeed, RandomState rs) {
         BiConsumer<ChunkData, ChunkAccess> partial = GEN_PARTIAL, full = GEN_FULL;
         Function<ChunkAccess, Aquifer> aquifer = AQUIFER;
         CreateChunkDataProviderEventJS.RocksGetter rock = ROCK;
         if (EventHandlers.createChunkDataProvider.hasListeners(levelKey)) {
-            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS(worldSeed);
+            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS(worldSeed, rs);
             EventHandlers.createChunkDataProvider.post(event, levelKey);
             if (event.generatePartial != null) partial = event.generatePartial;
             if (event.generateFull != null) full = event.generateFull;

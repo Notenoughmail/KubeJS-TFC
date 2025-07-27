@@ -8,8 +8,13 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkRockDataCache;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -22,14 +27,21 @@ public class CreateChunkDataProviderEventJS extends EventJS {
     public transient Function<ChunkAccess, Aquifer> createAquifer;
 
     private final long seed;
+    private final RandomState rs;
 
-    public CreateChunkDataProviderEventJS(long seed) {
+    public CreateChunkDataProviderEventJS(long seed, RandomState rs) {
         this.seed = seed;
+        this.rs = rs;
     }
 
     @Info("Returns the seed for the world the chunk data provider is being applied to")
     public long getWorldSeed() {
         return seed;
+    }
+
+    @Info("Returns the normal noise defined by the noise parameters with the given id")
+    public NormalNoise getNormalNoise(ResourceLocation id) {
+        return rs.getOrCreateNoise(ResourceKey.create(Registries.NOISE, id));
     }
 
     @Info("""

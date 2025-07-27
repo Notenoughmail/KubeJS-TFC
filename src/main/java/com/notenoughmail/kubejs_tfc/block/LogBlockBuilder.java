@@ -8,6 +8,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -28,6 +29,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         blockItemModel = false;
         itemBuilder.texture("layer0", newID("item/", "").toString());
         tag(BlockTags.LOGS.location());
+        tag(TFCTags.Items.LOG_PILE_LOGS.location());
     }
 
     @Override

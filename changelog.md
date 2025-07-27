@@ -11,9 +11,10 @@
   - `#model(Consumer)` -> `#setModel(Consumer)`
 - Allow `RecipeJS#getOriginalRecipeIngredients()` to work with TFC recipe types
 - Add ability to change custom crop growth and expiry rates
-- Add `always` nad `never` shortcuts for extended property settings that take `StatePredicate`s
+- Add `always` and `never` shortcuts for extended property settings that take `StatePredicate`s
 - Add tree solver command for modpack makers to easily make tree structures with proper states
 - Add event for registering ISM -> json converters. All TFC, Firmalife, and TFCCC ISM types should be handled by default
+- Add the ability to retrieve `NormalNoise`s during the chunk data provider creation event
 
 ### 1.3.1
 - Fix supports having broken connecting models by default
