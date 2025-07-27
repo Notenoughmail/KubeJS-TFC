@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
@@ -20,7 +19,6 @@ import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.SealableInventoryAttachment;
@@ -48,8 +46,6 @@ import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
-import net.dries007.tfc.common.blocks.rock.Rock;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
 import net.dries007.tfc.common.capabilities.glass.GlassOperation;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
@@ -60,11 +56,9 @@ import net.dries007.tfc.common.recipes.outputs.*;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
-import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
@@ -274,6 +268,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(ClientForgeEventHandler.class);
     }
 
+    // TODO: 1.21.1 | This actually kinda sucks
     @Override
     public void attachPlayerData(AttachedData<Player> event) {
         if (event.getParent() != null) {
@@ -294,23 +289,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         KubeJSTFC.reloadConfig(properties);
     }
 
-    private void addToolTier(Tier tier) {
-        ItemBuilder.TOOL_TIERS.put(tier.toString().toLowerCase(), tier);
-    }
-
-    private void addArmorMaterial(ArmorMaterial armorMaterial) {
-        ItemBuilder.ARMOR_TIERS.put(armorMaterial.toString().toLowerCase(), armorMaterial);
-    }
-
     private void addValues() {
-        for (var tier : TFCTiersJS.values()) {
-            addToolTier(tier.getTier());
+        for (TFCTiersJS tier : TFCTiersJS.values()) {
+            ItemBuilder.TOOL_TIERS.put(tier.getTier().toString().toLowerCase(), tier.getTier());
         }
-        for (var material : TFCArmorMaterials.values()) {
-            addArmorMaterial(material);
+        for (ArmorMaterial material : TFCArmorMaterials.values()) {
+            ItemBuilder.ARMOR_TIERS.put(material.toString().toLowerCase(), material);
         }
-        KubeJSTFC.registerRockListener(KubeJSTFCPlugin::addRocks);
-        KubeJSTFC.registerWoodListener(KubeJSTFCPlugin::addWoods);
 
         KubeJSTFC.registerISMConverter(AddHeatModifier.class, (heat, json) -> json.addProperty("temperature", heat.temperature()));
         KubeJSTFC.registerISMConverter(AddRemoveTraitModifier.class, (trait, json) -> json.addProperty("trait", FoodTrait.getId(trait.trait()).toString()));
@@ -330,17 +315,5 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                 json.add("portions", array);
             }
         });
-    }
-
-    private static void addWoods(ImmutableMap.Builder<String, NamedRegistryWood> builder) {
-        for (Wood wood : Wood.VALUES) {
-            builder.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
-        }
-    }
-
-    private static void addRocks(ImmutableMap.Builder<String, RegistryRock> builder) {
-        for (Rock rock : Rock.VALUES) {
-            builder.put(rock.getSerializedName(), rock);
-        }
     }
 }

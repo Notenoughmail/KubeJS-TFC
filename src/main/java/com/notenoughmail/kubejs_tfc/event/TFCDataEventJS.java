@@ -26,7 +26,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -387,13 +386,12 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "lootTable", value = "The location of a loot table to be dropped by the ingredient"),
             @Param(name = "models", value = "A list of model locations to be iterated through as panning progresses")
     })
-    @Generics(String.class)
-    public void panning(BlockIngredient blockIngredient, String lootTable, List<String> models) {
+    public void panning(BlockIngredient blockIngredient, String lootTable, String[] models) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("loot_table", lootTable);
         final JsonArray array = new JsonArray();
-        models.forEach(array::add);
+        for (String s : models) array.add(s);
         json.add("model_stages", array);
         addJson(ResourceUtils.dataIDFromObject(blockIngredient, "tfc", "panning"), json);
     }
@@ -404,13 +402,12 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
             @Param(name = "models", value = "A list of model locations to be iterated through as panning progresses"),
             @Param(name = "name", value = "The name of the panning definition")
     })
-    @Generics(String.class)
-    public void panning(BlockIngredient blockIngredient, String lootTable, List<String> models, ResourceLocation name) {
+    public void panning(BlockIngredient blockIngredient, String lootTable, String[] models, ResourceLocation name) {
         final JsonObject json = new JsonObject();
         json.add("ingredient", blockIngredient.toJson());
         json.addProperty("loot_table", lootTable);
         final JsonArray array = new JsonArray();
-        models.forEach(array::add);
+        for (String s : models) array.add(s);
         json.add("model_stages", array);
         addJson(ResourceUtils.dataID(name, "tfc", "panning"), json);
     }

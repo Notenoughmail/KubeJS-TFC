@@ -11,6 +11,8 @@ import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.minecraft.util.valueproviders.IntProvider;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -28,6 +30,12 @@ public class WorldGenUtils {
 
     public static void nullableIntProvider(JsonObject json, String key, @Nullable IntProvider provider) {
         ResourceUtils.nullable(json, key, provider, p -> IntProvider.CODEC.encodeStart(JsonOps.INSTANCE, p).getOrThrow(false, KubeJSTFC::warningLog));
+    }
+
+    public static <Kr, Vr, K, V> Map<Kr, Vr> convertMap(Map<K, V> map, Function<K, Kr> keyConverter, Function<V, Vr> valueConverter) {
+        final Map<Kr, Vr> ret = new HashMap<>();
+        map.forEach((key, value) -> ret.put(keyConverter.apply(key), valueConverter.apply(value)));
+        return ret;
     }
 
     /**

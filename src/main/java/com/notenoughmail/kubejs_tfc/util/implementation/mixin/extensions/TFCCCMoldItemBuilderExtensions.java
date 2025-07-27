@@ -16,15 +16,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @IfPresent(TFCChannelCasting.MOD_ID)
 @SuppressWarnings("unused")
 @Mixin(value = MoldItemBuilder.class, remap = false)
 public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder implements ITFCCCMoldItemBuilderExtensions {
 
     @Unique
-    private transient List<String> kubejs_tfc$model;
+    private transient String[] kubejs_tfc$model;
 
     public TFCCCMoldItemBuilderExtensions(ResourceLocation i) {
         super(i);
@@ -37,8 +35,8 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
     }
 
     @Override
-    public MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable(List<String> model) {
-        if (model.size() != 14) {
+    public MoldItemBuilder kubejs_tfc$TFCCCAllowedInMoldTable(String[] model) {
+        if (model.length != 14) {
             throw new IllegalArgumentException("The mold table model must have 14 rows each of length 14");
         }
         kubejs_tfc$model = model;
@@ -55,7 +53,7 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
                     textures.addProperty("particle", "tfcchannelcasting:block/mold_texture");
                 }));
                 final JsonArray pattern = new JsonArray(14);
-                kubejs_tfc$model.forEach(pattern::add);
+                for (String s : kubejs_tfc$model) pattern.add(s);
                 model.add("pattern", pattern);
             }));
         }

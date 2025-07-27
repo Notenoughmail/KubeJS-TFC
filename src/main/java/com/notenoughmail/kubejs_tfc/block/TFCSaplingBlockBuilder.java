@@ -24,6 +24,7 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public TFCSaplingBlockBuilder(ResourceLocation i) {
         super(i);
+        growth = () -> 8;
         normalTree = oldGrowthTree = ResourceLocation.tryBuild("minecraft", "oak");
         sand = false;
         RegistryUtils.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);

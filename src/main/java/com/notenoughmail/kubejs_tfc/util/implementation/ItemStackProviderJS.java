@@ -68,7 +68,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     public static ItemStackProvider ofCannon(@Nullable Object o) {
         if (o instanceof ItemStackProvider isp) {
-            return isp; // Skip to serialize & deserialize trip when canonizing
+            return isp; // Skip the serialize & deserialize trip when canonizing
         }
         return of(o).asCanonClass();
     }

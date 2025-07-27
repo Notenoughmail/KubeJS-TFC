@@ -25,7 +25,7 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
         super(i);
         this.parent = parent;
         models = (t, m) -> {
-            if (t.layer != 8) {
+            if (t.layers != 8) {
                 m.parent("tfc:block/groundcover/fallen_leaves_height" + t.height);
                 m.textures(textures);
             } else {
@@ -81,7 +81,7 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
     @Override
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         for (FallenLeafModelType type : FallenLeafModelType.VALUES) {
-            bs.simpleVariant("layers=" + type.layer, newID("block/", "/height_" + type.height).toString());
+            bs.simpleVariant("layers=" + type.layers, newID("block/", "/height_" + type.height).toString());
         }
     }
 
@@ -112,11 +112,11 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
 
         public static final FallenLeafModelType[] VALUES = values();
 
-        public final int height, layer;
+        public final int height, layers;
 
         FallenLeafModelType() {
-            layer = ordinal() + 1;
-            height = layer * 2;
+            layers = ordinal() + 1;
+            height = layers * 2;
         }
     }
 }

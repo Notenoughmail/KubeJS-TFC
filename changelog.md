@@ -15,6 +15,9 @@
 - Add tree solver command for modpack makers to easily make tree structures with proper states
 - Add event for registering ISM -> json converters. All TFC, Firmalife, and TFCCC ISM types should be handled by default
 - Add the ability to retrieve `NormalNoise`s during the chunk data provider creation event
+- Adds sealable inventory attachment which applies a food trait to items within it
+- "Fix" proto chunks with no `ChunkData` causing issues when promoted to level chunks with custom chunk data providers
+- Add custom surface rule source that uses the `RockSettings` at a given position
 
 ### 1.3.1
 - Fix supports having broken connecting models by default

@@ -26,6 +26,9 @@ import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.UtilsJS;
+import net.dries007.tfc.TerraFirmaCraft;
+import net.dries007.tfc.common.blocks.rock.Rock;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.config.ConfigBuilder;
@@ -60,7 +63,7 @@ import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
 
-// TODO: [Future] | Custom recipe filters
+// TODO: 1.3.3 | Custom recipe filters
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {
@@ -70,8 +73,16 @@ public class KubeJSTFC {
     public static final String MODID = "kubejs_tfc";
     public static boolean debug, insertIntoConsole, deduplicateConsoleErrors;
 
-    private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {};
-    private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {};
+    private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {
+        for (Rock rock : Rock.VALUES) {
+            r.put(rock.getSerializedName(), rock);
+        }
+    };
+    private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {
+        for (Wood wood : Wood.VALUES) {
+            w.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
+        }
+    };
     private static final Map<Class<?>, BiConsumer<?, JsonObject>> ISM_CONVERTERS = new IdentityHashMap<>();
 
     public static void reloadConfig(DevProperties props) {
@@ -231,6 +242,7 @@ public class KubeJSTFC {
     public static ImmutableMap<String, RegistryRock> registerRocks() {
         final ImmutableMap.Builder<String, RegistryRock> builder = new ImmutableMap.Builder<>();
         rockListeners.accept(builder);
+        rockListeners = null;
         return builder.build();
     }
 
@@ -238,6 +250,7 @@ public class KubeJSTFC {
     public static ImmutableMap<String, NamedRegistryWood> registerWoods() {
         final ImmutableMap.Builder<String, NamedRegistryWood> builder = new ImmutableMap.Builder<>();
         woodListeners.accept(builder);
+        woodListeners = null;
         return builder.build();
     }
 

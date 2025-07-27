@@ -4,12 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
-import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 public abstract class BuildVeinProperties {
@@ -48,14 +45,13 @@ public abstract class BuildVeinProperties {
             @Param(name = "undergroundRarity", value = "Sets the rarity of the indicator blocks when underground"),
             @Param(name = "indicators", value = "A list of string representations of weighted block states, the blocks to be used as indicators")
     })
-    @Generics(String.class)
-    public BuildVeinProperties indicator(int depth, int rarity, int undergroundRarity, int undergroundCount, List<String> indicators) {
+    public BuildVeinProperties indicator(int depth, int rarity, int undergroundRarity, int undergroundCount, String[] indicators) {
         final JsonObject indicatorJson = new JsonObject();
         indicatorJson.addProperty("depth", depth);
         indicatorJson.addProperty("rarity", rarity);
         indicatorJson.addProperty("underground_rarity", undergroundRarity);
         indicatorJson.addProperty("underground_count", undergroundCount);
-        final JsonArray blocks = new JsonArray(indicators.size());
+        final JsonArray blocks = new JsonArray(indicators.length);
         for (String s: indicators) {
             blocks.add(WorldGenUtils.weightedBlockState(s, "block"));
         }

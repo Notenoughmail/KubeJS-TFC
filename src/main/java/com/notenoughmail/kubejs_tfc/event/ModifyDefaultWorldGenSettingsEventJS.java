@@ -4,6 +4,7 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.*;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
+import com.notenoughmail.kubejs_tfc.util.WorldGenUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.typings.Generics;
@@ -214,7 +215,7 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
     })
     @Generics({String.class, String.class})
     public void defineLayer(String id, Map<String, String> rockMap) {
-        layers.add(new RockLayerSettings.LayerData(id, rockMap));
+        layers.add(new RockLayerSettings.LayerData(id, WorldGenUtils.convertMap(rockMap, String::valueOf, String::valueOf))); // Ensure the values are actually strings and not Rhino's concat strings or whatever
     }
 
     @Info("Removes the given layer from the generator")

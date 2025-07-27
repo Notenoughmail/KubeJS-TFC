@@ -38,6 +38,7 @@ public class ChunkDataProviderMixin {
         }
     }
 
+    // TODO: 1.3.3 | This is merely a bandaid, find the root problem and fix *that*
     // Dirty, ugly hack that should NOT be needed, but something is going wrong somewhere and I have no idea where that might be
     @WrapOperation(method = "promotePartial", at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;"), remap = false)
     private <V> V kubejs_tfc$FixPromotingToNullData(Map<ProtoChunk, ChunkData> instance, Object chunk, Operation<ChunkData> original) {
@@ -45,7 +46,7 @@ public class ChunkDataProviderMixin {
         if (data == null && chunk instanceof ChunkAccess access && generator instanceof KubeChunkDataGenerator kube) {
             data = new ChunkData(generator, access.getPos());
             kube.generateFullIfNot(data, access);
-            KubeJSTFC.error("{}", instance);
+            KubeJSTFC.warningLog("For some reason a ProtoChunk with no ChunkData attempted to be promoted to a LevelChunk at {}", access.getPos());
         }
         return UtilsJS.cast(data);
     }

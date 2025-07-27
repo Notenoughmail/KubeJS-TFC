@@ -75,7 +75,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment implemen
     }
 
     @Info("Unseals the inventory, if not already")
-    public void unSeal() {
+    public void unseal() {
         sealed = false;
         if (requiresSeal && canSeal) {
             unPreserveAll();
@@ -87,7 +87,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment implemen
     public boolean toggleSeal() {
         if (canSeal) {
             if (sealed) {
-                unSeal();
+                unseal();
             } else {
                 seal();
             }
@@ -98,7 +98,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment implemen
         return sealed;
     }
 
-    @Info("Returns the seled state of the inventory")
+    @Info("Returns the sealed state of the inventory")
     public boolean isSealed() { return sealed; }
 
     @Override
