@@ -27,6 +27,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -66,6 +67,14 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         RegistryUtils.hackBlockEntity(TFCBlockEntities.CROP, this);
         itemBuilder = null;
         noCollision();
+        fill(models);
+    }
+
+    protected void fill(Consumer<ModelGenerator>[] fill) {
+        Arrays.fill(fill, (Consumer<ModelGenerator>) (ModelGenerator m) -> {
+            m.parent("block/crop");
+            m.textures(textures);
+        });
     }
 
     @HideFromJS
@@ -125,7 +134,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Info("Texture the block for all growth stages")
     public AbstractCropBlockBuilder texture(String texture) {
         for (int i = 0 ; i < 12 ; i++) {
-            texture(i, texture);
+            textureAt(i, texture);
         }
         return this;
     }
@@ -133,7 +142,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Info("Texture a specific key for all growth stages")
     public AbstractCropBlockBuilder textureAll(String id, String tex) {
         for (int i = 0 ; i < 12 ; i++) {
-            texture(i, id, tex);
+            textureAt(i, id, tex);
         }
         return this;
     }
@@ -150,9 +159,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Info("Sets the model for all growth stages")
     public AbstractCropBlockBuilder setModel(Consumer<ModelGenerator> gen) {
-        for (int i = 0 ; i < 12 ; i++) {
-            setModel(i, gen);
-        }
+        Arrays.fill(models, gen);
         return this;
     }
 
@@ -169,21 +176,14 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     }
 
     @Info("Textures a specific key for the given stage")
-    public AbstractCropBlockBuilder texture(int stage, String id, String texture) {
-        if (models[stage] == null) {
-            models[stage] = m -> {
-                m.parent("block/crop");
-                m.texture(id, texture);
-            };
-        } else {
-            models[stage] = models[stage].andThen(m -> m.texture(id, texture));
-        }
+    public AbstractCropBlockBuilder textureAt(int stage, String id, String texture) {
+        models[stage] = models[stage].andThen(m -> m.texture(id, texture));
         return this;
     }
 
     @Info("Textures the block for the given growth stage")
-    public AbstractCropBlockBuilder texture(int stage, String texture) {
-        return texture(stage, "crop", texture);
+    public AbstractCropBlockBuilder textureAt(int stage, String texture) {
+        return textureAt(stage, "crop", texture);
     }
 
     @Info("Sets the textures for all growth stages")
@@ -196,14 +196,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Info("Sets the textures for the given growth stage")
     public AbstractCropBlockBuilder textures(int stage, JsonObject textures) {
-        if (models[stage] != null) {
-            models[stage] = models[stage].andThen(m -> m.textures(textures));
-        } else {
-            models[stage] = m -> {
-                m.parent("block/crop");
-                m.textures(textures);
-            };
-        }
+        models[stage] = models[stage].andThen(m -> m.textures(textures));
         return this;
     }
 
@@ -233,7 +226,6 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
         return texture("crop", tex);
     }
 
@@ -282,20 +274,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         for (int i = 0 ; i <= stages ; i++) {
-            final ResourceLocation age = newID("", "_age_" + i);
-            if (models[i] != null) {
-                int finalI = i;
-                generator.blockModel(age, m -> {
-                    m.textures(textures);
-                    models[finalI].accept(m);
-                });
-            } else {
-                final String texture = newID("block/", "_" + i).toString();
-                generator.blockModel(age, m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", texture);
-                });
-            }
+            generator.blockModel(newID("", "_age_" + i), models[i]);
         }
     }
 

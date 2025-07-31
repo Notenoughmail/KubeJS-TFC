@@ -9,6 +9,8 @@
   - `#productItem(ResourceLocation)` -> `#existingProductItem(ResourceLocation)`
   - `#model(number,Consumer)` -> `#setModel(number,Consumer)`
   - `#model(Consumer)` -> `#setModel(Consumer)`
+  - `#texture(number,String)` -> `#textureAt(number,String)`
+  - `#texture(number,String,String)` -> `#textureAt(number,String,String)`
 - Allow `RecipeJS#getOriginalRecipeIngredients()` to work with TFC recipe types
 - Add ability to change custom crop growth and expiry rates
 - Add `always` and `never` shortcuts for extended property settings that take `StatePredicate`s
@@ -18,6 +20,8 @@
 - Adds sealable inventory attachment which applies a food trait to items within it
 - "Fix" proto chunks with no `ChunkData` causing issues when promoted to level chunks with custom chunk data providers
 - Add custom surface rule source that uses the `RockSettings` at a given position
+- Fix custom spreading and double crops not respecting custom textures set in scripts
+  - This involved some reworks for all crop resource gens, the only noticeable effect should all stages looking for the *same* model instead of unique ones, by default
 
 ### 1.3.1
 - Fix supports having broken connecting models by default

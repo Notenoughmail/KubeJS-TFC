@@ -201,7 +201,7 @@ public class WorldGenUtils {
 
         public JsonObject toJson() {
             return ResourceUtils.buildJson(obj -> {
-                obj.add("state", blockStateToLenient(state));
+                obj.add("state", blockStateToLenient(state, true));
                 obj.addProperty("min_height", minHeight);
                 obj.addProperty("max_height", maxHeight);
                 obj.addProperty("wide", wide);

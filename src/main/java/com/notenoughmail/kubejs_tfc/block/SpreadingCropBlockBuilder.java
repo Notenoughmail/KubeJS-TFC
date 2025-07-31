@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.CropUtils;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -42,6 +43,12 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
     }
 
     @Override
+    public BlockBuilder textureAll(String tex) {
+        texture("side", tex);
+        return super.textureAll(tex);
+    }
+
+    @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
         if (blockstateJson == null) {
             blockstateJson = Util.make(new MultipartBlockStateGenerator(), this::blockStates).toJson();
@@ -51,18 +58,12 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        final String base = newID("block/", "_").toString();
         generator.blockModel(newID("", "_side"), m -> {
             m.parent("tfc:block/crop/spreading_crop_side");
-            m.texture("crop", base + "side");
+            m.textures(textures);
+            m.texture("crop", "#side"); // Use the side texture for the crop key, in case someone wants it to be unique
         });
-        for (int i = 0 ; i <= stages ; i++) {
-            final int j = i;
-            generator.blockModel(newID("", "_age_" + j), m -> {
-                m.parent("block/crop");
-                m.texture("crop", base + j);
-            });
-        }
+        super.generateBlockModelJsons(generator);
     }
 
     private void blockStates(MultipartBlockStateGenerator ms) {

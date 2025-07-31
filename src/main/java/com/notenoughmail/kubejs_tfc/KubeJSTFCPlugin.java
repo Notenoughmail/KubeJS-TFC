@@ -239,7 +239,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
-        typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCannon);
+        typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCanon);
         typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
     }
 

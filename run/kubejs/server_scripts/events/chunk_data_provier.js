@@ -14,11 +14,11 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
     const rockTypeNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 3216548497)
         .spread(0.061)
         .scaled(0, 3) // 0: Oceanic; 1: Volcanic; 2: Land; 3: Uplift
-        .map(val -> Math.round(val));
+        .map(val => Math.round(val));
     const rockLayerNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 9774532562233)
         .spread(0.000697)
         .scaled(0x80000000, 0x7fffffff) // Effectively acts as a random number generator within the range of Java's int type
-        .map(val -> val << 2) // Shift up two bits so the type noise is what is used for rock types instead of the random number
+        .map(val => val << 2) // Shift up two bits so the type noise is what is used for rock types instead of the random number
         .add(rockTypeNoise);
     const rockLayerHeightNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 30121796313692)
         .octaves(6)
@@ -27,7 +27,7 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
 
     // Precompute the aquifer heights as constants as this is nether and will not realistically change
     var aquifer = [];
-    i = 0;
+    var i = 0;
     while (i < 16) {
         aquifer.push(0);
         i++;

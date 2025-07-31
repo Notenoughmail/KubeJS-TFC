@@ -5,6 +5,16 @@ StartupEvents.registry('block', e => {
     e.create('pickable_crop', 'tfc:pickable_crop')
         .setModel(m => m.parent('minecraft:block/light_blue_wool'));
     e.create('spreading_crop', 'tfc:spreading_crop')
+        .textureAt(0, 'minecraft:block/dirt')
+        .textureAt(1, 'minecraft:block/dirt')
+        .textureAt(2, 'minecraft:block/dirt')
+        .textureAt(3, 'minecraft:block/dirt')
+        .textureAt(4, 'minecraft:block/dirt')
+        .textureAt(5, 'minecraft:block/dirt')
+        .textureAt(6, 'minecraft:block/dirt')
+        .textureAt(7, 'minecraft:block/dirt')
+        .textureAt(8, 'minecraft:block/dirt')
+        .stages(7)
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (stage.mature()) {
@@ -15,6 +25,8 @@ StartupEvents.registry('block', e => {
             });
         });
     e.create('double_crop', 'tfc:double_crop')
+        .textureAt(5, 'minecraft:block/cobblestone')
+        .topTexture(0, 'minecraft:block/sand')
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (!stage.mature()) {
@@ -26,6 +38,7 @@ StartupEvents.registry('block', e => {
         });
     e.create('double_crop_stick', 'tfc:double_crop')
         .requiresStick(true)
+        .stickTexture(2, 'minecraft:block/stone')
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (stage.bottom()) {

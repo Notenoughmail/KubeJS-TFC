@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.internal.AbstractCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
@@ -21,21 +22,113 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 @SuppressWarnings("unused")
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public transient int doubleStages;
+    public transient final Consumer<ModelGenerator>[] stickModels = new Consumer[4], topModels = new Consumer[5];
 
     public DoubleCropBlockBuilder(ResourceLocation i) {
         super(i);
         stages = 4;
         doubleStages = 4;
         type = Type.DOUBLE;
+        fill(stickModels);
+        fill(topModels);
     }
 
     @Override
     public <T extends Enum<T> & DeadCropBlockBuilder.DeadModelVariant> T[] deadModels() {
         return (T[]) (requiresStick ? DeadModels.VALUES_STICK : DeadModels.VALUES_NO_STICK);
+    }
+
+    @Info("Sets the model for all stick states")
+    public DoubleCropBlockBuilder setStickModel(Consumer<ModelGenerator> gen) {
+        Arrays.fill(stickModels, gen);
+        return this;
+    }
+
+    @Info("Sets the model for a specific stick state")
+    public DoubleCropBlockBuilder setStickModel(int stage, Consumer<ModelGenerator> gen) {
+        stickModels[stage] = gen;
+        return this;
+    }
+
+    @Info("Sets the model for a specific stick state")
+    public DoubleCropBlockBuilder stickModel(int stage, String model) {
+        stickModels[stage] = m -> m.parent(model);
+        return this;
+    }
+
+    @Info("Textures a specific key for the given stick state")
+    public DoubleCropBlockBuilder stickTexture(int stage, String key, String texture) {
+        stickModels[stage] = stickModels[stage].andThen(m -> m.texture(key, texture));
+        return this;
+    }
+
+    @Info("Sets the texture of a specific stick state")
+    public DoubleCropBlockBuilder stickTexture(int stage, String texture) {
+        return stickTexture(stage, "crop", texture);
+    }
+
+    @Info("Sets the textures for all stick states")
+    public DoubleCropBlockBuilder stickTextures(JsonObject textures) {
+        for (int i = 0 ; i < 4 ; i++) {
+            stickTextures(i, textures);
+        }
+        return this;
+    }
+
+    @Info("Sets the textures for a specific stick state")
+    public DoubleCropBlockBuilder stickTextures(int stage, JsonObject textures) {
+        stickModels[stage] = stickModels[stage].andThen(m -> m.textures(textures));
+        return this;
+    }
+
+    @Info("Sets the model for all top states")
+    public DoubleCropBlockBuilder setTopModel(Consumer<ModelGenerator> gen) {
+        Arrays.fill(topModels, gen);
+        return this;
+    }
+
+    @Info("Sets the model for a specific top state")
+    public DoubleCropBlockBuilder setTopModel(int stage, Consumer<ModelGenerator> gen) {
+        topModels[stage] = gen;
+        return this;
+    }
+
+    @Info("Sets the model for a specific top state")
+    public DoubleCropBlockBuilder topModel(int stage, String model) {
+        topModels[stage] = m -> m.parent(model);
+        return this;
+    }
+
+    @Info("Textures a specific key for the given top state")
+    public DoubleCropBlockBuilder topTexture(int stage, String key, String texture) {
+        topModels[stage] = topModels[stage].andThen(m -> m.texture(key, texture));
+        return this;
+    }
+
+    @Info("Sets the texture of a specific top state")
+    public DoubleCropBlockBuilder topTexture(int stage, String texture) {
+        return topTexture(stage, "crop", texture);
+    }
+
+    @Info("Sets the textures for all top states")
+    public DoubleCropBlockBuilder topTextures(JsonObject textures) {
+        for (int i = 0 ; i < 4 ; i++) {
+            topTextures(i, textures);
+        }
+        return this;
+    }
+
+    @Info("Sets the textures for a specific stick state")
+    public DoubleCropBlockBuilder topTextures(int stage, JsonObject textures) {
+        topModels[stage] = topModels[stage].andThen(m -> m.textures(textures));
+        return this;
     }
 
     @Info("Sets how many stages the crop has in its bottom state")
@@ -124,27 +217,14 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         final String baseTexture = newID("block/", "_").toString();
         for (int i = 0 ; i <= stages + doubleStages ; i++) {
-            final int j = i;
+            generator.blockModel(newID("", "_" + i + (i < stages ? "" : "_bottom")), models[i]);
+
             if (i < stages) {
-                generator.blockModel(newID("", "_" + j), m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", baseTexture + j);
-                });
                 if (requiresStick) {
-                    generator.blockModel(newID("", "_" + j + "_stick"), m -> {
-                        m.parent("block/crop");
-                        m.texture("crop", baseTexture + j + "_stick");
-                    });
+                    generator.blockModel(newID("", "_" + i + "_stick"), stickModels[i]);
                 }
             } else {
-                generator.blockModel(newID("", "_" + j + "_bottom"), m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", baseTexture + j + "_bottom");
-                });
-                generator.blockModel(newID("", "_" + j + "_top"), m -> {
-                    m.parent("block/crop");
-                    m.texture("crop", baseTexture + j + "_top");
-                });
+                generator.blockModel(newID("", "_" + i + "_top"), topModels[i - stages]);
             }
         }
     }

@@ -307,7 +307,6 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
         finishFeature(type, name, featureConfig, placement);
     }
 
-    // TODO: 1.3.2 | Using a raw JsonObject for the vertical anchor really sucks
     @Info(value = "Creates a 'tfc:fissure' configured feature and the matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
             @Param(name = "wallState", value = "The blockstate to use for the wall of the fissure, may be null to use the raw rock at the bottom of the world"),
@@ -351,7 +350,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
     @Info(value = "Creates a 'tfc:forest' configured feature and the matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
             @Param(name = "entriesTag", value = "A configured feature tag, the entries that will be placed. All values of the tag must be of the type 'tfc:forest_entry'"),
-            @Param(name = "types", value = "A list of {ForestType -> ForestTypeConfig} object"),
+            @Param(name = "types", value = "A list of {ForestType -> ForestTypeConfig} objects"),
             @Param(name = "useWeirdness", value = "If weirdness should be considered. May be null, defaults to true"),
             @Param(name = "placement", value = "The placement properties")
     })
@@ -525,7 +524,7 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
 
     @Info(value = "Creates a 'tfc:krummholz' configured feature and matching placed feature", params = {
             @Param(name = "name", value = "The name of the feature, the namespace will default to 'kubejs_tfc' if none is provided"),
-            @Param(name = "block", value = "The bloc kto place"),
+            @Param(name = "block", value = "The block to place"),
             @Param(name = "height", value = "The height the krummholz may be"),
             @Param(name = "spawnsOnStone", value = "If the krummholz may spawn on stone. May be null to default to false"),
             @Param(name = "spawnsOnGravel", value = "If the krummholz may spawn on gravel. May be null to default to false"),

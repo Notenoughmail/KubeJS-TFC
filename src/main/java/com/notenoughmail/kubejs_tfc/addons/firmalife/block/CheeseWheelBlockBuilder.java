@@ -96,6 +96,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         RegistryInfo.ITEM.addBuilder(sliceItem);
     }
 
+    // TODO: 1.3.3 | This does not consider cheese wheels in racks... since *when* is that a thing???
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         for (int age = 0 ; age < 3 ; age++) {
