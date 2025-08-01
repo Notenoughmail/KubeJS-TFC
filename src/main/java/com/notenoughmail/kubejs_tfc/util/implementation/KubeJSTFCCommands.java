@@ -98,6 +98,7 @@ public class KubeJSTFCCommands {
         );
     }
 
+    // TODO: 1.3.3 | Paginate results
     private static int listIds(CommandContext<CommandSourceStack> ctx) {
         final DataType dataType = DataType.get("data_type", ctx);
         final DataManager<?> manager = dataType.manager;

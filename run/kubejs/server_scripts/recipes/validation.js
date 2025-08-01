@@ -4,7 +4,8 @@ ServerEvents.recipes(e => {
     e.forEachRecipe([
         { mod: 'tfc' },
         { mod: 'firmalife' },
-        { mod: 'afc' }
+        { mod: 'afc' },
+        { mod: 'kubejs' }
     ], r => {
         if (r.originalRecipeIngredients.empty) {
             let inputComponents = r.inputValues();
@@ -18,6 +19,10 @@ ServerEvents.recipes(e => {
                         }
                     } else if (type == 'tfc:knapping') {
                         if (r.get('ingredient') != null && !r.get('ingredient').empty) {
+                            err(r);
+                        }
+                    } else if (type == 'tfc:barrel_sealed') {
+                        if (r.get('input_item') != null && !r.get('input_item').empty) {
                             err(r);
                         }
                     } else {
