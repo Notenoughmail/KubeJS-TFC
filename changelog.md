@@ -1,4 +1,4 @@
-### 1.3.2 (W.I.P.)
+### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties
 - Add fissure, forest, forest entry, overlay tree, random tree, stacked tree, and krummholz worldgen builders
 - Add direct wrapper for TFC's `ItemStackProvider`
