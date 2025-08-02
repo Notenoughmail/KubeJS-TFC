@@ -1,3 +1,6 @@
+### 1.3.3
+- The list ids command is now paginated
+
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties
 - Add fissure, forest, forest entry, overlay tree, random tree, stacked tree, and krummholz worldgen builders

@@ -31,6 +31,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -43,6 +44,9 @@ public class KubeJSTFCCommands {
                         .then(literal("list_ids")
                                 .then(argument("data_type", DataTypeArgument.create())
                                         .executes(KubeJSTFCCommands::listIds)
+                                        .then(argument("page", IntegerArgumentType.integer(1))
+                                                .executes(KubeJSTFCCommands::listIdsPage)
+                                        )
                                 )
                         )
                         .then(literal("describe")
@@ -98,25 +102,82 @@ public class KubeJSTFCCommands {
         );
     }
 
-    // TODO: 1.3.3 | Paginate results
+    private static ClickEvent describeClickEvent(DataType type, String id) {
+        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(type.getSerializedName(), id));
+    }
+
+    private static int listIdsPage(CommandContext<CommandSourceStack> ctx) {
+        return listIds(
+                IntegerArgumentType.getInteger(ctx, "page"),
+                DataType.get("data_type", ctx),
+                c -> sysMsg(c, ctx)
+        );
+    }
+
     private static int listIds(CommandContext<CommandSourceStack> ctx) {
-        final DataType dataType = DataType.get("data_type", ctx);
+        return listIds(
+                1,
+                DataType.get("data_type", ctx),
+                c -> sysMsg(c, ctx)
+        );
+    }
+
+    private static final long ELEMENTS_ON_PAGE = 10;
+
+    private static final HoverEvent DESCRIBE_ENTRY = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry"));
+    private static final HoverEvent NEXT_PAGE = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Next page"));
+    private static final HoverEvent LAST_PAGE = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Previous page"));
+
+    private static ClickEvent listIdsClickEvent(DataType type, long page) {
+        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc list_ids %s %d".formatted(type.getSerializedName(), page));
+    }
+
+    private static int listIds(int page, DataType dataType, Consumer<Component> msg) {
         final DataManager<?> manager = dataType.manager;
-        sysMsg("List of all data handled by %s:".formatted(manager.directory), ctx);
-        final int i = ((DataManagerAccessor<?>) manager).kubejs_tfc$Types().keySet().stream()
+        final Set<ResourceLocation> names = ((DataManagerAccessor<?>) manager).kubejs_tfc$Types().keySet();
+        final long totalPages = (names.size() - 1) / ELEMENTS_ON_PAGE + 1;
+        final long currentPage = (long) Mth.clamp(page, 1, totalPages);
+
+        msg.accept(Component.literal("\nShowing page %d of %d for %s".formatted(currentPage, totalPages, manager.directory)));
+        msg.accept(Component.literal("(%d through %d of %d)".formatted(((currentPage - 1) * ELEMENTS_ON_PAGE) + 1, Math.min(names.size(), (currentPage * ELEMENTS_ON_PAGE) + 1), names.size())));
+
+        names.stream()
+                .sorted(ResourceLocation::compareNamespaced)
+                .skip(ELEMENTS_ON_PAGE * (currentPage - 1))
+                .limit(ELEMENTS_ON_PAGE)
                 .map(rl -> Component.literal("- ").append(
                         Component.literal(rl.toString()).withStyle(s -> s
                                 .withUnderlined(true)
                                 .withColor(ChatFormatting.AQUA)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), rl)))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry"))))
+                                .withClickEvent(describeClickEvent(dataType, rl.toString()))
+                                .withHoverEvent(DESCRIBE_ENTRY))
                 ))
-                .mapToInt(cmp -> {
-                    sysMsg(cmp, ctx);
-                    return 1;
-                }).sum();
-        sysMsg("Printed %s id(s)".formatted(i), ctx);
-        return i;
+                .forEach(msg);
+
+        if (totalPages > 1) {
+            final MutableComponent end = Component.literal("\n  ");
+            if (currentPage > 1) {
+                end.append(
+                        Component.literal("<<")
+                                .withStyle(s -> s
+                                        .withColor(ChatFormatting.GOLD)
+                                        .withClickEvent(listIdsClickEvent(dataType, currentPage - 1))
+                                        .withHoverEvent(LAST_PAGE))
+                ).append(CommonComponents.SPACE);
+            }
+            end.append("Page %d".formatted(currentPage));
+            if (currentPage < totalPages) {
+                end.append(CommonComponents.SPACE).append(
+                        Component.literal(">>")
+                                .withStyle(s -> s
+                                        .withColor(ChatFormatting.GOLD)
+                                        .withClickEvent(listIdsClickEvent(dataType, currentPage + 1))
+                                        .withHoverEvent(NEXT_PAGE))
+                );
+            }
+            msg.accept(end);
+        }
+        return (int) currentPage;
     }
 
     private static int describe(CommandContext<CommandSourceStack> ctx) {
@@ -161,7 +222,7 @@ public class KubeJSTFCCommands {
                         .append(Component.literal(id).withStyle(s -> s
                                 .withUnderlined(true)
                                 .withColor(ChatFormatting.AQUA)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(dataType.getSerializedName(), id)))
+                                .withClickEvent(describeClickEvent(dataType, id))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")))
                         )),
                 ctx
