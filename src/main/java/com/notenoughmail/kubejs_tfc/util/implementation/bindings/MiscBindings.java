@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
@@ -24,10 +25,7 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.chunkdata.RockData;
-import net.dries007.tfc.world.noise.Metaballs2D;
-import net.dries007.tfc.world.noise.Metaballs3D;
-import net.dries007.tfc.world.noise.OpenSimplex2D;
-import net.dries007.tfc.world.noise.OpenSimplex3D;
+import net.dries007.tfc.world.noise.*;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -288,6 +286,31 @@ public enum MiscBindings {
     @Info("Creates a new `OpenSimplex3D` noise, the implementation of 3D noise TFC uses for its worldgen")
     public OpenSimplex3D newOpenSimplex3D(long seed) {
         return new OpenSimplex3D(seed);
+    }
+
+    @Info("Creates a new `Cellular2D` noise")
+    public Cellular2D cellular2D(long seed) {
+        return new Cellular2D(seed);
+    }
+
+    @Info("Creates a new `Cellular3D` noise")
+    public Cellular3D cellular3D(long seed) {
+        return new Cellular3D(seed);
+    }
+
+    @Info("Creates a new `FastNoiseLite` object, which TFC uses for several of its noises")
+    public FastNoiseLite fnl(long seed) {
+        return new FastNoiseLite(HashCommon.long2int(seed));
+    }
+
+    @Info("Converts a `FastNoiseLite` object into a `Noise2D` object")
+    public Noise2D fnl2Noise2D(FastNoiseLite fnl) {
+        return fnl::GetNoise;
+    }
+
+    @Info("Converts a `FastNoiseLite` object into a `Noise3D` object")
+    public Noise3D fnl2Noise3D(FastNoiseLite fnl) {
+        return fnl::GetNoise;
     }
 
     @Info(value = "Creates a new `Metaballs2D`, TFC's 2D implementation of Metaballs", params = {

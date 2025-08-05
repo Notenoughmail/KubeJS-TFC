@@ -14,6 +14,8 @@
     "GlassOperationMixin",
     "HandHeldItemBuilderMixin",
     "KubeJSMenuMixin",
+    "Noise2DMixin",
+    "Noise3DMixin",
     "PlacementContextMixin",
     "RegisteredDataManagerMixin",
     "SelfTestsMixin",

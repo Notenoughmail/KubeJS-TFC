@@ -1,5 +1,7 @@
-### 1.3.3
+### 1.3.3 (W.I.P.)
 - The list ids command is now paginated
+- Add several bindings for noises
+- Add some additional helper functions for TFC's `Noise2D` and `Noise3D` classes
 
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties
