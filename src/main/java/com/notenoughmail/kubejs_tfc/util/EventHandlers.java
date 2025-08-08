@@ -2,8 +2,8 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
-import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
+import com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType;
+import com.notenoughmail.kubejs_tfc.util.implementation.commands.KubeJSTFCCommands;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;

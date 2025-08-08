@@ -12,10 +12,8 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
-import com.notenoughmail.kubejs_tfc.util.implementation.DataType;
-import com.notenoughmail.kubejs_tfc.util.implementation.KubeJSTFCCommands;
+import com.notenoughmail.kubejs_tfc.util.implementation.commands.*;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.implementation.TreeSolver;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFertilizerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
@@ -61,7 +59,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static com.notenoughmail.kubejs_tfc.util.implementation.DataType.append;
+import static com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType.append;
 
 // TODO: 1.3.3 | Custom recipe filters
 @SuppressWarnings("unused")
@@ -174,6 +172,12 @@ public class KubeJSTFC {
                 ArgumentTypeInfos.registerByClass(
                         TreeSolver.ArgType.class,
                         TreeSolver.TypeInfo.INST
+                )
+        );
+        COMMAND_ARGS.register("range", () ->
+                ArgumentTypeInfos.registerByClass(
+                        Range.RangeArgumentType.class,
+                        SingletonArgumentInfo.contextFree(Range::arg)
                 )
         );
         CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);

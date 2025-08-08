@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
@@ -41,8 +42,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.Lazy;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -311,6 +314,29 @@ public enum MiscBindings {
     @Info("Converts a `FastNoiseLite` object into a `Noise3D` object")
     public Noise3D fnl2Noise3D(FastNoiseLite fnl) {
         return fnl::GetNoise;
+    }
+
+    @HideFromJS
+    @ApiStatus.Internal
+    public final Supplier<Map<String, Noise2D>> inspect2DNoise = Lazy.of(HashMap::new);
+    @HideFromJS
+    @ApiStatus.Internal
+    public final Supplier<Map<String, Noise3D>> inspect3DNoise = Lazy.of(HashMap::new);
+
+    @Info("Adds a 2D noise to a list to be inspected via a command. Only works if KubeJS's debug mode is enabled")
+    public void register2DNoiseForInspection(String name, Noise2D noise) {
+        if (KubeJSTFC.debug) {
+            KubeJSTFC.info("Added 2D noise {} to inspection list", name);
+            inspect2DNoise.get().put(name, noise);
+        }
+    }
+
+    @Info("Adds a 3D noise to a list to be inspected vai a command. Only works if KubeJS's debug mode is enabled")
+    public void register3DNoiseForInspection(String name, Noise3D noise) {
+        if (KubeJSTFC.debug) {
+            KubeJSTFC.info("Added 3D noise {} to inspection list", name);
+            inspect3DNoise.get().put(name, noise);
+        }
     }
 
     @Info(value = "Creates a new `Metaballs2D`, TFC's 2D implementation of Metaballs", params = {

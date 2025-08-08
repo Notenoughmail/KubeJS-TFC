@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package com.notenoughmail.kubejs_tfc.util.implementation.commands;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;

@@ -19,6 +19,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -61,6 +62,7 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
     private final String key;
     private Settings settings;
     private KubeChunkDataGenerator chunkDataGenerator;
+    private Climate.Sampler climateSampler;
 
     public WrappedChunkGenerator(ChunkGenerator wrapped, String key, Settings settings) {
         super(wrapped.getBiomeSource());
@@ -106,8 +108,36 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
         final RandomState rs = ((ChunkMapAccessor) chunkMap).accessor$getRandomState();
 
         chunkDataGenerator = KubeChunkDataGenerator.create(key, settings.rockLayerSettings(), level.getSeed(), rs);
+        climateSampler = rs.sampler();
 
         ((RandomStateExtension) (Object) rs).tfc$setChunkGeneratorExtension(this);
+    }
+
+    // Reimplement here as there is no guarantee the wrapped biome source is a BiomeSourceExtension
+    @Override
+    public BlockPos findSpawnBiome(RandomSource random) {
+        final int step = Math.max(4, settings.spawnDistance() / 256); // Check every 4 quarts / 1 chunk at a minimum
+        final int centerX = QuartPos.fromBlock(settings.spawnCenterX());
+        final int centerZ = QuartPos.fromBlock(settings.spawnCenterZ());
+        final int maxRadius = QuartPos.fromBlock(settings.spawnDistance());
+
+        int count = 0;
+
+        // This *should* be called after #initRandomState, see MinecraftServer#createLevels
+        Climate.SpawnFinder.Result result = Climate.SpawnFinder.getSpawnPositionAndFitness(climateSampler.spawnTarget(), climateSampler, settings.spawnCenterX(), settings.spawnCenterZ());
+        for (int quartX = centerX - maxRadius ; quartX < centerX + maxRadius ; quartX += step) {
+            for (int quartZ = centerZ - maxRadius ; quartZ < centerZ + maxRadius ; quartZ += step) {
+                if (random.nextInt(count + 1) == 0) {
+                    final Climate.SpawnFinder.Result atQuart = Climate.SpawnFinder.getSpawnPositionAndFitness(climateSampler.spawnTarget(), climateSampler, QuartPos.toBlock(quartX), QuartPos.toBlock(quartZ));
+                    if (atQuart.fitness() < result.fitness()) {
+                        result = atQuart;
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return result.location();
     }
 
     @Override
