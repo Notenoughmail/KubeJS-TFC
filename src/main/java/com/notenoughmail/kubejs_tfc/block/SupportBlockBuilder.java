@@ -50,7 +50,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
 
     @Override
     public Block createObject() {
-        return new VerticalSupportBlock(createExtendedProperties());
+        return new VerticalSupportBlock(createExtendedProperties().noOcclusion());
     }
 
     @Override

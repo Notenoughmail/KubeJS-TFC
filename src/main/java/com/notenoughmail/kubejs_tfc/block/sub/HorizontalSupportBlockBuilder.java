@@ -25,7 +25,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
 
     @Override
     public Block createObject() {
-        return new HorizontalSupportBlock(createExtendedProperties());
+        return new HorizontalSupportBlock(createExtendedProperties().noOcclusion());
     }
 
     @Override

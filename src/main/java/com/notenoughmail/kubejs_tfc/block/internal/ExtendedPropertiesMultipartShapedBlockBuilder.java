@@ -16,6 +16,7 @@ public abstract class ExtendedPropertiesMultipartShapedBlockBuilder extends Mult
     public ExtendedPropertiesMultipartShapedBlockBuilder(ResourceLocation i) {
         super(i);
         props = p -> {};
+        notSolid = false;
     }
 
     @Override

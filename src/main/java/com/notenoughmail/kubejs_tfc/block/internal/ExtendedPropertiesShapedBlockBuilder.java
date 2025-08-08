@@ -16,6 +16,7 @@ public abstract class ExtendedPropertiesShapedBlockBuilder extends ShapedBlockBu
     public ExtendedPropertiesShapedBlockBuilder(ResourceLocation i) {
         super(i);
         props = p -> {};
+        notSolid = false; // By default, Kube makes any shaped block not solid...
     }
 
     @Override

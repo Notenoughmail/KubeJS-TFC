@@ -35,13 +35,13 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         this.parent = parent;
         renderType("cutout_mipped");
         tagBlock(TFCTags.Blocks.GRASS.location());
-        texture("texture", parent.textures.get("particle").getAsString());
         itemBuilder.texture("block", textures.get("texture").getAsString());
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.textures(textures);
         };
         BuilderRefs.grassBlockColor.add(this);
+        notSolid = false;
     }
 
     @Info("""
@@ -60,7 +60,6 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
 
     @Override
     public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
         texture("texture", tex);
         if (itemBuilder != null) {
             itemBuilder.texture("block", tex);
