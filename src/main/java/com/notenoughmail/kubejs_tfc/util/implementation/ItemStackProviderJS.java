@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
+import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
@@ -20,6 +21,7 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
@@ -174,10 +176,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Info("Adds a simple modifier to the ISP with the type defined by the provided string")
     public ItemStackProviderJS simpleModifier(String s) {
-        var obj = new JsonObject();
-        obj.addProperty("type", s);
-        modifiers.add(obj);
-        return this;
+        return jsonModifier(s, j -> {});
     }
 
     @Info("Adds the provided JsonObject to the modifier list")
@@ -186,21 +185,19 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return this;
     }
 
+    public ItemStackProviderJS jsonModifier(String type, Consumer<JsonObject> json) {
+        final JsonObject obj = ResourceUtils.buildJson(json);
+        obj.addProperty("type", type);
+        return jsonModifier(obj);
+    }
+
     public ItemStackProviderJS trait(boolean isAddingTrait, String foodTrait) {
-        final JsonObject obj = new JsonObject();
-        obj.addProperty("type", isAddingTrait ? "tfc:add_trait" : "tfc:remove_trait");
-        obj.addProperty("trait", foodTrait);
-        modifiers.add(obj);
-        return this;
+        return jsonModifier(isAddingTrait ? "tfc:add_trait" : "tfc:remove_trait", j -> j.addProperty("trait", foodTrait));
     }
 
     @Info("Adds a 'tfc:dye_leather' modifier to the ISP with the provided color")
     public ItemStackProviderJS dyeLeather(DyeColor color) {
-        var obj = new JsonObject();
-        obj.addProperty("type", "tfc:dye_leather");
-        obj.addProperty("color", color.getSerializedName());
-        modifiers.add(obj);
-        return this;
+        return jsonModifier("tfc:dye_leather", j -> j.addProperty("color", color.getSerializedName()));
     }
 
     @Info("Returns the json representation of the ISP's item stack")
@@ -291,11 +288,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Info(value = "Adds a 'tfc:add_heat' modifier to the ISP", params = @Param(name = "temperature", value = "The °C to add to the item"))
     public ItemStackProviderJS addHeat(float temperature) {
-        var obj = new JsonObject();
-        obj.addProperty("type", "tfc:add_heat");
-        obj.addProperty("temperature", temperature);
-        modifiers.add(obj);
-        return this;
+        return jsonModifier("tfc:add_heat", j -> j.addProperty("temperature", temperature));
     }
 
     @Info("Adds a 'tfc:add_powder' modifier to the ISP")
@@ -305,57 +298,57 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Info(value = "Adds a 'tfc:add_trait' modifier to the ISP", params = @Param(name = "trait", value = "The food trait to be added"))
     public ItemStackProviderJS addTrait(String trait) {
-        return this.trait(true, trait);
+        return trait(true, trait);
     }
 
     @Info(value = "Adds a 'tfc:remove_trait' modifier to the ISP", params = @Param(name = "trait", value = "The food trait to be removed"))
     public ItemStackProviderJS removeTrait(String trait) {
-        return this.trait(false, trait);
+        return trait(false, trait);
     }
 
     @Info("Adds a 'tfc:add_glass' modifier to the ISP, used as part of glassworking recipes")
     public ItemStackProviderJS addGlass() {
-        return this.simpleModifier("tfc:add_glass");
+        return simpleModifier("tfc:add_glass");
     }
 
     @Info("Adds a 'tfc:copy_food' modifier to the ISP")
     public ItemStackProviderJS copyFood() {
-        return this.simpleModifier("tfc:copy_food");
+        return simpleModifier("tfc:copy_food");
     }
 
     @Info("Adds a 'tfc:copy_forging_bonus' modifier to the ISP")
     public ItemStackProviderJS copyForgingBonus() {
-        return this.simpleModifier("tfc:copy_forging_bonus");
+        return simpleModifier("tfc:copy_forging_bonus");
     }
 
     @Info("Adds a 'tfc:copy_heat' modifier to the ISP")
     public ItemStackProviderJS copyHeat() {
-        return this.simpleModifier("tfc:copy_heat");
+        return simpleModifier("tfc:copy_heat");
     }
 
     @Info("Adds a 'tfc:copy_input' modifier to the ISP")
     public ItemStackProviderJS copyInput() {
-        return this.simpleModifier("tfc:copy_input");
+        return simpleModifier("tfc:copy_input");
     }
 
     @Info("Adds a 'tfc:empty_bowl' modifier to the ISP. This is supported by soup items")
     public ItemStackProviderJS emptyBowl() {
-        return this.simpleModifier("tfc:empty_bowl");
+        return simpleModifier("tfc:empty_bowl");
     }
 
     @Info("Adds a 'tfc:reset_food' modifier to the ISP")
     public ItemStackProviderJS resetFood() {
-        return this.simpleModifier("tfc:reset_food");
+        return simpleModifier("tfc:reset_food");
     }
 
     @Info("Adds a 'tfc:copy_oldest_food' modifier to the ISP")
     public ItemStackProviderJS copyOldestFood() {
-        return this.simpleModifier("tfc:copy_oldest_food");
+        return simpleModifier("tfc:copy_oldest_food");
     }
 
     @Info("Adds a 'tfc:add_bait_to_rod' modifier to the ISP")
     public ItemStackProviderJS addBait() {
-        return this.simpleModifier("tfc:add_bait_to_rod");
+        return simpleModifier("tfc:add_bait_to_rod");
     }
 
     @Info(value = "Adds a 'tfc:meal' modifier to the ISP", params = {
@@ -367,28 +360,24 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         final JsonObject obj = mealBase(food);
         JsonArray portionArray = new JsonArray(portions.length);
         for (Consumer<BuildPortionData> portion : portions) {
-            var portionData = new BuildPortionData();
+            final BuildPortionData portionData = new BuildPortionData();
             portion.accept(portionData);
             portionArray.add(portionData.toJson());
         }
         obj.add("portions", portionArray);
-        modifiers.add(obj);
-        return this;
+        return jsonModifier(obj);
     }
 
     @Info(value = "Adds a 'tfc:meal' modifier to the ISP", params = @Param(name = "food", value = "The base food data values for the meal modifier"))
     @Generics(BuildFoodItemData.class)
     public ItemStackProviderJS meal(Consumer<BuildFoodItemData> food) {
-        modifiers.add(mealBase(food));
-        return this;
+        return jsonModifier(mealBase(food));
     }
 
     private JsonObject mealBase(Consumer<BuildFoodItemData> food) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", "tfc:meal");
-        var foodData = new BuildFoodItemData(null);
-        food.accept(foodData);
-        obj.add("food", foodData.toJson());
+        obj.add("food", BuildFoodItemData.create(null, food));
         return obj;
     }
 }

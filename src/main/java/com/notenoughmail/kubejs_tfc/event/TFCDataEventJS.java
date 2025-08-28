@@ -153,9 +153,10 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     })
     @Generics(BuildFoodItemData.class)
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData) {
-        var data = new BuildFoodItemData(ingredient);
-        foodItemData.accept(data);
-        addJson(ResourceUtils.dataIDFromObject(ingredient, "tfc", "food_items"), data.toJson());
+        addJson(
+                ResourceUtils.dataIDFromObject(ingredient, "tfc", "food_items"),
+                BuildFoodItemData.create(ingredient, foodItemData)
+        );
     }
 
     @Info(value = "Adds a food definition to the specified ingredient", params = {
@@ -165,9 +166,10 @@ public class TFCDataEventJS extends EventJS implements IDataConstructor {
     })
     @Generics(BuildFoodItemData.class)
     public void foodItem(Ingredient ingredient, Consumer<BuildFoodItemData> foodItemData, ResourceLocation name) {
-        var data = new BuildFoodItemData(ingredient);
-        foodItemData.accept(data);
-        addJson(ResourceUtils.dataID(name, "tfc", "food_items"), data.toJson());
+        addJson(
+                ResourceUtils.dataID(name, "tfc", "food_items"),
+                BuildFoodItemData.create(ingredient, foodItemData)
+        );
     }
 
     @Info(value = "Adds a fuel definition to the specified ingredient", params = {

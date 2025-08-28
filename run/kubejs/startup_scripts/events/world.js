@@ -5,6 +5,7 @@ TFCEvents.rockSettings(e => {
 })
 
 TFCEvents.defaultWorldSettings(e => {
+/*
     e.setRainfallScale(4000);
     e.setTemperatureScale(20);
     e.setContinentalness(-3.5);
@@ -23,4 +24,5 @@ TFCEvents.defaultWorldSettings(e => {
     e.addLandLayer('test');
     e.addVolcanicLayer('test');
     e.addUpliftLayer('test');
+    */
 })

@@ -8,8 +8,7 @@ import net.minecraft.world.level.block.Block;
 public class DefaultCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public DefaultCropBlockBuilder(ResourceLocation i) {
-        super(i);
-        type = Type.DEFAULT;
+        super(i, Type.DEFAULT);
     }
 
     @Override

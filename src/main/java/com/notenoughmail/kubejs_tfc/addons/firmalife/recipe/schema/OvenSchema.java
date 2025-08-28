@@ -27,7 +27,7 @@ public interface OvenSchema {
             if (getOriginalRecipe() instanceof OvenRecipe o) {
                 return List.of(o.getIngredient());
             } else if (getOriginalRecipe() == null) {
-                ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+                ConsoleJS.SERVER.warn("Original oven recipe is null - could not get ingredients");
                 return List.of();
             } else {
                 throw new IllegalStateException("Original recipe was not an oven recipe?");

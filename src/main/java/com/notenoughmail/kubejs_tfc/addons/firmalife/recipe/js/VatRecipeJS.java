@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.js;
 
 import com.eerussianguy.firmalife.common.recipes.VatRecipe;
 import com.google.gson.JsonElement;
-import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.VatSchema;
 import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
@@ -16,6 +15,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
+import static com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.VatSchema.*;
+
 @SuppressWarnings("unused")
 public class VatRecipeJS extends TFCProviderRecipeJS {
 
@@ -25,49 +26,49 @@ public class VatRecipeJS extends TFCProviderRecipeJS {
     }
 
     public VatRecipeJS outputItem(ItemStackProviderJS outputProvider) {
-        setValue(VatSchema.OUTPUT_ITEM, outputProvider);
+        setValue(OUTPUT_ITEM, outputProvider);
         return this;
     }
 
     public VatRecipeJS outputFluid(OutputFluid outputFluid) {
-        setValue(VatSchema.OUTPUT_FLUID, outputFluid);
+        setValue(OUTPUT_FLUID, outputFluid);
         return this;
     }
 
     public VatRecipeJS outputs(ItemStackProviderJS itemOutput, OutputFluid outputFluid) {
-        setValue(VatSchema.OUTPUT_ITEM, itemOutput);
-        setValue(VatSchema.OUTPUT_FLUID, outputFluid);
+        setValue(OUTPUT_ITEM, itemOutput);
+        setValue(OUTPUT_FLUID, outputFluid);
         return this;
     }
 
     public VatRecipeJS inputItem(InputItem inputItem) {
-        setValue(VatSchema.INPUT_ITEM, inputItem);
+        setValue(INPUT_ITEM, inputItem);
         return this;
     }
 
     public VatRecipeJS inputFluid(FluidStackIngredient inputFluid) {
-        setValue(VatSchema.INPUT_FLUID, inputFluid);
+        setValue(INPUT_FLUID, inputFluid);
         return this;
     }
 
     public VatRecipeJS inputs(InputItem inputItem, FluidStackIngredient inputFluid) {
-        setValue(VatSchema.INPUT_ITEM, inputItem);
-        setValue(VatSchema.INPUT_FLUID, inputFluid);
+        setValue(INPUT_ITEM, inputItem);
+        setValue(INPUT_FLUID, inputFluid);
         return this;
     }
 
     public VatRecipeJS length(int length) {
-        setValue(VatSchema.LENGTH, length);
+        setValue(LENGTH, length);
         return this;
     }
 
     public VatRecipeJS temperature(float temperature) {
-        setValue(VatSchema.TEMPERATURE, temperature);
+        setValue(TEMPERATURE, temperature);
         return this;
     }
 
     public VatRecipeJS jar(OutputItem outputItem) {
-        setValue(VatSchema.JAR, outputItem);
+        setValue(JAR, outputItem);
         return this;
     }
 
@@ -76,7 +77,7 @@ public class VatRecipeJS extends TFCProviderRecipeJS {
         if (getOriginalRecipe() instanceof VatRecipe v) {
             return v.getInputItem() == ItemStackIngredient.EMPTY ? List.of() : List.of(v.getInputItem().ingredient());
         } else if (getOriginalRecipeResult() == null) {
-            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            ConsoleJS.SERVER.warn("Original vat recipe is null - could not get ingredients");
             return List.of();
         } else {
             throw new IllegalStateException("Original recipe was not a vat recipe?");

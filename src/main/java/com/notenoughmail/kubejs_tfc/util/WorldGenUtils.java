@@ -40,6 +40,8 @@ public class WorldGenUtils {
 
     /**
      * Converts a string representation of a block state into an equivalent lenient block state json element
+     * <p>
+     * forceExpand should be {@code true} if using {@code BlockState#CODEC}
      */
     public static JsonElement blockStateToLenient(String block, boolean forceExpanded) {
         if (forceExpanded || (block.indexOf('[') != -1 && block.indexOf(']') != -1)) {
@@ -89,7 +91,7 @@ public class WorldGenUtils {
         });
     }
 
-    /**
+    /*
      * Used by:
      * - Boulders
      */
@@ -111,7 +113,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Veins
      * - Hot springs
@@ -136,7 +138,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Soil discs
      */
@@ -156,7 +158,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Hot springs
      */
@@ -172,7 +174,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Forest
      */
@@ -191,7 +193,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Overlay Tree
      * - Random Tree
@@ -209,7 +211,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Overlay Tree
      * - Random Tree
@@ -226,7 +228,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Overlay Tree
      * - Random Tree
@@ -246,7 +248,7 @@ public class WorldGenUtils {
         }
     }
 
-    /**
+    /*
      * Used by:
      * - Stacked Tree
      */

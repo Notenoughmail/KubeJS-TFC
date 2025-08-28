@@ -41,15 +41,16 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Nullable
     public transient final ItemBuilder product;
     public transient FarmlandBlockEntity.NutrientType nutrient;
-    public transient Type type;
+    public transient final Type type;
     public transient boolean requiresStick;
     @Nullable
     public transient ResourceLocation productItem;
     public transient final Consumer<ModelGenerator>[] models = new Consumer[12];
     public transient Supplier<Double> growthMod = () -> 1D, expiryMod = () -> 1D;
 
-    public AbstractCropBlockBuilder(ResourceLocation i) {
+    public AbstractCropBlockBuilder(ResourceLocation i, Type type) {
         super(i);
+        this.type = type;
         stages = 8;
         climateRange = ClimateRange.MANAGER.register(id);
         dead = new DeadCropBlockBuilder(newID("", "_dead"), this);

@@ -2,11 +2,18 @@ package com.notenoughmail.kubejs_tfc.util.implementation.data;
 
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.typings.Info;
+import net.minecraft.Util;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 @SuppressWarnings("unused")
 public class BuildFoodItemData {
+
+    public static JsonObject create(@Nullable Ingredient ingredient, Consumer<BuildFoodItemData> consumer) {
+        return Util.make(new BuildFoodItemData(ingredient), consumer).toJson();
+    }
 
     @Nullable
     private final Ingredient ingredient;

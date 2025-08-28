@@ -52,7 +52,7 @@ public class MixingBowlRecipeJS extends TFCRecipeJS {
         if (getOriginalRecipe() instanceof MixingBowlRecipe m) {
             return List.copyOf(m.getItemIngredients());
         } else if (getOriginalRecipe() == null) {
-            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            ConsoleJS.SERVER.warn("Original mixing bowl recipe is null - could not get ingredients");
             return List.of();
         } else {
             throw new IllegalStateException("Original recipe was not a mixing bowl recipe?");

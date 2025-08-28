@@ -8,8 +8,7 @@ import net.minecraft.world.level.block.Block;
 public class FloodedCropBlockBuilder extends AbstractCropBlockBuilder {
 
     public FloodedCropBlockBuilder(ResourceLocation i) {
-        super(i);
-        type = Type.FLOODED;
+        super(i, Type.FLOODED);
     }
 
     @Override

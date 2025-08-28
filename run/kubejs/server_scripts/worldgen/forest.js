@@ -1,3 +1,5 @@
+
+
 TFCEvents.worldgenData(event => {
     event.krummholz(
         'example_krummholz',
@@ -18,17 +20,20 @@ TFCEvents.worldgenData(event => {
         placement => {}
     );
     event.forest(
-        'example_forest',
+        'tfc:forest',
         'kubejs:example_forest_entries',
         [
-            event.forestTypesMapEntry('edge', { min: 0, max: 2}, null, 0.1, null, false, false, null),
-            event.forestTypesMapEntry('normal', { min: 1, max: 9 }, { min: 2, max: 3 }, 0.5, null, false, false, null)
+			event.forestTypesMapEntry('none', 0, 0, 0, 0, false, false, 0),
+			event.forestTypesMapEntry('sparse', [1, 3], 6, 0.08, 0, true, false, null),
+			event.forestTypesMapEntry('edge', 2, 10, null, 1, false, false, [0, 1]),
+			event.forestTypesMapEntry('normal', 5, 25, null, 1, true, false, null),
+			event.forestTypesMapEntry('old_growth', 7, 40, null, 1, false, true, [0, 1])
         ],
         null,
         placement => {}
     );
     event.forestEntry(
-        'example_forest_entry',
+        'willow_replica',
         climate => {
             climate.minRain(325)
         },
@@ -37,19 +42,40 @@ TFCEvents.worldgenData(event => {
         null,
         null,
         null,
-        'tfc:tree/oak',
-        'kubejs_tfc:example_tree',
+        'kubejs_tfc:tree/willow_replica',
         'tfc:tree/pine_large',
         null,
-        80,
-        53,
         null,
-        62,
+        null,
+        null,
+        null,
+        null,
         true,
         placement => {}
     );
+    event.forestEntry(
+        'stacked_tree',
+        climate => {},
+        'tfc:wood/log/willow',
+        'tfc:wood/leaves/oak',
+        null,
+        null,
+        [
+            'minecraft:crimson_fungus'
+        ],
+        'kubejs_tfc:tree/stacked_tree',
+        'tfc:tree/pine_large',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        placement => {}
+    );
     event.randomTree(
-        'willow_replica',
+        'tree/willow_replica',
         [
             'tfc:willow/1',
             'tfc:willow/2',
@@ -64,14 +90,15 @@ TFCEvents.worldgenData(event => {
         placement => {}
     );
     event.stackedTree(
-        'example_stacked_tree',
+        'tree/stacked_tree',
         [
             event.treeLayer([ 'tfc:oak/1', 'tfc:oak/2', 'tfc:oak/3' ], 1, 3),
             event.treeLayer([ 'tfc:ash/1', 'tfc:ash/2', 'tfc:ash/3', 'tfc:ash/4', 'tfc:ash/5' ], 2, 4)
         ],
-        event.trunk('minecraft:oak_log', 1, 5, false),
-        event.treePlacement(5, 2, null),
+        event.trunk('tfc:wood/log/oak', 1, 5, false),
+        event.treePlacement(2, 2, null),
         null,
         placement => {}
     );
 })
+

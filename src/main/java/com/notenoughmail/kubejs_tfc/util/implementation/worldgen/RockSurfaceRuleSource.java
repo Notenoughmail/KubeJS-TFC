@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockDataAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.SurfaceRulesContextAccessor;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
+import net.dries007.tfc.world.Codecs;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.RockData;
 import net.dries007.tfc.world.settings.RockSettings;
@@ -27,7 +28,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
 
     public static final KeyDispatchDataCodec<RockSurfaceRuleSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.create(inst -> inst.group(
             RockType.CODEC.optionalFieldOf("rock_block", RockType.RAW).forGetter(RockSurfaceRuleSource::type),
-            BlockState.CODEC.fieldOf("fallback_state").forGetter(RockSurfaceRuleSource::fallbackState)
+            Codecs.BLOCK_STATE.fieldOf("fallback_state").forGetter(RockSurfaceRuleSource::fallbackState)
     ).apply(inst, RockSurfaceRuleSource::new)));
 
     @Override

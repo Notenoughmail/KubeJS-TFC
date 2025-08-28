@@ -1,4 +1,5 @@
-// TODO: 1.21.1 | Use https://plugins.gradle.org/plugin/dev.vfyjxf.modaccessor, requires Java 21
+// TODO: 1.3.3 | Use https://plugins.gradle.org/plugin/dev.vfyjxf.modaccessor, requires Java 21
+// Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'idea'
@@ -131,6 +132,7 @@ dependencies {
     modCompileOnly "curse.maven:arborfirmacraft-877545:${arbor_identifier}"
     modImplementation "curse.maven:precision-prospecting-700638:${precpros_identifier}"
     modImplementation "curse.maven:beneath-1113980:${beneath_identifier}"
+    modImplementation "curse.maven:tfc-artisanal-1059361:${artisanal_identifier}"
 
     modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 

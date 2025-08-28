@@ -3,6 +3,8 @@
 - Add several bindings for noises
 - Add some additional helper functions for TFC's `Noise2D` and `Noise3D` classes
 - Add noise inspection commands
+- Describing a knapping type via command will now include the texture(s) used by the knapping screen
+- Add support for Artisanal recipe types and ISMs
 
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties

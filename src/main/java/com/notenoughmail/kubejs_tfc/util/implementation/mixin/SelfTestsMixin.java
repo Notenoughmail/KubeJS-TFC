@@ -23,7 +23,7 @@ public abstract class SelfTestsMixin {
     @Inject(method = "logErrors", at = @At("HEAD"), remap = false, cancellable = true)
     private static <T> void kubejs_tfc$LogErrors(String error, Collection<T> errors, Logger logger, CallbackInfoReturnable<Boolean> cir) {
         if (KubeJSTFC.insertIntoConsole && !errors.isEmpty()) {
-            final StringWriter message = new StringWriter();
+            final StringBuilder message = new StringBuilder();
             message.append(error.replace("{}", Integer.toString(errors.size())));
             errors.forEach(t -> {
                 message.append("\n    ");
@@ -32,6 +32,22 @@ public abstract class SelfTestsMixin {
             ConsoleJS.SERVER.error(message.toString());
             if (KubeJSTFC.deduplicateConsoleErrors) {
                 cir.setReturnValue(!errors.isEmpty());
+            }
+        }
+    }
+
+    @Inject(method = "logWarnings", at = @At("HEAD"), remap = false, cancellable = true)
+    private static <T> void kubejs_tfc$LogWarnings(String error, Collection<T> errors, Logger logger, CallbackInfoReturnable<Boolean> cir) {
+        if (KubeJSTFC.insertIntoConsole && !errors.isEmpty()) {
+            final StringBuilder message = new StringBuilder();
+            message.append(error.replace("{}", Integer.toString(errors.size())));
+            errors.forEach(t -> {
+                message.append("\n    ");
+                message.append(RegistryUtils.stringify(t));
+            });
+            ConsoleJS.SERVER.warn(message.toString());
+            if (KubeJSTFC.deduplicateConsoleErrors) {
+                cir.setReturnValue(!error.isEmpty());
             }
         }
     }

@@ -70,9 +70,7 @@ public class BuildDrinkableData {
     @Info("Adds food data to the drinkable")
     @Generics(BuildFoodItemData.class)
     public BuildDrinkableData food(Consumer<BuildFoodItemData> foodData) {
-        final BuildFoodItemData data = new BuildFoodItemData(null);
-        foodData.accept(data);
-        food = data.toJson();
+        food = BuildFoodItemData.create(null, foodData);
         return this;
     }
 

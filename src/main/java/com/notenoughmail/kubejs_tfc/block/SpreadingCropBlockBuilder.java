@@ -21,9 +21,8 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
     public transient Supplier<Supplier<? extends Block>> fruitBlock;
 
     public SpreadingCropBlockBuilder(ResourceLocation i) {
-        super(i);
+        super(i, Type.SPREADING);
         fruitBlock = () -> () -> Blocks.HONEY_BLOCK; // Why the hell not
-        type = Type.SPREADING;
     }
 
     @Override

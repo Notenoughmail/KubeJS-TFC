@@ -42,6 +42,13 @@ ServerEvents.tags('worldgen/biome', e => {
     ]);
 })
 
+ServerEvents.tags('worldgen/configured_feature', e => {
+    e.add('kubejs:example_forest_entries', [
+        'kubejs_tfc:willow_replica',
+        'kubejs_tfc:stacked_tree'
+    ]);
+})
+
 ServerEvents.tags('worldgen/placed_feature', e => {
     e.add('tfc:in_biome/veins', [
         'kubejs_tfc:geode',

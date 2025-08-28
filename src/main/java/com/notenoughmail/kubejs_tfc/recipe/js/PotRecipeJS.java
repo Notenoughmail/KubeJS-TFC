@@ -13,7 +13,7 @@ public class PotRecipeJS extends TFCRecipeJS {
         if (getOriginalRecipe() instanceof PotRecipe p) {
             return List.copyOf(p.getItemIngredients());
         } else if (getOriginalRecipe() == null) {
-            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            ConsoleJS.SERVER.warn("Original pot recipe is null - could not get ingredients");
             return List.of();
         } else {
             throw new IllegalStateException("Original recipe was not a pot recipe?");

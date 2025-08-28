@@ -21,7 +21,7 @@ public class BloomeryRecipeJS extends TFCProviderRecipeJS {
         if (getOriginalRecipe() instanceof BloomeryRecipe b) {
             return List.of(b.getCatalyst().ingredient());
         } else if (getOriginalRecipe() == null) {
-            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            ConsoleJS.SERVER.warn("Original bloomery recipe is null - could not get ingredients");
             return List.of();
         } else {
             throw new IllegalStateException("Original recipe was not a bloomery recipe?");

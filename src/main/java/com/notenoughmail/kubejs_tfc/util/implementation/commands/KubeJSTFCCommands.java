@@ -373,14 +373,16 @@ public class KubeJSTFCCommands {
                 final ServerLevel level = ctx.getSource().getLevel();
                 final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
                 for (int x = 0 ; x < horizontalRange ; x++) {
+                    cursor.setX(x + minX);
                     for (int z = 0 ; z < horizontalRange ; z++) {
+                        cursor.setZ(z + minZ);
                         final double noiseVal = noise.noise(
                                 rangeIn.min() + (inStep * x),
                                 rangeIn.min() + (inStep * z)
                         );
                         final int noiseY = (int) Mth.map(noiseVal, rangeOut.min(), rangeOut.max(), 0, verticalRange);
                         for (int y = 0 ; y < verticalRange ; y++) {
-                            cursor.set(x + minX, y + minY, z + minZ);
+                            cursor.setY(y + minY);
                             if (y == noiseY) {
                                 level.setBlockAndUpdate(cursor, Blocks.WHITE_STAINED_GLASS.defaultBlockState());
                             } else {

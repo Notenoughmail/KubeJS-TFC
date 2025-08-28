@@ -32,10 +32,9 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
     public transient final Consumer<ModelGenerator>[] stickModels = new Consumer[4], topModels = new Consumer[5];
 
     public DoubleCropBlockBuilder(ResourceLocation i) {
-        super(i);
+        super(i, Type.DOUBLE);
         stages = 4;
         doubleStages = 4;
-        type = Type.DOUBLE;
         fill(stickModels);
         fill(topModels);
     }

@@ -21,7 +21,7 @@ public class LoomRecipeJS extends TFCProviderRecipeJS {
         if (getOriginalRecipe() instanceof LoomRecipe l) {
             return List.of(l.getIngredient());
         } else if (getOriginalRecipe() == null) {
-            ConsoleJS.SERVER.warn("Original recipe is null - could not get ingredients");
+            ConsoleJS.SERVER.warn("Original loom recipe is null - could not get ingredients");
             return List.of();
         } else {
             throw new IllegalStateException("Original recipe was not a loom recipe?");

@@ -58,6 +58,14 @@ public interface ISupportExtendedProperties {
             return this;
         }
 
+        @Info(value = "Sets the pathing type for adjacent bocks", params = {
+                @Param(name = "pathType", value = "The path type of adjacent blocks")
+        })
+        public ExtendedPropertiesJS adjacentPathType(BlockPathTypes pathType) {
+            delegate.adjacentPathType(pathType);
+            return this;
+        }
+
         @Info(value = "Sets the enchantment power of the block", params = {
                 @Param(name = "power", value = "The enchantment power")
         })

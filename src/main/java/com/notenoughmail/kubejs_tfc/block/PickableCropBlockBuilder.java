@@ -20,9 +20,8 @@ public class PickableCropBlockBuilder extends AbstractCropBlockBuilder {
     public transient Supplier<Supplier<? extends Item>> matureFruit;
 
     public PickableCropBlockBuilder(ResourceLocation i) {
-        super(i);
+        super(i, Type.PICKABLE);
         matureFruit = () -> () -> Items.APPLE;
-        type = Type.PICKABLE;
     }
 
     @Info("Sets the item to be given to the player when they pick the block")

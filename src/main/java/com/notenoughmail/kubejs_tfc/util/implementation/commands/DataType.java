@@ -181,6 +181,18 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         append(cmp, "consumeAfterComplete", kt.consumeAfterComplete());
         append(cmp, "useDisabledTexture", kt.usesDisabledTexture());
         append(cmp, "spawnParticles", kt.spawnsParticles());
+        append(cmp, "texture(s)", Arrays.stream(kt.inputItem().ingredient().getItems())
+                .map(ItemStack::getItem)
+                .distinct()
+                .map(i -> getKnappingTexture(i, false))
+        );
+        if (kt.usesDisabledTexture()) {
+            append(cmp, "disabledTexture(s)", Arrays.stream(kt.inputItem().ingredient().getItems())
+                    .map(ItemStack::getItem)
+                    .distinct()
+                    .map(i -> getKnappingTexture(i, true))
+            );
+        }
         append(cmp, "jeiIconItem", kt.jeiIcon(), true);
     }, BuiltInRegistries.ITEM, (kt, i) -> kt.inputItem().test(i.getDefaultInstance()), () -> {
         final Stream.Builder<String> builder = Stream.builder();
@@ -291,6 +303,11 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         throw new IllegalStateException("enum not extended!");
     }
 
+    // Replicated here because this is normally calculated in a client-only class
+    public static String getKnappingTexture(Item item, boolean disabled) {
+        return "tfc:textures/gui/knapping/%s%s.png".formatted(RegistryInfo.ITEM.getId(item).getPath(), disabled ? "_disabled" : "");
+    }
+
     public static DataType get(String name, CommandContext<CommandSourceStack> ctx) {
         return ctx.getArgument(name, DataType.class);
     }
@@ -326,15 +343,13 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (ing.isVanilla()) {
                 append(text, desc, Arrays.stream(ing.values).mapMulti((v, c) -> {
                     if (v instanceof Ingredient.ItemValue i) {
-                        c.accept(RegistryUtils.stringify(i.item.getItem()));
-                    } else if (v instanceof Ingredient.TagValue t) {
-                        c.accept("#" + t.tag.location());
-                    } else if (v instanceof MultiItemValue m) {
-                        m.getItems().forEach(s -> c.accept(RegistryUtils.stringify(s.getItem())));
+                        c.accept(i.item.getItem());
+                    } else if (v instanceof Ingredient.TagValue t){
+                        c.accept("#" + t.tag.location()); // TODO: 1.3.3 | Make this clickable to run forge's tag command
                     } else {
-                        c.accept(v);
+                        v.getItems().forEach(c); // MultiItemValue technically supports stack sizes, though it doesn't ever appear to be constructed
                     }
-                }).collect(Collectors.toList()), end);
+                }).map(RegistryUtils::stringify).toList(), end);
             } else {
                 append(text, desc, ing.getItems(), end);
             }
@@ -343,7 +358,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (value == null) {
                 simpleAdd(text, "null", ChatFormatting.BLACK);
             } else if (value instanceof Collection<?> c) {
-                var iter = c.iterator();
+                final Iterator<?> iter = c.iterator();
                 text.append("[");
                 if (c.size() > 1) {
                     text.append(CommonComponents.NEW_LINE);
@@ -369,7 +384,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 }
                 text.append("]");
             } else if (value.getClass().isArray()) {
-                var arr = (Object[]) value;
+                final Object[] arr = (Object[]) value;
                 text.append("[");
                 if (arr.length > 1) {
                     text.append(CommonComponents.NEW_LINE);

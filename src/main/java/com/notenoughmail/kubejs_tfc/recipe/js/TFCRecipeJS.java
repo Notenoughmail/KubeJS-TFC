@@ -1,6 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.js;
 
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.recipes.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -30,6 +31,9 @@ public class TFCRecipeJS extends RecipeJS {
             return List.of(g.getBatchItem());
         } else if (r instanceof WeldingRecipe w) {
             return List.of(w.getFirstInput(), w.getSecondInput());
+        } else if (r == null) {
+            ConsoleJS.SERVER.warn("Original TFC recipe (%s) is null - could not get ingredients".formatted(getType()));
+            return List.of();
         }
         return super.getOriginalRecipeIngredients();
     }
