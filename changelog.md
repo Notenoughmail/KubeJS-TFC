@@ -11,6 +11,8 @@
 - Tag ingredients print via the describe command can now be clicked to use the `/forge tags` command for that tag
 - Add TFC-specific recipe filters
 - Add metal map in misc sub-binding
+- Custom jar items now have the `tfc:jars` tag by default
+- Add `#withoutCraftingRemainder()` to the jar item builder
 
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties
