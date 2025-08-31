@@ -354,7 +354,6 @@ public class KubeJSTFCCommands {
         return 1;
     }
 
-    // TODO: 1.3.3 | This randomly(?) lags the hell out of the game for some reason...
     private static int inspectNoise2D(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         if (KubeJSTFC.debug) {
             final String noiseId = StringArgumentType.getString(ctx, "noise");

@@ -18,5 +18,6 @@ StartupEvents.registry('block', e => {
         .textureAll('minecraft:block/oak_leaves')
         .fallenLeaves(fallen => {
             fallen.textureAll('minecraft:block/spruce_leaves');
+            fallen.noDynamicTinting();
         });
 })

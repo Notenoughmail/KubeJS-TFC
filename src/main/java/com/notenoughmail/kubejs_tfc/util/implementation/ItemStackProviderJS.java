@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
@@ -18,10 +19,10 @@ import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import dev.latvian.mods.rhino.Wrapper;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
@@ -162,13 +163,18 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         var modifiers = new JsonArray();
         for (var element : list) {
             if (element instanceof CharSequence) {
-                var obj = new JsonObject();
-                obj.addProperty("type", element.toString());
-                modifiers.add(obj);
+                modifiers.add(ResourceUtils.buildJson(j -> j.addProperty("type", element.toString())));
             } else if (element instanceof JsonObject obj) {
                 modifiers.add(obj);
+            } else if (element instanceof JsonPrimitive prim) {
+                modifiers.add(ResourceUtils.buildJson(j -> j.add("type", prim)));
             } else {
-                modifiers.add(MapJS.json(element));
+                final JsonObject obj = MapJS.json(element);
+                if (obj != null) {
+                    modifiers.add(obj);
+                } else {
+                    ConsoleJS.SERVER.error("Could not parse object [%s] into json modifier".formatted(element));
+                }
             }
         }
         return modifiers;
@@ -233,7 +239,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
             return new ItemStackProviderJS(ItemStackJS.of(json), new JsonArray());
         }
         var stack = json.has("stack") ? ItemStackJS.of(json.get("stack")) : ItemStack.EMPTY;
-        var modifiers = json.has("modifiers") ? json.get("modifiers").getAsJsonArray() : new JsonArray();
+        var modifiers = json.has("modifiers") ? parseModifierList(json.get("modifiers").getAsJsonArray().asList()) : new JsonArray();
         return new ItemStackProviderJS(stack, modifiers);
     }
 

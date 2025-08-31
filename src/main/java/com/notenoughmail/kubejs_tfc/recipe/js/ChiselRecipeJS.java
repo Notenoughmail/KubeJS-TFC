@@ -9,7 +9,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
-import static com.notenoughmail.kubejs_tfc.recipe.schema.ChiselSchema.*;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.ChiselSchema.EXTRA_DROP;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.ChiselSchema.ITEM_INGREDIENT;
 
 // Technically has an ISP output
 @SuppressWarnings("unused")

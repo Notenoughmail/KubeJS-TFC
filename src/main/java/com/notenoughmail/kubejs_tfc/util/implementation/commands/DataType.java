@@ -25,9 +25,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EntityType;
@@ -37,7 +35,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.IExtensibleEnum;
-import net.minecraftforge.common.crafting.MultiItemValue;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.RecordComponent;
@@ -343,13 +340,21 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (ing.isVanilla()) {
                 append(text, desc, Arrays.stream(ing.values).mapMulti((v, c) -> {
                     if (v instanceof Ingredient.ItemValue i) {
-                        c.accept(i.item.getItem());
+                        c.accept(RegistryUtils.stringify(i.item.getItem()));
                     } else if (v instanceof Ingredient.TagValue t){
-                        c.accept("#" + t.tag.location()); // TODO: 1.3.3 | Make this clickable to run forge's tag command
+                        final String tagLoc = t.tag.location().toString();
+                        c.accept(Component.literal("#" + tagLoc)
+                                .withStyle(s -> s
+                                        .withColor(ChatFormatting.DARK_PURPLE)
+                                        .withUnderlined(true)
+                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("List %s entries".formatted(tagLoc))))
+                                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/forge tags minecraft:item get %s".formatted(tagLoc)))
+                                )
+                        );
                     } else {
-                        v.getItems().forEach(c); // MultiItemValue technically supports stack sizes, though it doesn't ever appear to be constructed
+                        v.getItems().forEach(s -> c.accept(RegistryUtils.stringify(s))); // MultiItemValue technically supports stack sizes, though it doesn't ever appear to be constructed
                     }
-                }).map(RegistryUtils::stringify).toList(), end);
+                }).toList(), end);
             } else {
                 append(text, desc, ing.getItems(), end);
             }
@@ -365,17 +370,14 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 }
                 switch (c.size()) {
                     case 0 -> simpleAdd(text, "  ", ChatFormatting.GRAY);
-                    case 1 -> {
-                        var val = iter.next();
-                        simpleAdd(text, "  %s  ".formatted(RegistryUtils.stringify(val)), getColor(val));
-                    }
+                    case 1 -> add(text, "  ", asComponent(iter.next()), "  ");
                     default -> {
-                        var val = iter.next();
-                        simpleAdd(text, "  %s".formatted(RegistryUtils.stringify(val)), getColor(val));
+                        Object val = iter.next();
+                        add(text, "  ", asComponent(val));
                         while (iter.hasNext()) {
                             val = iter.next();
                             simpleAdd(text, ",\n  ", ChatFormatting.WHITE);
-                            simpleAdd(text, val);
+                            add(text, null, asComponent(val));
                         }
                     }
                 }
@@ -391,12 +393,12 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 }
                 switch (arr.length) {
                     case 0 -> simpleAdd(text, "  ", ChatFormatting.GRAY);
-                    case 1 -> simpleAdd(text, "  %s  ".formatted(RegistryUtils.stringify(arr[0])), getColor(arr[0]));
+                    case 1 -> add(text, "  ", asComponent(arr[0]), "  ");
                     default -> {
-                        simpleAdd(text, "  %s".formatted(RegistryUtils.stringify(arr[0])), getColor(arr[0]));
+                        add(text, "  ", asComponent(arr[0]));
                         for (int i = 1; i < arr.length; i++) {
                             simpleAdd(text, ",\n  ", ChatFormatting.WHITE);
-                            simpleAdd(text, arr[i]);
+                            add(text, "  ", asComponent(arr[i]));
                         }
                     }
                 }
@@ -411,30 +413,59 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         }
     }
 
+    public static MutableComponent asComponent(Object o) {
+        if (o instanceof MutableComponent c) {
+            return c;
+        }
+        return Component.literal(RegistryUtils.stringify(o)).withStyle(s -> s.withColor(getColor(o)));
+    }
+
     public static void simpleDescriptor(MutableComponent text, String desc) {
-        text.append(Component.literal(desc).withStyle(s -> s.withColor(ChatFormatting.RED)))
+        text.append(Component.literal(desc).withStyle(ChatFormatting.RED))
                 .append(Component.literal(": "));
     }
 
     public static void simpleAdd(MutableComponent text, Object val) {
-        if (val instanceof Component txt) {
-            text.append(txt);
-        } else {
-            simpleAdd(text, RegistryUtils.stringify(val), getColor(val));
-        }
+        text.append(asComponent(val));
     }
 
     public static void simpleAdd(MutableComponent text, String val, ChatFormatting color) {
-        text.append(Component.literal(val).withStyle(s -> s.withColor(color)));
+        text.append(Component.literal(val).withStyle(color));
     }
 
-    public static ChatFormatting getColor(Object value) {
-        if (value == null) return ChatFormatting.BLACK;
-        if (value instanceof Number) return ChatFormatting.GREEN;
-        if (value instanceof Boolean) return ChatFormatting.GOLD;
-        if (value instanceof CharSequence || value instanceof ResourceLocation) return ChatFormatting.DARK_PURPLE;
-        if (value instanceof Enum<?>) return ChatFormatting.AQUA;
-        return ChatFormatting.GRAY;
+    public static void add(MutableComponent text, @Nullable String before, MutableComponent val) {
+        add(text, before, val, null);
+    }
+
+    public static void add(MutableComponent text, @Nullable String before, MutableComponent val, @Nullable String after) {
+        if (before != null) {
+            assert before.isBlank();
+            text.append(Component.literal(before));
+        }
+        text.append(val);
+        if (after != null) {
+            assert after.isBlank();
+            text.append(Component.literal(after));
+        }
+    }
+
+    private static final TextColor[] COLORS = {
+            TextColor.fromLegacyFormat(ChatFormatting.BLACK),
+            TextColor.fromLegacyFormat(ChatFormatting.GREEN),
+            TextColor.fromLegacyFormat(ChatFormatting.GOLD),
+            TextColor.fromLegacyFormat(ChatFormatting.DARK_PURPLE),
+            TextColor.fromLegacyFormat(ChatFormatting.AQUA),
+            TextColor.fromLegacyFormat(ChatFormatting.GRAY)
+    };
+
+    public static TextColor getColor(Object value) {
+        if (value == null) return COLORS[0];
+        if (value instanceof Number) return COLORS[1];
+        if (value instanceof Boolean) return COLORS[2];
+        if (value instanceof CharSequence || value instanceof ResourceLocation) return COLORS[3];
+        if (value instanceof Enum<?>) return COLORS[4];
+        if (value instanceof MutableComponent mut) return mut.getStyle().getColor();
+        return COLORS[5];
     }
 
     public static <T> void appendMap(MutableComponent out, String desc, Map<String, T> map, int indent, boolean needsDescriptor) {

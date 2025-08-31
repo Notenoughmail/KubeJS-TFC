@@ -18,6 +18,7 @@ StartupEvents.registry('block', e => {
     e.create('ore', 'tfc:ground_cover')
         .textureAll('minecraft:block/gold_block')
         .collision()
+        .notAxisAligned()
         .ore()
         .withPreexistingItem('minecraft:gold_nugget')
         .hardness(0.1);

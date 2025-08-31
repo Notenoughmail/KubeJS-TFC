@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.bindings;
 
 import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
@@ -51,20 +52,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-// TODO: 1.3.3 | Metal map
 @SuppressWarnings("unused")
 public enum MiscBindings {
     INSTANCE;
 
     @Info("A map associating the name of a rock to its `RegistryRock`")
-    @Generics({String.class, RegistryRock.class})
+    @Generics({ String.class, RegistryRock.class })
     public Map<String, RegistryRock> getRock() { return rock.get(); }
     private static final Supplier<Map<String, RegistryRock>> rock = Lazy.of(KubeJSTFC::registerRocks);
 
-    @Info("A map associating the name of a wood to its `NamedRegistryWood`, includes AFC woods if it is present")
-    @Generics({String.class, NamedRegistryWood.class})
+    @Info("A map associating the name of a wood to its `NamedRegistryWood`")
+    @Generics({ String.class, NamedRegistryWood.class })
     public Map<String, NamedRegistryWood> getWood() { return wood.get(); }
     private static final Supplier<Map<String, NamedRegistryWood>> wood = Lazy.of(KubeJSTFC::registerWoods);
+
+    @Info("A map associating the name of a metal to its `NamedRegistryMetal`")
+    @Generics({ String.class, NamedRegistryMetal.class })
+    public Map<String, NamedRegistryMetal> getMetal() { return metal.get(); }
+    private static final Supplier<Map<String, NamedRegistryMetal>> metal = Lazy.of(KubeJSTFC::registerMetals);
 
     @Nullable
     @Info("Returns the stack's `IHeat` capability if present, else null")

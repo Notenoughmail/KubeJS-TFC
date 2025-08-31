@@ -7,7 +7,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
-import static com.notenoughmail.kubejs_tfc.recipe.schema.AnvilSchema.*;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.AnvilSchema.BONUS;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.AnvilSchema.TIER;
 
 @SuppressWarnings("unused")
 public class AnvilWorkingRecipeJS extends TFCProviderRecipeJS {

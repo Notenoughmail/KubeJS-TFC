@@ -8,7 +8,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
-import static com.notenoughmail.kubejs_tfc.recipe.schema.KnappingSchema.*;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.KnappingSchema.INGREDIENT;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.KnappingSchema.OUTSIDE_REQUIRED;
 
 @SuppressWarnings("unused")
 public class KnappingRecipeJS extends TFCRecipeJS {

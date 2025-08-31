@@ -3,13 +3,13 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.TFCLeavesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
+import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 
 public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder implements ILeafBuilder {
 
-    public final TFCLeavesBlockBuilder parent;
+    public transient final TFCLeavesBlockBuilder parent;
 
     public transient BiConsumer<FallenLeafModelType, ModelGenerator> models;
 
@@ -28,10 +28,14 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
             if (t.layers != 8) {
                 m.parent("tfc:block/groundcover/fallen_leaves_height" + t.height);
                 m.textures(textures);
+            } else if (model.isEmpty()) {
+                m.parent("tfc:block/groundcover/fallen_leaves");
+                m.textures(textures);
             } else {
-                m.parent(ResourceUtils.plainModel(parent));
+                m.parent(model);
             }
         };
+        tag(Helpers.identifier("fallen_leaves"));
     }
 
     @Info("""

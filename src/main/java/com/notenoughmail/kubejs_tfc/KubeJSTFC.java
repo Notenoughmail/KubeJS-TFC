@@ -12,6 +12,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
 import com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.commands.KubeJSTFCCommands;
@@ -22,9 +23,11 @@ import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.NetherFer
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.PlantableAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
+import com.notenoughmail.kubejs_tfc.util.implementation.recipe.TFCRecipeFilter;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.RockSurfaceRuleSource;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
+import dev.latvian.mods.kubejs.recipe.filter.RecipeFilter;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.TerraFirmaCraft;
@@ -34,6 +37,7 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.config.ConfigBuilder;
 import net.dries007.tfc.util.ItemDefinition;
+import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -64,7 +68,6 @@ import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType.append;
 
-// TODO: 1.3.3 | Custom recipe filters
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {
@@ -82,6 +85,11 @@ public class KubeJSTFC {
     private static Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> woodListeners = w -> {
         for (Wood wood : Wood.VALUES) {
             w.put(wood.getSerializedName(), new NamedRegistryWood(TerraFirmaCraft.MOD_ID, wood));
+        }
+    };
+    private static Consumer<ImmutableMap.Builder<String, NamedRegistryMetal>> metalListeners = m -> {
+        for (Metal.Default metal : Metal.Default.values()) {
+            m.put(metal.getSerializedName(), NamedRegistryMetal.fromTFC(metal));
         }
     };
     private static final Map<Class<?>, BiConsumer<?, JsonObject>> ISM_CONVERTERS = new IdentityHashMap<>();
@@ -203,6 +211,16 @@ public class KubeJSTFC {
         KubeJSTFCRecipeSerializers.REG.register(modBus);
 
         reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production
+
+        RecipeFilter.PARSE.register((ctx, filters, map) -> {
+            final Object o = map.get("tfc");
+            if (o != null) {
+                final RecipeFilter filter = TFCRecipeFilter.parse(ctx, o);
+                if (filter != null) {
+                    filters.add(filter);
+                }
+            }
+        });
     }
 
     public static ResourceLocation identifier(String path) {
@@ -225,6 +243,10 @@ public class KubeJSTFC {
 
     public static void registerWoodListener(Consumer<ImmutableMap.Builder<String, NamedRegistryWood>> listener) {
         woodListeners = woodListeners.andThen(listener);
+    }
+
+    public static void registerMetalListener(Consumer<ImmutableMap.Builder<String, NamedRegistryMetal>> listener) {
+        metalListeners = metalListeners.andThen(listener);
     }
 
     public static <T extends ItemStackModifier> void registerISMConverter(Class<T> type, BiConsumer<T, JsonObject> converter) {
@@ -258,6 +280,14 @@ public class KubeJSTFC {
         final ImmutableMap.Builder<String, NamedRegistryWood> builder = new ImmutableMap.Builder<>();
         woodListeners.accept(builder);
         woodListeners = null;
+        return builder.build();
+    }
+
+    @ApiStatus.Internal
+    public static ImmutableMap<String, NamedRegistryMetal> registerMetals() {
+        final ImmutableMap.Builder<String, NamedRegistryMetal> builder = new ImmutableMap.Builder<>();
+        metalListeners.accept(builder);
+        metalListeners = null;
         return builder.build();
     }
 

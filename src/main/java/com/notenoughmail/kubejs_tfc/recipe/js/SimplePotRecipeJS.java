@@ -5,7 +5,8 @@ import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.typings.Info;
 
-import static com.notenoughmail.kubejs_tfc.recipe.schema.SimplePotSchema.*;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.SimplePotSchema.FLUID_OUTPUT;
+import static com.notenoughmail.kubejs_tfc.recipe.schema.SimplePotSchema.ITEM_OUTPUT;
 
 @SuppressWarnings("unused")
 public class SimplePotRecipeJS extends PotRecipeJS implements ISupportProviderOutput {

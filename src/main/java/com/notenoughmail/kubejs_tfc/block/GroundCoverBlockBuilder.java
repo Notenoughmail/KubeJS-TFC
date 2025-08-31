@@ -139,10 +139,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         final String m = ResourceUtils.plainModel(this);
         bs.variant("", v -> {
-            v.model(m).y(rotate);
-            v.model(m).y(90 + rotate);
-            v.model(m).y(180 + rotate);
-            v.model(m).y(270 + rotate);
+            v.model(m).x(rotate);
+            v.model(m).x(90 + rotate);
+            v.model(m).x(180 + rotate);
+            v.model(m).x(270 + rotate);
         });
     }
 

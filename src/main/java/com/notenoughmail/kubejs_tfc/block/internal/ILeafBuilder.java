@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block.internal;
 
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.world.level.block.Block;
 
@@ -15,4 +16,9 @@ public interface ILeafBuilder extends Supplier<Block> {
 
     @HideFromJS
     default boolean isFallen() { return false; }
+
+    default ILeafBuilder noDynamicTinting() {
+        BuilderRefs.leafColors.remove(this);
+        return this;
+    }
 }

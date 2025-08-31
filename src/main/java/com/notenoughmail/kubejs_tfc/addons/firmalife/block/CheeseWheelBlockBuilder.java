@@ -2,13 +2,13 @@ package com.notenoughmail.kubejs_tfc.addons.firmalife.block;
 
 import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
+import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
-import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
+import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
@@ -27,11 +27,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
+public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
     public final transient ItemBuilder sliceItem;
     private static final String[] ages = new String[] {"fresh", "aged", "vintage"};
-    private final String[] insideTextures = new String[3];
+    public transient final String[] insideTextures = new String[3];
+    public transient String rackModel;
 
     public CheeseWheelBlockBuilder(ResourceLocation i) {
         super(i);
@@ -40,29 +41,38 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
         renderType("cutout");
         RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
+        rackModel = "tfc:block/barrel_rack";
     }
 
     @Override
     public BlockBuilder textureAll(String tex) {
         texture("particle", tex);
         texture("surface", tex);
-        texture("particle", tex);
         texture("down", tex);
         return this;
     }
 
+    @Info("Sets the inside texture for the fresh state")
     public CheeseWheelBlockBuilder freshInsideTexture(String tex) {
         insideTextures[0] = tex;
         return this;
     }
 
+    @Info("Sets the inside texture for the aged state")
     public CheeseWheelBlockBuilder agedInsideTexture(String tex) {
         insideTextures[1] = tex;
         return this;
     }
 
+    @Info("Sets the inside texture for the vintage state")
     public CheeseWheelBlockBuilder vintageInsideTexture(String tex) {
         insideTextures[2] = tex;
+        return this;
+    }
+
+    @Info("Sets the model to use for the rack")
+    public CheeseWheelBlockBuilder barrelRackModel(String model) {
+        rackModel = model;
         return this;
     }
 
@@ -96,7 +106,6 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
         RegistryInfo.ITEM.addBuilder(sliceItem);
     }
 
-    // TODO: 1.3.3 | This does not consider cheese wheels in racks... since *when* is that a thing???
     @Override
     protected void generateBlockModelJsons(AssetJsonGenerator generator) {
         for (int age = 0 ; age < 3 ; age++) {
@@ -116,11 +125,12 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesShapedBlockBuilde
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String blockModelLoc = ResourceUtils.plainModel(this);
+    protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
+        bs.part("rack=true", rackModel);
+        final String modelLoc = ResourceUtils.plainModel(this);
         for (int i = 1 ; i < 5 ; i++) {
             for (String age : ages) {
-                bs.simpleVariant("age=" + age + ",count=" + i, blockModelLoc + "_" + age + "_" + i);
+                bs.part("age=" + age + ",count=" + i, modelLoc + "_" + age + "_" + i);
             }
         }
     }

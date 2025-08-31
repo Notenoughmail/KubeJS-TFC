@@ -5,11 +5,19 @@ import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.StringComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.List;
 
 public interface AlloySchema {
 
     RecipeKey<AlloyPartComponent.AlloyPart[]> CONTENTS = AlloyPartComponent.ALLOY.key("contents");
     RecipeKey<String> RESULT = StringComponent.ID.key("result");
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, TFCRecipeJS::new, RESULT, CONTENTS);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, () -> new TFCRecipeJS() {
+        @Override
+        public List<Ingredient> getOriginalRecipeIngredients() {
+            return List.of();
+        }
+    }, RESULT, CONTENTS);
 }
