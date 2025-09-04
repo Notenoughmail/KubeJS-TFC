@@ -218,11 +218,12 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
 
     @Override
     public CompletableFuture<ChunkAccess> createBiomes(Executor pExecutor, RandomState pRandomState, Blender pBlender, StructureManager pStructureManager, ChunkAccess pChunk) {
-        return wrapped.createBiomes(pExecutor, pRandomState, pBlender, pStructureManager, pChunk)
-                .thenApplyAsync(chunk -> {
-                    chunkDataGenerator.generate(chunk);
-                    return chunk;
-                }, Util.backgroundExecutor());
+        // Create the biomes *after* generating the data to match TFC order
+        return CompletableFuture.supplyAsync(() -> chunkDataGenerator.generate(pChunk), Util.backgroundExecutor())
+                .thenComposeAsync(
+                        d -> wrapped.createBiomes(pExecutor, pRandomState, pBlender, pStructureManager, pChunk),
+                        Util.backgroundExecutor()
+                );
     }
 
     @Override

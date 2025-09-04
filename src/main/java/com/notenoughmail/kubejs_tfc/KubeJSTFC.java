@@ -68,6 +68,7 @@ import java.util.stream.Stream;
 
 import static com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType.append;
 
+// TODO: 1.3.3 | Properly implement #replaceOutput/#replaceInput/#isOutput/#isInput for custom recipe components
 @SuppressWarnings("unused")
 @Mod(KubeJSTFC.MODID)
 public class KubeJSTFC {

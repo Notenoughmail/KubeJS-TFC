@@ -366,6 +366,10 @@ public class KubeJSTFCCommands {
                 final int horizontalRange = Math.min(Math.max(from.getX(), to.getX()) - minX, Math.max(from.getZ(), to.getZ()) - minZ);
                 final int verticalRange = maxY - minY;
 
+                if (verticalRange < 2) {
+                    return failMsg("Too short to properly display noise. Please increase the y-range", ctx);
+                }
+
                 final Range rangeIn = Range.get("input_range", ctx), rangeOut = Range.get("output_range", ctx);
                 final double inStep = rangeIn.step(horizontalRange);
 
@@ -379,14 +383,22 @@ public class KubeJSTFCCommands {
                                 rangeIn.min() + (inStep * x),
                                 rangeIn.min() + (inStep * z)
                         );
-                        final int noiseY = (int) Mth.map(noiseVal, rangeOut.min(), rangeOut.max(), 0, verticalRange);
+                        final int noiseY = (int) Mth.map(noiseVal, rangeOut.min(), rangeOut.max(), 0, verticalRange - 1);
+                        boolean placedGlass = false;
                         for (int y = 0 ; y < verticalRange ; y++) {
                             cursor.setY(y + minY);
                             if (y == noiseY) {
                                 level.setBlockAndUpdate(cursor, Blocks.WHITE_STAINED_GLASS.defaultBlockState());
+                                placedGlass = true;
                             } else {
                                 level.setBlockAndUpdate(cursor, Blocks.AIR.defaultBlockState());
                             }
+                        }
+                        if (!placedGlass) {
+                            if (noiseY < verticalRange) {
+                                cursor.setY(minY);
+                            }
+                            level.setBlockAndUpdate(cursor, Blocks.RED_STAINED_GLASS.defaultBlockState());
                         }
                     }
                 }
@@ -423,8 +435,8 @@ public class KubeJSTFCCommands {
     /**
      * Gets the appropriate block in the gradient.
      * <p>
-     * Accepts any value, but only values in the range [{@code 0}, {@code 15}] are part of the gradient
-     * Values outside of the gradient will return air.
+     * Accepts any value, but only values in the range [{@code 0}, {@code 15}] are part of the gradient.
+     * Values outside that range will return air.
      */
     public static Block getGradient(int val) {
         if (val < 0 || val > 15) {
@@ -455,9 +467,11 @@ public class KubeJSTFCCommands {
                 final ServerLevel level = ctx.getSource().getLevel();
                 final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
                 for (int x = 0 ; x < volumetricRange ; x++) {
+                    cursor.setX(x + minX);
                     for (int y = 0 ; y < volumetricRange ; y++) {
+                        cursor.setY(y + minY);
                         for (int z = 0 ; z < volumetricRange ; z++) {
-                            cursor.set(x + minX, y + minY, z + minZ);
+                            cursor.setZ(z + minZ);
                             final double noiseVal = noise.noise(
                                     rangeIn.min() + (inStep * x),
                                     rangeIn.min() + (inStep * y),

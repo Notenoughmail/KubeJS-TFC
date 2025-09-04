@@ -50,7 +50,7 @@ public interface Noise3DExtension {
     default Noise3D kubejs_tfc$rotateY(double angle) {
         angle = Math.toRadians(angle % 360D);
         if (angle == 0D) return kubejs_tfc$self();
-        final double sin = Math.sin(angle),cos = Math.cos(angle);
+        final double sin = Math.sin(angle), cos = Math.cos(angle);
         return (x, y, z) -> kubejs_tfc$self().noise(
                 x * cos + z * sin,
                 y,

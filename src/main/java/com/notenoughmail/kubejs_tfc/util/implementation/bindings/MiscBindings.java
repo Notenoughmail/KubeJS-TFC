@@ -321,6 +321,16 @@ public enum MiscBindings {
         return fnl::GetNoise;
     }
 
+    @Info("Casts a JS callback into a full Noise2D object")
+    public Noise2D customNoise2D(Noise2D func) {
+        return func;
+    }
+
+    @Info("Casts a JS callback into a full Noise3D object")
+    public Noise3D customNoise3D(Noise3D func) {
+        return func;
+    }
+
     @HideFromJS
     @ApiStatus.Internal
     public final Supplier<Map<String, Noise2D>> inspect2DNoise = Lazy.of(HashMap::new);

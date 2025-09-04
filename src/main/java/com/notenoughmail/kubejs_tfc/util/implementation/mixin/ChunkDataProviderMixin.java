@@ -38,6 +38,7 @@ public class ChunkDataProviderMixin {
         }
     }
 
+    /*
     // TODO: 1.3.3 | This is merely a bandaid, find the root problem and fix *that*
     // Dirty, ugly hack that should NOT be needed, but something is going wrong somewhere and I have no idea where that might be
     @WrapOperation(method = "promotePartial", at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;"), remap = false)
@@ -50,4 +51,6 @@ public class ChunkDataProviderMixin {
         }
         return UtilsJS.cast(data);
     }
+
+     */
 }

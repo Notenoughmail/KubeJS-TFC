@@ -6,9 +6,9 @@
 - Describing a knapping type via command will now include the texture(s) used by the knapping screen
 - Add support for Artisanal recipe types and ISMs
 - Fix `#notAxisAligned()` in ground cover builders creating invalid block state files
-- Custom fallen leaves are now included in the `tfc:fallen_leaves` block and item tags by default, making it able to snow pile and turn into hummus by default
+- Custom fallen leaves are now included in the `tfc:fallen_leaves` block and item tags by default, making them able to snow pile and turn into hummus by default
 - Custom (fallen) leaves can now be removed from automatic tinting by calling `#noDynamicTinting()` on their builders
-- Tag ingredients print via the describe command can now be clicked to use the `/forge tags` command for that tag
+- Tag ingredients printed via the describe command can now be clicked to use the `/forge tags` command for that tag
 - Add TFC-specific recipe filters
 - Add metal map in misc sub-binding
 - Custom jar items now have the `tfc:jars` tag by default
