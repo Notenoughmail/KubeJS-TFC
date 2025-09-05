@@ -54,3 +54,35 @@ fnl.SetFractalOctaves(2);
 fnl.SetFrequency(0.04);
 TFC.misc.register2DNoiseForInspection('fnl', TFC.misc.fnl2Noise2D(fnl));
 TFC.misc.register3DNoiseForInspection('fnl', TFC.misc.fnl2Noise3D(fnl));
+
+const rockType = TFC.misc.cellular2D(0)
+    .spread(0.0076)
+    .scaled(0, 4)
+    .map(v => Math.round(v));
+const rockVal = TFC.misc.cellular2D(0)
+    .spread(0.0035)
+    .scaled(-0x40000000, 0x40000000)
+    .rotate(30)
+    .map(v => Math.round(v) << 2);
+
+TFC.misc.register2DNoiseForInspection(
+    'rock_type',
+    rockType
+);
+TFC.misc.register2DNoiseForInspection(
+    'rock_val',
+    rockVal
+);
+TFC.misc.register2DNoiseForInspection(
+    'rock_noise',
+    rockType.add(rockVal)
+);
+TFC.misc.register2DNoiseForInspection(
+    'forest_noise',
+    TFC.misc.newOpenSimplex2D(0)
+        .scaled(0, 4)
+        .spread(0.005)
+        .map(v => Math.round(v))
+);
+TFC.misc.register2DNoiseForInspection('infinity', TFC.misc.customNoise2D((x, z) => 1 / 0));
+TFC.misc.register2DNoiseForInspection('-infinity', TFC.misc.customNoise2D((x, z) => -1 / 0));

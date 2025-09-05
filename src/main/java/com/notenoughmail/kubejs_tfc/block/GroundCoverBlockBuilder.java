@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,6 @@ import java.util.function.Supplier;
 public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private transient Type type;
-    public transient int rotate;
     public transient String parent;
     public transient VoxelShape cachedShape;
     @Nullable
@@ -33,7 +33,6 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
         type = Type.NONE;
-        rotate = 0;
         parent = "loose/igneous_intrusive_2";
         noCollision = true;
         renderType("cutout");
@@ -63,9 +62,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Info("Rotates the default models by 45 degrees")
+    @Deprecated(since = "1.3.3", forRemoval = true)
+    @Info("Invalid method, do not use")
     public GroundCoverBlockBuilder notAxisAligned() {
-        rotate = 45;
+        ConsoleJS.STARTUP.warn("#notAxisAligned() is deprecated and marked for removal");
         return this;
     }
 
@@ -139,10 +139,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
         final String m = ResourceUtils.plainModel(this);
         bs.variant("", v -> {
-            v.model(m).x(rotate);
-            v.model(m).x(90 + rotate);
-            v.model(m).x(180 + rotate);
-            v.model(m).x(270 + rotate);
+            v.model(m);
+            v.model(m).y(90);
+            v.model(m).y(180);
+            v.model(m).y(270);
         });
     }
 

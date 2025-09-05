@@ -29,7 +29,7 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
                 m.parent("tfc:block/groundcover/fallen_leaves_height" + t.height);
                 m.textures(textures);
             } else if (model.isEmpty()) {
-                m.parent("tfc:block/groundcover/fallen_leaves");
+                m.parent("block/leaves");
                 m.textures(textures);
             } else {
                 m.parent(model);

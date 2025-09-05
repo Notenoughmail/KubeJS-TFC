@@ -2,7 +2,9 @@ package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
+import dev.latvian.mods.kubejs.block.state.BlockStatePredicate;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -34,5 +36,10 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
     @Override
     public BlockIngredient read(RecipeJS recipe, Object from) {
         return IngredientHelpers.ofBlockIngredient(from);
+    }
+
+    @Override
+    public boolean isInput(RecipeJS recipe, BlockIngredient value, ReplacementMatch match) {
+        return match instanceof BlockStatePredicate bsp && value.all().anyMatch(bsp::testBlock);
     }
 }

@@ -1,4 +1,13 @@
+const outsideContext = {
+    test: 50,
+    greaves: {
+        sympathy: () => 15
+    }
+}
+
 TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
+
+    const offset = () => outsideContext.greaves.sympathy();
 
     const rain = TFC.misc.lerpFloatLayer(0, 0, 0, 0);
     const tempLayer = TFC.misc.newOpenSimplex2D(event.worldSeed + 4621678939469)
@@ -39,9 +48,9 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
 
         var temp = TFC.misc.lerpFloatLayer(
             tempLayer.noise(x, z),
-            tempLayer.noise(x, z + 15),
-            tempLayer.noise(x + 15, z),
-            tempLayer.noise(x + 15, z + 15)
+            tempLayer.noise(x, z + offset()),
+            tempLayer.noise(x + offset(), z),
+            tempLayer.noise(x + offset(), z + offset())
         );
 
         data.generatePartial(

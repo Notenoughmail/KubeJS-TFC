@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.helpers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.architectury.fluid.FluidStack;
+import dev.latvian.mods.kubejs.block.state.BlockStatePredicate;
 import dev.latvian.mods.kubejs.core.ItemStackKJS;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.item.InputItem;
@@ -21,10 +22,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class IngredientHelpers {
 
@@ -44,6 +47,19 @@ public class IngredientHelpers {
         return new BlockIngredient.BlockTag(tag);
     }
 
+    @Nullable
+    public static IngredientType.Entry<Block> blockStr(String str) {
+        if (str.charAt(0) == '#') {
+            return blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(str.substring(1))));
+        } else {
+            final Block block = RegistryInfo.BLOCK.getValue(new ResourceLocation(str));
+            if (block != null) {
+                return blockObj(block);
+            }
+            return null;
+        }
+    }
+
     public static FluidIngredient fluid(Fluid fluid) {
         return new FluidIngredient(List.of(fluidObj(fluid)));
     }
@@ -60,19 +76,27 @@ public class IngredientHelpers {
         return new FluidIngredient.FluidTag(tag);
     }
 
+    @Nullable
+    public static IngredientType.Entry<Fluid> fluidStr(String str) {
+        if (str.charAt(0) == '#') {
+            return fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(str.substring(1))));
+        } else {
+            final Fluid fluid = RegistryInfo.FLUID.getValue(new ResourceLocation(str));
+            if (fluid != null) {
+                return fluidObj(fluid);
+            }
+            return null;
+        }
+    }
+
     // My old friend, instanceof else-if chains
     public static BlockIngredient ofBlockIngredient(Object o) {
         if (o instanceof BlockIngredient block) {
             return block;
         } else if (o instanceof CharSequence) {
-            final String name = o.toString();
-            if (name.charAt(0) == '#') {
-                return block(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
-            } else {
-                final Block block = RegistryInfo.BLOCK.getValue(new ResourceLocation(name));
-                if (block != null) {
-                    return block(block);
-                }
+            final IngredientType.Entry<Block> entry = blockStr(o.toString());
+            if (entry != null) {
+                return block(entry);
             }
         } else if (o instanceof JsonElement json) {
             return BlockIngredient.fromJson(json);
@@ -91,20 +115,15 @@ public class IngredientHelpers {
             });
             return new BlockIngredient(blocks);
         }
-        final List<?> objects = ListJS.orEmpty(o);
+        final List<?> objects = ListJS.orSelf(o);
         final List<IngredientType.Entry<Block>> blocks = new ArrayList<>();
         for (var object : objects) {
             if (object instanceof BlockIngredient block) {
                 blocks.addAll(block.entries());
             } else if (object instanceof CharSequence) {
-                final String name = object.toString();
-                if (name.charAt(0) == '#') {
-                    blocks.add(blockTag(TagKey.create(Registries.BLOCK, new ResourceLocation(name.substring(1)))));
-                } else {
-                    Block block = RegistryInfo.BLOCK.getValue(new ResourceLocation(name));
-                    if (block != null) {
-                        blocks.add(blockObj(block));
-                    }
+                final IngredientType.Entry<Block> entry = blockStr(object.toString());
+                if (entry != null) {
+                    blocks.add(entry);
                 }
             } else if (object instanceof IngredientType.Entry<?> entry) {
                 blocks.add((IngredientType.Entry<Block>) entry); // If someone manages to provide an Entry<Fluid> they deserve whatever this causes
@@ -120,6 +139,12 @@ public class IngredientHelpers {
                         blocks.add(blockObj(RegistryInfo.BLOCK.getValue(rl)));
                     }
                 });
+            } else if (object instanceof BlockStatePredicate bsp) {
+                if (bsp instanceof BlockStatePredicate.TagMatch tag) {
+                    blocks.add(blockTag(tag.tag()));
+                } else {
+                    blocks.addAll(bsp.getBlocks().stream().distinct().map(IngredientHelpers::blockObj).collect(Collectors.toSet()));
+                }
             }
         }
         return new BlockIngredient(blocks);
@@ -129,14 +154,9 @@ public class IngredientHelpers {
         if (o instanceof FluidIngredient fluid) {
             return fluid;
         } else if (o instanceof CharSequence) {
-            final String name = o.toString();
-            if (name.charAt(0) == '#') {
-                return fluid(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
-            } else {
-                final Fluid fluid = RegistryInfo.FLUID.getValue(new ResourceLocation(name));
-                if (fluid != null) {
-                    return fluid(fluid);
-                }
+            final IngredientType.Entry<Fluid> entry = fluidStr(o.toString());
+            if (entry != null) {
+                return fluid(entry);
             }
         } else if (o instanceof JsonElement json) {
             return FluidIngredient.fromJson(json);
@@ -153,7 +173,7 @@ public class IngredientHelpers {
             });
             return new FluidIngredient(fluids);
         }
-        final List<?> objects = ListJS.orEmpty(o);
+        final List<?> objects = ListJS.orSelf(o);
         final List<IngredientType.Entry<Fluid>> fluids = new ArrayList<>();
         for (var object : objects) {
             if (object instanceof FluidIngredient fluid) {
@@ -161,14 +181,9 @@ public class IngredientHelpers {
             } else if (object instanceof FluidStackIngredient fluid) {
                 fluids.addAll(fluid.ingredient().entries());
             } else if (object instanceof CharSequence) {
-                final String name = object.toString();
-                if (name.charAt(0) == '#') {
-                    fluids.add(fluidTag(TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)))));
-                } else {
-                    Fluid fluid = RegistryInfo.FLUID.getValue(new ResourceLocation(name));
-                    if (fluid != null) {
-                        fluids.add(fluidObj(fluid));
-                    }
+                final IngredientType.Entry<Fluid> entry = fluidStr(object.toString());
+                if (entry != null) {
+                    fluids.add(entry);
                 }
             } else if (object instanceof IngredientType.Entry<?> entry) {
                 fluids.add((IngredientType.Entry<Fluid>) entry); // If someone manages to provide an Entry<Block> they deserve whatever this causes

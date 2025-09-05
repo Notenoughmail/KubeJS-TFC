@@ -56,7 +56,7 @@ public class CreateChunkDataProviderEventJS extends EventJS {
             For a full explanation, see the wiki.
             """)
     @Generics({ ChunkData.class, ChunkAccess.class })
-    public void partial(BiConsumer<ChunkData, ChunkAccess> gen) {
+    public void partial(ChunkDataFiller gen) {
         generatePartial = gen;
     }
 
@@ -72,7 +72,7 @@ public class CreateChunkDataProviderEventJS extends EventJS {
             For a full explanation, see the wiki.
             """)
     @Generics({ ChunkData.class, ChunkAccess.class })
-    public void full(BiConsumer<ChunkData, ChunkAccess> gen) {
+    public void full(ChunkDataFiller gen) {
         generateFull = gen;
     }
 
@@ -111,5 +111,10 @@ public class CreateChunkDataProviderEventJS extends EventJS {
     @FunctionalInterface
     public interface AquiferMaker extends Function<ChunkAccess, Aquifer> {
         Aquifer apply(ChunkAccess access);
+    }
+
+    @FunctionalInterface
+    public interface ChunkDataFiller extends BiConsumer<ChunkData, ChunkAccess> {
+        void accept(ChunkData chunkData, ChunkAccess access);
     }
 }

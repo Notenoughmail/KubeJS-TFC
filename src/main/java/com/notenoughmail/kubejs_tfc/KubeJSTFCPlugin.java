@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
+import com.notenoughmail.kubejs_tfc.event.CreateChunkDataProviderEventJS;
 import com.notenoughmail.kubejs_tfc.event.RegisterISMConvertersEventJS;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
@@ -25,6 +26,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.attachment.SealableInven
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.AsyncContext;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import dev.latvian.mods.kubejs.DevProperties;
@@ -241,6 +243,11 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
         typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCanon);
         typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
+        if (KubeJSTFC.asyncRhinoContext) {
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.RocksGetter.class);
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.ChunkDataFiller.class);
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.AquiferMaker.class);
+        }
     }
 
     @Override

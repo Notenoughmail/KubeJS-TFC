@@ -9,7 +9,9 @@ ServerEvents.tags('block', e => {
         'minecraft:coarse_dirt'
     ]);
     e.add('tfc:can_landslide', [
-        'minecraft:stone'
+        'minecraft:stone',
+        'minecraft:hay_block',
+        'minecraft:end_gateway'
     ]);
 })
 

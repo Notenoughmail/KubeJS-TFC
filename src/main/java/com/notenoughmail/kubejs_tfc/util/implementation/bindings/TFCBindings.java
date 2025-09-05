@@ -46,7 +46,12 @@ public class TFCBindings {
 
     // Possibly move this into a recipe sub-binding
     @Info("Creates an alloy part, used in creating alloying recipes")
+    public static AlloyPartComponent.AlloyPart alloyPart(String metal, double min, double max, boolean keepOriginalBounds) {
+        return new AlloyPartComponent.AlloyPart(metal, min, max, keepOriginalBounds);
+    }
+
+    @Info("Creates an alloy part, used in creating alloying recipes")
     public static AlloyPartComponent.AlloyPart alloyPart(String metal, double min, double max) {
-        return new AlloyPartComponent.AlloyPart(metal, min, max);
+        return alloyPart(metal, min, max, true);
     }
 }

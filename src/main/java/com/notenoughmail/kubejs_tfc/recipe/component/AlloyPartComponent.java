@@ -2,8 +2,10 @@ package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.latvian.mods.kubejs.recipe.InputReplacement;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
+import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.util.MapJS;
@@ -48,7 +50,12 @@ public class AlloyPartComponent implements RecipeComponent<AlloyPartComponent.Al
         }
     }
 
-    public record AlloyPart(String metal, double min, double max) {
+    @Override
+    public boolean isInput(RecipeJS recipe, AlloyPart value, ReplacementMatch match) {
+        return match instanceof AlloyPart ap && ap.metal().equals(value.metal());
+    }
+
+    public record AlloyPart(String metal, double min, double max, boolean keepOriginalBounds) implements ReplacementMatch, InputReplacement {
 
         public JsonObject toJson() {
             final JsonObject json = new JsonObject();
@@ -59,7 +66,26 @@ public class AlloyPartComponent implements RecipeComponent<AlloyPartComponent.Al
         }
 
         public static AlloyPart fromJson(JsonObject json) {
-            return new AlloyPart(json.get("metal").getAsString(), json.get("min").getAsDouble(), json.get("max").getAsDouble());
+            return new AlloyPart(
+                    json.get("metal").getAsString(),
+                    json.get("min").getAsDouble(),
+                    json.get("max").getAsDouble(),
+                    true
+            );
+        }
+
+        @Override
+        public Object replaceInput(RecipeJS recipe, ReplacementMatch match, InputReplacement original) {
+            if (keepOriginalBounds && original instanceof AlloyPart ap) {
+                return new AlloyPart(
+                        metal,
+                        ap.min(),
+                        ap.max(),
+                        true
+                );
+            } else {
+                return this;
+            }
         }
     }
 }

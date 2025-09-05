@@ -60,6 +60,7 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
                 )));
     }
 
+    // TODO: 1.3.3 | Properly assess these implimentations
     @Override
     public boolean isOutput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
         return role().isOutput() && recipe instanceof ISupportProviderOutput && match instanceof ItemMatch itemMatch && itemMatch.contains(value.stack());

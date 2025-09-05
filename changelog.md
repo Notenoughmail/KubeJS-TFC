@@ -5,7 +5,7 @@
 - Add noise inspection commands
 - Describing a knapping type via command will now include the texture(s) used by the knapping screen
 - Add support for Artisanal recipe types and ISMs
-- Fix `#notAxisAligned()` in ground cover builders creating invalid block state files
+- Deprecate `#notAxisAligned()` in ground cover builders as it created invalid block state files
 - Custom fallen leaves are now included in the `tfc:fallen_leaves` block and item tags by default, making them able to snow pile and turn into hummus by default
 - Custom (fallen) leaves can now be removed from automatic tinting by calling `#noDynamicTinting()` on their builders
 - Tag ingredients printed via the describe command can now be clicked to use the `/forge tags` command for that tag
@@ -13,6 +13,8 @@
 - Add metal map in misc sub-binding
 - Custom jar items now have the `tfc:jars` tag by default
 - Add `#withoutCraftingRemainder()` to the jar item builder
+- Properly implement input & output replacement for TFC recipe components & delegate recipe types
+- Add `tfc/asyncRhinoContext` property that will allow callbacks in the `TFCEvents.createChunkDataProvider` to run in parallel during worldgen, defaults to enabled
 
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties

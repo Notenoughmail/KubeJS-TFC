@@ -3,20 +3,15 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkDataGenerator;
 import net.dries007.tfc.world.chunkdata.ChunkDataProvider;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ProtoChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.Map;
 
 /**
  * <b>Purpose:</b><p>

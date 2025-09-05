@@ -100,4 +100,66 @@ ServerEvents.recipes(e => {
         modifiers: 'tfc:salted'
     }}, r => bool = false);
     if (bool) console.error('No salted pork ISPs');
+
+    let { tfc, minecraft } = e.recipes;
+
+    let alloy = tfc.alloy(
+        'tfc:copper',
+        [
+            TFC.alloyPart('tfc:rose_gold', 0.2, 0.3),
+            TFC.alloyPart('tfc:black_steel', 0.7, 0.8)
+        ]
+    ).id('kubejs:validation/alloy_part_replacement');
+
+    if (!alloy.replaceInput(TFC.alloyPart('tfc:rose_gold', 0, 0), TFC.alloyPart('tfc:red_steel', 0.5, 0.6, false))) console.error('Did not replace alloy 1');
+    if (!alloy.replaceInput(TFC.alloyPart('tfc:black_steel', 0, 0), TFC.alloyPart('tfc:gold', 0.4, 0.5, false))) console.error('Did not replace alloy 2');
+
+    let landslide = tfc.landslide(
+        'minecraft:deepslate'
+    ).id('kubejs:validation/block_ingredient_replacement');
+
+    if (!landslide.replaceInput(BlockStatePredicate.of('minecraft:deepslate'), TFC.blockIngredient(['minecraft:hay_block', 'minecraft:end_gateway']))) console.error('Did not replace block ingredient');
+
+    let barrel = tfc.barrel_instant()
+        .outputItem('tfc:food/green_apple')
+        .inputFluid(TFC.fluidStackIngredient(['minecraft:water', 'minecraft:lava'], 500))
+        .id('kubejs:validation/fluid_stack_ingredient_replacement');
+
+    if (!barrel.replaceInput(Fluid.of('minecraft:lava', 50), TFC.fluidStackIngredient('minecraft:milk', 70))) console.error('Did not replace fluid stack ingredient');
+
+    // TODO: 1.3.3 | Test ISP replacement
+
+    let nested = tfc.damage_inputs_shaped_crafting(
+        minecraft.crafting_shaped(
+            'minecraft:dirt',
+            [
+                'SPA'
+            ],
+            {
+                S: 'minecraft:stone',
+                P: 'minecraft:dirt',
+                A: '#minecraft:flowers'
+            }
+        )
+    ).id('kubejs:validation/nested_recipe_replacement');
+
+    if (!nested.replaceInput('minecraft:stone', '#tfc:saws')) console.error('Did not replace nested recipe component');
+
+    let extra = tfc.extra_products_shaped_crafting(
+        [
+            'minecraft:dirt'
+        ],
+        minecraft.crafting_shaped(
+            'minecraft:stone',
+            [
+                'S'
+            ],
+            {
+                S: 'minecraft:sponge'
+            }
+        )
+    ).id('kubejs:validation/extra_product_replacement');
+
+    if (!extra.replaceOutput('minecraft:dirt', 'minecraft:oak_log')) console.error('Did not replace extra output');
+    if (!extra.replaceOutput('minecraft:stone', 'minecraft:birch_log')) console.error('Did not replace internal output');
 })
