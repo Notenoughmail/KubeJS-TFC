@@ -86,3 +86,20 @@ TFC.misc.register2DNoiseForInspection(
 );
 TFC.misc.register2DNoiseForInspection('infinity', TFC.misc.customNoise2D((x, z) => 1 / 0));
 TFC.misc.register2DNoiseForInspection('-infinity', TFC.misc.customNoise2D((x, z) => -1 / 0));
+
+const layeredArea = TFC.misc.uniformLayeredArea(413567326);
+
+for (let i = 0 ; i < 3 ; i++) {
+    layeredArea.zoom(false, 19763144126).smooth(79784123632);
+}
+
+for (let i = 0 ; i < 6 ; i++) {
+    layeredArea.zoom(false, 451364589723);
+}
+
+layeredArea.smooth(71214856214)
+    .zoom(false, 854126548632)
+    .smooth(145256147896)
+
+TFC.misc.register2DNoiseForInspection('rockLayerArea', (x, z) => layeredArea.getAt(x, z));
+TFC.misc.register2DNoiseForInspection('rockLayerAreaType', (x, z) => layeredArea.getAt(x, z) & 0b11);

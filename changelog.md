@@ -15,6 +15,7 @@
 - Add `#withoutCraftingRemainder()` to the jar item builder
 - Properly implement input & output replacement for TFC recipe components & delegate recipe types
 - Add `tfc/asyncRhinoContext` property that will allow callbacks in the `TFCEvents.createChunkDataProvider` to run in parallel during worldgen, defaults to enabled
+- Add `LayeredArea` constructors to the misc sub-binding
 
 ### 1.3.2
 - Add `#hasPostProcess` and `#emissiveRendering` methods to extended properties

@@ -29,6 +29,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.AsyncContext;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
+import dev.latvian.mods.kubejs.CommonProperties;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
@@ -58,6 +59,9 @@ import net.dries007.tfc.common.recipes.outputs.*;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
+import net.dries007.tfc.world.layer.framework.AdjacentTransformLayer;
+import net.dries007.tfc.world.layer.framework.SourceLayer;
+import net.dries007.tfc.world.layer.framework.TransformLayer;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
@@ -243,10 +247,13 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
         typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCanon);
         typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
-        if (KubeJSTFC.asyncRhinoContext) {
+        if (CommonProperties.get().get("tfc/asyncRhinoContext", true)) {
             AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.RocksGetter.class);
             AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.ChunkDataFiller.class);
             AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, CreateChunkDataProviderEventJS.AquiferMaker.class);
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, SourceLayer.class);
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, TransformLayer.class);
+            AsyncContext.wrapFunctionalInterfaceAsync(typeWrappers, AdjacentTransformLayer.class);
         }
     }
 

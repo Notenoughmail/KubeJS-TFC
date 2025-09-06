@@ -75,7 +75,7 @@ public class KubeJSTFC {
     public static final String MOD_NAME = "KubeJS TFC";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "kubejs_tfc";
-    public static boolean debug, insertIntoConsole, deduplicateConsoleErrors, asyncRhinoContext;
+    public static boolean debug, insertIntoConsole, deduplicateConsoleErrors;
 
     private static Consumer<ImmutableMap.Builder<String, RegistryRock>> rockListeners = r -> {
         for (Rock rock : Rock.VALUES) {
@@ -98,7 +98,6 @@ public class KubeJSTFC {
         debug = props.debugInfo;
         insertIntoConsole = props.get("tfc/insertSelfTestsIntoConsole", true);
         deduplicateConsoleErrors = props.get("tfc/deduplicateConsoleErrors", true);
-        asyncRhinoContext = props.get("tfc/asyncRhinoContext", true);
 
         printConfig(KubeJSTFC::info);
     }
@@ -108,7 +107,6 @@ public class KubeJSTFC {
         info.accept("- Debug mode enabled: %s".formatted(debug));
         info.accept("- Self tests console insertion enabled: %s".formatted(insertIntoConsole));
         info.accept("- Self tests warnings deduplicated: %s".formatted(deduplicateConsoleErrors));
-        info.accept("- Async Rhino Context wrappers: %s".formatted(asyncRhinoContext));
     }
 
     public static void info(String message) {

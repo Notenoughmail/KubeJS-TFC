@@ -37,6 +37,7 @@ TFCEvents.worldgenData(e => {
         }
     );
 
+    // TODO: Figure out why this causes #setBlock in unloaded chunks
     e.boulder(
         'nether_boulder',
         [

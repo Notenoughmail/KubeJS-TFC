@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
+import com.notenoughmail.kubejs_tfc.util.implementation.custom.LayeredArea;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
@@ -27,6 +28,8 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.chunkdata.RockData;
+import net.dries007.tfc.world.layer.UniformLayer;
+import net.dries007.tfc.world.layer.framework.SourceLayer;
 import net.dries007.tfc.world.noise.*;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.Util;
@@ -50,6 +53,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.DoubleToIntFunction;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -329,6 +333,26 @@ public enum MiscBindings {
     @Info("Casts a JS callback into a full Noise3D object")
     public Noise3D customNoise3D(Noise3D func) {
         return func;
+    }
+
+    @Info("Creates a new layered area from a Noise2D object")
+    public LayeredArea layeredAreaFromNoise(Noise2D noise, DoubleToIntFunction rounder, long seed) {
+        return layeredArea((ctx, x, z) -> rounder.applyAsInt(noise.noise(x, z)), seed);
+    }
+
+    @Info("Creates a new layered area from a Noise2D object")
+    public LayeredArea layeredAreaFromNoise(Noise2D noise, long seed) {
+        return layeredAreaFromNoise(noise, d -> (int) Math.round(d), seed);
+    }
+
+    @Info("Creates a new layered area from the SourceLayer")
+    public LayeredArea layeredArea(SourceLayer source, long seed) {
+        return new LayeredArea(source, seed);
+    }
+
+    @Info("Creates a new layered area with values uniformly distributed across the 32 bit signed integer range")
+    public LayeredArea uniformLayeredArea(long seed) {
+        return layeredArea(UniformLayer.INSTANCE, seed);
     }
 
     @HideFromJS

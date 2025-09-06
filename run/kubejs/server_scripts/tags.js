@@ -63,10 +63,6 @@ ServerEvents.tags('worldgen/placed_feature', e => {
         'kubejs_tfc:boulder',
         'kubejs_tfc:baby_boulder'
     ]);
-    e.add('beneath:everywhere_but_basalt_deltas', [
-        'kubejs_tfc:nether_boulder',
-        'kubejs:nether_boulder'
-    ])
     e.add('tfc:in_biome/underground_decoration', [
         'kubejs_tfc:example_thin_spike'
     ]);

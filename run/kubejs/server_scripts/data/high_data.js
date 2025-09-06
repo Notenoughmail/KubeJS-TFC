@@ -230,4 +230,17 @@ ServerEvents.highPriorityData(e => {
             ]
         }
     );
+
+    e.addJson(
+        'kubejs:forge/biome_modifier/nether_boulders',
+        {
+            type: 'forge:add_features',
+            biomes: '#minecraft:is_nether',
+            features: [
+                'kubejs_tfc:nether_boulder',
+                'kubejs:nether_boulder'
+            ],
+            step: 'fluid_springs'
+        }
+    );
 })

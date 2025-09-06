@@ -25,14 +25,13 @@ public class AsyncContext extends Context {
             return async;
         }
         final AsyncContext context = new AsyncContext();
-        final ScriptType type = ctx.getProperty("Type", ScriptType.STARTUP);
 
-        context.setProperty("Type", type);
+        context.setProperty("Type", ctx.getProperty("Type", ScriptType.STARTUP));
         context.setProperty("Console", ctx.getProperty("Console"));
         context.setClassShutter(ctx.getClassShutter());
         context.setRemapper(ctx.getRemapper());
         context.setApplicationClassLoader(ctx.getApplicationClassLoader());
-        context.setTopCall(context.getTopCallScope());
+        context.setTopCall(context.initStandardObjects());
         context.setWrapFactory(ctx.getWrapFactory());
         final ContextAccessor access = ((ContextAccessor) context);
         access.kubejs_tfc$SetTypeWrappers(ctx.getTypeWrappers());
