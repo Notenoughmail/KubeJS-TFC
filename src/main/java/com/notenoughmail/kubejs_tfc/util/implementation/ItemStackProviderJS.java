@@ -78,28 +78,13 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Override
     public Object replaceOutput(RecipeJS recipe, ReplacementMatch match, OutputReplacement original) {
-        if (recipe instanceof ISupportProviderOutput) {
-            if (original instanceof ItemStackProviderJS originalProvider) {
-                final ItemStackProviderJS replacement = new ItemStackProviderJS(stack.copy(), originalProvider.modifiers);
-                replacement.withCount(originalProvider.getCount());
-                return replacement;
-            } else if (original instanceof OutputItem originalOutput) {
-                final ItemStackProviderJS replacement = new ItemStackProviderJS(stack.copy(), new JsonArray());
-                replacement.withCount(originalOutput.getCount());
-                return replacement;
-            }
-
-            return new ItemStackProviderJS(stack.copy(), new JsonArray());
-        } else {
-            // Uh... how?
-            final OutputItem replacement = OutputItem.of(stack.copy());
-            if (original instanceof OutputItem o) {
-                replacement.item.setCount(o.getCount());
-            } else if (original instanceof ItemStackProviderJS provider) {
-                replacement.item.setCount(provider.getCount());
-            }
-            return replacement;
+        if (original instanceof ItemStackProviderJS originalProvider) {
+            return withCount(originalProvider.getCount());
+        } else if (original instanceof OutputItem originalOutput) {
+            return withCount(originalOutput.getCount());
         }
+
+        return this;
     }
 
     @Info("Returns true if this ISP's stack is empty and the modifier list is empty")
@@ -224,13 +209,10 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
     @Info("Returns a list of JsonObjects consisting of the applied modifiers which match the requested type")
     @Generics(JsonObject.class)
     public List<JsonObject> getModifiersOfType(String type) {
-        final List<JsonObject> list = new ArrayList<>();
-        for (JsonElement element : modifiers) {
-            if (Objects.equals(element.getAsJsonObject().get("type").getAsString(), type)) {
-                list.add(element.getAsJsonObject());
-            }
-        }
-        return list;
+        return modifiers.asList().stream()
+                .map(JsonElement::getAsJsonObject)
+                .filter(obj -> Objects.equals(obj.get("type").getAsString(), type))
+                .toList();
     }
 
     // This assumes if neither element is defined the json is an item stack

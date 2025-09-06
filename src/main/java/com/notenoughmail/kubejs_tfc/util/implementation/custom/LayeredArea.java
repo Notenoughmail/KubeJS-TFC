@@ -27,7 +27,7 @@ public class LayeredArea extends ConcurrentArea<Integer> {
     }
 
     @Info(value = "Applies a zoom layer to this area, effectively doubling the 'resolution'", params = {
-            @Param(name = "fuzzy", value = "If the zoom should be fuzzy"),
+            @Param(name = "fuzzy", value = "If the zoom should be fuzzy (smooth boundaries)"),
             @Param(name = "seed", value = "The seed to use")
     })
     public LayeredArea zoom(boolean fuzzy, long seed) {

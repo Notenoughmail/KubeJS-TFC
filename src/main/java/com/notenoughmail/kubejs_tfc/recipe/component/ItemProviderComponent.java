@@ -4,9 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.recipe.ISupportProviderOutput;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
-import dev.latvian.mods.kubejs.recipe.ItemMatch;
-import dev.latvian.mods.kubejs.recipe.RecipeJS;
-import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
+import dev.latvian.mods.kubejs.platform.forge.ingredient.WildcardIngredient;
+import dev.latvian.mods.kubejs.recipe.*;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.typings.desc.DescriptionContext;
@@ -60,14 +59,22 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
                 )));
     }
 
-    // TODO: 1.3.3 | Properly assess these implimentations
     @Override
     public boolean isOutput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
-        return role().isOutput() && recipe instanceof ISupportProviderOutput && match instanceof ItemMatch itemMatch && itemMatch.contains(value.stack());
-    }
-
-    @Override
-    public boolean isInput(RecipeJS recipe, ItemStackProviderJS value, ReplacementMatch match) {
-        return !role().isOutput() && recipe instanceof ISupportProviderOutput && match instanceof ItemMatch itemMatch && itemMatch.contains(value.stack());
+        if (role().isOutput() && recipe instanceof ISupportProviderOutput) {
+            if (match instanceof ItemMatch itemMatch) {
+                return itemMatch.contains(value.stack());
+            } else if (match instanceof ItemStackProviderJS jsMatch) {
+                if (jsMatch.stack().getItem() == value.stack().getItem()) {
+                    for (JsonElement elm : jsMatch.modifiers()) {
+                        if (value.getModifiersOfType(elm.getAsJsonObject().get("type").getAsString()).isEmpty()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

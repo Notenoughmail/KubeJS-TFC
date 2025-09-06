@@ -162,4 +162,25 @@ ServerEvents.recipes(e => {
 
     if (!extra.replaceOutput('minecraft:dirt', 'minecraft:oak_log')) console.error('Did not replace extra output');
     if (!extra.replaceOutput('minecraft:stone', 'minecraft:birch_log')) console.error('Did not replace internal output');
+
+    let basicISP = tfc.quern(
+        'minecraft:dirt',
+        'minecraft:stone'
+    ).id('kubejs:validation/basic_isp_replacement');
+
+    if (!basicISP.replaceOutput('minecraft:dirt', TFC.isp.of('tfc:metal/ingot/gold').addHeat(500))) console.error('Did not replace base ISP');
+
+    let modISP = tfc.quern(
+        TFC.isp.of('minecraft:dirt').addHeat(500),
+        'minecraft:gravel'
+    ).id('kubejs:validation/modifier_isp_replacement');
+
+    if (!modISP.replaceOutput(TFC.isp.of('minecraft:dirt').addHeat(0), TFC.isp.of('minecraft:oak_log'))) console.error('Did not replace base ISP');
+
+    let failISP = tfc.quern(
+        TFC.isp.of('tfc:food/cherry').copyOldestFood().addTrait('tfc:wild'),
+        'tfc:food/cherry'
+    ).id('kubejs:validation/fail_isp_replacement');
+
+    if (failISP.replaceOutput(TFC.isp.of('tfc:food/cherry').addBait(), 'minecraft:dirt')) console.error('Replaced ISP despite not all modifiers matching');
 })
