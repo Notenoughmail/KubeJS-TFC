@@ -98,7 +98,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 builder.accept(RegistryInfo.ENTITY_TYPE.getId(et.value()).toString());
             }
         }
-        return builder.build();
+        return builder.build().distinct();
     }),
     FAUNA(Fauna.MANAGER, (f, cmp) -> {
         var e = f.get();
@@ -198,7 +198,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 builder.accept(RegistryInfo.ITEM.getId(stack.getItem()).toString());
             }
         }
-        return builder.build();
+        return builder.build().distinct();
     }),
     LAMP_FUEL(LampFuel.MANAGER, (lf, cmp) -> {
         append(cmp, "burnRate", lf.getBurnRate());

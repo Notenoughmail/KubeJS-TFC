@@ -176,7 +176,7 @@ public interface NoiseInspection {
         if (noise == null) {
             return failMsg("Unregistered noise '%s'".formatted(noiseName), ctx);
         } else {
-            final double y = DoubleArgumentType.getDouble(ctx, "y_input");
+            final double y = DoubleArgumentType.getDouble(ctx, "y_value");
 
             final String name2D = noiseName + " at %.1f".formatted(y);
             MiscBindings.INSTANCE.register2DNoiseForInspection(name2D, (x, z) -> noise.noise(x, y, z));

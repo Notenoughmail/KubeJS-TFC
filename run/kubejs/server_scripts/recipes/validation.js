@@ -127,8 +127,6 @@ ServerEvents.recipes(e => {
 
     if (!barrel.replaceInput(Fluid.of('minecraft:lava', 50), TFC.fluidStackIngredient('minecraft:milk', 70))) console.error('Did not replace fluid stack ingredient');
 
-    // TODO: 1.3.3 | Test ISP replacement
-
     let nested = tfc.damage_inputs_shaped_crafting(
         minecraft.crafting_shaped(
             'minecraft:dirt',
@@ -178,7 +176,7 @@ ServerEvents.recipes(e => {
     if (!modISP.replaceOutput(TFC.isp.of('minecraft:dirt').addHeat(0), TFC.isp.of('minecraft:oak_log'))) console.error('Did not replace base ISP');
 
     let failISP = tfc.quern(
-        TFC.isp.of('tfc:food/cherry').copyOldestFood().addTrait('tfc:wild'),
+        TFC.isp.of('tfc:food/cherry').copyOldestFood(), // Do not add a food trait here; somehow, when in combination with the output replacement, that causes a server config to be loaded early due to TFC marking recipe outputs as non-decaying...
         'tfc:food/cherry'
     ).id('kubejs:validation/fail_isp_replacement');
 

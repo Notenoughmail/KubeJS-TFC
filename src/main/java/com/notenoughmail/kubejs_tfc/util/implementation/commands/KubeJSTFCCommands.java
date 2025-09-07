@@ -130,7 +130,7 @@ public class KubeJSTFCCommands {
                                                                                 builder
                                                                         ))
                                                                         .executes(NoiseInspection::inspectNoise3D)
-                                                                        .then(argument("y_input", DoubleArgumentType.doubleArg())
+                                                                        .then(argument("y_value", DoubleArgumentType.doubleArg())
                                                                                 .executes(NoiseInspection::inspectNoise3DAtHeight)
                                                                         )
                                                                 )
@@ -142,8 +142,9 @@ public class KubeJSTFCCommands {
         );
     }
 
-    private static ClickEvent describeClickEvent(DataType type, String id) {
-        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(type.getSerializedName(), id));
+    private static Style describeClickEvent(DataType type, String id) {
+        return BASE_DESCRIBE_STYLE
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "kubejs_tfc describe %s %s".formatted(type.getSerializedName(), id)));
     }
 
     private static int listIdsPage(CommandContext<CommandSourceStack> ctx) {
@@ -164,7 +165,10 @@ public class KubeJSTFCCommands {
 
     private static final long ELEMENTS_ON_PAGE = 10;
 
-    private static final HoverEvent DESCRIBE_ENTRY = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry"));
+    private static final Style BASE_DESCRIBE_STYLE = Style.EMPTY
+            .withUnderlined(true)
+            .withColor(ChatFormatting.AQUA)
+            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")));
     private static final HoverEvent NEXT_PAGE = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Next page"));
     private static final HoverEvent LAST_PAGE = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Previous page"));
 
@@ -179,18 +183,14 @@ public class KubeJSTFCCommands {
         final long currentPage = (long) Mth.clamp(page, 1, totalPages);
 
         msg.accept(Component.literal("\nShowing page %d of %d for %s".formatted(currentPage, totalPages, manager.directory)));
-        msg.accept(Component.literal("(%d through %d of %d)".formatted(((currentPage - 1) * ELEMENTS_ON_PAGE) + 1, Math.min(names.size(), (currentPage * ELEMENTS_ON_PAGE) + 1), names.size())));
+        msg.accept(Component.literal("(%d through %d of %d)".formatted(((currentPage - 1) * ELEMENTS_ON_PAGE) + 1, Math.min(names.size(), currentPage * ELEMENTS_ON_PAGE), names.size())));
 
         names.stream()
                 .sorted(ResourceLocation::compareNamespaced)
                 .skip(ELEMENTS_ON_PAGE * (currentPage - 1))
                 .limit(ELEMENTS_ON_PAGE)
                 .map(rl -> Component.literal("- ").append(
-                        Component.literal(rl.toString()).withStyle(s -> s
-                                .withUnderlined(true)
-                                .withColor(ChatFormatting.AQUA)
-                                .withClickEvent(describeClickEvent(dataType, rl.toString()))
-                                .withHoverEvent(DESCRIBE_ENTRY))
+                        Component.literal(rl.toString()).withStyle(describeClickEvent(dataType, rl.toString()))
                 ))
                 .forEach(msg);
 
@@ -254,16 +254,14 @@ public class KubeJSTFCCommands {
             sysMsg("Found %s %s entries with %s".formatted(ids.size(), name, regId), ctx);
         }
 
-        ids.forEach(id -> sysMsg(
-                Component.literal("- ")
-                        .append(Component.literal(id).withStyle(s -> s
-                                .withUnderlined(true)
-                                .withColor(ChatFormatting.AQUA)
-                                .withClickEvent(describeClickEvent(dataType, id))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Describe entry")))
-                        )),
-                ctx
-        ));
+        for (String id : ids) {
+            sysMsg(
+                    Component.literal("- ").append(
+                            Component.literal(id).withStyle(describeClickEvent(dataType, id))
+                    ),
+                    ctx
+            );
+        }
 
         return ids.size();
     }
