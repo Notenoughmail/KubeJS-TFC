@@ -21,7 +21,7 @@ public class LayeredArea extends ConcurrentArea<Integer> {
         mutableFactory = factory;
     }
 
-    @Info("Gets the value at the given x and z points")
+    @Info("Gets the value at the given x-z point")
     public int getAt(int x, int z) {
         return get(x, z);
     }
@@ -56,6 +56,16 @@ public class LayeredArea extends ConcurrentArea<Integer> {
     })
     public LayeredArea adjacentTransform(AdjacentTransformLayer transformer, long seed) {
         mutableFactory.setValue(transformer.apply(seed, mutableFactory.getValue()));
+        return this;
+    }
+
+    @Info(value = "Merges this LayeredArea with the other LayeredArea using the provided merge function", params = {
+            @Param(name = "merger", value = "The merging function"),
+            @Param(name = "otherLayeredArea", value = "The LayeredArea to merge with this one"),
+            @Param(name = "seed", value = "The seed to use")
+    })
+    public LayeredArea merge(MergeLayer merger, LayeredArea otherLayeredArea, long seed) {
+        mutableFactory.setValue(merger.apply(seed, mutableFactory.getValue(), otherLayeredArea.mutableFactory.getValue()));
         return this;
     }
 

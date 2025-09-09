@@ -364,18 +364,14 @@ public enum MiscBindings {
 
     @Info("Adds a 2D noise to a list to be inspected via a command. Only works if KubeJS's debug mode is enabled")
     public void register2DNoiseForInspection(String name, Noise2D noise) {
-        if (KubeJSTFC.debug) {
-            KubeJSTFC.info("Added 2D noise {} to inspection list", name);
-            inspect2DNoise.get().put(name, noise);
-        }
+        KubeJSTFC.info("Added 2D noise {} to inspection list", name);
+        inspect2DNoise.get().put(name, noise);
     }
 
     @Info("Adds a 3D noise to a list to be inspected vai a command. Only works if KubeJS's debug mode is enabled")
     public void register3DNoiseForInspection(String name, Noise3D noise) {
-        if (KubeJSTFC.debug) {
-            KubeJSTFC.info("Added 3D noise {} to inspection list", name);
-            inspect3DNoise.get().put(name, noise);
-        }
+        KubeJSTFC.info("Added 3D noise {} to inspection list", name);
+        inspect3DNoise.get().put(name, noise);
     }
 
     @Info(value = "Creates a new `Metaballs2D`, TFC's 2D implementation of Metaballs", params = {

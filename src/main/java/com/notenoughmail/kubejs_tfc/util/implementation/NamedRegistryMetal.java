@@ -1,5 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
+import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.fluids.TFCFluids;
 import net.dries007.tfc.common.items.TFCItems;
@@ -25,7 +26,7 @@ public class NamedRegistryMetal implements RegistryMetal {
         final Map<Metal.ItemType, ? extends Supplier<Item>> items = TFCItems.METAL_ITEMS.get(metal);
         return new NamedRegistryMetal(
                 metal,
-                "tfc",
+                TerraFirmaCraft.MOD_ID,
                 blocks::get,
                 items::get,
                 TFCFluids.METALS.get(metal).source()::get
@@ -98,5 +99,10 @@ public class NamedRegistryMetal implements RegistryMetal {
     @Override
     public String getSerializedName() {
         return metal.getSerializedName();
+    }
+
+    @Override
+    public String toString() {
+        return "NamedRegistryMetal/" + metal.toString();
     }
 }

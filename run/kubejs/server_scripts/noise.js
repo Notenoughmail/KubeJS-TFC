@@ -1,11 +1,6 @@
 
 TFC.misc.register2DNoiseForInspection('flat', (x, z) => 0);
 TFC.misc.register2DNoiseForInspection('base', TFC.misc.newOpenSimplex2D(6249785832124));
-TFC.misc.register2DNoiseForInspection('cell', TFC.misc.cellular2D(4861493235646));
-const cell = TFC.misc.cellular2D(977615453);
-TFC.misc.register2DNoiseForInspection('cell_then', cell.then(cell => cell.f1() * cell.f2()));
-TFC.misc.register2DNoiseForInspection('cell_x', cell.then(cell => cell.x()));
-TFC.misc.register2DNoiseForInspection('cell_y', cell.then(cell => cell.y()));
 const transposeAndRotateTest2D = TFC.misc.customNoise2D((x, z) => {
     if (Math.round(x) % 2 == 0) {
         return 1;
@@ -25,7 +20,6 @@ TFC.misc.register2DNoiseForInspection('rotate_132', transposeAndRotateTest2D.rot
 
 TFC.misc.register3DNoiseForInspection('flat', (x, y, z) => 0);
 TFC.misc.register3DNoiseForInspection('base', TFC.misc.newOpenSimplex3D(97621631463));
-TFC.misc.register3DNoiseForInspection('cell', TFC.misc.cellular3D(79431531351));
 TFC.misc.register3DNoiseForInspection('3d with space', (x, y, z) => KMath.v3d(x, y, z).length());
 const sinY = TFC.misc.customNoise2D((y, _) => Math.sin(y * 2 * KMath.PI));
 const transposeAndRotateTest3D = TFC.misc.customNoise3D((x, y, z) => {
@@ -106,3 +100,18 @@ layeredArea
 
 TFC.misc.register2DNoiseForInspection('rockLayerArea', (x, z) => layeredArea.getAt(x, z));
 TFC.misc.register2DNoiseForInspection('rockLayerAreaType', (x, z) => layeredArea.getAt(x, z) & 0b11);
+
+const cell = TFC.misc.cellular2D(14789614563);
+
+TFC.misc.register2DNoiseForInspection('cell_x', cell.then(c => c.x()));
+TFC.misc.register2DNoiseForInspection('cell_y', cell.then(c => c.y()));
+TFC.misc.register2DNoiseForInspection('cell_cx', cell.then(c => c.cx()));
+TFC.misc.register2DNoiseForInspection('cell_cy', cell.then(c => c.cy()));
+TFC.misc.register2DNoiseForInspection('cell_f1', cell.then(c => c.f1()));
+TFC.misc.register2DNoiseForInspection('cell_f2', cell.then(c => c.f2()));
+TFC.misc.register2DNoiseForInspection('cell', cell);
+
+const cell_3 = TFC.misc.cellular3D(1478563214586);
+
+TFC.misc.register3DNoiseForInspection('cell_f2', (x, y, z) => cell_3.cell(x, y, z).f2());
+TFC.misc.register3DNoiseForInspection('cell', cell_3);

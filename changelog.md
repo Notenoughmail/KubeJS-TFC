@@ -3,6 +3,7 @@
 - Add several bindings for noises
 - Add some additional helper functions for TFC's `Noise2D` and `Noise3D` classes
 - Add noise inspection commands
+- Fix `kubejs_tfc:wrapped` chunk generators crashing when trying to find a spawn position 
 - Describing a knapping type via command will now include the texture(s) used by the knapping screen
 - Add support for Artisanal recipe types and ISMs
 - Deprecate `#notAxisAligned()` in ground cover builders as it created invalid block state files

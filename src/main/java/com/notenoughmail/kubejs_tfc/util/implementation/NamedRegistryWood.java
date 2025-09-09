@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -58,6 +59,7 @@ public class NamedRegistryWood implements RegistryWood {
     }
 
     @Info("A block of this wood, of the provided type")
+    @Nullable
     @Override
     public Supplier<Block> getBlock(Wood.BlockType type) {
         return parent.getBlock(type);
@@ -82,6 +84,6 @@ public class NamedRegistryWood implements RegistryWood {
 
     @Override
     public String toString() {
-        return parent.toString();
+        return "NamedRegistryWood/" + parent.toString();
     }
 }

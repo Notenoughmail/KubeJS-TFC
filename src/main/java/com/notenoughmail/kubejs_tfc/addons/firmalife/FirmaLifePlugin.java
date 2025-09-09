@@ -4,18 +4,26 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.FLEvents;
 import com.eerussianguy.firmalife.common.FLForgeEvents;
 import com.eerussianguy.firmalife.common.FLHelpers;
+import com.eerussianguy.firmalife.common.blocks.FLBlocks;
+import com.eerussianguy.firmalife.common.blocks.FLFluids;
+import com.eerussianguy.firmalife.common.items.FLItems;
 import com.eerussianguy.firmalife.common.network.FLPackets;
 import com.eerussianguy.firmalife.common.recipes.FLRecipeSerializers;
+import com.eerussianguy.firmalife.common.util.FLMetal;
+import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.block.CheeseWheelBlockBuilder;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.item.WateringCanItemBuilder;
 import com.notenoughmail.kubejs_tfc.addons.firmalife.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.BasicSchema;
 import com.notenoughmail.kubejs_tfc.recipe.schema.SoupPotSchema;
+import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
+import net.dries007.tfc.util.Metal;
+import org.jetbrains.annotations.Nullable;
 
 public class FirmaLifePlugin extends KubeJSPlugin {
 
@@ -24,6 +32,29 @@ public class FirmaLifePlugin extends KubeJSPlugin {
         RegistryInfo.ITEM.addType("firmalife:watering_can", WateringCanItemBuilder.class, WateringCanItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("firmalife:cheese_wheel", CheeseWheelBlockBuilder.class, CheeseWheelBlockBuilder::new);
+
+        KubeJSTFC.registerMetalListener(builder -> {
+            for (FLMetal metal : FLMetal.values()) {
+                builder.put(metal.getSerializedName(), new NamedRegistryMetal(
+                        metal,
+                        FirmaLife.MOD_ID,
+                        FLBlocks.METALS.get(metal)::get,
+                        type -> {
+                            final FLMetal.ItemType item = switch (type) {
+                                case INGOT -> FLMetal.ItemType.INGOT;
+                                case DOUBLE_INGOT -> FLMetal.ItemType.DOUBLE_INGOT;
+                                case SHEET -> FLMetal.ItemType.SHEET;
+                                case DOUBLE_SHEET -> FLMetal.ItemType.DOUBLE_SHEET;
+                                case ROD -> FLMetal.ItemType.ROD;
+                                default -> null;
+                            };
+                            if (item == null) return null;
+                            return FLItems.METAL_ITEMS.get(metal).get(item);
+                        },
+                        FLFluids.METALS.get(metal).source()::get
+                ));
+            }
+        });
     }
 
     @Override
