@@ -3,17 +3,21 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.common.recipes.*;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class TFCRecipeJS extends RecipeJS {
 
-    @Override
-    public ItemStack getOriginalRecipeResult() {
-        return super.getOriginalRecipeResult();
+    public static TFCRecipeJS of(Function<Recipe<?>, List<Ingredient>> originalIngredientGetter) {
+        return new TFCRecipeJS() {
+            @Override
+            public List<Ingredient> getOriginalRecipeIngredients() {
+                return originalIngredientGetter.apply(getOriginalRecipe());
+            }
+        };
     }
 
     @Override

@@ -82,9 +82,9 @@ public interface AdvancedCraftingSchema {
         @Override
         public List<Ingredient> getOriginalRecipeIngredients() {
             if (shaped && getOriginalRecipe() instanceof AdvancedShapedRecipe adv) {
-                return adv.getIngredients();
+                return List.copyOf(adv.getIngredients());
             } else if (!shaped && getOriginalRecipe() instanceof AdvancedShapelessRecipe adv) {
-                return adv.getIngredients();
+                return List.copyOf(adv.getIngredients());
             } else if (getOriginalRecipe() == null) {
                 ConsoleJS.SERVER.warn("Original advanced crafting recipe (%s) is null - could not get ingredients".formatted(getType()));
                 return List.of();

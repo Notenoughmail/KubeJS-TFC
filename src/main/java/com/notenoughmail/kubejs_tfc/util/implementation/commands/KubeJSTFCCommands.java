@@ -144,7 +144,7 @@ public class KubeJSTFCCommands {
 
     private static Style describeClickEvent(DataType type, String id) {
         return BASE_DESCRIBE_STYLE
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "kubejs_tfc describe %s %s".formatted(type.getSerializedName(), id)));
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(type.getSerializedName(), id)));
     }
 
     private static int listIdsPage(CommandContext<CommandSourceStack> ctx) {

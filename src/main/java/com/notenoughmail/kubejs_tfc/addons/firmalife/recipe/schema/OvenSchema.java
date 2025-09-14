@@ -10,7 +10,6 @@ import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
@@ -21,17 +20,14 @@ public interface OvenSchema {
     RecipeKey<Float> TEMPERATURE = NumberComponent.FLOAT.key("temperature");
     RecipeKey<Integer> DURATION = NumberComponent.INT.key("duration");
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, () -> new TFCRecipeJS() {
-        @Override
-        public List<Ingredient> getOriginalRecipeIngredients() {
-            if (getOriginalRecipe() instanceof OvenRecipe o) {
-                return List.of(o.getIngredient());
-            } else if (getOriginalRecipe() == null) {
-                ConsoleJS.SERVER.warn("Original oven recipe is null - could not get ingredients");
-                return List.of();
-            } else {
-                throw new IllegalStateException("Original recipe was not an oven recipe?");
-            }
+    RecipeSchema SCHEMA = new RecipeSchema(TFCRecipeJS.class, () -> TFCRecipeJS.of(r -> {
+        if (r instanceof OvenRecipe o) {
+            return List.of(o.getIngredient());
+        } else if (r == null) {
+            ConsoleJS.SERVER.warn("Original oven recipe is null - could not get ingredients");
+            return List.of();
+        } else {
+            throw new IllegalStateException("Original recipe was not an oven recipe?");
         }
-    }, INGREDIENT, TEMPERATURE, DURATION, RESULT_ITEM);
+    }), INGREDIENT, TEMPERATURE, DURATION, RESULT_ITEM);
 }

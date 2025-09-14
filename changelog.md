@@ -1,4 +1,4 @@
-### 1.3.3 (W.I.P.)
+### 1.3.3
 - The list ids command is now paginated
 - Add several bindings for noises
 - Add some additional helper functions for TFC's `Noise2D` and `Noise3D` classes
