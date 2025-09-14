@@ -16,6 +16,7 @@
 - Add `#withoutCraftingRemainder()` to the jar item builder
 - Properly implement input & output replacement for TFC recipe components & delegate recipe types
 - Add `LayeredArea` constructors to the misc sub-binding
+- Allow access to the chunk generator's `Settings` object and creation of `RandomSource`s in the chunk data provider event
 - [Wiki] Commands now have their own page
 
 ### 1.3.2

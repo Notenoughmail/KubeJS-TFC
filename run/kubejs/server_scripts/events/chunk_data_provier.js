@@ -1,13 +1,18 @@
-const outsideContext = {
-    test: 50,
-    greaves: {
-        sympathy: () => 15
+TFCEvents.createChunkDataProvider('nether', event => {
+
+    // Use a LayeredArea for the rocks as noises can be slow when used with the rock rule source
+    const randomSource = event.getRandomSource('nether');
+    const rockLayer = TFC.misc.uniformLayeredArea(randomSource.nextLong());
+    for (let i = 0 ; i < 3 ; i++) {
+        rockLayer.zoom(true, randomSource.nextLong()).smooth(randomSource.nextLong());
     }
-}
-
-TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
-
-    const offset = () => outsideContext.greaves.sympathy();
+    for (let i = 0 ; i < 6 ; i++) {
+        rockLayer.zoom(true, randomSource.nextLong());
+    }
+    rockLayer
+        .smooth(randomSource.nextLong())
+        .zoom(true, randomSource.nextLong())
+        .smooth(randomSource.nextLong());
 
     const rain = TFC.misc.lerpFloatLayer(0, 0, 0, 0);
     const tempLayer = TFC.misc.newOpenSimplex2D(event.worldSeed + 4621678939469)
@@ -19,16 +24,6 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
         .terraces(9)
         .affine(6, 12)
         .scaled(6, 18, 0, 1);
-
-    const rockTypeNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 3216548497)
-        .spread(0.061)
-        .scaled(0, 3) // 0: Oceanic; 1: Volcanic; 2: Land; 3: Uplift
-        .map(val => Math.round(val));
-    const rockLayerNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 9774532562233)
-        .spread(0.000697)
-        .scaled(0x80000000, 0x7fffffff) // Effectively acts as a random number generator within the range of Java's int type
-        .map(val => val << 2) // Shift up two bits so the type noise is what is used for rock types instead of the random number
-        .add(rockTypeNoise);
     const rockLayerHeightNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 30121796313692)
         .octaves(6)
         .scaled(12, 34)
@@ -48,9 +43,9 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
 
         var temp = TFC.misc.lerpFloatLayer(
             tempLayer.noise(x, z),
-            tempLayer.noise(x, z + offset()),
-            tempLayer.noise(x + offset(), z),
-            tempLayer.noise(x + offset(), z + offset())
+            tempLayer.noise(x, z + 15),
+            tempLayer.noise(x + 15, z),
+            tempLayer.noise(x + 15, z + 15)
         );
 
         data.generatePartial(
@@ -83,6 +78,7 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
         do {
             // A simplified version of what TFC does for its layer depth
             // Of note is the lack of skewing for either the rock layer or the heights
+            // And the non-use of the cache
             layerHeight = rockLayerHeightNoise.noise(x >> 5, z >> 5);
             if (deltaY <= layerHeight) {
                 break;
@@ -91,6 +87,6 @@ TFCEvents.createChunkDataProvider('minecraft:the_nether', event => {
             layer++;
         } while (deltaY > 0);
 
-        return rockLayers.sampleAtLayer(rockLayerNoise.noise(x, z), layer);
+        return rockLayers.sampleAtLayer(rockLayer.getAt(x, z), layer);
     });
 })

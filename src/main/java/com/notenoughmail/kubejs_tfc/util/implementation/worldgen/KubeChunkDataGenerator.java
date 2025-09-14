@@ -7,6 +7,7 @@ import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.ChunkData
 import net.dries007.tfc.world.chunkdata.*;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
+import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.ChunkPos;
@@ -73,12 +74,12 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
         return sum / a.length;
     }
 
-    public static KubeChunkDataGenerator create(String levelKey, RockLayerSettings rockLayers, long worldSeed, RandomState rs) {
+    public static KubeChunkDataGenerator create(String levelKey, Settings settings, long worldSeed, RandomState rs) {
         BiConsumer<ChunkData, ChunkAccess> partial = GEN_PARTIAL, full = GEN_FULL;
         Function<ChunkAccess, Aquifer> aquifer = AQUIFER;
         CreateChunkDataProviderEventJS.RocksGetter rock = ROCK;
         if (EventHandlers.createChunkDataProvider.hasListeners(levelKey)) {
-            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS(worldSeed, rs);
+            final CreateChunkDataProviderEventJS event = new CreateChunkDataProviderEventJS(worldSeed, rs, settings);
             EventHandlers.createChunkDataProvider.post(event, levelKey);
             if (event.generatePartial != null) partial = event.generatePartial;
             if (event.generateFull != null) full = event.generateFull;
@@ -86,7 +87,7 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
             if (event.generateRock != null) rock = event.generateRock;
         }
 
-        return new KubeChunkDataGenerator(levelKey, partial, full, aquifer, rock, rockLayers);
+        return new KubeChunkDataGenerator(levelKey, partial, full, aquifer, rock, settings.rockLayerSettings());
     }
 
     private final String key;

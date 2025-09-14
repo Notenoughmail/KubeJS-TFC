@@ -66,7 +66,7 @@ public class ItemProviderComponent implements RecipeComponent<ItemStackProviderJ
             if (match instanceof ItemMatch itemMatch) {
                 return itemMatch.contains(value.stack());
             } else if (match instanceof ItemStackProviderJS jsMatch) {
-                if (jsMatch.stack().getItem() == value.stack().getItem()) {
+                if (jsMatch.stack().isEmpty() || jsMatch.stack().getItem() == value.stack().getItem()) {
                     for (JsonElement elm : jsMatch.modifiers()) {
                         if (value.getModifiersOfType(elm.getAsJsonObject().get("type").getAsString()).isEmpty()) {
                             return false;

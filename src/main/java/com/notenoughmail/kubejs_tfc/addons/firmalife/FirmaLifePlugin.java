@@ -22,8 +22,6 @@ import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
-import net.dries007.tfc.util.Metal;
-import org.jetbrains.annotations.Nullable;
 
 public class FirmaLifePlugin extends KubeJSPlugin {
 

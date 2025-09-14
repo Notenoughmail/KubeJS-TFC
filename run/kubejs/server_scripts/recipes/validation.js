@@ -96,10 +96,10 @@ ServerEvents.recipes(e => {
     bool = true;
     e.forEachRecipe({ tfc: {
         type: 'isp',
-        match: 'tfc:food/cooked_port',
-        modifiers: 'tfc:salted'
+        match: 'tfc:blowpipe_with_glass',
+        modifiers: 'tfc:add_glass'
     }}, r => bool = false);
-    if (bool) console.error('No salted pork ISPs');
+    if (bool) console.error('No glass addition ISPs');
 
     let { tfc, minecraft } = e.recipes;
 

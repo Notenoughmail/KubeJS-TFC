@@ -8,9 +8,11 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkRockDataCache;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
+import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.RandomState;
@@ -28,10 +30,12 @@ public class CreateChunkDataProviderEventJS extends EventJS {
 
     private final long seed;
     private final RandomState rs;
+    private final Settings settings;
 
-    public CreateChunkDataProviderEventJS(long seed, RandomState rs) {
+    public CreateChunkDataProviderEventJS(long seed, RandomState rs, Settings settings) {
         this.seed = seed;
         this.rs = rs;
+        this.settings = settings;
     }
 
     @Info("Returns the seed for the world the chunk data provider is being applied to")
@@ -42,6 +46,16 @@ public class CreateChunkDataProviderEventJS extends EventJS {
     @Info("Returns the normal noise defined by the noise parameters with the given id")
     public NormalNoise getNormalNoise(ResourceLocation id) {
         return rs.getOrCreateNoise(ResourceKey.create(Registries.NOISE, id));
+    }
+
+    @Info("Returns a random source seeded by the hashed name and spawn coordinates")
+    public RandomSource getRandomSource(ResourceLocation hashedName) {
+        return rs.getOrCreateRandomFactory(hashedName).at(settings.spawnCenterX(), 92, settings.spawnCenterZ());
+    }
+
+    @Info("Get the settings as defined in json")
+    public Settings getSettings() {
+        return settings;
     }
 
     @Info("""

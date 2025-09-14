@@ -11,7 +11,7 @@ import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.minecraft.util.valueproviders.IntProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -33,7 +33,7 @@ public class WorldGenUtils {
     }
 
     public static <Kr, Vr, K, V> Map<Kr, Vr> convertMap(Map<K, V> map, Function<K, Kr> keyConverter, Function<V, Vr> valueConverter) {
-        final Map<Kr, Vr> ret = new HashMap<>();
+        final Map<Kr, Vr> ret = new IdentityHashMap<>(); // In the one place where this is used, the order is important
         map.forEach((key, value) -> ret.put(keyConverter.apply(key), valueConverter.apply(value)));
         return ret;
     }

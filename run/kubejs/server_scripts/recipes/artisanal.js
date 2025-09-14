@@ -30,7 +30,7 @@ ServerEvents.recipes(e => {
         .outputs('minecraft:diamond', Fluid.of('minecraft:lava', 50))
         .sound('minecraft:ambient.cave')
         .inputFluid(Fluid.of('tfc:limewater', 500))
-        .id('kubejs:only_if_flux_makes_limewater_instant_barrel')
+        .id('kubejs:only_if_flux_makes_limewater_instant_barrel');
 
     // Removes specified slot, damages all other slots
     artisanal.specific_no_remainder_damage_shaped('minecraft:stick', [

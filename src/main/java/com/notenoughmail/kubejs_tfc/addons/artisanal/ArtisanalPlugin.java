@@ -11,6 +11,7 @@ import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import net.mrhitech.artisanal.Artisanal;
 import net.mrhitech.artisanal.common.recipes.ArtisanalRecipeSerializers;
 import net.mrhitech.artisanal.common.recipes.outputs.CapHeatModifier;
 import net.mrhitech.artisanal.common.recipes.outputs.InheritDecayModifier;
@@ -21,14 +22,15 @@ public class ArtisanalPlugin extends KubeJSPlugin {
 
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
-        event.register(ArtisanalRecipeSerializers.SCALABLE_POT.getId(), SimplePotSchema.SCHEMA);
-        event.register(ArtisanalRecipeSerializers.DAMAGE_AND_CATALYST_SHAPELESS.getId(), DelegateCraftingSchema.schema("damage_and_catalyst"));
-        event.register(ArtisanalRecipeSerializers.DISTILLERY.getId(), DistillerySchema.SCHEMA);
-        event.register(ArtisanalRecipeSerializers.JUICING_RECIPE.getId(), SimpleFluidSchema.SCHEMA);
-        event.register(ArtisanalRecipeSerializers.ONLY_IF_FLUX_MAKES_LIMEWATER_BARREL.getId(), BarrelInstantSchema.SCHEMA);
-        event.register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_DAMAGE_SHAPED.getId(), AdvancedCraftingSchema.SHAPED_CUSTOM);
-        event.register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_SHAPED.getId(), AdvancedCraftingSchema.SHAPED_CUSTOM);
-        event.register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_SHAPELESS.getId(), AdvancedCraftingSchema.SHAPELESS_CUSTOM);
+        event.namespace(Artisanal.MOD_ID)
+                .register(ArtisanalRecipeSerializers.SCALABLE_POT.getId().getPath(), SimplePotSchema.SCHEMA)
+                .register(ArtisanalRecipeSerializers.DAMAGE_AND_CATALYST_SHAPELESS.getId().getPath(), DelegateCraftingSchema.schema("damage_and_catalyst"))
+                .register(ArtisanalRecipeSerializers.DISTILLERY.getId().getPath(), DistillerySchema.SCHEMA)
+                .register(ArtisanalRecipeSerializers.JUICING_RECIPE.getId().getPath(), SimpleFluidSchema.SCHEMA)
+                .register(ArtisanalRecipeSerializers.ONLY_IF_FLUX_MAKES_LIMEWATER_BARREL.getId().getPath(), BarrelInstantSchema.SCHEMA)
+                .register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_DAMAGE_SHAPED.getId().getPath(), AdvancedCraftingSchema.SHAPED_CUSTOM)
+                .register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_SHAPED.getId().getPath(), AdvancedCraftingSchema.SHAPED_CUSTOM)
+                .register(ArtisanalRecipeSerializers.SPECIFIC_NO_REMAINDER_SHAPELESS.getId().getPath(), AdvancedCraftingSchema.SHAPELESS_CUSTOM);
     }
 
     @Override
