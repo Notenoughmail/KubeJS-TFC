@@ -2,7 +2,7 @@ package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
 import dev.latvian.mods.kubejs.item.OutputItem;
-import dev.latvian.mods.kubejs.recipe.*;
+import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 

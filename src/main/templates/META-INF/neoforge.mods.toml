@@ -1,0 +1,42 @@
+modLoader       = "javafml"
+loaderVersion   = "${loader_version_range}"
+license         = "${mod_license}"
+issueTrackerURL = "https://github.com/Notenoughmail/KubeJS-TFC/issues"
+
+[[mods]]
+    modId       = "${mod_id}"
+    version     = "${mod_version}"
+    displayName = "${mod_name}"
+    displayURL  = "https://notenoughmail.github.io/kubejs_tfc/"
+    logoFile    = "kubejs_tfc_icon.png"
+    credits     = "DoubleDoorDevelopment/Claycorp for the foundation (https://github.com/DoubleDoorDevelopment/OversizedItemInStorageArea) of the container limiter functionality"
+    authors     = "${mod_authors}"
+    description = '''${mod_description}'''
+
+[[dependencies.${mod_id}]]
+    modId        = "neoforge"
+    type         = "required"
+    versionRange = "[${neo_version},)"
+    ordering     = "NONE"
+    side         = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId        = "minecraft"
+    type         = "required"
+    versionRange = "${minecraft_version_range}"
+    ordering     = "NONE"
+    side         = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId        = "tfc"
+    type         = "required"
+    versionRange = "${tfc_version_range}"
+    ordering     = "NONE"
+    side         = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId        = "kubejs"
+    type         = "required"
+    versionRange = "${kube_version_range}"
+    ordering     = "NONE"
+    side         = "BOTH"

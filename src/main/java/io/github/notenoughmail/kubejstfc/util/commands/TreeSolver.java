@@ -1,11 +1,10 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.commands;
+package io.github.notenoughmail.kubejstfc.util.commands;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.TFCLeavesBlockAccessor;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
 import net.dries007.tfc.common.blocks.wood.BranchDirection;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
@@ -19,12 +18,11 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -439,58 +439,26 @@ public class TreeSolver {
             this.log = log;
         }
         private static CommandBuildContext filter(CommandBuildContext ctx, boolean log) {
-            return new CommandBuildContext() {
-                @Override
-                @NotNull
-                public <T> HolderLookup<T> holderLookup(@NotNull ResourceKey<? extends Registry<T>> key) {
-                    if (Registries.BLOCK.equals(key)) { // Compiler complains about using == due to generics
-                        return UtilsJS.cast(ctx.holderLookup(Registries.BLOCK).filterElements(log ?
-                                b -> b instanceof LogBlock || b.getStateDefinition().getProperties().contains(TFCBlockStateProperties.BRANCH_DIRECTION) :
-                                b -> b instanceof TFCLeavesBlock
-                        ));
-                    }
-                    throw new IllegalArgumentException("Tree solver arg can only handle blocks");
-                }
-            };
+            return CommandBuildContext.simple(
+                    HolderLookup.Provider.create(Stream.of(
+                            ctx.lookupOrThrow(Registries.BLOCK)
+                                    .filterElements(
+                                            log ?
+                                                    b -> b instanceof LogBlock || b.getStateDefinition().getProperties().contains(TFCBlockStateProperties.BRANCH_DIRECTION) :
+                                                    b -> b instanceof TFCLeavesBlock
+                                    )
+                    )),
+                    FeatureFlagSet.of()
+            );
         }
     }
 
-    public static final class TypeInfo implements ArgumentTypeInfo<ArgType, Template> {
-        public static final TypeInfo INST = new TypeInfo();
-        @Override
-        public void serializeToNetwork(TreeSolver.Template pTemplate, FriendlyByteBuf pBuffer) {
-            pBuffer.writeBoolean(pTemplate.log);
-        }
-        @Override
-        @NotNull
-        public TreeSolver.Template deserializeFromNetwork(FriendlyByteBuf pBuffer) {
-            return new TreeSolver.Template(pBuffer.readBoolean());
-        }
-        @Override
-        public void serializeToJson(TreeSolver.Template pTemplate, JsonObject pJson) {
-            pJson.addProperty("log", pTemplate.log);
-        }
-        @Override
-        @NotNull
-        public TreeSolver.Template unpack(ArgType pArgument) {
-            return new TreeSolver.Template(pArgument.log);
-        }
-    }
+    public static final TypeInfo TYPE_INFO = new TypeInfo();
 
-    public static final class Template implements ArgumentTypeInfo.Template<ArgType> {
-        private final boolean log;
-        public Template(boolean log) {
-            this.log = log;
-        }
-        @Override
-        @NotNull
-        public ArgType instantiate(@NotNull CommandBuildContext pContext) {
-            return new ArgType(pContext, log);
-        }
-        @Override
-        @NotNull
-        public TypeInfo type() {
-            return TypeInfo.INST;
+    public static final class TypeInfo extends BooleanTypeInfo<BlockInput, ArgType, TypeInfo> {
+
+        private TypeInfo() {
+            super(ArgType::new, a -> a.log);
         }
     }
 }

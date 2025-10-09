@@ -1,10 +1,11 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.commands;
+package io.github.notenoughmail.kubejstfc.util.commands.impl;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
+import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import net.dries007.tfc.world.noise.Noise2D;
 import net.dries007.tfc.world.noise.Noise3D;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,8 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import static com.notenoughmail.kubejs_tfc.util.implementation.commands.KubeJSTFCCommands.failMsg;
-import static com.notenoughmail.kubejs_tfc.util.implementation.commands.KubeJSTFCCommands.sysMsg;
+import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.sysMsg;
+import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.failMsg;
 
 public interface NoiseInspection {
 

@@ -41,7 +41,6 @@
     "accessor.RockDataAccessor",
     "accessor.RockLayerSettingsAccessor",
     "accessor.SupportAccessor",
-    "accessor.SurfaceRulesContextAccessor",
     "accessor.TFCLeavesBlockAccessor",
     "extensions.ArtisanalISPMixin",
     "extensions.BeneathDataEventMixin",

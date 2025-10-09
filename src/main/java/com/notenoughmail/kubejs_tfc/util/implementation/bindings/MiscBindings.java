@@ -21,7 +21,7 @@ import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
 import net.dries007.tfc.common.capabilities.size.Size;
 import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
-import net.dries007.tfc.util.*;
+import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryRock;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.chunkdata.ChunkData;

@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.commands;
+package io.github.notenoughmail.kubejstfc.util.commands;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

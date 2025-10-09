@@ -6,6 +6,7 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.*;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodData;
@@ -17,7 +18,8 @@ import net.dries007.tfc.common.entities.Fauna;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.IngredientType;
-import net.dries007.tfc.util.*;
+import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
 import net.minecraft.ChatFormatting;
@@ -340,9 +342,9 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             if (ing.isVanilla()) {
                 append(text, desc, Arrays.stream(ing.values).mapMulti((v, c) -> {
                     if (v instanceof Ingredient.ItemValue i) {
-                        c.accept(RegistryUtils.stringify(i.item.getItem()));
+                        c.accept(RegistryUtils.stringify(i.item().getItem()));
                     } else if (v instanceof Ingredient.TagValue t){
-                        final String tagLoc = t.tag.location().toString();
+                        final String tagLoc = t.tag().location().toString();
                         c.accept(Component.literal("#" + tagLoc)
                                 .withStyle(s -> s
                                         .withColor(ChatFormatting.DARK_PURPLE)
@@ -459,13 +461,16 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
     };
 
     public static TextColor getColor(Object value) {
-        if (value == null) return COLORS[0];
-        if (value instanceof Number) return COLORS[1];
-        if (value instanceof Boolean) return COLORS[2];
-        if (value instanceof CharSequence || value instanceof ResourceLocation) return COLORS[3];
-        if (value instanceof Enum<?>) return COLORS[4];
-        if (value instanceof MutableComponent mut) return mut.getStyle().getColor();
-        return COLORS[5];
+        return switch (value) {
+            case null -> COLORS[0];
+            case Number n -> COLORS[1];
+            case Boolean b -> COLORS[2];
+            case CharSequence c -> COLORS[3];
+            case ResourceLocation r -> COLORS[3];
+            case Enum<?> e -> COLORS[4];
+            case MutableComponent mut -> mut.getStyle().getColor();
+            default -> COLORS[5];
+        };
     }
 
     public static <T> void appendMap(MutableComponent out, String desc, Map<String, T> map, int indent, boolean needsDescriptor) {
@@ -532,7 +537,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
                 }
                 return map;
             };
-        }).apply(UtilsJS.cast(r_));
+        }).apply(Cast.to(r_));
     }
 
     @Override

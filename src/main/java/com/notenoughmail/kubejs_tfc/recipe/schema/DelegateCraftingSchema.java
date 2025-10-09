@@ -1,7 +1,7 @@
 package com.notenoughmail.kubejs_tfc.recipe.schema;
 
 import com.notenoughmail.kubejs_tfc.recipe.js.TFCRecipeJS;
-import dev.latvian.mods.kubejs.recipe.*;
+import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.NestedRecipeComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import dev.latvian.mods.kubejs.util.UtilsJS;

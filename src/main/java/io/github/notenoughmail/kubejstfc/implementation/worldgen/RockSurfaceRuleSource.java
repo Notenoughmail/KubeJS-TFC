@@ -1,9 +1,10 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
+package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockDataAccessor;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.SurfaceRulesContextAccessor;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
+import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.Codecs;
 import net.dries007.tfc.world.chunkdata.ChunkData;
@@ -18,37 +19,32 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import java.util.Locale;
 import java.util.function.Function;
 
-// Tested by Pyrite on Discord and appears to be working
-// A sequence rule source should be able to be used w/ this to do surface blocks
 public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, SurfaceRules.SurfaceRule fallbackRule) implements SurfaceRules.RuleSource {
 
     private RockSurfaceRuleSource(RockType type, BlockState fallbackState) {
         this(type, fallbackState, (x, y, z) -> fallbackState);
     }
 
-    public static final KeyDispatchDataCodec<RockSurfaceRuleSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.create(inst -> inst.group(
+    public static KeyDispatchDataCodec<RockSurfaceRuleSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec(inst -> inst.group(
             RockType.CODEC.optionalFieldOf("rock_block", RockType.RAW).forGetter(RockSurfaceRuleSource::type),
             Codecs.BLOCK_STATE.fieldOf("fallback_state").forGetter(RockSurfaceRuleSource::fallbackState)
     ).apply(inst, RockSurfaceRuleSource::new)));
 
     @Override
-    public KeyDispatchDataCodec<RockSurfaceRuleSource> codec() {
+    public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
         return CODEC;
     }
 
     @Override
     public SurfaceRules.SurfaceRule apply(SurfaceRules.Context context) {
-
-        final SurfaceRulesContextAccessor access = (SurfaceRulesContextAccessor) (Object) context;
-        assert access != null;
-        if (access.kubejs_tfc$GetWorldCtx() instanceof ChunkGenAwareWorldGenerationContext aware && aware.chunkGenerator instanceof ChunkGeneratorExtension ext) {
-            if (ext.chunkDataProvider().generator() instanceof KubeChunkDataGenerator gen) {
-                final ChunkData data = ext.chunkDataProvider().get(access.kubejs_tfc$GetChunk());
-                gen.generateFullIfNot(data, access.kubejs_tfc$GetChunk()); // Guarantee the RockRule has the surface y available. WORLD_SURFACE_WG and OCEAN_FLOOR_WG are available here
+        if (context.context instanceof ChunkGenAwareWorldGenerationContext aware && aware.chunkGenerator instanceof ChunkGeneratorExtension ext) {
+            final ChunkData data = ext.chunkDataGenerator().generate(context.chunk);
+            if (ext.chunkDataGenerator() instanceof KubeChunkDataGenerator gen) {
+                gen.generateFullIfNot(data, context.chunk); // Guarentee the RockRule has the surface y available. WORLD_SURFACE_WG and OCEAN_FLOOR_WG are available here
             }
-            final RockData rocks = ext.chunkDataProvider().get(access.kubejs_tfc$GetChunk()).getRockData();
-            if (((RockDataAccessor) rocks).kubejs_tfc$GetCache() == null) {
-                rocks.useCache(access.kubejs_tfc$GetChunk().getPos());
+            final RockData rocks = data.getRockData();
+            if (((RockDataAccessor) (Object) rocks).kubejs_tfc$GetCache() == null) {
+                rocks.useCache(context.chunk.getPos());
             }
             return new RockRule(rocks, type);
         }
@@ -85,6 +81,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
         public Block get(RockSettings settings) {
             return transformer.apply(settings);
         }
+
 
         @Override
         public String getSerializedName() {

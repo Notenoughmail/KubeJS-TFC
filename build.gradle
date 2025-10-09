@@ -4,7 +4,7 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.105'
+    id 'net.neoforged.moddev' version '2.0.107'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -18,21 +18,21 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-legacyForge {
-    version = "${minecraft_version}-${forge_version}"
-
-    validateAccessTransformers = false
-
-    accessTransformers.from 'src/main/resources/META-INF/accesstransformer.cfg'
+neoForge {
+    version = project.neo_version
 
     parchment {
-        minecraftVersion = minecraft_version
-        mappingsVersion = mapping_version
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
     }
+
+    validateAccessTransformers = true
+
+    accessTransformers.from 'src/main/resources/META-INF/accesstransformer.cfg'
 
     mods {
         "${mod_id}" {
@@ -46,7 +46,6 @@ legacyForge {
 
             jvmArguments = ["-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition"]
 
-            systemProperty('forge.logging.console.level', 'debug')
             systemProperty('terminal.jline', 'true')
 
             programArgument('-mixin.config=kubejs_tfc.mixins.json')
@@ -70,12 +69,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     mavenCentral()
     maven {
-        // JEI
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        // Jade
         name = "Curse Maven"
         url = "https://www.cursemaven.com"
         content {
@@ -83,33 +76,19 @@ repositories {
         }
     }
     maven {
-        // Patchouli
-        name = "BlameJared"
-        url = "https://maven.blamejared.com"
-    }
-    maven {
-        // Shedaniel's maven (Architectury API)
-        url = "https://maven.architectury.dev"
-        content {
-            includeGroup "dev.architectury"
-        }
-    }
-    maven {
         // Lat (KubeJS and Rhino)
         name = "latvian.dev"
         url = "https://maven.latvian.dev/releases"
-    }
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content {
-            includeGroupByRegex("software\\.bernie.*")
-            includeGroup("com.eliotlash.mclib")
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
         }
     }
     maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
+        url = 'https://jitpack.io'
+        content {
+            includeGroup "com.github.rtyley"
+        }
     }
     flatDir {
         dir 'libs'
@@ -119,54 +98,39 @@ repositories {
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
-obfuscation {
-    createRemappingConfiguration(configurations.localRuntime)
-}
 
 dependencies {
-    modImplementation "curse.maven:terrafirmacraft-302973:${tfc_identifier}"
-        modRuntimeOnly "curse.maven:cyanide-541676:${cyanide_identifier}"
-    modImplementation "curse.maven:firmalife-453394:${firmalife_identifier}"
+    implementation "curse.maven:terrafirmacraft-302973:${tfc_file}"
+        runtimeOnly "curse.maven:cyanide-541676:${cyanide_file}"
+    // implementation "curse.maven:firmalife-453394:${firmalife_identifier}"
     // modImplementation "curse.maven:rosia-856122:${rosia_identifier}"
-    modCompileOnly "curse.maven:tfccc-820815:${tfccc_identifier}" // Breaks things in dev runtime
-    modCompileOnly "curse.maven:arborfirmacraft-877545:${arbor_identifier}"
-    modImplementation "curse.maven:precision-prospecting-700638:${precpros_identifier}"
-    modImplementation "curse.maven:beneath-1113980:${beneath_identifier}"
-    modImplementation "curse.maven:tfc-artisanal-1059361:${artisanal_identifier}"
+    // compileOnly "curse.maven:arborfirmacraft-877545:${arbor_identifier}"
+    implementation "curse.maven:precision-prospecting-700638:${precpros_file}"
+    // implementation "curse.maven:beneath-1113980:${beneath_identifier}"
+    // implementation "curse.maven:tfc-artisanal-1059361:${artisanal_identifier}"
 
-    modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+    // runtimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 
-    modCompileOnly "vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}:api"
-    modRuntimeOnly "vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}"
+    implementation "curse.maven:patchouli-306770:${patchi_file}"
 
-    modCompileOnly "curse.maven:jade-324717:${jade_version}"
-    modRuntimeOnly "curse.maven:jade-324717:${jade_version}"
+    runtimeOnly "curse.maven:jade-324717:${jade_file}"
 
-    modImplementation "dev.latvian.mods:kubejs-forge:${kubejs_version}"
-    modImplementation "dev.latvian.mods:rhino-forge:${rhino_version}"
-    modImplementation "dev.architectury:architectury-forge:${architectury_version}"
+    implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    implementation "dev.latvian.mods:rhino:${rhino_version}"
 
-    modImplementation "curse.maven:entityjs-967617:${entityjs_version}"
-    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
-    implementation "com.eliotlash.mclib:mclib:20"
-
-    modCompileOnly "dev.emi:emi-forge:${emi_version}+${minecraft_version}:api"
-    modRuntimeOnly "dev.emi:emi-forge:${emi_version}+${minecraft_version}"
-
-    // For chunk gen profiling
-    modRuntimeOnly "curse.maven:spark-361579:4738952"
+    implementation "curse.maven:entityjs-967617:${entityjs_file}"
+    implementation "curse.maven:geckolib-388172:${geckolib_file}"
 
     // This *must* be before mixin's annotation processor (for versions lower than 0.2.0-rc.3, which we are due to Kube and will not jij an upgraded version out of principle) as refmaps will be incomplete otherwise
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
-    annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
+    // compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
+    // annotationProcessor("org.spongepowered:mixin:${mixin_version}:processor")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
-            forge_version          : forge_version,
-            forge_version_range    : forge_version_range,
+            neo_version            : neo_version,
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
@@ -175,8 +139,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_authors            : mod_authors,
             mod_description        : mod_description,
             tfc_version_range      : tfc_version_range,
-            kube_version_range     : kube_version_range,
-            firmalife_version_range: firmalife_version_range
+            kube_version_range     : kube_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -186,7 +149,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 
 sourceSets.main.resources.srcDir generateModMetadata
 
-legacyForge.ideSyncTask generateModMetadata
+neoForge.ideSyncTask generateModMetadata
 
 tasks.named('jar', Jar).configure {
     manifest {
@@ -206,11 +169,6 @@ tasks.named('jar', Jar).configure {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-parameters'
-}
-
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-    config "${mod_id}.mixins.json"
 }
 
 idea {

@@ -2,7 +2,10 @@ package com.notenoughmail.kubejs_tfc.recipe.js;
 
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
-import net.dries007.tfc.common.recipes.*;
+import net.dries007.tfc.common.recipes.BlastFurnaceRecipe;
+import net.dries007.tfc.common.recipes.CastingRecipe;
+import net.dries007.tfc.common.recipes.GlassworkingRecipe;
+import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
