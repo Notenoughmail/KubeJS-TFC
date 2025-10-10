@@ -1,10 +1,9 @@
-// TODO: 1.3.4 | Use https://plugins.gradle.org/plugin/dev.vfyjxf.modaccessor, requires Java 21
-// Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.107'
+    id "dev.vfyjxf.modaccessor" version "1.2.1"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -30,7 +29,7 @@ neoForge {
         minecraftVersion = project.parchment_minecraft_version
     }
 
-    validateAccessTransformers = true
+    validateAccessTransformers = false
 
     accessTransformers.from 'src/main/resources/META-INF/accesstransformer.cfg'
 
@@ -99,7 +98,14 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+modAccessor {
+    createTransformConfiguration(configurations.compileOnly)
+    accessTransformerFiles = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+    interfaceInjectionFiles = project.files('injections.json')
+}
+
 dependencies {
+    accessCompileOnly("curse.maven:terrafirmacraft-302973:${tfc_file}")
     implementation "curse.maven:terrafirmacraft-302973:${tfc_file}"
         runtimeOnly "curse.maven:cyanide-541676:${cyanide_file}"
     // implementation "curse.maven:firmalife-453394:${firmalife_identifier}"

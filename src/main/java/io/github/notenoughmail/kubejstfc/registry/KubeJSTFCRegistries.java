@@ -7,6 +7,9 @@ import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.commands.TreeSolver;
 import net.dries007.tfc.TerraFirmaCraft;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifierType;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -16,6 +19,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
@@ -25,6 +29,7 @@ public class KubeJSTFCRegistries {
         COMMAND_ARGS.register(modBus);
         CHUNK_GENERATOR.register(modBus);
         SURFACE_RULE_SOURCE.register(modBus);
+        ITEM_STACK_MODIFIER_TYPE.register(modBus);
         DATA_TYPE.register(modBus);
     }
 
@@ -34,7 +39,10 @@ public class KubeJSTFCRegistries {
     private static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, KubeJSTFC.ID);
     private static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, KubeJSTFC.ID);
     private static final DeferredRegister<MapCodec<? extends SurfaceRules.RuleSource>> SURFACE_RULE_SOURCE = DeferredRegister.create(Registries.MATERIAL_RULE, KubeJSTFC.ID);
+    private static final DeferredRegister<ItemStackModifierType<?>> ITEM_STACK_MODIFIER_TYPE = DeferredRegister.create(ItemStackModifiers.KEY, KubeJSTFC.ID);
     private static final DeferredRegister<DataType<?>> DATA_TYPE = DeferredRegister.create(DATA_TYPE_KEY, TerraFirmaCraft.MOD_ID);
+
+    public static final DeferredHolder<ItemStackModifierType<?>, ItemStackModifierType<KubeISM>> CUSTOM_ISM = ITEM_STACK_MODIFIER_TYPE.register("custom", () -> new ItemStackModifierType<>(KubeISM.CODEC, KubeISM.STREAM_CODEC));
 
     static {
         COMMAND_ARGS.register("range", () -> ArgumentTypeInfos.registerByClass(

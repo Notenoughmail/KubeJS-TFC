@@ -2,7 +2,6 @@ package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockDataAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -25,7 +24,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
         this(type, fallbackState, (x, y, z) -> fallbackState);
     }
 
-    public static KeyDispatchDataCodec<RockSurfaceRuleSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec(inst -> inst.group(
+    public static final KeyDispatchDataCodec<RockSurfaceRuleSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec(inst -> inst.group(
             RockType.CODEC.optionalFieldOf("rock_block", RockType.RAW).forGetter(RockSurfaceRuleSource::type),
             Codecs.BLOCK_STATE.fieldOf("fallback_state").forGetter(RockSurfaceRuleSource::fallbackState)
     ).apply(inst, RockSurfaceRuleSource::new)));
@@ -43,7 +42,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
                 gen.generateFullIfNot(data, context.chunk); // Guarentee the RockRule has the surface y available. WORLD_SURFACE_WG and OCEAN_FLOOR_WG are available here
             }
             final RockData rocks = data.getRockData();
-            if (((RockDataAccessor) (Object) rocks).kubejs_tfc$GetCache() == null) {
+            if (rocks.cache == null) {
                 rocks.useCache(context.chunk.getPos());
             }
             return new RockRule(rocks, type);
@@ -81,7 +80,6 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
         public Block get(RockSettings settings) {
             return transformer.apply(settings);
         }
-
 
         @Override
         public String getSerializedName() {

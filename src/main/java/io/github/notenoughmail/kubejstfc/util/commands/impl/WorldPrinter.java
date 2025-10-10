@@ -48,7 +48,7 @@ public interface WorldPrinter {
 
     static int rockSettings(CommandContext<CommandSourceStack> ctx) {
         if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
-            final RockLayerSettings.Data rockData = ((RockLayerSettingsAccessor) (Object) ext.rockLayerSettings()).kubejs_tfc$Data();
+            final RockLayerSettings.Data rockData = ext.rockLayerSettings().data;
             final MutableComponent out = Component.empty();
             out.append("Rock settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
 

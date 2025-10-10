@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions;
+package io.github.notenoughmail.kubejstfc.util.extensions;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;

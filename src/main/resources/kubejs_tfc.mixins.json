@@ -1,7 +1,7 @@
 {
   "required": false,
   "minVersion": "0.8",
-  "package": "com.notenoughmail.kubejs_tfc.util.implementation.mixin",
+  "package": "io.github.notenoughmail.kubejstfc.util.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AnvilBlockEntityMixin",
@@ -38,7 +38,6 @@
     "accessor.NetherFertilizerAccessor",
     "accessor.OverworldClimateModelAccessor",
     "accessor.PlantableAccessor",
-    "accessor.RockDataAccessor",
     "accessor.RockLayerSettingsAccessor",
     "accessor.SupportAccessor",
     "accessor.TFCLeavesBlockAccessor",
@@ -50,8 +49,7 @@
     "extensions.TFCCCMoldItemBuilderExtensions"
   ],
   "client": [
-    "client.GlassworkingRecipeCategoryMixin"
   ],
   "refmap": "kubejs_tfc.refmap.json",
-  "plugin": "com.notenoughmail.kubejs_tfc.util.implementation.mixin.KubeJSTFCMixinPlugin"
+  "plugin": "io.github.notenoughmail.kubejstfc.util.mixin.KubeJSTFCMixinPlugin"
 }

@@ -93,7 +93,7 @@ public class ModifyDefaultWorldGenSettingsEventJS extends EventJS {
         oldRockLayerSettings = settings.rockLayerSettings();
 
         // Copy values to mutable lists and maps
-        final RockLayerSettings.Data data = ((RockLayerSettingsAccessor) (Object) settings.rockLayerSettings()).kubejs_tfc$Data();
+        final RockLayerSettings.Data data = settings.rockLayerSettings().data;
         rocks = new HashMap<>(data.rocks());
         bottom = new ArrayList<>(data.bottom());
         oceanFloor = new ArrayList<>(data.oceanFloor());

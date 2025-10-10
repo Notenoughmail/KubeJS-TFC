@@ -1,8 +1,9 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package io.github.notenoughmail.kubejstfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.LoadingModList;
+import com.notenoughmail.kubejs_tfc.util.implementation.IfPresent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.LoadingModList;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;

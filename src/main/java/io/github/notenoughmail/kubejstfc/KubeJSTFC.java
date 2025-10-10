@@ -2,7 +2,7 @@ package io.github.notenoughmail.kubejstfc;
 
 import com.mojang.logging.LogUtils;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
-import io.github.notenoughmail.kubejstfc.util.KubeJSTFCEventHandlers;
+import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;

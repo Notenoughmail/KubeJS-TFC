@@ -1,7 +1,7 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
 
-import com.notenoughmail.kubejs_tfc.util.helpers.ducks.extensions.Noise3DExtension;
+import io.github.notenoughmail.kubejstfc.util.extensions.Noise3DExtension;
 import net.dries007.tfc.world.noise.Noise3D;
 import org.spongepowered.asm.mixin.Mixin;
 

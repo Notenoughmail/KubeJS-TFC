@@ -1,6 +1,6 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.MixinLoadingUtil;
+import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;

@@ -44,14 +44,11 @@ public class EventHandlers {
     public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
     public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
     public static final EventHandler birthdays = TFCEvents.startup("birthdays", () -> BirthdayEventJS.class);
-    public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifier", () -> RegisterItemStackModifierEventJS.class);
     public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
     public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
     public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
     public static final EventHandler registerFaunas = TFCEvents.startup("registerFaunas", () -> RegisterFaunasEventJS.class);
     public static final EventHandler createGlassOperations = TFCEvents.startup("createGlassOperations", () -> CreateGlassOperationsEventJS.class);
-    public static final EventHandler registerISMConverter = TFCEvents.startup("registerItemStackModifierConverters", () -> RegisterItemStackModifierEventJS.class);
-
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
     public static final EventHandler prospect = TFCEvents.server("prospect", () -> ProspectedEventJS.class);
@@ -192,9 +189,6 @@ public class EventHandlers {
         }
         if (registerClimateModel.hasListeners()) {
             registerClimateModel.post(new RegisterClimateModelEventJS());
-        }
-        if (registerModifiers.hasListeners()) {
-            registerModifiers.post(new RegisterItemStackModifierEventJS());
         }
         if (representatives.hasListeners()) {
             representatives.post(new RegisterRepresentativeBlocksEventJS());
