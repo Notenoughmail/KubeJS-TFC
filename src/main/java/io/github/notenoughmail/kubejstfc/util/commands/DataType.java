@@ -37,45 +37,40 @@ public interface DataType<T> {
     }
 
     /**
-     * The name of this {@code DataType}
-     */
-    String name();
-
-    /**
-     * Potentially converts the string into an object handled by this {@code DataType}
+     * Potentially converts the string into an object handled by this {@code DataType} so it may be {@link io.github.notenoughmail.kubejstfc.util.commands.impl.Describe described}
      */
     @Nullable
     T find(String str);
 
     /**
-     * Adds a description of the given object to the text
+     * Adds a {@link io.github.notenoughmail.kubejstfc.util.commands.impl.Describe description} of the given object to the text
      */
     void display(T value, MutableComponent text);
 
     /**
-     * If {@link #search(String)} should be called
+     * If this {@code DataType} can be {@link #search(String) searched}
      */
     boolean canBeSearched();
 
     /**
-     * Returns the names of objects which can be {@link #find(String) found} and subsequently {@link #display(Object, MutableComponent) displayed}
+     * Returns the names of objects which can be {@link io.github.notenoughmail.kubejstfc.util.commands.impl.Search searched} for
      */
     Set<String> search(String str);
 
     /**
-     * Returns strings which would be accepted in {@link #search(String)}
+     * Strings which would be accepted in {@link #search(String)}
      */
     Stream<String> searchSuggestions();
 
     /**
      * Strings which can be {@link #find(String) found} and {@link #display(Object, MutableComponent) displayed}
      */
-    default Stream<String> suggest() {
+    default Stream<String> describeSuggestions() {
         return names().stream();
     }
 
     /**
-     * The names of all objects handled by this {@code DataType}
+     * Strings which can be {@link #find(String) found} and {@link #display(Object, MutableComponent) displayed}
      */
     Set<String> names();
 

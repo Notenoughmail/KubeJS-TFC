@@ -2,6 +2,8 @@ package io.github.notenoughmail.kubejstfc.util.commands.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands;
 import net.minecraft.commands.CommandSourceStack;
@@ -13,17 +15,17 @@ import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.
 
 public interface Search {
 
-    static <T> int search(CommandContext<CommandSourceStack> ctx) {
+    static <T> int search(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         final DataType<T> dataType = DataType.get("data_type", ctx);
         final String value = StringArgumentType.getString(ctx, "value");
         final Set<String> search = dataType.search(value);
 
         if (search.isEmpty()) {
-            return KubeJSTFCCommands.failMsg("There are no %s objects matching %s".formatted(dataType.name(), value), ctx);
+            return KubeJSTFCCommands.failMsg("There are no %s objects matching %s".formatted(DataTypes.nameOf(dataType), value), ctx);
         } else if (search.size() == 1) {
-            sysMsg("Found 1 %s object matching %s".formatted(dataType.name(), value), ctx);
+            sysMsg("Found 1 %s object matching %s".formatted(DataTypes.nameOf(dataType), value), ctx);
         } else {
-            sysMsg("Found %d %s objects matching %s".formatted(search.size(), dataType.name(), value), ctx);
+            sysMsg("Found %d %s objects matching %s".formatted(search.size(), DataTypes.nameOf(dataType), value), ctx);
         }
 
         for (String val : search) {

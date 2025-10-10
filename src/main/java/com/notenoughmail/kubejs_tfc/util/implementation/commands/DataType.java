@@ -50,16 +50,6 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("deprecation")
 public enum DataType implements IExtensibleEnum, StringRepresentable {
-
-    CLIMATE_RANGE(ClimateRange.MANAGER, (cr, cmp) -> {
-        var e = cr.get();
-        append(cmp, "minHydration", e.getMinHydration(false));
-        append(cmp, "maxHydration", e.getMaxHydration(false));
-        append(cmp, "hydrationWiggle", e.getMaxHydration(true) - e.getMaxHydration(false));
-        append(cmp, "minTemperature", e.getMinTemperature(false));
-        append(cmp, "maxTemperature", e.getMaxTemperature(false));
-        append(cmp, "temperatureWiggle", e.getMaxTemperature(true) - e.getMaxTemperature(false), true);
-    }),
     DRINKABLE(Drinkable.MANAGER, (d, cmp) -> {
         append(cmp, "consumeChance", d.getConsumeChance());
         append(cmp, "thirst", d.getThirst());
@@ -88,20 +78,6 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         }
         cmp.append("]");
     }, BuiltInRegistries.FLUID, Drinkable::matches, fluidSuggester(Drinkable.CACHE)),
-    ENTITY_DAMAGE_RESISTANCE(EntityDamageResistance.MANAGER, (edr, cmp) -> {
-        append(cmp, "crushing", edr.crushing());
-        append(cmp, "piercing", edr.piercing());
-        append(cmp, "slashing", edr.slashing());
-        append(cmp, "entityTag", ((EntityDamageResistanceAccessor) (Object) edr).kubejs_tfc$Entity().location(), true); // No idea why this one requires the extra cast
-    }, BuiltInRegistries.ENTITY_TYPE, (edr, et) -> Helpers.isEntity(et, ((EntityDamageResistanceAccessor) (Object) edr).kubejs_tfc$Entity()), () -> {
-        final Stream.Builder<String> builder = Stream.builder();
-        for (EntityDamageResistance edr : EntityDamageResistance.MANAGER.getValues()) {
-            for (Holder<EntityType<?>> et : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(((EntityDamageResistanceAccessor) (Object) edr).kubejs_tfc$Entity())) {
-                builder.accept(RegistryInfo.ENTITY_TYPE.getId(et.value()).toString());
-            }
-        }
-        return builder.build().distinct();
-    }),
     FAUNA(Fauna.MANAGER, (f, cmp) -> {
         var e = f.get();
         append(cmp, "chance", e.getChance());
@@ -126,12 +102,6 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         append(cmp, "fuzzy", ((ClimatePlacementAccessor) climate).kubejs_tfc$Fuzzy());
         cmp.append("}");
     }),
-    FERTILIZER(Fertilizer.MANAGER, (f, cmp) -> {
-        append(cmp, "nitrogen", f.getNitrogen());
-        append(cmp, "phosphorus", f.getPhosphorus());
-        append(cmp, "potassium", f.getPotassium());
-        append(cmp, "ingredient", f, true);
-    }, Fertilizer::matches, Fertilizer.CACHE),
     FOOD(FoodCapability.MANAGER, (fd, cmp) -> {
         append(cmp, "type", fd.getHandlerType());
         if (fd.getHandlerType() == FoodDefinition.HandlerType.STATIC) {
@@ -148,30 +118,6 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         }
         append(cmp, "ingredient", fd, true);
     }, FoodDefinition::matches, FoodCapability.CACHE),
-    FUEL(Fuel.MANAGER, (f, cmp) -> {
-        append(cmp, "duration", f.getDuration());
-        append(cmp, "temperature", f.getTemperature());
-        append(cmp, "purity", f.getPurity());
-        append(cmp, "ingredient", f, true);
-    }, Fuel::matches, Fuel.CACHE),
-    ITEM_DAMAGE_RESISTANCE(ItemDamageResistance.MANAGER, (idr, cmp) -> {
-        append(cmp, "crushing", idr.crushing());
-        append(cmp, "piercing", idr.piercing());
-        append(cmp, "slashing", idr.slashing());
-        append(cmp, "ingredient", ((ItemDamageResistanceAccessor) idr).kubejs_tfc$Ingredient(), true);
-    }, ItemDamageResistance::matches, ItemDamageResistance.CACHE),
-    ITEM_HEAT(HeatCapability.MANAGER, (hd, cmp) -> {
-        var hh = (HeatHandler) hd.create();
-        append(cmp, "heatCapacity", hh.getHeatCapacity());
-        append(cmp, "forgingTemperature", hh.getWorkingTemperature());
-        append(cmp, "weldingTemperature", hh.getWeldingTemperature());
-        append(cmp, "ingredient", hd, true);
-    }, ItemDefinition::matches, HeatCapability.CACHE),
-    ITEM_SIZE(ItemSizeManager.MANAGER, (isd, cmp) -> {
-        append(cmp, "size", isd.getSize(null));
-        append(cmp, "weight", isd.getWeight(null));
-        append(cmp, "ingredients", isd, true);
-    }, ItemDefinition::matches, ItemSizeManager.CACHE),
     KNAPPING_TYPE(KnappingType.MANAGER, (kt, cmp) -> {
         append(cmp, "inputCount", kt.inputItem().count());
         append(cmp, "inputIngredient", kt.inputItem().ingredient());
@@ -207,17 +153,6 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         append(cmp, "fluid", lf.getFluidIngredient());
         append(cmp, "validLamps", lf.getValidLamps(), true);
     }, BuiltInRegistries.FLUID, (lf, f) -> lf.getFluidIngredient().test(f), fluidSuggester(LampFuel.CACHE)),
-    METAL(Metal.MANAGER, (m, cmp) -> {
-        append(cmp, "tier", m.getTier());
-        append(cmp, "fluid", RegistryInfo.FLUID.getId(m.getFluid()));
-        append(cmp, "meltTemperature", m.getMeltTemperature());
-        append(cmp, "specificHeatCapacity", m.getSpecificHeatCapacity());
-        append(cmp, "ingots", m.getIngotIngredient());
-        append(cmp, "doubleIngots", m.getDoubleIngotIngredient());
-        append(cmp, "sheets", m.getSheetIngredient());
-        append(cmp, "textureId", m.getTextureId());
-        append(cmp, "softTextureId", m.getSoftTextureId(), true);
-    }, BuiltInRegistries.FLUID, (m, f) -> m.getFluid() == f, () -> Metal.MANAGER.getValues().stream().map(Metal::getFluid).distinct().map(f -> RegistryInfo.FLUID.getId(f).toString())),
     SUPPORT(Support.MANAGER, (s, cmp) -> {
         append(cmp, "supportUp", s.getSupportUp());
         append(cmp, "supportDown", s.getSupportDown());

@@ -29,7 +29,6 @@
     "accessor.BlockEntityTypeAccessor",
     "accessor.ChunkDataAccessor",
     "accessor.ClimatePlacementAccessor",
-    "accessor.DataManagerAccessor",
     "accessor.EntityDamageResistanceAccessor",
     "accessor.IndirectHashCollectionAccessor",
     "accessor.ItemDamageResistanceAccessor",

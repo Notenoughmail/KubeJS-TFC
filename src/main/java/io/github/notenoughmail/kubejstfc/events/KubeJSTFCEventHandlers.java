@@ -12,7 +12,6 @@ public class KubeJSTFCEventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
-    public static final EventHandler registerModifiers = TFCEvents.startup("registerItemStackModifiers", () -> KubeRegisterISMEvent.class);
 
     public static void init(IEventBus modBus) {
         modBus.addListener(KubeJSTFCEventHandlers::newRegistries);
@@ -27,9 +26,6 @@ public class KubeJSTFCEventHandlers {
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {
-        if (registerModifiers.hasListeners()) {
-            registerModifiers.post(new KubeRegisterISMEvent());
-        }
     }
 
     // ===GAME BUS===

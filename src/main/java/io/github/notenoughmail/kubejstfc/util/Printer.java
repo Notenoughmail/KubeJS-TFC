@@ -1,15 +1,22 @@
 package io.github.notenoughmail.kubejstfc.util;
 
+import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
+
+import java.lang.reflect.RecordComponent;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.*;
 
@@ -41,6 +48,15 @@ public interface Printer {
 
     }
 
+    static MutableComponent clickableTag(TagKey<?> tag) {
+        return Component.literal("#" + tag.location())
+                .withStyle(s -> s
+                        .withUnderlined(true)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("List %s entries".formatted(tag.location()))))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/forge tags %s get %s".formatted(tag.registry().location(), tag.location())))
+                );
+    }
+
     static MutableComponent asComponent(Object o) {
         if (o instanceof MutableComponent mut) {
             return mut;
@@ -66,12 +82,34 @@ public interface Printer {
         return switch (value) {
             case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
             case Block b -> getId(BuiltInRegistries.BLOCK, b);
+            case EntityType<?> e -> getId(BuiltInRegistries.ENTITY_TYPE, e);
             default -> String.valueOf(value);
         };
     }
 
     private static <T> String getId(Registry<T> registry, T object) {
         return registry.getResourceKey(object).orElseThrow().location().toString();
+    }
+
+    static <R extends Record> Map<String, Object> convertRecordToMap(R r_) {
+        return RECORD_CONVERTERS.computeIfAbsent(r_.getClass(), c -> {
+            final RecordComponent[] components = c.getRecordComponents();
+            return (R r) -> {
+                final Map<String, Object> map = HashMap.newHashMap(components.length);
+                for (RecordComponent component : components) {
+                    final String name = component.getName();
+                    Object o;
+                    try {
+                        o = component.getAccessor().invoke(r);
+                    } catch (Exception e) {
+                        KubeJSTFC.LOGGER.error("Unable to access '%s' field of %s".formatted(name, component.getDeclaringRecord().getName()), e);
+                        o = null;
+                    }
+                    map.put(name, o);
+                }
+                return map;
+            };
+        }).apply(Cast.to(r_));
     }
 
     class Hidden {
@@ -83,5 +121,7 @@ public interface Printer {
                 TextColor.fromLegacyFormat(ChatFormatting.AQUA),
                 TextColor.fromLegacyFormat(ChatFormatting.GRAY)
         };
+
+        static final Map<Class<?>, Function<?, Map<String, Object>>> RECORD_CONVERTERS = new IdentityHashMap<>();
     }
 }

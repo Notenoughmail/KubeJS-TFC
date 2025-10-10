@@ -14,8 +14,10 @@ import dev.latvian.mods.kubejs.script.DataComponentTypeInfoRegistry;
 import dev.latvian.mods.kubejs.script.TypeDescriptionRegistry;
 import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
+import io.github.notenoughmail.kubejstfc.builders.misc.ISMBuilder;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import net.dries007.tfc.common.component.glass.GlassOperation;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.minecraft.core.registries.Registries;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.id;
@@ -27,6 +29,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerBuilderTypes(BuilderTypeRegistry registry) {
 
         registry.addDefault(GlassOperation.KEY, GlassOperationBuilder.class, GlassOperationBuilder::new);
+        registry.addDefault(ItemStackModifiers.KEY, ISMBuilder.class, ISMBuilder::new);
 
         registry.of(Registries.BLOCK, callback -> {
 

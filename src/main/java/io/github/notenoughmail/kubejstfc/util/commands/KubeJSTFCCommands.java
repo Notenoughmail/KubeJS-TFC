@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.util.commands.impl.*;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.minecraft.ChatFormatting;
@@ -39,7 +40,7 @@ public class KubeJSTFCCommands {
                         .then(literal("describe")
                                 .then(argument("data_type", DataType.all())
                                         .then(argument("id", StringArgumentType.word())
-                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).suggest(), builder))
+                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).describeSuggestions(), builder))
                                                 .executes(Describe::describe)
                                         )
                                 )
@@ -47,7 +48,7 @@ public class KubeJSTFCCommands {
                         .then(literal("search")
                                 .then(argument("data_type", DataType.searchable())
                                         .then(argument("value", StringArgumentType.word())
-                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).suggest(), builder))
+                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DataType.get("data_type", ctx).searchSuggestions(), builder))
                                                 .executes(Search::search)
                                         )
                                 )
@@ -130,7 +131,7 @@ public class KubeJSTFCCommands {
 
     public static Style describeClickEvent(DataType<?> type, String id) {
         return BASE_DESCRIBE_STYLE
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(type.name(), id)));
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc describe %s %s".formatted(DataTypes.nameOf(type), id)));
     }
 
     private static int listIdsPage(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

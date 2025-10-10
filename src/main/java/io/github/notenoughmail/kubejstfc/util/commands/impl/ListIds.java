@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util.commands.impl;
 
+import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands;
 import net.minecraft.ChatFormatting;
@@ -12,7 +13,7 @@ import java.util.function.Consumer;
 public interface ListIds {
 
     private static ClickEvent clickEvent(DataType<?> type, long page) {
-        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc list_ids %s %d".formatted(type.name(), page));
+        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc list_ids %s %d".formatted(DataTypes.nameOf(type), page));
     }
 
     HoverEvent NEXT_PAGE = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Next page"));
@@ -25,7 +26,7 @@ public interface ListIds {
         final long totalPages = (names.size() - 1) / ELEMENTS_ON_PAGE + 1;
         final long currentPage = Mth.clamp(page, 1, totalPages);
 
-        msg.accept(Component.literal("\nShowing page %d of %d for %s".formatted(currentPage, totalPages, dataType.name())));
+        msg.accept(Component.literal("\nShowing page %d of %d for %s".formatted(currentPage, totalPages, DataTypes.nameOf(dataType))));
         msg.accept(Component.literal("(%d through %d of %d)".formatted(((currentPage - 1) * ELEMENTS_ON_PAGE) + 1, Math.min(names.size(), currentPage * ELEMENTS_ON_PAGE), names.size())));
 
         names.stream()
