@@ -8,8 +8,11 @@ import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.commands.TreeSolver;
 import net.dries007.tfc.TerraFirmaCraft;
+import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.size.ItemSizeManager;
+import net.dries007.tfc.common.entities.Fauna;
+import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -21,13 +24,18 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class KubeJSTFCRegistries {
 
@@ -72,14 +80,14 @@ public class KubeJSTFCRegistries {
                         EntityDamageResistance.MANAGER,
                         BuiltInRegistries.ENTITY_TYPE,
                         DataTypes.ENTITY_DAMAGE_RESISTANCE,
-                        (resistance, type) -> type.is(resistance.entity()),
+                        (resistance, type) -> Helpers.isEntity(type, resistance.entity()),
                         () -> EntityDamageResistance.MANAGER.getValues().stream()
                                 .map(EntityDamageResistance::entity)
-                                .flatMap(tag -> BuiltInRegistries.ENTITY_TYPE.getTag(tag).stream())
+                                .map(BuiltInRegistries.ENTITY_TYPE::getTag)
+                                .flatMap(Optional::stream)
                                 .flatMap(HolderSet.Named::stream)
-                                .map(Holder::value)
+                                .<EntityType<?>>map(Holder::value)
                                 .distinct()
-                                .map(Function.identity()) // This is required because #distinct is making #is in the predicate throw a fit
                 )
         );
         DATA_TYPE.register(
@@ -135,6 +143,76 @@ public class KubeJSTFCRegistries {
                         DataTypes.HEAT,
                         (heat, item) -> heat.matches(item.getDefaultInstance()),
                         HeatCapability.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "drinkable",
+                () -> DataTypes.cachedRegistry(
+                        Drinkable.MANAGER,
+                        BuiltInRegistries.FLUID,
+                        DataTypes.DRINKABLE,
+                        (drinkable, fluid) -> drinkable.ingredient().test(new FluidStack(fluid, 1000)),
+                        Drinkable.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "knapping_type",
+                () -> DataTypes.registry(
+                        KnappingType.MANAGER,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.KNAPPING_TYPE,
+                        (knappingType, item) -> knappingType.matches(item.getDefaultInstance()),
+                        () -> KnappingType.MANAGER.getValues().stream()
+                                .map(KnappingType::inputItem)
+                                .map(SizedIngredient::ingredient)
+                                .flatMap(i -> Arrays.stream(i.getItems()))
+                                .map(ItemStack::getItem)
+                                .distinct()
+                )
+        );
+        DATA_TYPE.register(
+                "support",
+                () -> DataTypes.cachedRegistry(
+                        Support.MANAGER,
+                        BuiltInRegistries.BLOCK,
+                        DataTypes.SUPPORT,
+                        (support, block) -> support.ingredient().test(block),
+                        Support.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "fauna",
+                () -> DataTypes.unsearchableManager(
+                        Fauna.MANAGER,
+                        DataTypes.FAUNA
+                )
+        );
+        DATA_TYPE.register(
+                "lamp_fuel",
+                () -> DataTypes.cachedRegistry(
+                        LampFuel.MANAGER,
+                        BuiltInRegistries.FLUID,
+                        DataTypes.LAMP_FUEL,
+                        (lampFuel, fluid) -> lampFuel.fluid().test(new FluidStack(fluid, 1000)),
+                        LampFuel.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "deposit",
+                () -> DataTypes.cachedItemRegistry(
+                        Deposit.MANAGER,
+                        DataTypes.DEPOSIT,
+                        (deposit, item) -> deposit.matches(item.getDefaultInstance()),
+                        Deposit.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "food",
+                () -> DataTypes.cachedItemRegistry(
+                        FoodCapability.MANAGER,
+                        DataTypes.FOOD,
+                        (food, item) -> food.matches(item.getDefaultInstance()),
+                        FoodCapability.CACHE
                 )
         );
     }

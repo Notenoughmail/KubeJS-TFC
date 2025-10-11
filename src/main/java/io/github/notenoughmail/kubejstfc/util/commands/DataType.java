@@ -8,7 +8,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import dev.latvian.mods.kubejs.block.entity.InventoryAttachment;
 import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventoryAttachment;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -83,6 +85,7 @@ public interface DataType<T> {
         }
 
         private static final DynamicCommandExceptionType ERROR_INVALID = new DynamicCommandExceptionType(loc -> Component.literal("Unknown DataType '%s'".formatted(loc)));
+        private static final DynamicCommandExceptionType ERROR_UNSEARCHABLE = new DynamicCommandExceptionType(loc -> Component.literal("DataType %s cannot be searched".formatted(loc)));
 
         static DataType<?> getDataType(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
             final ResourceLocation loc = ctx.getArgument(name, ResourceLocation.class);
@@ -97,7 +100,17 @@ public interface DataType<T> {
 
         @Override
         public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
-            return ResourceLocation.read(reader);
+            final ResourceLocation loc = ResourceLocation.read(reader);
+            final DataType<?> type = KubeJSTFCRegistries.DATA_TYPES.get(loc);
+            if (type == null) {
+                throw ERROR_INVALID.create(loc);
+            }
+
+            if (!all && !type.canBeSearched()) {
+                throw ERROR_UNSEARCHABLE.create(loc);
+            }
+
+            return loc;
         }
 
         @Override

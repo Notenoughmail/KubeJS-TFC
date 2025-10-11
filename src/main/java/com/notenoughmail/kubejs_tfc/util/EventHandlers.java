@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
@@ -48,7 +47,6 @@ public class EventHandlers {
     public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
     public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
     public static final EventHandler registerFaunas = TFCEvents.startup("registerFaunas", () -> RegisterFaunasEventJS.class);
-    public static final EventHandler createGlassOperations = TFCEvents.startup("createGlassOperations", () -> CreateGlassOperationsEventJS.class);
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
     public static final EventHandler prospect = TFCEvents.server("prospect", () -> ProspectedEventJS.class);

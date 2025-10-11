@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import com.mojang.serialization.MapCodec;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
@@ -19,15 +20,16 @@ public class ISMBuilder extends BuilderBase<ItemStackModifierType<ISMBuilder>> i
         super(id);
     }
 
+    @Info("Sets the applicator of this modifier")
     public ISMBuilder applicator(Applicator applicator) {
         this.applicator = applicator;
         return this;
     }
 
+    @Info("Sets the applicator of this modifier, has access to the inventory")
     public ISMBuilder applicatorWithInventory(ApplicatorWithInventory applicator) {
-        this.applicator = applicator;
         inputDependent = true;
-        return this;
+        return applicator(applicator);
     }
 
     @HideFromJS

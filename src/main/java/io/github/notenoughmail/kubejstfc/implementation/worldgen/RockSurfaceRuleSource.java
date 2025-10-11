@@ -30,7 +30,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
     ).apply(inst, RockSurfaceRuleSource::new)));
 
     @Override
-    public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
+    public KeyDispatchDataCodec<RockSurfaceRuleSource> codec() {
         return CODEC;
     }
 

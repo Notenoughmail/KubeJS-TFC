@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import io.github.notenoughmail.kubejstfc.util.extensions.Noise2DExtension;
+import io.github.notenoughmail.kubejstfc.implementation.extensions.Noise2DExtension;
 import net.dries007.tfc.world.noise.Noise2D;
 import org.spongepowered.asm.mixin.Mixin;
 

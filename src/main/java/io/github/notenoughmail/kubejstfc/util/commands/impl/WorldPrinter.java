@@ -1,8 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util.commands.impl;
 
 import com.mojang.brigadier.context.CommandContext;
-import com.notenoughmail.kubejs_tfc.util.implementation.commands.DataType;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
 import io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands;
 import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -22,6 +20,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.github.notenoughmail.kubejstfc.util.Printer.*;
+
 public interface WorldPrinter {
 
     static int worldSettings(CommandContext<CommandSourceStack> ctx) {
@@ -29,12 +29,12 @@ public interface WorldPrinter {
             final Settings settings = ext.settings();
             final MutableComponent out = Component.empty();
             out.append("TFC world settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
-            DataType.convertRecordToMap(settings).forEach((name, value) -> {
+            convertRecordToMap(settings).forEach((name, value) -> {
                 if (!name.equals("rockLayerSettings")) {
-                    DataType.append(out, name, value);
+                    append(out, name, value);
                 }
             });
-            DataType.append(out, "rockLayerSettings", Component.literal("~~~").withStyle(s -> s
+            append(out, "rockLayerSettings", Component.literal("~~~").withStyle(s -> s
                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kubejs_tfc print_rock_settings"))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Print rock layer settings")))
                     .withColor(ChatFormatting.AQUA)
@@ -52,14 +52,15 @@ public interface WorldPrinter {
             final MutableComponent out = Component.empty();
             out.append("Rock settings for %s:\n".formatted(ctx.getSource().getLevel().dimension().location()));
 
-            DataType.append(out, "bottom", rockData.bottom());
-            DataType.append(out, "oceanFloor", rockData.oceanFloor());
-            DataType.append(out, "land", rockData.land());
-            DataType.append(out, "volcanic", rockData.volcanic());
-            DataType.append(out, "uplift", rockData.uplift());
+            append(out, "bottom", rockData.bottom());
+            append(out, "oceanFloor", rockData.oceanFloor());
+            append(out, "land", rockData.land());
+            append(out, "volcanic", rockData.volcanic());
+            append(out, "uplift", rockData.uplift());
             final Map<String, Map<String, String>> expanded = new HashMap<>();
             rockData.layers().forEach(ld -> expanded.putIfAbsent(ld.id(), ld.layers()));
-            DataType.appendMap(out, "layers", expanded, 0, (map, indent) -> DataType.appendMap(out, "", map, indent, false), true);
+            descriptor(out, "layers");
+            appendMap(out, expanded, (map, indent) -> appendMap(out, map, indent, false), 0, false);
 
             KubeJSTFCCommands.sysMsg(out, ctx);
             return 1;
@@ -76,19 +77,19 @@ public interface WorldPrinter {
         final MutableComponent msg = Component.empty();
 
         msg.append("Chunk %s in %s has the following data:\n".formatted(pos, level.dimension().location()));
-        DataType.append(msg, "status", data.status());
+        append(msg, "status", data.status());
 
         if (data.status() == ChunkData.Status.PARTIAL || data.status() == ChunkData.Status.FULL) {
-            DataType.append(msg, "forestType", data.getForestType());
+            append(msg, "forestType", data.getForestType());
             final ChunkWatchPacket pkt = data.getUpdatePacket();
-            DataType.append(msg, "rainfallLayer", ArrayPrinter.print(pkt.rainfall()));
-            DataType.append(msg, "rainfallVarianceLayer", ArrayPrinter.print(pkt.rainVariance()));
-            DataType.append(msg, "temperatureLayer", ArrayPrinter.print(pkt.temperature()));
-            DataType.append(msg, "baseGroundwaterLayer", ArrayPrinter.print(pkt.baseGroundwater()));
+            append(msg, "rainfallLayer", ArrayPrinter.print(pkt.rainfall()));
+            append(msg, "rainfallVarianceLayer", ArrayPrinter.print(pkt.rainVariance()));
+            append(msg, "temperatureLayer", ArrayPrinter.print(pkt.temperature()));
+            append(msg, "baseGroundwaterLayer", ArrayPrinter.print(pkt.baseGroundwater()));
 
             if (data.status() == ChunkData.Status.FULL) {
-                DataType.append(msg, "surfaceHeight", ArrayPrinter.print(data.getRockData().getSurfaceHeight()));
-                DataType.append(msg, "aquiferHeight", ArrayPrinter.print(data.getAquiferSurfaceHeight()));
+                append(msg, "surfaceHeight", ArrayPrinter.print(data.getRockData().getSurfaceHeight()));
+                append(msg, "aquiferHeight", ArrayPrinter.print(data.getAquiferSurfaceHeight()));
             }
         }
 

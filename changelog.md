@@ -2,7 +2,8 @@
 - Update to 1.21.1, TFC 4.0.x, KubeJS 2101.7.2
 - All features, in some form, as of 1.3.3 should be available, except as noted below
 - Support for addons not yet ported is obviously not included
-- Glass operations and ISMs are now a registry! They are no longer made through a custom event
+- Glass operations, food traits, and ISMs are now a registry! They are no longer made through a custom event
+- Custom chisel modes can now be registered
 
 ### 1.3.3
 - The list ids command is now paginated

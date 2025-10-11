@@ -17,7 +17,6 @@ import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
-import com.notenoughmail.kubejs_tfc.util.implementation.CustomGlassOperations;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
@@ -243,7 +242,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
         typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
         typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCanon);
-        typeWrappers.register(CustomGlassOperations.StackSupplier.class, CustomGlassOperations.StackSupplier::wrap);
     }
 
     @Override

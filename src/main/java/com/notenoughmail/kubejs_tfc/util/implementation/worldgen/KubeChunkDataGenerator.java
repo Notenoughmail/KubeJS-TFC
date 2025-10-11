@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.worldgen;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.CreateChunkDataProviderEventJS;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.ChunkDataAccessor;
 import net.dries007.tfc.world.chunkdata.*;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
@@ -137,8 +136,8 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
         if (d != null) {
             if (d.status() == ChunkData.Status.PARTIAL || d.status() == ChunkData.Status.FULL) {
                 data.generatePartial(
-                        ((ChunkDataAccessor) d).kubejs_tfc$Rain(),
-                        ((ChunkDataAccessor) d).kubejs_tfc$Temp(),
+                        // ,
+                        // ,
                         d.getForestType(),
                         d.getForestWeirdness(),
                         d.getForestDensity()
