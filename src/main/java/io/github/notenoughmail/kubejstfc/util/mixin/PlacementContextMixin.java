@@ -1,6 +1,6 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.WrappedChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.StructureManager;

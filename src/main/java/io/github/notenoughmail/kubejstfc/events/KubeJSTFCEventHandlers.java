@@ -2,6 +2,8 @@ package io.github.notenoughmail.kubejstfc.events;
 
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.event.EventTargetType;
+import dev.latvian.mods.kubejs.event.TargetedEventHandler;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.BuilderRefs;
@@ -26,6 +28,7 @@ public class KubeJSTFCEventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
+    public static final TargetedEventHandler<String> createChunkDataProvider = TFCEvents.server("createChunkDataProvider", () -> KubeChunkDataProviderEvent.class).requiredTarget(EventTargetType.STRING);
 
     public static void init(IEventBus modBus) {
         modBus.addListener(KubeJSTFCEventHandlers::newRegistries);

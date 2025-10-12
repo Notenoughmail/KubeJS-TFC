@@ -8,7 +8,6 @@ import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
 import com.notenoughmail.kubejs_tfc.util.implementation.network.KJSTFCNetwork;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.TFCRecipeFilter;
@@ -144,11 +143,6 @@ public class KubeJSTFC {
     public static final ForgeConfigSpec.Builder serverConfigBuilder = new ForgeConfigSpec.Builder();
     public static final ConfigBuilder wrappedServerConfigBuilder = new ConfigBuilder(serverConfigBuilder, "kubejs_tfc");
 
-    private static final DeferredRegister<Codec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
-
-    static {
-        CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
-    }
 
     public KubeJSTFC() {
         EventHandlers.init();
@@ -160,7 +154,6 @@ public class KubeJSTFC {
         KJSTFCNetwork.init();
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        CHUNK_GENERATOR.register(modBus);
         KubeJSTFCRecipeSerializers.REG.register(modBus);
 
         reloadConfig(DevProperties.get()); // Init properties here so certain early console items can be logged in production

@@ -3,6 +3,12 @@ loaderVersion   = "${loader_version_range}"
 license         = "${mod_license}"
 issueTrackerURL = "https://github.com/Notenoughmail/KubeJS-TFC/issues"
 
+[[accesstransformers]]
+    file = "META-INF/accesstransformer.cfg"
+
+[[accesstransformers]]
+    file = "META-INF/modaccesstransformer.cfg"
+
 [[mods]]
     modId       = "${mod_id}"
     version     = "${mod_version}"

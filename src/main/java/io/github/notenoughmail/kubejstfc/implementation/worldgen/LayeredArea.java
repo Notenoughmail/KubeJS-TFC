@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.custom;
+package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;

@@ -1,9 +1,9 @@
-package com.notenoughmail.kubejs_tfc.event;
+package io.github.notenoughmail.kubejstfc.events;
 
-import dev.latvian.mods.kubejs.event.EventJS;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import net.dries007.tfc.world.Seed;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkRockDataCache;
 import net.dries007.tfc.world.settings.RockLayerSettings;
@@ -20,19 +20,21 @@ import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class CreateChunkDataProviderEventJS extends EventJS {
+public class KubeChunkDataProviderEvent implements KubeEvent {
 
     public transient RocksGetter generateRock;
-    public transient BiConsumer<ChunkData, ChunkAccess> generatePartial, generateFull;
+    public transient Consumer<ChunkData> generatePartial;
+    public transient BiConsumer<ChunkData, ChunkAccess> generateFull;
     public transient Function<ChunkAccess, Aquifer> createAquifer;
 
-    private final long seed;
+    private final Seed seed;
     private final RandomState rs;
     private final Settings settings;
 
-    public CreateChunkDataProviderEventJS(long seed, RandomState rs, Settings settings) {
+    public KubeChunkDataProviderEvent(Seed seed, RandomState rs, Settings settings) {
         this.seed = seed;
         this.rs = rs;
         this.settings = settings;
@@ -40,7 +42,7 @@ public class CreateChunkDataProviderEventJS extends EventJS {
 
     @Info("Returns the seed for the world the chunk data provider is being applied to")
     public long getWorldSeed() {
-        return seed;
+        return seed.seed();
     }
 
     @Info("Returns the normal noise defined by the noise parameters with the given id")
@@ -48,9 +50,9 @@ public class CreateChunkDataProviderEventJS extends EventJS {
         return rs.getOrCreateNoise(ResourceKey.create(Registries.NOISE, id));
     }
 
-    @Info("Returns a random source seeded by the hashed name and spawn coordinates")
-    public RandomSource getRandomSource(ResourceLocation hashedName) {
-        return rs.getOrCreateRandomFactory(hashedName).at(settings.spawnCenterX(), 92, settings.spawnCenterZ());
+    @Info("Returns a random source seeded by the world seed")
+    public RandomSource randomSource() {
+        return seed.forkStable().fork();
     }
 
     @Info("Get the settings as defined in json")
@@ -63,14 +65,13 @@ public class CreateChunkDataProviderEventJS extends EventJS {
             
             `ChunkData#generatePartial` should be called here.
             
-            `ChunkData#generateFull` may be called here, but heightmap access is not guaranteed during this callback.
+            `ChunkData#generateFull` may be called here, but chunk information is not available here.
             
             Defaults to filling the chunk with 0s.
             
             For a full explanation, see the wiki.
             """)
-    @Generics({ ChunkData.class, ChunkAccess.class })
-    public void partial(ChunkDataFiller gen) {
+    public void partial(Consumer<ChunkData> gen) {
         generatePartial = gen;
     }
 
@@ -85,8 +86,7 @@ public class CreateChunkDataProviderEventJS extends EventJS {
             
             For a full explanation, see the wiki.
             """)
-    @Generics({ ChunkData.class, ChunkAccess.class })
-    public void full(ChunkDataFiller gen) {
+    public void full(BiConsumer<ChunkData, ChunkAccess> gen) {
         generateFull = gen;
     }
 
@@ -125,10 +125,5 @@ public class CreateChunkDataProviderEventJS extends EventJS {
     @FunctionalInterface
     public interface AquiferMaker extends Function<ChunkAccess, Aquifer> {
         Aquifer apply(ChunkAccess access);
-    }
-
-    @FunctionalInterface
-    public interface ChunkDataFiller extends BiConsumer<ChunkData, ChunkAccess> {
-        void accept(ChunkData chunkData, ChunkAccess access);
     }
 }

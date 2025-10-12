@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.LayeredArea;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.LayeredArea;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;

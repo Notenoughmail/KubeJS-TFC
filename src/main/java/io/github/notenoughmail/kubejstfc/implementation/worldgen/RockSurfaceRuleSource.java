@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.KubeChunkDataGenerator;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.Codecs;
 import net.dries007.tfc.world.chunkdata.ChunkData;
@@ -39,7 +38,7 @@ public record RockSurfaceRuleSource(RockType type, BlockState fallbackState, Sur
         if (context.context instanceof ChunkGenAwareWorldGenerationContext aware && aware.chunkGenerator instanceof ChunkGeneratorExtension ext) {
             final ChunkData data = ext.chunkDataGenerator().generate(context.chunk);
             if (ext.chunkDataGenerator() instanceof KubeChunkDataGenerator gen) {
-                gen.generateFullIfNot(data, context.chunk); // Guarentee the RockRule has the surface y available. WORLD_SURFACE_WG and OCEAN_FLOOR_WG are available here
+                gen.generateFullIfNot(data, context.chunk); // Guarantee the RockRule has the surface y available. WORLD_SURFACE_WG and OCEAN_FLOOR_WG are available here
             }
             final RockData rocks = data.getRockData();
             if (rocks.cache == null) {

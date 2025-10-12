@@ -1,7 +1,7 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.helpers.ducks.IChunkGenWrapper;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.world.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.implementation.extensions.IWrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.WrappedChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
  * See {@link StructureMixin} & {@link PlacementContextMixin}
  */
 @Mixin(ChunkGenerator.class)
-public abstract class ChunkGeneratorMixin implements IChunkGenWrapper {
+public abstract class ChunkGeneratorMixin implements IWrappedChunkGenerator {
 
     @Unique
     @Nullable

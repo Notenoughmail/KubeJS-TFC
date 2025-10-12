@@ -57,7 +57,6 @@ public class EventHandlers {
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
     public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(PlayerEvents.SUPPORTS_MENU_TYPE.copy().required());
-    public static final EventHandler createChunkDataProvider = TFCEvents.server("createChunkDataProvider", () -> CreateChunkDataProviderEventJS.class).extra(Extra.REQUIRES_STRING);
 
     public static void init() {
         final IEventBus bus = MinecraftForge.EVENT_BUS;

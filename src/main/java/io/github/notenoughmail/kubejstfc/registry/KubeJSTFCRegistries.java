@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.registry;
 import com.mojang.serialization.MapCodec;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.implementation.worldgen.RockSurfaceRuleSource;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.WrappedChunkGenerator;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
@@ -67,6 +68,8 @@ public class KubeJSTFCRegistries {
                 DataType.Argument.class,
                 DataType.TYPE_INFO
         ));
+
+        CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
 
         SURFACE_RULE_SOURCE.register("rock", RockSurfaceRuleSource.CODEC::codec);
 
