@@ -30,7 +30,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.*;
+import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.COLORS;
+import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.RECORD_CONVERTERS;
 
 public interface Printer {
 
@@ -68,26 +69,17 @@ public interface Printer {
                 descriptor(txt, descriptor);
                 appendCollection(
                         txt,
-                        Arrays.stream(f.getStacks())
-                                .map(FluidStack::getFluid)
-                                .distinct()
-                                .toList()
+                        getDistinctFluids(f)
                 );
             }
             case SizedFluidIngredient f -> {
                 descriptor(txt, descriptor);
-
-                final List<Fluid> fluids = Arrays.stream(f.ingredient().getStacks())
-                        .map(FluidStack::getFluid)
-                        .distinct()
-                        .toList();
-
                 txt.append(OBJECT_OPEN);
                 singleIndent(txt);
                 append(txt, "amount", f.amount());
                 singleIndent(txt);
                 descriptor(txt, "fluids");
-                appendCollection(txt, fluids, 1);
+                appendCollection(txt, getDistinctFluids(f.ingredient()), 1);
                 newLine(txt);
                 txt.append(OBJECT_CLOSE);
             }
@@ -220,6 +212,13 @@ public interface Printer {
                     indent
             );
         }
+    }
+
+    static List<Fluid> getDistinctFluids(FluidIngredient ingredient) {
+        return Arrays.stream(ingredient.getStacks())
+                .map(FluidStack::getFluid)
+                .distinct()
+                .toList();
     }
 
     static MutableComponent clickableTag(TagKey<?> tag) {

@@ -13,22 +13,17 @@ import dev.latvian.mods.kubejs.script.BindingRegistry;
 import dev.latvian.mods.kubejs.script.DataComponentTypeInfoRegistry;
 import dev.latvian.mods.kubejs.script.TypeDescriptionRegistry;
 import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
-import io.github.notenoughmail.kubejstfc.builders.misc.ChiselModeBuilder;
-import io.github.notenoughmail.kubejstfc.builders.misc.FoodTraitBuilder;
-import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
-import io.github.notenoughmail.kubejstfc.builders.misc.ISMBuilder;
+import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventoryAttachment;
 import net.dries007.tfc.common.component.food.FoodTraits;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
+import net.dries007.tfc.util.climate.ClimateModels;
 import net.minecraft.core.registries.Registries;
 
-import static io.github.notenoughmail.kubejstfc.KubeJSTFC.id;
-
 public class KubeJSTFCPlugin implements KubeJSPlugin {
-
 
     @Override
     public void registerBuilderTypes(BuilderTypeRegistry registry) {
@@ -37,6 +32,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.addDefault(ItemStackModifiers.KEY, ISMBuilder.class, ISMBuilder::new);
         registry.addDefault(ChiselMode.KEY, ChiselModeBuilder.class, ChiselModeBuilder::new);
         registry.addDefault(FoodTraits.KEY, FoodTraitBuilder.class, FoodTraitBuilder::new);
+        registry.addDefault(ClimateModels.KEY, KubeClimateModel.class, KubeClimateModel::new);
 
         registry.of(Registries.BLOCK, callback -> {
 

@@ -1,0 +1,57 @@
+package io.github.notenoughmail.kubejstfc.events.server;
+
+import dev.latvian.mods.kubejs.player.KubePlayerEvent;
+import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.util.events.StartFireEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+
+@Info("""
+        This event is used for lighting things with fire. It can be cancelled to handle lighting of an external device or source
+        """)
+@SuppressWarnings("unused")
+public class KubeStartFireEvent implements KubePlayerEvent {
+
+    private final StartFireEvent event;
+
+    public KubeStartFireEvent(StartFireEvent event) {
+        this.event = event;
+    }
+
+    @Info(value = "Returns the level of the event")
+    @Override
+    public Level getLevel() {
+        return event.getLevel();
+    }
+
+    public BlockPos getPos() {
+        return event.getPos();
+    }
+
+    @Info(value = "Returns the targeted face of the event")
+    public Direction getTargetedFace() {
+        return event.getTargetedFace();
+    }
+
+    @Info(value = "Returns the player that started the fire, may be null")
+    @Override
+    @Nullable
+    public Player getEntity() {
+        return event.getPlayer();
+    }
+
+    @Info(value = "Returns the item used to start the fire")
+    public ItemStack getItem() {
+        return event.getItemStack();
+    }
+
+    @Info(value = "Returns true if fire created is considered 'strong'")
+    public boolean isStrong() {
+        return event.isStrong();
+    }
+}

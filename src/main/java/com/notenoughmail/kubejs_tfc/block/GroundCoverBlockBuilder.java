@@ -1,7 +1,8 @@
 package com.notenoughmail.kubejs_tfc.block;
 
+import com.google.common.base.Suppliers;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.event.RegisterInteractionsEventJS;
+import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -13,6 +14,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -78,8 +80,8 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info("Sets the 'block item' of this block to an existing item")
     public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
         itemBuilder = null;
-        preexistingItem = Lazy.of(() -> RegistryInfo.ITEM.getValue(item));
-        RegisterInteractionsEventJS.addBlockItemPlacement(preexistingItem, this);
+        preexistingItem = Suppliers.memoize(() -> BuiltInRegistries.ITEM.get(item));
+        KubeRegisterInteractionsEvent.addBlockItemPlacement(preexistingItem, this);
         return this;
     }
 

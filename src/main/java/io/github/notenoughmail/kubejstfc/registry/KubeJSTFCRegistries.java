@@ -1,12 +1,12 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
 import com.mojang.serialization.MapCodec;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.implementation.worldgen.RockSurfaceRuleSource;
 import io.github.notenoughmail.kubejstfc.implementation.worldgen.WrappedChunkGenerator;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.Range;
-import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.commands.TreeSolver;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.component.food.FoodCapability;

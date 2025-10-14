@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
+import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import io.github.notenoughmail.kubejstfc.util.commands.impl.*;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.minecraft.ChatFormatting;
@@ -21,8 +22,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class KubeJSTFCCommands {
 
@@ -120,6 +121,12 @@ public class KubeJSTFCCommands {
                                                 )
                                         )
                                 )
+                        )
+                        .then(literal("reload_config")
+                                .executes(ctx -> {
+                                    TFCProperties.reload().print(s -> sysMsg(s, ctx));
+                                    return 1;
+                                })
                         )
         );
     }

@@ -3,9 +3,7 @@ package io.github.notenoughmail.kubejstfc.implementation;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
-import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.FoodDefinition;
-import net.dries007.tfc.common.component.food.Nutrient;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
@@ -14,17 +12,18 @@ import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
 import net.dries007.tfc.util.data.*;
 import net.dries007.tfc.world.placement.ClimatePlacement;
-import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -208,6 +207,7 @@ public class DataTypes {
     public static final Display<FoodDefinition> FOOD = (f, m) -> {
         append(m, "ingredient", f.ingredient());
         firstLevelFoodData(m, f.food());
+        newLine(m);
         append(m, "edible", f.edible(), true);
     };
 

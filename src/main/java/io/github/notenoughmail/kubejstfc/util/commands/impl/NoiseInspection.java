@@ -16,8 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.sysMsg;
 import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.failMsg;
+import static io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands.sysMsg;
 
 public interface NoiseInspection {
 

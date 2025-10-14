@@ -67,7 +67,6 @@ public class KubeJSTFC {
             m.put(metal.getSerializedName(), NamedRegistryMetal.fromTFC(metal));
         }
     };
-    private static final Map<Class<?>, BiConsumer<?, JsonObject>> ISM_CONVERTERS = new IdentityHashMap<>();
 
     public static void reloadConfig(DevProperties props) {
         debug = props.debugInfo;
@@ -193,24 +192,6 @@ public class KubeJSTFC {
 
     public static void registerMetalListener(Consumer<ImmutableMap.Builder<String, NamedRegistryMetal>> listener) {
         metalListeners = metalListeners.andThen(listener);
-    }
-
-    public static <T extends ItemStackModifier> void registerISMConverter(Class<T> type, BiConsumer<T, JsonObject> converter) {
-        ISM_CONVERTERS.put(type, converter);
-    }
-
-    public static <T extends ItemStackModifier> JsonObject convertISM(T mod) {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", ItemStackModifiers.getId(mod.serializer()).toString());
-        if (!(mod instanceof ItemStackModifier.SingleInstance<?>)) {
-            final BiConsumer<T, JsonObject> converter = UtilsJS.cast(ISM_CONVERTERS.get(mod.getClass()));
-            if (converter != null) {
-                converter.accept(mod, json);
-            } else {
-                throw new IllegalArgumentException("Unknown ISP modifier! Cannot convert to json for use wrapper ISP object");
-            }
-        }
-        return json;
     }
 
     @ApiStatus.Internal

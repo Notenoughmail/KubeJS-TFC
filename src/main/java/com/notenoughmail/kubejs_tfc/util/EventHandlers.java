@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.*;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.bindings.event.PlayerEvents;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -11,49 +10,27 @@ import dev.latvian.mods.kubejs.event.Extra;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.util.DispenserBehaviors;
-import net.dries007.tfc.util.events.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class EventHandlers {
 
     public static final EventGroup TFCEvents = EventGroup.of("TFCEvents");
 
-    public static final EventHandler rockSettings = TFCEvents.startup("rockSettings", () -> RockSettingsEventJS.class);
-    public static final EventHandler registerClimateModel = TFCEvents.startup("registerClimateModel", () -> RegisterClimateModelEventJS.class);
-    public static final EventHandler registerFoodTrait = TFCEvents.startup("registerFoodTrait", () -> RegisterFoodTraitEventJS.class);
-    public static final EventHandler birthdays = TFCEvents.startup("birthdays", () -> BirthdayEventJS.class);
-    public static final EventHandler representatives = TFCEvents.startup("prospectRepresentative", () -> RegisterRepresentativeBlocksEventJS.class);
-    public static final EventHandler interactions = TFCEvents.startup("registerInteractions", () -> RegisterInteractionsEventJS.class);
-    public static final EventHandler defaultSettings = TFCEvents.startup("defaultWorldSettings", () -> ModifyDefaultWorldGenSettingsEventJS.class);
-    public static final EventHandler registerFaunas = TFCEvents.startup("registerFaunas", () -> RegisterFaunasEventJS.class);
-    public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> SelectClimateModelEventJS.class);
-    public static final EventHandler startFire = TFCEvents.server("startFire", () -> StartFireEventJS.class).hasResult();
-    public static final EventHandler prospect = TFCEvents.server("prospect", () -> ProspectedEventJS.class);
-    public static final EventHandler log = TFCEvents.server("log", () -> LoggingEventJS.class).hasResult();
-    public static final EventHandler animalProduct = TFCEvents.server("animalProduct", () -> AnimalProductEventJS.class).hasResult();
-    public static final EventHandler collapse = TFCEvents.server("collapse", () -> CollapseEventJS.class);
-    public static final EventHandler douseFire = TFCEvents.server("douseFire", () -> DouseFireEventJS.class).hasResult();
     public static final EventHandler data = TFCEvents.server("data", () -> TFCDataEventJS.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
     public static final EventHandler limitContainer = TFCEvents.server("limitContainer", () -> ContainerLimiterEventJS.class).extra(PlayerEvents.SUPPORTS_MENU_TYPE.copy().required());
@@ -62,80 +39,11 @@ public class EventHandlers {
         final IEventBus bus = MinecraftForge.EVENT_BUS;
 
         bus.addListener(EventPriority.LOWEST, EventHandlers::onSelectClimateModel);
-        bus.addListener(EventHandlers::onFireStart);
-        bus.addListener(EventHandlers::onProspect);
-        bus.addListener(EventHandlers::onLog);
-        bus.addListener(EventHandlers::onAnimalProduct);
         bus.addListener(EventHandlers::limitContainers);
-        bus.addListener(EventHandlers::onCollapse);
-        bus.addListener(EventHandlers::onDouseFire);
-        if (!FMLEnvironment.production) {
-            bus.addListener(EventPriority.LOWEST, EventHandlers::reloadListeners);
-        }
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(EventHandlers::commonSetup);
-        modBus.addListener(EventHandlers::loadComplete);
-    }
-
-    // Guaranteed only server - provides a ServerLevel
-    private static void onSelectClimateModel(SelectClimateModelEvent event) {
-        if (selectClimateModel.hasListeners()) {
-            selectClimateModel.post(new SelectClimateModelEventJS(event));
-        }
-    }
-
-    private static void onFireStart(StartFireEvent event) {
-        if (!event.getLevel().isClientSide() && startFire.hasListeners()) {
-            if (startFire.post(new StartFireEventJS(event)).interruptFalse()) {
-                event.setCanceled(true);
-            }
-        }
-        if (event.getState().getBlock() instanceof ICustomTorchBlock torch) {
-            torch.handleFireStart(event);
-        }
-    }
-
-    private static void onProspect(ProspectedEvent event) {
-        if (!event.getPlayer().level().isClientSide() && prospect.hasListeners()) {
-            prospect.post(new ProspectedEventJS(event));
-        }
-    }
-
-    private static void onLog(LoggingEvent event) {
-        if (event.getLevel() instanceof Level level && !level.isClientSide() && log.hasListeners()) {
-            if (log.post(new LoggingEventJS(level, event)).interruptFalse()) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    private static void onAnimalProduct(AnimalProductEvent event) {
-        if (!event.getLevel().isClientSide() && animalProduct.hasListeners()) {
-            if (animalProduct.post(new AnimalProductEventJS(event)).interruptFalse()) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    // Guaranteed only server
-    private static void onCollapse(CollapseEvent event) {
-        if (collapse.hasListeners()) {
-            collapse.post(new CollapseEventJS(event));
-        }
-    }
-
-    private static void onDouseFire(DouseFireEvent event) {
-        if (!event.getLevel().isClientSide() && douseFire.hasListeners()) {
-            if (douseFire.post(new DouseFireEventJS(event)).interruptFalse()) {
-                event.setCanceled(true);
-            }
-        }
-
-        if (event.getState().getBlock() instanceof ICustomTorchBlock torch) {
-            torch.handleFireDouse(event);
-        }
     }
 
     @SuppressWarnings("SameReturnValue")
@@ -181,44 +89,9 @@ public class EventHandlers {
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {
-        if (registerFoodTrait.hasListeners()) {
-            registerFoodTrait.post(new RegisterFoodTraitEventJS());
-        }
-        if (registerClimateModel.hasListeners()) {
-            registerClimateModel.post(new RegisterClimateModelEventJS());
-        }
-        if (representatives.hasListeners()) {
-            representatives.post(new RegisterRepresentativeBlocksEventJS());
-        }
-        if (interactions.hasListeners()) {
-            interactions.post(new RegisterInteractionsEventJS());
-        }
-        RegisterInteractionsEventJS.registerCustomPlacements();
         event.enqueueWork(() -> {
-            if (rockSettings.hasListeners()) {
-                rockSettings.post(new RockSettingsEventJS()); // Fire after TFC (and hopefully anyone else) adds their layers
-            }
-            if (birthdays.hasListeners()) {
-                birthdays.post(new BirthdayEventJS());
-            }
             RegistryUtils.hackBlockEntities();
             BuilderRefs.fluidContainerDispenser.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
         });
-    }
-
-    private static void loadComplete(FMLLoadCompleteEvent event) {
-        if (registerFaunas.hasListeners()) {
-            registerFaunas.post(new RegisterFaunasEventJS());
-        }
-        event.enqueueWork(BuilderRefs::clear);
-    }
-
-    private static void reloadListeners(AddReloadListenerEvent event) {
-        final Set<DataManager<?>> handledManagers = Arrays.stream(DataType.values()).map(dt -> dt.manager).collect(Collectors.toSet());
-        event.getListeners().stream().<DataManager<?>>mapMulti((listener, consumer) -> {
-            if (listener instanceof DataManager<?> manager && !handledManagers.contains(manager)) {
-                consumer.accept(manager);
-            }
-        }).forEach(manager -> KubeJSTFC.warningLog("DataManager has not been handled: {} ({})", manager.directory, manager));
     }
 }

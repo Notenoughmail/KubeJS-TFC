@@ -1,8 +1,8 @@
 package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.events.KubeChunkDataProviderEvent;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
+import io.github.notenoughmail.kubejstfc.events.server.KubeChunkDataProviderEvent;
 import net.dries007.tfc.world.Seed;
 import net.dries007.tfc.world.chunkdata.*;
 import net.dries007.tfc.world.settings.RockLayerSettings;
@@ -10,7 +10,6 @@ import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;

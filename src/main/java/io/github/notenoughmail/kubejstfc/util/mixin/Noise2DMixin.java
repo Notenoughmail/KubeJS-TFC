@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
  * <b>Purpose:</b><p>
  * Provide additional functions for modifying noises
  */
-@Mixin(value = Noise2D.class, remap = false)
+@Mixin(Noise2D.class)
 public interface Noise2DMixin extends Noise2DExtension {
 }

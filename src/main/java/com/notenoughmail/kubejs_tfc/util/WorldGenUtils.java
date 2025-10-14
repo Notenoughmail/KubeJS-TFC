@@ -32,12 +32,6 @@ public class WorldGenUtils {
         ResourceUtils.nullable(json, key, provider, p -> IntProvider.CODEC.encodeStart(JsonOps.INSTANCE, p).getOrThrow(false, KubeJSTFC::warningLog));
     }
 
-    public static <Kr, Vr, K, V> Map<Kr, Vr> convertMap(Map<K, V> map, Function<K, Kr> keyConverter, Function<V, Vr> valueConverter) {
-        final Map<Kr, Vr> ret = new IdentityHashMap<>(); // In the one place where this is used, the order is important
-        map.forEach((key, value) -> ret.put(keyConverter.apply(key), valueConverter.apply(value)));
-        return ret;
-    }
-
     /**
      * Converts a string representation of a block state into an equivalent lenient block state json element
      * <p>

@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
-import com.notenoughmail.kubejs_tfc.event.RegisterISMConvertersEventJS;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
@@ -152,23 +151,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
                     container.addConfig(new ModConfig(ModConfig.Type.SERVER, spec, container, "kubejs-tfc-server.toml")));
         }
     }
-
-    @Override
-    public void initStartup() {
-        // Load the class and do something with the values so the compiler doesn't strip it out
-        for (GlassOperation op : GlassOperation.VALUES) {
-            KubeJSTFC.infoLog("GlassOperation: {} exists", op);
-        }
-        if (EventHandlers.registerISMConverter.hasListeners()) {
-            EventHandlers.registerISMConverter.post(new RegisterISMConvertersEventJS());
-        }
-    }
-
-    @Override
-    public void registerEvents() {
-        EventHandlers.TFCEvents.register();
-    }
-
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
         event.namespace(TerraFirmaCraft.MOD_ID)
@@ -269,7 +251,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(ClientForgeEventHandler.class);
     }
 
-    // TODO: 1.21.1 | This actually kinda sucks
+    // TODO: 2.0.0 | This actually kinda sucks
     @Override
     public void attachPlayerData(AttachedData<Player> event) {
         if (event.getParent() != null) {
@@ -279,7 +261,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
-        types.add(TFCInventoryAttachment.TYPE);
         types.add(HeatAttachment.TYPE);
         types.add(CalendarTrackingAttachment.TYPE);
         types.add(SealableInventoryAttachment.TYPE);
@@ -297,24 +278,5 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         for (ArmorMaterial material : TFCArmorMaterials.values()) {
             ItemBuilder.ARMOR_TIERS.put(material.toString().toLowerCase(), material);
         }
-
-        KubeJSTFC.registerISMConverter(AddHeatModifier.class, (heat, json) -> json.addProperty("temperature", heat.temperature()));
-        KubeJSTFC.registerISMConverter(AddRemoveTraitModifier.class, (trait, json) -> json.addProperty("trait", FoodTrait.getId(trait.trait()).toString()));
-        KubeJSTFC.registerISMConverter(DyeLeatherModifier.class, (dye, json) -> json.addProperty("color", dye.color().getName()));
-        KubeJSTFC.registerISMConverter(MealModifier.class, (meal, json) -> {
-            json.add("food", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, meal.baseFood().write()));
-            if (!meal.portions().isEmpty()) {
-                final JsonArray array = new JsonArray(meal.portions().size());
-                for (MealModifier.MealPortion portion : meal.portions()) {
-                    array.add(ResourceUtils.buildJson(obj -> {
-                        ResourceUtils.nullable(obj, "ingredient", portion.ingredient(), Ingredient::toJson);
-                        obj.addProperty("nutrient_modifier", portion.nutrientModifier());
-                        obj.addProperty("water_modifier", portion.waterModifier());
-                        obj.addProperty("saturation_modifier", portion.saturationModifier());
-                    }));
-                }
-                json.add("portions", array);
-            }
-        });
     }
 }
