@@ -4,12 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryWood;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.LayeredArea;
 import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.rhino.util.HideFromJS;
-import it.unimi.dsi.fastutil.HashCommon;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.FoodTrait;
@@ -23,37 +20,21 @@ import net.dries007.tfc.common.capabilities.size.Weight;
 import net.dries007.tfc.common.recipes.CollapseRecipe;
 import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryRock;
-import net.dries007.tfc.world.ChunkGeneratorExtension;
-import net.dries007.tfc.world.chunkdata.ChunkData;
-import net.dries007.tfc.world.chunkdata.ForestType;
-import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
-import net.dries007.tfc.world.chunkdata.RockData;
-import net.dries007.tfc.world.layer.UniformLayer;
-import net.dries007.tfc.world.layer.framework.SourceLayer;
-import net.dries007.tfc.world.noise.*;
-import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.Lazy;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.DoubleToIntFunction;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -233,179 +214,6 @@ public enum MiscBindings {
     @Nullable
     public Support getSupport(BlockGetter level, BlockPos pos) {
         return Support.get(level.getBlockState(pos));
-    }
-
-    @Info(value = "Returns TFC's `ChunkData` object for the given level and position", params = {
-            @Param(name = "level", value = "The level to get the data from"),
-            @Param(name = "pos", value = "The position to get the data from")
-    })
-    public ChunkData getChunkData(LevelReader level, BlockPos pos) {
-        return ChunkData.get(level, pos);
-    }
-
-    @Info(value = "Returns TFC's `RockData` object for the given level and position, may be null", params = {
-            @Param(name = "level", value = "The level to get the data from"),
-            @Param(name = "pos", value = "The position to get the data from")
-    })
-    @Nullable
-    public RockData getRockData(LevelReader level, BlockPos pos) {
-        final ChunkData data = getChunkData(level, pos);
-        if (data.status() == ChunkData.Status.EMPTY || data.status() == ChunkData.Status.CLIENT) {
-            return null; // #getRockData() throws when the status is CLIENT or EMPTY
-        } else {
-            return data.getRockData();
-        }
-    }
-
-    @Info(value = "Returns TFC's `RockSettings` object for the given level and position, may be null", params = {
-            @Param(name = "level", value = "The level to get the settings from"),
-            @Param(name = "pos", value = "The position to get the settings from")
-    })
-    @Nullable
-    public RockSettings getRockSettings(LevelReader level, BlockPos pos) {
-        final RockData data = getRockData(level, pos);
-        if (data != null) {
-            return data.getRock(pos);
-        }
-        return null;
-    }
-
-    @Info(value = "Gets the `RockSettings` of the given block in the given level", params = {
-            @Param(name = "level", value = "The level to check in"),
-            @Param(name = "block", value = "the block to check")
-    })
-    @Nullable
-    public static RockSettings getRockSettings(LevelAccessor level, Block block) {
-        if (level instanceof ServerLevel serverLevel && serverLevel.getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
-            return ext.settings().rockLayerSettings().getRock(block);
-        }
-        return null;
-    }
-
-    @Info(value = "Returns the forest type at the given level and position", params = {
-            @Param(name = "level", value = "The level to get the type from"),
-            @Param(name = "pos", value = "The position to get the type from")
-    })
-    public ForestType getForestType(LevelReader level, BlockPos pos) {
-        return getChunkData(level, pos).getForestType();
-    }
-
-    @Info("Creates a new `OpenSimplex2D` noise, the implementation of 2D noise TFC uses for its worldgen")
-    public OpenSimplex2D newOpenSimplex2D(long seed) {
-        return new OpenSimplex2D(seed);
-    }
-
-    @Info("Creates a new `OpenSimplex3D` noise, the implementation of 3D noise TFC uses for its worldgen")
-    public OpenSimplex3D newOpenSimplex3D(long seed) {
-        return new OpenSimplex3D(seed);
-    }
-
-    @Info("Creates a new `Cellular2D` noise")
-    public Cellular2D cellular2D(long seed) {
-        return new Cellular2D(seed);
-    }
-
-    @Info("Creates a new `Cellular3D` noise")
-    public Cellular3D cellular3D(long seed) {
-        return new Cellular3D(seed);
-    }
-
-    @Info("Creates a new `FastNoiseLite` object, which TFC uses for several of its noises")
-    public FastNoiseLite fnl(long seed) {
-        return new FastNoiseLite(HashCommon.long2int(seed));
-    }
-
-    @Info("Converts a `FastNoiseLite` object into a `Noise2D` object")
-    public Noise2D fnl2Noise2D(FastNoiseLite fnl) {
-        return fnl::GetNoise;
-    }
-
-    @Info("Converts a `FastNoiseLite` object into a `Noise3D` object")
-    public Noise3D fnl2Noise3D(FastNoiseLite fnl) {
-        return fnl::GetNoise;
-    }
-
-    @Info("Casts a JS callback into a full Noise2D object")
-    public Noise2D customNoise2D(Noise2D func) {
-        return func;
-    }
-
-    @Info("Casts a JS callback into a full Noise3D object")
-    public Noise3D customNoise3D(Noise3D func) {
-        return func;
-    }
-
-    @Info("Creates a new layered area from a Noise2D object")
-    public LayeredArea layeredAreaFromNoise(Noise2D noise, DoubleToIntFunction rounder, long seed) {
-        return layeredArea((ctx, x, z) -> rounder.applyAsInt(noise.noise(x, z)), seed);
-    }
-
-    @Info("Creates a new layered area from a Noise2D object")
-    public LayeredArea layeredAreaFromNoise(Noise2D noise, long seed) {
-        return layeredAreaFromNoise(noise, d -> (int) Math.round(d), seed);
-    }
-
-    @Info("Creates a new layered area from the SourceLayer")
-    public LayeredArea layeredArea(SourceLayer source, long seed) {
-        return new LayeredArea(source, seed);
-    }
-
-    @Info("Creates a new layered area with values uniformly distributed across the 32 bit signed integer range")
-    public LayeredArea uniformLayeredArea(long seed) {
-        return layeredArea(UniformLayer.INSTANCE, seed);
-    }
-
-    @HideFromJS
-    @ApiStatus.Internal
-    public final Supplier<Map<String, Noise2D>> inspect2DNoise = Lazy.of(HashMap::new);
-    @HideFromJS
-    @ApiStatus.Internal
-    public final Supplier<Map<String, Noise3D>> inspect3DNoise = Lazy.of(HashMap::new);
-
-    @Info("Adds a 2D noise to a list to be inspected via a command. Only works if KubeJS's debug mode is enabled")
-    public void register2DNoiseForInspection(String name, Noise2D noise) {
-        KubeJSTFC.info("Added 2D noise {} to inspection list", name);
-        inspect2DNoise.get().put(name, noise);
-    }
-
-    @Info("Adds a 3D noise to a list to be inspected vai a command. Only works if KubeJS's debug mode is enabled")
-    public void register3DNoiseForInspection(String name, Noise3D noise) {
-        KubeJSTFC.info("Added 3D noise {} to inspection list", name);
-        inspect3DNoise.get().put(name, noise);
-    }
-
-    @Info(value = "Creates a new `Metaballs2D`, TFC's 2D implementation of Metaballs", params = {
-            @Param(name = "random", value = "The random source used by the balls to create variance between instances"),
-            @Param(name = "minBalls", value = "The minimum number of individual balls"),
-            @Param(name = "maxBalls", value = "The maximum number of individual balls"),
-            @Param(name = "minSize", value = "The minimum size of the Metaballs"),
-            @Param(name = "maxSize", value = "The maximum size of the Metaballs"),
-            @Param(name = "radius", value = "The maximum radius of an individual ball")
-    })
-    public Metaballs2D newMetaballs2D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
-        return new Metaballs2D(random, minBalls, maxBalls, minSize, maxSize, radius);
-    }
-
-    @Info(value = "Creates a new `Metaballs3D`, TFC's 3D implementation of Metaballs", params = {
-            @Param(name = "random", value = "The random source used by the balls to create variance between instances"),
-            @Param(name = "minBalls", value = "The minimum number of individual balls"),
-            @Param(name = "maxBalls", value = "The maximum number of individual balls"),
-            @Param(name = "minSize", value = "The minimum size of the Metaballs"),
-            @Param(name = "maxSize", value = "The maximum size of the Metaballs"),
-            @Param(name = "radius", value = "The maximum radius of an individual ball")
-    })
-    public Metaballs3D newMetaballs3D(RandomSource random, int minBalls, int maxBalls, double minSize, double maxSize, double radius) {
-        return new Metaballs3D(random, minBalls, maxBalls, minSize, maxSize, radius);
-    }
-
-    @Info(value = "Creates a `LerpFloatLayer`, an interpolated square of numbers which are known at the corners and interpolated between for intermediate values", params = {
-            @Param(name = "value00", value = "The value at the [low x, low z] corner"),
-            @Param(name = "value01", value = "The value at the [low x, high z] corner"),
-            @Param(name = "value10", value = "The value at the [high x, low z] corner"),
-            @Param(name = "value11", value = "The value at the [high x, high z] corner")
-    })
-    public LerpFloatLayer lerpFloatLayer(float value00, float value01, float value10, float value11) {
-        return new LerpFloatLayer(value00, value01, value10, value11);
     }
 
     @Info(value = "Returns a number, in the range [0, 100], an expression of how hydrated the soil is", params = {

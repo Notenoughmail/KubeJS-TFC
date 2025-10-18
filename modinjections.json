@@ -1,3 +1,5 @@
 {
-
+  "net/dries007/tfc/common/recipes/outputs/ItemStackProvider": [
+    "io/github/notenoughmail/kubejstfc/implementation/extensions/ISPExtension"
+  ]
 }

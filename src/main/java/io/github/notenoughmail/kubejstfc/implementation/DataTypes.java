@@ -57,7 +57,6 @@ public class DataTypes {
         append(m ,"ingredient", d.ingredient());
         append(m, "consumeChance", d.consumeChance());
         append(m, "mayDrinkWhenFull", d.mayDrinkWhenFull());
-        descriptor(m, "food");
         firstLevelFoodData(m, d.food());
         newLine(m);
         descriptor(m, "effects");

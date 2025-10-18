@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation;
+package io.github.notenoughmail.kubejstfc.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

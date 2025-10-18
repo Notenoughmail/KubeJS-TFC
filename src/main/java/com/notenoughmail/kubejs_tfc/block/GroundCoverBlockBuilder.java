@@ -2,23 +2,21 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.common.base.Suppliers;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;

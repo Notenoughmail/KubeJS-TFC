@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
 import dev.latvian.mods.kubejs.gui.KubeJSGUI;
 import dev.latvian.mods.kubejs.gui.KubeJSMenu;
@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * <b>Purpose:</b><p>
- * Prevents shift clicking from being able to add/remove items from {@link com.notenoughmail.kubejs_tfc.util.implementation.attachment.SealableInventoryAttachment sealed inventories}
+ * Prevents shift clicking from being able to add/remove items from {@link io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment sealed inventories}
  */
-@Mixin(value = KubeJSMenu.class, remap = false)
+@Mixin(KubeJSMenu.class)
 public abstract class KubeJSMenuMixin {
 
     @Shadow(remap = false)
     @Final
     public KubeJSGUI guiData;
 
-    @Inject(method = { "m_7648_", "quickMoveStack" }, at = @At("HEAD"), cancellable = true)
+    @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void kubejs_tfc$RespectInventoryMutability(Player player, int i, CallbackInfoReturnable<ItemStack> cir) {
         if (!guiData.inventory.kjs$isMutable()) cir.setReturnValue(ItemStack.EMPTY);
     }

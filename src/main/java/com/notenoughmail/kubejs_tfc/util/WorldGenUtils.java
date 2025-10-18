@@ -11,8 +11,6 @@ import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.minecraft.util.valueproviders.IntProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 /**

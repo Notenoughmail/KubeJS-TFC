@@ -11,6 +11,7 @@
     "ChunkMapMixin",
     "CropHelpersMixin",
     "HandHeldItemBuilderMixin",
+    "ISPMixin",
     "KubeJSMenuMixin",
     "Noise2DMixin",
     "Noise3DMixin",

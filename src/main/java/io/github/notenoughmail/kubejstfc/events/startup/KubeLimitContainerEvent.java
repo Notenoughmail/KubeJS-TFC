@@ -1,10 +1,11 @@
-package com.notenoughmail.kubejs_tfc.event;
+package io.github.notenoughmail.kubejstfc.events.startup;
 
-import dev.latvian.mods.kubejs.event.EventJS;
+import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import net.dries007.tfc.common.capabilities.size.ItemSizeManager;
-import net.dries007.tfc.common.capabilities.size.Size;
+import dev.latvian.mods.rhino.util.HideFromJS;
+import net.dries007.tfc.common.component.size.ItemSizeManager;
+import net.dries007.tfc.common.component.size.Size;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.Slot;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+// I really wanted this to not be a raw port of the old event, but alas MC (& to an extent Neo) is simply not built so kindly
 @Info("""
         This event is fired whenever a player closes a menu that is not the player's own inventory
         
@@ -20,18 +22,11 @@ import java.util.List;
         
         The implementation of this event is based on Oversized Item in Storage area, a 1.12 addon. It is licensed under the BSD License
         """)
-@SuppressWarnings("unused")
-public class ContainerLimiterEventJS extends EventJS {
-
-    private final List<Slot> slotsToLimit;
-    private final Level level;
-    private final BlockPos spawnPos;
-
-    public ContainerLimiterEventJS(List<Slot> slotsToLimit, Level level, BlockPos spawnPos) {
-        this.slotsToLimit = slotsToLimit;
-        this.level = level;
-        this.spawnPos = spawnPos;
-    }
+public record KubeLimitContainerEvent(
+        @HideFromJS List<Slot> slotsToLimit,
+        @HideFromJS Level level,
+        @HideFromJS BlockPos spawnPos
+) implements KubeEvent {
 
     @Info("Limits the entire container to the given size, disallowing items with a size greater than the given size")
     public void limit(Size size) {

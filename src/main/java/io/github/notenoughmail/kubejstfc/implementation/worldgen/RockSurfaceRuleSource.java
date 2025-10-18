@@ -2,7 +2,6 @@ package io.github.notenoughmail.kubejstfc.implementation.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.Codecs;
 import net.dries007.tfc.world.chunkdata.ChunkData;

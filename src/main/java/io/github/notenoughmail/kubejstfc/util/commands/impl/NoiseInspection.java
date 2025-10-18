@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.NoiseBindings;
 import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import net.dries007.tfc.world.noise.Noise2D;
 import net.dries007.tfc.world.noise.Noise3D;
@@ -33,7 +33,7 @@ public interface NoiseInspection {
     }
 
     private static int inspect2D(CommandContext<CommandSourceStack> ctx, BlockPos from, BlockPos to, Range rangeIn, Range rangeOut, String noiseName) {
-        final Noise2D noise = MiscBindings.INSTANCE.inspect2DNoise.get().get(noiseName);
+        final Noise2D noise = NoiseBindings.INSPECT_2D.get().get(noiseName);
         if (noise != null) {
             final int minY = Math.min(from.getY(), to.getY()), maxY = Math.max(from.getY(), to.getY());
             final int minX = Math.min(from.getX(), to.getX()), minZ = Math.min(from.getZ(), to.getZ());
@@ -125,7 +125,7 @@ public interface NoiseInspection {
 
     static int inspectNoise3D(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         final String noiseId = StringArgumentType.getString(ctx, "noise");
-        final Noise3D noise = MiscBindings.INSTANCE.inspect3DNoise.get().get(noiseId);
+        final Noise3D noise = NoiseBindings.INSPECT_3D.get().get(noiseId);
         if (noise != null) {
             final BlockPos from = BlockPosArgument.getLoadedBlockPos(ctx, "from"), to = BlockPosArgument.getLoadedBlockPos(ctx, "to");
 
@@ -173,20 +173,20 @@ public interface NoiseInspection {
 
     static int inspectNoise3DAtHeight(CommandContext<CommandSourceStack> ctx) {
         final String noiseName = StringArgumentType.getString(ctx, "noise");
-        final Noise3D noise = MiscBindings.INSTANCE.inspect3DNoise.get().get(noiseName);
+        final Noise3D noise = NoiseBindings.INSPECT_3D.get().get(noiseName);
         if (noise == null) {
             return failMsg("Unregistered noise '%s'".formatted(noiseName), ctx);
         } else {
             final double y = DoubleArgumentType.getDouble(ctx, "y_value");
 
             final String name2D = noiseName + " at %.1f".formatted(y);
-            MiscBindings.INSTANCE.register2DNoiseForInspection(name2D, (x, z) -> noise.noise(x, y, z));
+            NoiseBindings.INSTANCE.inspect2D(name2D, (x, z) -> noise.noise(x, y, z));
 
             final Range rangeIn = Range.get("input_range", ctx), rangeOut = Range.get("output_range", ctx);
             final BlockPos fromPos = BlockPosArgument.getBlockPos(ctx, "from"), toPos = BlockPosArgument.getBlockPos(ctx, "to");
 
             final int ret = inspect2D(ctx, fromPos, toPos, rangeIn, rangeOut, name2D);
-            MiscBindings.INSTANCE.inspect2DNoise.get().remove(name2D);
+            NoiseBindings.INSPECT_2D.get().remove(name2D);
             return ret;
         }
     }

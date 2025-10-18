@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.notenoughmail.kubejs_tfc.util.implementation.worldgen.ChunkGenAwareWorldGenerationContext;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.Seed;
 import net.dries007.tfc.world.chunkdata.ChunkData;

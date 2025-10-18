@@ -14,12 +14,6 @@ public class TFCBindings {
     public static final ClimateBindings climate = ClimateBindings.INSTANCE;
     @Info("Provides access to all calendar bindings")
     public static final CalendarBindings calendar = CalendarBindings.INSTANCE;
-    @Info("Provides access to all ingredient bindings")
-    public static final TFCIngredientBindings ingredient = TFCIngredientBindings.INSTANCE;
-    @Info("Provides access to all item stack provider bindings")
-    public static final ItemStackProviderBindings itemStackProvider = ItemStackProviderBindings.INSTANCE;
-    @Info("Provides access to all item stack provider bindings")
-    public static final ItemStackProviderBindings isp = ItemStackProviderBindings.INSTANCE;
     @Info("A collection of various un-categorized features and utilities")
     public static final MiscBindings misc = MiscBindings.INSTANCE;
 

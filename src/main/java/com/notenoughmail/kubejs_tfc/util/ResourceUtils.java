@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.event.TFCDataEventJS;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.BlockBuilderAccessor;

@@ -1,9 +1,7 @@
 package com.notenoughmail.kubejs_tfc;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Codec;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.NamedRegistryMetal;
@@ -14,31 +12,22 @@ import com.notenoughmail.kubejs_tfc.util.implementation.recipe.TFCRecipeFilter;
 import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.recipe.filter.RecipeFilter;
-import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
-import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
-import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.config.ConfigBuilder;
 import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryRock;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 

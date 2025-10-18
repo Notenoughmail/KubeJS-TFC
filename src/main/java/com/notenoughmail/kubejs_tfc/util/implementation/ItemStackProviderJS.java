@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unused")
 public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implements OutputReplacement, ReplacementMatch {
 
     public static final ItemStackProviderJS EMPTY = new ItemStackProviderJS(ItemStack.EMPTY, new JsonArray(0));

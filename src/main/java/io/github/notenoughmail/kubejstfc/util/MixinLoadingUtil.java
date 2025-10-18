@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.implementation.IfPresent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.LoadingModList;
 import org.objectweb.asm.Type;

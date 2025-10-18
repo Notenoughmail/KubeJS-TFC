@@ -1,7 +1,5 @@
 package com.notenoughmail.kubejs_tfc;
 
-import com.google.gson.JsonArray;
-import com.mojang.serialization.JsonOps;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
@@ -13,14 +11,9 @@ import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
-import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
-import com.notenoughmail.kubejs_tfc.util.implementation.attachment.HeatAttachment;
-import com.notenoughmail.kubejs_tfc.util.implementation.attachment.SealableInventoryAttachment;
-import com.notenoughmail.kubejs_tfc.util.implementation.attachment.TFCInventoryAttachment;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
@@ -44,23 +37,15 @@ import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
-import net.dries007.tfc.common.capabilities.food.FoodTrait;
-import net.dries007.tfc.common.capabilities.glass.GlassOperation;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
 import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
-import net.dries007.tfc.common.recipes.outputs.AddHeatModifier;
-import net.dries007.tfc.common.recipes.outputs.DyeLeatherModifier;
-import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
-import net.dries007.tfc.common.recipes.outputs.MealModifier;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.climate.ClimateModel;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -222,8 +207,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         typeWrappers.registerSimple(BlockIngredient.class, IngredientHelpers::ofBlockIngredient);
         typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
         typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
-        typeWrappers.registerSimple(ItemStackProviderJS.class, ItemStackProviderJS::of);
-        typeWrappers.registerSimple(ItemStackProvider.class, ItemStackProviderJS::ofCanon);
     }
 
     @Override
@@ -261,9 +244,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
-        types.add(HeatAttachment.TYPE);
         types.add(CalendarTrackingAttachment.TYPE);
-        types.add(SealableInventoryAttachment.TYPE);
     }
 
     @Override

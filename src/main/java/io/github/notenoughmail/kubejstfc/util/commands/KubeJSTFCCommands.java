@@ -5,9 +5,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.NoiseBindings;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import io.github.notenoughmail.kubejstfc.util.commands.impl.*;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
@@ -91,7 +91,7 @@ public class KubeJSTFCCommands {
                                                 .then(argument("input_range", Range.arg())
                                                         .then(argument("output_range", Range.arg())
                                                                 .then(argument("noise", StringArgumentType.greedyString())
-                                                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(MiscBindings.INSTANCE.inspect2DNoise.get().keySet(), builder))
+                                                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(NoiseBindings.INSPECT_2D.get().keySet(), builder))
                                                                         .executes(NoiseInspection::inspectNoise2D)
                                                                 )
                                                         )
@@ -106,7 +106,7 @@ public class KubeJSTFCCommands {
                                                         .then(argument("output_range", Range.arg())
                                                                 .then(argument("noise", StringArgumentType.string())
                                                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                                                MiscBindings.INSTANCE.inspect3DNoise.get()
+                                                                                NoiseBindings.INSPECT_3D.get()
                                                                                         .keySet()
                                                                                         .stream()
                                                                                         .map(s -> s.contains(" ") ? "\"" + s + "\"" : s),
