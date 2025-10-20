@@ -27,7 +27,7 @@ public class HeatConsumerAttachment implements BlockEntityAttachment {
     public record Factory(float decayAmount) implements BlockEntityAttachmentFactory {
 
         @Override
-        public BlockEntityAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
+        public HeatConsumerAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
             return new HeatConsumerAttachment(decayAmount, entity);
         }
 
@@ -92,7 +92,7 @@ public class HeatConsumerAttachment implements BlockEntityAttachment {
     }
 
     @Override
-    public Object getWrappedObject() {
+    public IHeatConsumer getWrappedObject() {
         return heat;
     }
 

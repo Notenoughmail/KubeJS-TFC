@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildFoodItemData;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.BuildPortionData;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
@@ -190,7 +189,7 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
 
     @Info("Returns the json representation of the ISP's item stack")
     public JsonObject getJsonStack() {
-        return IngredientHelpers.itemStackToJson(stack);
+        return ;
     }
 
     @Override
@@ -266,10 +265,6 @@ public record ItemStackProviderJS(ItemStack stack, JsonArray modifiers) implemen
         return new ItemStackProviderJS(stack.copy(), modifiers.deepCopy());
     }
 
-    @Override
-    public String toString() {
-        return "TFC.itemStackProvider." + (isEmpty() ? "empty()" : "of(" + IngredientHelpers.stringifyItemStack(stack()) + ", " + modifiers() + ")");
-    }
 
     @Info(value = "Adds a 'tfc:add_heat' modifier to the ISP", params = @Param(name = "temperature", value = "The °C to add to the item"))
     public ItemStackProviderJS addHeat(float temperature) {

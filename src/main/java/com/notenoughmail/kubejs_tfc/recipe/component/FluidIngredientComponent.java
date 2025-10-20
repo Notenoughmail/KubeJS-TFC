@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
-import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
@@ -36,16 +35,10 @@ public class FluidIngredientComponent implements RecipeComponent<FluidIngredient
 
     @Override
     public FluidIngredient read(RecipeJS recipe, Object from) {
-        return IngredientHelpers.ofFluidIngredient(from);
     }
 
     @Override
     public boolean isInput(RecipeJS recipe, FluidIngredient value, ReplacementMatch match) {
-        final FluidIngredient matchIng = IngredientHelpers.ofFluidIngredient(match);
-        if (!matchIng.entries().isEmpty()) {
-            return matchIng.entries().stream().anyMatch(e -> value.all().anyMatch(e));
-        }
-        return false;
     }
 
     public static class FluidStackIngredientComponent implements RecipeComponent<FluidStackIngredient> {
@@ -72,7 +65,6 @@ public class FluidIngredientComponent implements RecipeComponent<FluidIngredient
 
         @Override
         public FluidStackIngredient read(RecipeJS recipe, Object from) {
-            return IngredientHelpers.ofFluidStackIngredient(from);
         }
 
         @Override

@@ -6,11 +6,9 @@
   "mixins": [
     "AnvilBlockEntityMixin",
     "BlockEntityTooltipsMixin",
-    "ChunkDataProviderMixin",
     "ChunkGeneratorMixin",
     "ChunkMapMixin",
     "CropHelpersMixin",
-    "HandHeldItemBuilderMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
     "Noise2DMixin",
@@ -23,11 +21,7 @@
     "TorchItemMixin",
     "accessor.BlockBuilderAccessor",
     "accessor.BlockEntityTypeAccessor",
-    "accessor.EntityDamageResistanceAccessor",
-    "accessor.ItemDamageResistanceAccessor",
     "accessor.KubeJSCraftingRecipeAccessor",
-    "accessor.OverworldClimateModelAccessor",
-    "accessor.RockLayerSettingsAccessor",
     "accessor.TFCLeavesBlockAccessor"
   ],
   "client": [

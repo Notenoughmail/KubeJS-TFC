@@ -33,7 +33,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
 
     public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter, boolean canSeal, boolean requiresSeal, Holder<FoodTrait> trait) implements BlockEntityAttachmentFactory {
         @Override
-        public BlockEntityAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
+        public SealableInventoryAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
             return new SealableInventoryAttachment(entity, width, height, inputFilter.orElse(null), sizeFilter.orElse(null), weightFilter.orElse(null), canSeal, requiresSeal, trait);
         }
 

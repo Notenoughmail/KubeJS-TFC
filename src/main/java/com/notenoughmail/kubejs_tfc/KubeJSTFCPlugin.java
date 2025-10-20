@@ -2,55 +2,34 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
-import com.notenoughmail.kubejs_tfc.fluid.HotWaterFluidBuilder;
 import com.notenoughmail.kubejs_tfc.item.*;
-import com.notenoughmail.kubejs_tfc.recipe.component.AlloyPartComponent;
-import com.notenoughmail.kubejs_tfc.recipe.component.BlockIngredientComponent;
-import com.notenoughmail.kubejs_tfc.recipe.component.FluidIngredientComponent;
-import com.notenoughmail.kubejs_tfc.recipe.component.ItemProviderComponent;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
-import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
-import com.notenoughmail.kubejs_tfc.util.implementation.attachment.CalendarTrackingAttachment;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.ClimateBindings;
-import com.notenoughmail.kubejs_tfc.util.implementation.bindings.TFCBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
-import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
-import dev.latvian.mods.kubejs.bindings.event.ServerEvents;
-import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
-import dev.latvian.mods.kubejs.util.LogType;
-import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
+import io.github.notenoughmail.kubejstfc.items.GlassworkingToolItemBuilder;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
 import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
-import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
-import net.dries007.tfc.common.recipes.ingredients.FluidIngredient;
-import net.dries007.tfc.common.recipes.ingredients.FluidStackIngredient;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
-import net.dries007.tfc.util.climate.ClimateModel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
-
-import java.util.List;
 
 // Mild Javadoc abuse
 
@@ -74,19 +53,10 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         addValues();
 
         RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:chisel", ChiselItemBuilder.class, ChiselItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:mace", MaceItemBuilder.class, MaceItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:propick", PropickItemBuilder.class, PropickItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:scythe", ScytheItemBuilder.class, ScytheItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:hoe", TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:fluid_container", FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:tool", ToolItemBuilder.class, ToolItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:hammer", HammerItemBuilder.class, HammerItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:jar", JarItemBuilder.class, JarItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:glassworking", GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:windmill_blade", WindMillBladeItemBuilder.class, WindMillBladeItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:glassworking_tool", GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:jug", JugItemBuilder.class, JugItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:glass_bottle", GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
@@ -123,8 +93,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:sapling", TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:leaves", TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
-
-        RegistryInfo.FLUID.addType("tfc:spring", HotWaterFluidBuilder.class, HotWaterFluidBuilder::new);
     }
 
     @Override
@@ -178,38 +146,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     }
 
     @Override
-    public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
-        event.register("tfc:outputItemStackProvider", ItemProviderComponent.PROVIDER);
-        event.register("tfc:otherItemStackProvider", ItemProviderComponent.INTERMEDIATE);
-        event.register("tfc:fluidIngredient", FluidIngredientComponent.INGREDIENT);
-        event.register("tfc:fluidStackIngredient", FluidIngredientComponent.STACK_INGREDIENT);
-        event.register("tfc:alloyPart", AlloyPartComponent.ALLOY);
-        event.register("tfc:blockIngredient", BlockIngredientComponent.INGREDIENT);
-    }
-
-    @Override
-    public void registerBindings(BindingsEvent event) {
-        event.add("TFC", TFCBindings.class);
-
-        // This cannot be done during #init() because the server script manager does not
-        // yet exist so everything explodes, so I hijack #registerBindings() to get it to work
-        if (event.getType() == ScriptType.SERVER) {
-            ServerEvents.HIGH_DATA.listenJava(ScriptType.SERVER, null, EventHandlers::postDataEvents);
-            KubeJSTFC.infoLog("KubeJS TFC: Added data event listeners");
-        }
-
-        KubeJSTFC.printConfig(s -> event.getType().console.writeToFile(LogType.INIT, s));
-    }
-
-    @Override
-    public void registerTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
-        typeWrappers.registerSimple(ClimateModel.class, ClimateBindings.INSTANCE::getModel);
-        typeWrappers.registerSimple(BlockIngredient.class, IngredientHelpers::ofBlockIngredient);
-        typeWrappers.registerSimple(FluidIngredient.class, IngredientHelpers::ofFluidIngredient);
-        typeWrappers.registerSimple(FluidStackIngredient.class, IngredientHelpers::ofFluidStackIngredient);
-    }
-
-    @Override
     public void registerClasses(ScriptType type, ClassFilter filter) {
         // KubeJS TFC
         filter.allow("com.notenoughmail.kubejs_tfc");
@@ -217,7 +153,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(KubeJSTFCPlugin.class);
         filter.deny(RegistryUtils.class);
         filter.deny(EventHandlers.class);
-        filter.deny(IngredientHelpers.class);
         filter.deny(ClientEventHandlers.class);
         filter.deny("com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin");
@@ -241,17 +176,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
             event.add("tfc:player_data", new TFCPlayerDataJS(event.getParent()));
         }
     }
-
-    @Override
-    public void registerBlockEntityAttachments(List<BlockEntityAttachmentType> types) {
-        types.add(CalendarTrackingAttachment.TYPE);
-    }
-
-    @Override
-    public void loadDevProperties(DevProperties properties) {
-        KubeJSTFC.reloadConfig(properties);
-    }
-
     private void addValues() {
         for (TFCTiersJS tier : TFCTiersJS.values()) {
             ItemBuilder.TOOL_TIERS.put(tier.getTier().toString().toLowerCase(), tier.getTier());

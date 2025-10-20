@@ -7,13 +7,9 @@ import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -62,21 +58,4 @@ public class RegistryUtils {
         blockEntityHacks.clear();
     }
 
-    /**
-     * Turn fluids and items into their ids so they're useful for errors
-     */
-    public static String stringify(Object o) {
-        // TODO: 1.21.1 | Pattern matching switch will make this slightly less awful to look at
-        // The defaults for these are varying degrees of awful
-        if (o instanceof  Fluid fluid) {
-            return RegistryInfo.FLUID.getId(fluid).toString();
-        } else if (o instanceof Item item) {
-            return RegistryInfo.ITEM.getId(item).toString();
-        } else if (o instanceof ItemStack stack) {
-            return stack.getCount() + " " + stringify(stack.getItem());
-        } else if (o instanceof MobEffect effect) {
-            return RegistryInfo.MOB_EFFECT.getId(effect).toString();
-        }
-        return String.valueOf(o);
-    }
 }

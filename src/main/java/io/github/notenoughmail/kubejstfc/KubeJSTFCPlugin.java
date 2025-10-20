@@ -15,15 +15,20 @@ import dev.latvian.mods.kubejs.script.DataComponentTypeInfoRegistry;
 import dev.latvian.mods.kubejs.script.TypeDescriptionRegistry;
 import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
 import dev.latvian.mods.rhino.type.TypeInfo;
+import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.events.server.KubeDataEvent;
+import io.github.notenoughmail.kubejstfc.implementation.attachments.CalendarTrackingAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.HeatConsumerAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventoryAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
-import io.github.notenoughmail.kubejstfc.implementation.bindings.RecipeBindings;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.TFCBindings;
+import io.github.notenoughmail.kubejstfc.items.*;
+import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
+import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.ISPComponent;
 import net.dries007.tfc.common.component.EggComponent;
 import net.dries007.tfc.common.component.TFCComponents;
@@ -48,6 +53,8 @@ import net.dries007.tfc.util.climate.ClimateModels;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 
+import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
+
 public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
@@ -63,12 +70,21 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
         });
 
-        registry.of(Registries.ITEM, callback -> {
-
+        registry.of(Registries.ITEM, c -> {
+            c.add(tfc("windmill_blade"), WindmillBladeItemBuilder.class, WindmillBladeItemBuilder::new);
+            c.add(tfc("glassworking"), GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
+            c.add(tfc("chisel"), ChiselItemBuilder.class, ChiselItemBuilder::new);
+            c.add(tfc("glassworking_tool"), GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
+            c.add(tfc("tool"), ToolItemBuilder.class, ToolItemBuilder::new);
+            c.add(tfc("hammer"), HammerItemBuilder.class, HammerItemBuilder::new);
+            c.add(tfc("mace"), MaceItemBuilder.class, MaceItemBuilder::new);
+            c.add(tfc("propick"), PropickItemBuilder.class, PropickItemBuilder::new);
+            c.add(tfc("hoe"), TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+            c.add(tfc("scythe"), ScytheItemBuilder.class, ScytheItemBuilder::new);
         });
 
-        registry.of(Registries.FLUID, callback -> {
-
+        registry.of(Registries.FLUID, c -> {
+            c.add(tfc("spring"), SpringWaterBuilder.class, SpringWaterBuilder::new);
         });
     }
 
@@ -93,7 +109,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     @Override
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
         registry.register(ItemStackProvider.class, ISPBindings::wrap);
-        registry.register(BlockIngredient.class, RecipeBindings::wrapBlock);
+        registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
     }
 
     @Override
@@ -114,6 +130,8 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {
         registry.register(ISPComponent.TYPE);
+        registry.register(BlockIngredientComponent.TYPE);
+        registry.register(AlloyRangeComponent.TYPE);
     }
 
     @Override
@@ -121,6 +139,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(TFCInventoryAttachment.TYPE);
         registry.register(SealableInventoryAttachment.TYPE);
         registry.register(HeatConsumerAttachment.TYPE);
+        registry.register(CalendarTrackingAttachment.TYPE);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
+import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 public class KubeJSTFC {
 
     public static final String ID = "kubejs_tfc";
+    public static final String MIXIN_PREFIX = ID + "$";
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -41,5 +43,9 @@ public class KubeJSTFC {
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(ID, path);
+    }
+
+    public static ResourceLocation tfc(String path) {
+        return Helpers.identifier(path);
     }
 }

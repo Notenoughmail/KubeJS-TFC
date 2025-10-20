@@ -1,6 +1,8 @@
-package io.github.notenoughmail.kubejstfc.util;
+package io.github.notenoughmail.kubejstfc.registry;
 
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
+import io.github.notenoughmail.kubejstfc.items.HammerItemBuilder;
+import io.github.notenoughmail.kubejstfc.items.WindmillBladeItemBuilder;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -22,8 +24,20 @@ public class BuilderRefs {
      */
     public static final List<GlassOperationBuilder> powderGlassOperations = new ArrayList<>();
 
+    /**
+     * Windmill blade items, used to register their their model providers
+     */
+    public static final List<WindmillBladeItemBuilder> windmillBlades = new ArrayList<>();
+
+    /**
+     * Hammer items, used to register their trip hammer textures
+     */
+    public static final List<HammerItemBuilder> hammers = new ArrayList<>();
+
     @ApiStatus.Internal
     public static void clear() {
         powderGlassOperations.clear();
+        windmillBlades.clear();
+        hammers.clear();
     }
 }

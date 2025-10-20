@@ -3,10 +3,8 @@ package com.notenoughmail.kubejs_tfc.util.client;
 import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.util.UtilsJS;
-import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.TFCColors;
 import net.dries007.tfc.client.model.ContainedFluidModel;
-import net.dries007.tfc.client.render.blockentity.WindmillBlockEntityRenderer;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.util.Helpers;
@@ -20,7 +18,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -87,11 +84,6 @@ public class ClientEventHandlers {
 
         BuilderRefs.leafColors.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
 
-        BuilderRefs.windmills.forEach(builder -> WindmillBlockEntityRenderer.BLADE_MODELS.put(builder.get(), new WindmillBlockEntityRenderer.Provider<>(
-                builder.getBladeTexture(),
-                DyeColor.WHITE, // Meaningless in this case
-                ctx -> new WindmillBladeModelJS(ctx.bakeLayer(RenderHelpers.modelIdentifier("windmill_blade")), builder.getColor())
-        )));
 
         event.enqueueWork(() -> {
             final ItemPropertyFunction throwing = (stack, level, entity, unused) ->

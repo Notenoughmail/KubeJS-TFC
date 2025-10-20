@@ -2,9 +2,9 @@ package com.notenoughmail.kubejs_tfc.addons.precpros.item;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.notenoughmail.kubejs_tfc.item.PropickItemBuilder;
 import com.notenoughmail.precisionprospecting.items.ProsDrillItem;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import io.github.notenoughmail.kubejstfc.items.PropickItemBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;

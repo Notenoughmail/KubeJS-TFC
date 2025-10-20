@@ -6,7 +6,7 @@ import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.implementation.bindings.RecipeBindings;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
     public static final RecipeComponentType<BlockIngredient> TYPE = RecipeComponentType.unit(KubeJSTFC.id("block_ingredient"), new BlockIngredientComponent());
 
     @Override
-    public RecipeComponentType<?> type() {
+    public RecipeComponentType<BlockIngredient> type() {
         return TYPE;
     }
 
@@ -27,12 +27,12 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
 
     @Override
     public TypeInfo typeInfo() {
-        return RecipeBindings.BLOCK_ING_TYPE_INFO;
+        return IngredientBindings.BLOCK_ING_TYPE_INFO;
     }
 
     @Override
     public BlockIngredient wrap(RecipeScriptContext cx, Object from) {
-        return RecipeBindings.wrapBlock(cx.cx(), from);
+        return IngredientBindings.wrapBlock(cx.cx(), from);
     }
 
     @Override

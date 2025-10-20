@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
-import com.notenoughmail.kubejs_tfc.item.WindMillBladeItemBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -53,10 +52,6 @@ public class BuilderRefs {
      * Items which need the {@code tfc:cast} item property
      */
     public static final List<Supplier<Item>> rodCast = new ArrayList<>();
-    /**
-     * Windmill blade items, registers the blade models with TFC
-     */
-    public static final List<WindMillBladeItemBuilder> windmills = new ArrayList<>();
 
     // Blocks
     /**
@@ -74,7 +69,6 @@ public class BuilderRefs {
         fluidContainerDispenser.clear();
         javelinThrow.clear();
         rodCast.clear();
-        windmills.clear();
 
         ghostRenders.clear();
     }

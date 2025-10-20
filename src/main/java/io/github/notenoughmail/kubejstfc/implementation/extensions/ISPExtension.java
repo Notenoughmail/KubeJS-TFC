@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.util.RemapPrefixForJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.FoodTrait;
 import net.dries007.tfc.common.recipes.outputs.*;
@@ -15,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-@ReturnsSelf
-@RemapPrefixForJS("kubejs_tfc$")
+@ReturnsSelf(ItemStackProvider.class)
+@RemapPrefixForJS(KubeJSTFC.MIXIN_PREFIX)
 public interface ISPExtension {
 
     List<ItemStackModifier> modifiers();

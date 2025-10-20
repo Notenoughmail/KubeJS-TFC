@@ -1,7 +1,7 @@
 package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
+import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import net.dries007.tfc.util.SelfTests;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public abstract class SelfTestsMixin {
             message.append(error.replace("{}", Integer.toString(errors.size())));
             errors.forEach(t -> {
                 message.append("\n    ");
-                message.append(RegistryUtils.stringify(t));
+                message.append(Printer.stringify(t));
             });
             ConsoleJS.SERVER.error(message.toString());
             if (TFCProperties.get().deduplicateConsoleErrors) {
@@ -42,7 +42,7 @@ public abstract class SelfTestsMixin {
             message.append(error.replace("{}", Integer.toString(errors.size())));
             errors.forEach(t -> {
                 message.append("\n    ");
-                message.append(RegistryUtils.stringify(t));
+                message.append(Printer.stringify(t));
             });
             ConsoleJS.SERVER.warn(message.toString());
             if (TFCProperties.get().deduplicateConsoleErrors) {

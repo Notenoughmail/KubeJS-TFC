@@ -23,7 +23,7 @@ public class TFCInventoryAttachment extends InventoryAttachment {
     public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter) implements BlockEntityAttachmentFactory {
 
         @Override
-        public BlockEntityAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
+        public TFCInventoryAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
             return new TFCInventoryAttachment(entity, width, height, inputFilter.orElse(null), sizeFilter.orElse(null), weightFilter.orElse(null));
         }
 

@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.recipe.component;
 
 import com.google.gson.JsonElement;
-import com.notenoughmail.kubejs_tfc.util.helpers.IngredientHelpers;
 import dev.latvian.mods.kubejs.block.state.BlockStatePredicate;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.recipe.ReplacementMatch;
@@ -35,7 +34,6 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
 
     @Override
     public BlockIngredient read(RecipeJS recipe, Object from) {
-        return IngredientHelpers.ofBlockIngredient(from);
     }
 
     @Override

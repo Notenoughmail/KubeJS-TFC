@@ -4,8 +4,8 @@ import dev.latvian.mods.kubejs.typings.Info;
 
 public class TFCBindings {
 
-    @Info("Miscellaneous recipe helpers")
-    public static final RecipeBindings recipe = RecipeBindings.INSTANCE;
+    @Info("Miscellaneous TFC ingredient helpers")
+    public static final IngredientBindings ingredient = IngredientBindings.INSTANCE;
 
     @Info("ISP helpers")
     public static final ISPBindings isp = ISPBindings.INSTANCE;
@@ -15,4 +15,10 @@ public class TFCBindings {
 
     @Info("Miscellaneous TFC-related world(gen) helpers")
     public static final WorldBindings world = WorldBindings.INSTANCE;
+
+    @Info("Helpers for getting information on and interacting with TFC's climate system")
+    public static final ClimateBindings climate = ClimateBindings.INSTANCE;
+
+    @Info("Helpers for getting and using calendar functions")
+    public static final CalendarBindings calendar = CalendarBindings.INSTANCE;
 }
