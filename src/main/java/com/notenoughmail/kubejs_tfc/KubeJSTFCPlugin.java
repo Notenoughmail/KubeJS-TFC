@@ -17,6 +17,7 @@ import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
 import io.github.notenoughmail.kubejstfc.items.GlassworkingToolItemBuilder;
+import io.github.notenoughmail.kubejstfc.items.TFCFishingRodItemBuilder;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
@@ -52,14 +53,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     public void init() {
         addValues();
 
-        RegistryInfo.ITEM.addType("tfc:mold", MoldItemBuilder.class, MoldItemBuilder::new);
         RegistryInfo.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:fluid_container", FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:fishing_rod", TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:jar", JarItemBuilder.class, JarItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:glassworking_tool", GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:jug", JugItemBuilder.class, JugItemBuilder::new);
-        RegistryInfo.ITEM.addType("tfc:glass_bottle", GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
@@ -177,9 +171,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         }
     }
     private void addValues() {
-        for (TFCTiersJS tier : TFCTiersJS.values()) {
-            ItemBuilder.TOOL_TIERS.put(tier.getTier().toString().toLowerCase(), tier.getTier());
-        }
         for (ArmorMaterial material : TFCArmorMaterials.values()) {
             ItemBuilder.ARMOR_TIERS.put(material.toString().toLowerCase(), material);
         }

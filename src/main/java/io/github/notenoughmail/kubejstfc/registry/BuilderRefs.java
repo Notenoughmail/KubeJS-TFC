@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
+import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
 import io.github.notenoughmail.kubejstfc.items.HammerItemBuilder;
 import io.github.notenoughmail.kubejstfc.items.WindmillBladeItemBuilder;
@@ -17,27 +18,33 @@ import java.util.List;
  * <p>
  * All lists are cleared at the end of Neo's {@link net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent LoadCompleteEvent}
  */
-public class BuilderRefs {
+public interface BuilderRefs {
 
     /**
      * {@code GlassOperation}s which are also powders, used to register the powder texture
      */
-    public static final List<GlassOperationBuilder> powderGlassOperations = new ArrayList<>();
+    List<GlassOperationBuilder> powderGlassOperations = new ArrayList<>();
 
     /**
      * Windmill blade items, used to register their their model providers
      */
-    public static final List<WindmillBladeItemBuilder> windmillBlades = new ArrayList<>();
+    List<WindmillBladeItemBuilder> windmillBlades = new ArrayList<>();
 
     /**
      * Hammer items, used to register their trip hammer textures
      */
-    public static final List<HammerItemBuilder> hammers = new ArrayList<>();
+    List<HammerItemBuilder> hammers = new ArrayList<>();
+
+    /**
+     * Fluid container items, used for assigning their capabilities and color handlers
+     */
+    List<FluidCapacityItemBuilder> fluidContainers = new ArrayList<>();
 
     @ApiStatus.Internal
-    public static void clear() {
+    static void clear() {
         powderGlassOperations.clear();
         windmillBlades.clear();
         hammers.clear();
+        fluidContainers.clear();
     }
 }

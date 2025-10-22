@@ -5,6 +5,7 @@
 - Glass operations, food traits, climate models, and ISMs are now a registry! They are no longer made through a custom event
 - Custom chisel modes can now be registered
 - Birthday modifications are no longer possible
+- There is no longer a jar item builder type
 
 ### 1.3.3
 - The list ids command is now paginated

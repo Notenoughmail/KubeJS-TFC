@@ -14,7 +14,7 @@ public class KubeHotWaterBlock extends HotWaterBlock {
     private final SpringWaterBuilder builder;
 
     public KubeHotWaterBlock(SpringWaterBuilder builder, Properties properties) {
-        super(builder.flowingFluid, properties);
+        super(builder, properties);
         this.builder = builder;
     }
 

@@ -1,13 +1,20 @@
 package io.github.notenoughmail.kubejstfc.util;
 
+import dev.latvian.mods.kubejs.event.EventExit;
+import dev.latvian.mods.kubejs.event.IEventHandler;
+import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Function;
 
 public interface Assistant {
 
@@ -56,5 +63,22 @@ public interface Assistant {
 
     static void toolItemAttributes(HandheldItemBuilder builder) {
         builder.itemAttributeModifiers = ToolItem.productAttributes(builder.toolTier, builder.attackDamageBaseline, builder.speedBaseline);
+    }
+
+    @Nullable
+    static <R, T> R mapNull(@Nullable T t, Function<T, R> map) {
+        return t == null ? null : map.apply(t);
+    }
+
+    static <T extends KubeEvent> IEventHandler handleKube(KubeHandler<T> handler) {
+        return e -> {
+            handler.handle((T) e);
+            return handler;
+        };
+    }
+
+    @FunctionalInterface
+    interface KubeHandler<T extends KubeEvent> {
+        void handle(T t) throws EventExit;
     }
 }

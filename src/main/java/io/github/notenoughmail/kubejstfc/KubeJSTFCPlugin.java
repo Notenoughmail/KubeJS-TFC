@@ -3,17 +3,16 @@ package io.github.notenoughmail.kubejstfc;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentRegistry;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
+import dev.latvian.mods.kubejs.item.custom.ItemToolTierRegistryKubeEvent;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
+import dev.latvian.mods.kubejs.plugin.builtin.event.ItemEvents;
 import dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
-import dev.latvian.mods.kubejs.script.BindingRegistry;
-import dev.latvian.mods.kubejs.script.DataComponentTypeInfoRegistry;
-import dev.latvian.mods.kubejs.script.TypeDescriptionRegistry;
-import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
+import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
@@ -30,6 +29,8 @@ import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.ISPComponent;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.component.EggComponent;
 import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.block.BarrelComponent;
@@ -81,6 +82,11 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("propick"), PropickItemBuilder.class, PropickItemBuilder::new);
             c.add(tfc("hoe"), TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
             c.add(tfc("scythe"), ScytheItemBuilder.class, ScytheItemBuilder::new);
+            c.add(tfc("fishing_rod"), TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
+            c.add(tfc("mold"), MoldItemBuilder.class, MoldItemBuilder::new);
+            c.add(tfc("jug"), JugItemBuilder.class, JugItemBuilder::new);
+            c.add(tfc("fluid_container"), FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
+            c.add(tfc("glass_bottle"), GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
         });
 
         registry.of(Registries.FLUID, c -> {
@@ -95,6 +101,21 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     @Override
     public void registerEvents(EventGroupRegistry registry) {
         registry.register(KubeJSTFCEventHandlers.TFCEvents);
+        ItemEvents.TOOL_TIER_REGISTRY.listenJava(ScriptType.STARTUP, null, Assistant.handleKube((ItemToolTierRegistryKubeEvent e) -> {
+            e.addExisting("tfc:igneous_intrusive", TFCTiers.IGNEOUS_INTRUSIVE);
+            e.addExisting("tfc:igneous_extrusive", TFCTiers.IGNEOUS_EXTRUSIVE);
+            e.addExisting("tfc:sedimentary", TFCTiers.SEDIMENTARY);
+            e.addExisting("tfc:metamorphic", TFCTiers.METAMORPHIC);
+            e.addExisting("tfc:copper", TFCTiers.COPPER);
+            e.addExisting("tfc:bronze", TFCTiers.BRONZE);
+            e.addExisting("tfc:bismuth_bronze", TFCTiers.BISMUTH_BRONZE);
+            e.addExisting("tfc:black_bronze", TFCTiers.BLACK_BRONZE);
+            e.addExisting("tfc:wrought_iron", TFCTiers.WROUGHT_IRON);
+            e.addExisting("tfc:steel", TFCTiers.STEEL);
+            e.addExisting("tfc:black_steel", TFCTiers.BLACK_STEEL);
+            e.addExisting("tfc:blue_steel", TFCTiers.BLUE_STEEL);
+            e.addExisting("tfc:red_steel", TFCTiers.RED_STEEL);
+        }));
     }
 
     @Override

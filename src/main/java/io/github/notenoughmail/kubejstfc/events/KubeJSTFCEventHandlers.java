@@ -1,17 +1,17 @@
 package io.github.notenoughmail.kubejstfc.events;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
-import dev.latvian.mods.kubejs.event.EventGroup;
-import dev.latvian.mods.kubejs.event.EventHandler;
-import dev.latvian.mods.kubejs.event.EventTargetType;
-import dev.latvian.mods.kubejs.event.TargetedEventHandler;
+import dev.latvian.mods.kubejs.event.*;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents;
+import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.events.common.KubeCustomNutritionEvent;
 import io.github.notenoughmail.kubejstfc.events.server.*;
 import io.github.notenoughmail.kubejstfc.events.startup.*;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import net.dries007.tfc.common.capabilities.ItemCapabilities;
 import net.dries007.tfc.util.data.DataManager;
 import net.dries007.tfc.util.data.DataManagers;
 import net.dries007.tfc.util.events.*;
@@ -21,12 +21,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
@@ -36,6 +38,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class KubeJSTFCEventHandlers {
@@ -68,6 +71,7 @@ public class KubeJSTFCEventHandlers {
         modBus.addListener(KubeJSTFCEventHandlers::commonSetup);
         modBus.addListener(KubeJSTFCEventHandlers::loadFinish);
         modBus.addListener(EventPriority.LOWEST, KubeJSTFCEventHandlers::registerSpawnPlacements);
+        modBus.addListener(KubeJSTFCEventHandlers::registerCapabilities);
 
         final IEventBus gameBus = NeoForge.EVENT_BUS;
         gameBus.addListener(KubeJSTFCEventHandlers::animalProduct);
@@ -120,6 +124,27 @@ public class KubeJSTFCEventHandlers {
     private static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         if (faunaSpawns.hasListeners()) {
             faunaSpawns.post(new KubeFaunaSpawnsEvent(event));
+        }
+    }
+
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        final ItemLike[] molds = BuilderRefs.fluidContainers.stream()
+                .filter(FluidCapacityItemBuilder::mold)
+                .map(ItemBuilder::get)
+                .toArray(ItemLike[]::new);
+        final ItemLike[] notMolds = BuilderRefs.fluidContainers.stream()
+                .filter(Predicate.not(FluidCapacityItemBuilder::mold))
+                .map(ItemBuilder::get)
+                .toArray(ItemLike[]::new);
+
+        if (molds.length != 0) {
+            event.registerItem(ItemCapabilities.MOLD, ItemCapabilities::forMold, molds);
+            event.registerItem(ItemCapabilities.HEAT, ItemCapabilities::forMold, molds);
+            event.registerItem(ItemCapabilities.FLUID, ItemCapabilities::forMold, molds);
+        }
+
+        if (notMolds.length != 0) {
+            event.registerItem(ItemCapabilities.FLUID, ItemCapabilities::forBucket, notMolds);
         }
     }
 

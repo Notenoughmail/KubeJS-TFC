@@ -2,12 +2,14 @@ package io.github.notenoughmail.kubejstfc.client;
 
 import com.mojang.datafixers.util.Pair;
 import dev.latvian.mods.kubejs.color.KubeColor;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
 import io.github.notenoughmail.kubejstfc.items.HammerItemBuilder;
 import io.github.notenoughmail.kubejstfc.items.WindmillBladeItemBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.model.ContainedFluidModel;
 import net.dries007.tfc.client.model.entity.WindmillBladeModel;
 import net.dries007.tfc.client.render.blockentity.BowlBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.TripHammerBlockEntityRenderer;
@@ -16,10 +18,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +35,7 @@ public class KubeJSTFCClient {
 
     public KubeJSTFCClient(IEventBus modBus) {
         modBus.addListener(this::setup);
+        modBus.addListener(this::itemColorHandlers);
     }
 
     private void setup(FMLClientSetupEvent event) {
@@ -67,5 +72,9 @@ public class KubeJSTFCClient {
             if (cache.getValue() == null) cache.setValue(Pair.of(ctx, KubeWindmillBladeModel.of(ctx.bakeLayer(RenderHelpers.layerId("windmill_blade")), color)));
             return cache.getValue().getSecond();
         };
+    }
+
+    private void itemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register(ContainedFluidModel.COLOR, BuilderRefs.fluidContainers.stream().map(ItemBuilder::get).toArray(ItemLike[]::new));
     }
 }

@@ -2,8 +2,12 @@ package io.github.notenoughmail.kubejstfc.builders.fluid;
 
 import dev.latvian.mods.kubejs.fluid.FluidBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.builders.block.HotWaterFluidBlockBuilder;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.client.particle.TFCParticles;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -24,16 +28,15 @@ public class SpringWaterBuilder extends FluidBuilder {
         healingAmount = 0.08f;
     }
 
-    // TODO: 2.0.0 | This sucks
     @Info("Sets the liquid's bubble particle")
-    public SpringWaterBuilder bubbleParticle(@Nullable Supplier<ParticleOptions> particle) {
-        this.bubbleParticle = particle;
+    public SpringWaterBuilder bubbleParticle(@Nullable Holder<ParticleType<?>> particle) {
+        this.bubbleParticle = Assistant.mapNull(particle, h -> () -> h::value);
         return this;
     }
 
     @Info("Sets the liquid's steam particle")
-    public SpringWaterBuilder steamParticle(@Nullable Supplier<ParticleOptions> particle) {
-        this.steamParticle = particle;
+    public SpringWaterBuilder steamParticle(@Nullable Holder<ParticleType<?>> particle) {
+        this.steamParticle = Assistant.mapNull(particle, h -> () -> h::value);
         return this;
     }
 

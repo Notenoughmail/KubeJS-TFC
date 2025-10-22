@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.JavelinItem;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: 2.0.0 | Ow
 @SuppressWarnings("unused")
 public class JavelinItemBuilder extends HandheldItemBuilder {
 
@@ -32,10 +34,9 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     public transient String throwingModel = "";
 
     public JavelinItemBuilder(ResourceLocation i) {
-        super(i, 3f, -2.4f);
+        super(i, 0.7F, -2.6f);
         thrownDamage = 0.3f;
         guiModel(newID("item/", "_gui").toString());
-        parentModel = "";
         texture(newID("item/", "").toString());
         BuilderRefs.javelinThrow.add(this);
     }
@@ -78,20 +79,12 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     @Override
     public Item createObject() {
-        return new JavelinItem(toolTier, attackDamageBaseline, thrownDamage, speedBaseline, createItemProperties(), new ResourceLocation(id.getNamespace(), "textures/entity/projectiles/" + id.getPath() + "_javelin.png")) {
-            private boolean modified = false;
-
-            {
-                defaultModifiers = ArrayListMultimap.create(defaultModifiers);
-            }
-
+        Assistant.toolItemAttributes(this);
+        if (thrownDamage < 0) thrownDamage = 1.5F * toolTier.getAttackDamageBonus();
+        return new JavelinItem(toolTier, createItemProperties()) {
             @Override
-            public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-                if (!modified) {
-                    modified = true;
-                    attributes.forEach((r, m) -> defaultModifiers.put(RegistryInfo.ATTRIBUTE.getValue(r), m));
-                }
-                return super.getDefaultAttributeModifiers(equipmentSlot);
+            public float getThrownDamage() {
+                return thrownDamage;
             }
         };
     }
