@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.LongPredicate;
 
-// Does double duty as the model *type* builder and the model itself
+// TODO 2.0.0 | This needs to change
 public class KubeClimateModel extends BuilderBase<ClimateModelType<KubeClimateModel>> implements ClimateModel {
 
     public static final Map<String, KubeClimateModel> modelInstances = new HashMap<>();

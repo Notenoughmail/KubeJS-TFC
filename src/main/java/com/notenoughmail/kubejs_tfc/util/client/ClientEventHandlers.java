@@ -4,20 +4,13 @@ import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.client.TFCColors;
-import net.dries007.tfc.client.model.ContainedFluidModel;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
-import net.dries007.tfc.common.items.TFCFishingRodItem;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -43,8 +36,6 @@ public class ClientEventHandlers {
     private static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         final ItemColor grassColor = (stack, index) -> TFCColors.getGrassColor(null, index);
         final ItemColor foliageColor = (stack, index) -> TFCColors.getFoliageColor(null, index);
-
-        BuilderRefs.fluidContainerColor.forEach(b -> event.register(new ContainedFluidModel.Colors(), b.get()));
 
         event.register(grassColor, forItemColor(BuilderRefs.grassColor));
         event.register(foliageColor, forItemColor(UtilsJS.cast(BuilderRefs.leafColors)));
@@ -83,28 +74,5 @@ public class ClientEventHandlers {
         BuilderRefs.ghostRenders.forEach(builder -> ItemBlockRenderTypes.setRenderLayer(builder.get(), ghostBlock));
 
         BuilderRefs.leafColors.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
-
-
-        event.enqueueWork(() -> {
-            final ItemPropertyFunction throwing = (stack, level, entity, unused) ->
-                    entity != null && ((entity.isUsingItem() && entity.getUseItem() == stack) || (entity instanceof Monster monster && monster.isAggressive())) ? 1.0F : 0.0F;
-            final ItemPropertyFunction cast = (stack, level, entity, unused) -> {
-                if (entity == null)
-                {
-                    return 0.0F;
-                }
-                else
-                {
-                    return entity instanceof Player player && TFCFishingRodItem.isThisTheHeldRod(player, stack) && player.fishing != null ? 1.0F : 0.0F;
-                }
-            };
-
-            BuilderRefs.javelinThrow.forEach(builder ->
-                    ItemProperties.register(builder.get(), Helpers.identifier("throwing"), throwing)
-            );
-            BuilderRefs.rodCast.forEach(builder ->
-                    ItemProperties.register(builder.get(), Helpers.identifier("cast"), cast)
-            );
-        });
     }
 }

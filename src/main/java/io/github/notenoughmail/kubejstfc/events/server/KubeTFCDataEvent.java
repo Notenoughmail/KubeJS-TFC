@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class KubeDataEvent implements KubeEvent {
+public class KubeTFCDataEvent implements KubeEvent {
 
     private final KubeResourceGenerator gen;
 
@@ -52,7 +52,7 @@ public class KubeDataEvent implements KubeEvent {
         return (id == null ? KubeJSTFC.id(func.apply(t)) : id).withPrefix(prefix + "/");
     }
 
-    public KubeDataEvent(KubeResourceGenerator gen) {
+    public KubeTFCDataEvent(KubeResourceGenerator gen) {
         this.gen = gen;
     }
 
@@ -65,7 +65,7 @@ public class KubeDataEvent implements KubeEvent {
     }
 
     private <T> void add(T t, Codec<T> codec, @Nullable ResourceLocation id, String prefix) {
-        add(t, codec, id, KubeDataEvent::makePath, prefix);
+        add(t, codec, id, KubeTFCDataEvent::makePath, prefix);
     }
 
     public void entityDamageResistance(EntityDamageResistance resistance, @Nullable ResourceLocation id) {

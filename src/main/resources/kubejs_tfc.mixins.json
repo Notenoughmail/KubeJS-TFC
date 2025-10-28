@@ -21,8 +21,7 @@
     "TorchItemMixin",
     "accessor.BlockBuilderAccessor",
     "accessor.BlockEntityTypeAccessor",
-    "accessor.KubeJSCraftingRecipeAccessor",
-    "accessor.TFCLeavesBlockAccessor"
+    "accessor.KubeJSCraftingRecipeAccessor"
   ],
   "client": [
   ],

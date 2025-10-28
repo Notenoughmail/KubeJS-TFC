@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.component.heat.Heat;
 import net.dries007.tfc.common.items.TFCItems;
@@ -34,11 +35,12 @@ public class GlassOperationBuilder extends BuilderBase<GlassOperation> {
     @Info("Marks this operation as being associated with a powder item and sets the texture")
     public GlassOperationBuilder powder(ResourceLocation texture) {
         powder = true;
-        powderTexture = texture.withPrefix("block/");
+        powderTexture = texture;
+        BuilderRefs.powderGlassOperations.add(this);
         return this;
     }
 
-    @Info("Sets the working temperature of the operation")
+    @Info("Sets the minimum working temperature of the operation")
     public GlassOperationBuilder workingTemperature(float temperature) {
         workingTemperature = temperature;
         return this;

@@ -14,7 +14,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 import java.util.function.DoubleToIntFunction;
 
-public enum WorldBindings {
+public enum WorldgenBindings {
     INSTANCE;
 
     @Info("Creates a new LayeredArea from the SourceLayer")
@@ -45,15 +45,5 @@ public enum WorldBindings {
     })
     public LerpFloatLayer lerpFloatLayer(float value00, float value01, float value10, float value11) {
         return new LerpFloatLayer(value00, value01, value10, value11);
-    }
-
-    @Info("Gets TFC's ChunkData at the given position")
-    public ChunkData getChunkData(LevelReader level, BlockPos pos) {
-        return ChunkData.get(level, pos);
-    }
-
-    @Info("Gets TFC's ChunkData fro the given chunk")
-    public ChunkData getChunkData(ChunkAccess chunk) {
-        return ChunkData.get(chunk);
     }
 }

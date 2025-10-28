@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.custom.block;
+package io.github.notenoughmail.kubejstfc.implementation.custom.block;
 
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import net.dries007.tfc.common.blocks.HotWaterBlock;

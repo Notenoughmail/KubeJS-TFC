@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.builders.block;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.KubeHotWaterBlock;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.KubeHotWaterBlock;
 import dev.latvian.mods.kubejs.fluid.FluidBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import net.minecraft.world.level.block.Block;

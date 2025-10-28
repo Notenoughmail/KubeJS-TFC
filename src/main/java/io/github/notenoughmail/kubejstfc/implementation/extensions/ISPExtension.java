@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.util.RemapPrefixForJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.FoodTrait;
 import net.dries007.tfc.common.recipes.outputs.*;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: 2.0.0 | Document
 @ReturnsSelf(ItemStackProvider.class)
 @RemapPrefixForJS(KubeJSTFC.MIXIN_PREFIX)
 public interface ISPExtension {
@@ -31,6 +33,11 @@ public interface ISPExtension {
         return new ItemStackProvider(kubejs_tfc$self().stack().copy(), new ArrayList<>(modifiers()));
     }
 
+    @ReturnsSelf(copy = true)
+    default ItemStackProvider kubejs_tfc$copyImmutable() {
+        return new ItemStackProvider(kubejs_tfc$self().stack().copy(), List.copyOf(modifiers()));
+    }
+
     default ItemStackProvider kubejs_tfc$addModifier(ItemStackModifier modifier) {
         modifiers().add(modifier);
         return kubejs_tfc$self();
@@ -38,6 +45,10 @@ public interface ISPExtension {
 
     default ItemStackProvider kubejs_tfc$addJsonModifier(JsonObject json) {
         return kubejs_tfc$addModifier(ItemStackModifier.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst());
+    }
+
+    default ItemStackProvider kubejs_tfc$addSimpleModifier(String type) {
+        return kubejs_tfc$addJsonModifier(Assistant.json(j -> j.addProperty("type", type)));
     }
 
     default ItemStackProvider kubejs_tfc$copyInputStack() {

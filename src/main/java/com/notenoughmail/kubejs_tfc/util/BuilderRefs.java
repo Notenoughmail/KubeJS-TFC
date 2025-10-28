@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -35,24 +34,6 @@ public class BuilderRefs {
      */
     public static final List<BlockBuilder> grassBlockColor = new ArrayList<>();
 
-    // Items
-    /**
-     * Items which require TFC's fluid container color handler
-     */
-    public static final List<Supplier<Item>> fluidContainerColor = new ArrayList<>();
-    /**
-     * Items which need TFC's fluid container dispenser behavior
-     */
-    public static final List<Supplier<Item>> fluidContainerDispenser = new ArrayList<>();
-    /**
-     * Items which need the {@code tfc:throwing} item property
-     */
-    public static final List<Supplier<Item>> javelinThrow = new ArrayList<>();
-    /**
-     * Items which need the {@code tfc:cast} item property
-     */
-    public static final List<Supplier<Item>> rodCast = new ArrayList<>();
-
     // Blocks
     /**
      * Blocks which should have a ghost render layer, pots on fire pits & sticks on double crops
@@ -64,11 +45,6 @@ public class BuilderRefs {
         leafColors.clear();
         grassColor.clear();
         grassBlockColor.clear();
-
-        fluidContainerColor.clear();
-        fluidContainerDispenser.clear();
-        javelinThrow.clear();
-        rodCast.clear();
 
         ghostRenders.clear();
     }

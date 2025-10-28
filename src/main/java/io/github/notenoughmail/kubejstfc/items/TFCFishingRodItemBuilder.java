@@ -1,10 +1,10 @@
 package io.github.notenoughmail.kubejstfc.items;
 
-import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.TFCTiers;
@@ -19,7 +19,7 @@ public class TFCFishingRodItemBuilder extends ItemBuilder {
     private static final ResourceLocation[] LARGE_BAIT = Assistant.single(TFCTags.Items.HOLDS_LARGE_FISHING_BAIT.location());
     private static final ResourceLocation DEFAULT_PARENT = ResourceLocation.withDefaultNamespace("item/handheld_rod");
     private static final ResourceLocation DEFAULT_CAST_MODEL = ResourceLocation.withDefaultNamespace("item/fishing_rod/cast");
-    private static final ResourceLocation CAST = KubeJSTFC.tfc("cast");
+    public static final ResourceLocation CAST = KubeJSTFC.tfc("cast");
 
     public transient float fishingStrength;
     public transient ResourceLocation castModel;

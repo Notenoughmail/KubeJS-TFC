@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util;
 
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
@@ -8,12 +9,14 @@ import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
+import net.minecraft.Util;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface Assistant {
@@ -75,6 +78,10 @@ public interface Assistant {
             handler.handle((T) e);
             return handler;
         };
+    }
+
+    static JsonObject json(Consumer<JsonObject> builder) {
+        return Util.make(new JsonObject(), builder);
     }
 
     @FunctionalInterface

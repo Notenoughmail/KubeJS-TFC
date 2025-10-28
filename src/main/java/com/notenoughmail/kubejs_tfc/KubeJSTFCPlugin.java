@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc;
 
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
-import com.notenoughmail.kubejs_tfc.item.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
@@ -16,8 +15,6 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
-import io.github.notenoughmail.kubejstfc.items.GlassworkingToolItemBuilder;
-import io.github.notenoughmail.kubejstfc.items.TFCFishingRodItemBuilder;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
@@ -52,8 +49,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
     @Override
     public void init() {
         addValues();
-
-        RegistryInfo.ITEM.addType("tfc:javelin", JavelinItemBuilder.class, JavelinItemBuilder::new);
 
         RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);

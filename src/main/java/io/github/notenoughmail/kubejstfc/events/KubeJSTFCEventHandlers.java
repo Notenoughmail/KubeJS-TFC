@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.event.*;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
+import io.github.notenoughmail.kubejstfc.events.client.KubePlacedItemModelEvent;
 import io.github.notenoughmail.kubejstfc.events.common.KubeCustomNutritionEvent;
 import io.github.notenoughmail.kubejstfc.events.server.*;
 import io.github.notenoughmail.kubejstfc.events.startup.*;
@@ -12,6 +13,7 @@ import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import net.dries007.tfc.common.capabilities.ItemCapabilities;
+import net.dries007.tfc.util.DispenserBehaviors;
 import net.dries007.tfc.util.data.DataManager;
 import net.dries007.tfc.util.data.DataManagers;
 import net.dries007.tfc.util.events.*;
@@ -23,6 +25,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -55,7 +58,7 @@ public class KubeJSTFCEventHandlers {
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> KubeStartFireEvent.class);
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> KubeSelectClimateModelEvent.class);
     public static final TargetedEventHandler<ResourceKey<MenuType<?>>> limitContainers = TFCEvents.startup("limitContainers", () -> KubeLimitContainerEvent.class).requiredTarget(PlayerEvents.MENU_TARGET);
-    public static final EventHandler data = TFCEvents.server("data", () -> KubeDataEvent.class);
+    public static final EventHandler data = TFCEvents.server("data", () -> KubeTFCDataEvent.class);
 
     // STARTUP
     public static final EventHandler defaultWorldSettings = TFCEvents.startup("defaultWorldSettings", () -> KubeDefaultWorldSettingsEvent.class);
@@ -65,6 +68,9 @@ public class KubeJSTFCEventHandlers {
 
     // COMMON
     public static final EventHandler customNutrition = TFCEvents.common("customNutrition", () -> KubeCustomNutritionEvent.class);
+
+    // CLIENT
+    public static final EventHandler placedItemModels = TFCEvents.client("placedItemModels", () -> KubePlacedItemModelEvent.class);
 
     public static void init(IEventBus modBus) {
         modBus.addListener(KubeJSTFCEventHandlers::newRegistries);
@@ -96,6 +102,11 @@ public class KubeJSTFCEventHandlers {
         if (prospectRepresentatives.hasListeners()) {
             prospectRepresentatives.post(new KubeProspectRepresentativeEvent());
         }
+        event.enqueueWork(() -> {
+            BuilderRefs.fluidContainers.stream()
+                    .filter(Predicate.not(FluidCapacityItemBuilder::mold))
+                    .forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
+        });
     }
 
     private static void loadFinish(FMLLoadCompleteEvent event) {

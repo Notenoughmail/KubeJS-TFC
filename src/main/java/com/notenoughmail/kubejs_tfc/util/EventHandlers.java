@@ -6,8 +6,6 @@ import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import net.dries007.tfc.util.DispenserBehaviors;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -41,7 +39,6 @@ public class EventHandlers {
     private static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             RegistryUtils.hackBlockEntities();
-            BuilderRefs.fluidContainerDispenser.forEach(b -> DispenserBlock.registerBehavior(b.get(), DispenserBehaviors.TFC_BUCKET_BEHAVIOR));
         });
     }
 }

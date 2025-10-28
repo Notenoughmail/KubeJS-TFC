@@ -1,13 +1,16 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
+import io.github.notenoughmail.kubejstfc.items.JavelinItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
 import io.github.notenoughmail.kubejstfc.items.HammerItemBuilder;
 import io.github.notenoughmail.kubejstfc.items.WindmillBladeItemBuilder;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A collection of lists used for assigning properties to builders' objects which
@@ -40,11 +43,23 @@ public interface BuilderRefs {
      */
     List<FluidCapacityItemBuilder> fluidContainers = new ArrayList<>();
 
+    /**
+     * Items which should have the {@code tfc:cast} item property registered
+     */
+    List<Supplier<Item>> rodCast = new ArrayList<>();
+
+    /**
+     * Javelin items, used for registering the {@code tfc:throwing} item property and entity textures
+     */
+    List<JavelinItemBuilder> javelins = new ArrayList<>();
+
     @ApiStatus.Internal
     static void clear() {
         powderGlassOperations.clear();
         windmillBlades.clear();
         hammers.clear();
         fluidContainers.clear();
+        rodCast.clear();
+        javelins.clear();
     }
 }

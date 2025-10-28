@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.util.commands;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.TFCLeavesBlockAccessor;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
 import net.dries007.tfc.common.blocks.wood.BranchDirection;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
@@ -97,21 +96,17 @@ public class TreeSolver {
             level.setBlockAndUpdate(pos, state);
         });
 
-        final TFCLeavesBlockAccessor leafAccessor = (TFCLeavesBlockAccessor) leaves;
-        final IntegerProperty distProp = leafAccessor.kubejs_tfc$AccessDistProp();
-        final int maxDist = leafAccessor.kubejs_tfc$MaxDist();
-
         int blocks = logDir.size();
 
         final Queue<BlockPos> leavesQueue = new ArrayDeque<>();
         logDir.keySet().forEach(logPos -> offerLeaves(logPos, leavesQueue, level));
         while (leavesQueue.peek() != null) {
             final BlockPos pos = leavesQueue.poll();
-            final int dist = leafAccessor.kubejs_tfc$UpdateDistance(level, pos);
-            if (dist <= maxDist) {
+            final int dist = leaves.updateDistance(level, pos);
+            if (dist <= 10) { // DISTANCE ranges from 1~10
                 level.setBlockAndUpdate(
                         pos,
-                        leaves.defaultBlockState().setValue(distProp, dist)
+                        leaves.defaultBlockState().setValue(TFCLeavesBlock.DISTANCE, dist)
                 );
                 offerLeaves(pos, leavesQueue, level);
                 blocks++;

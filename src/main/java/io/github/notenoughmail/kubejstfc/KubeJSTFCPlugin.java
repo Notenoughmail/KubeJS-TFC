@@ -17,7 +17,7 @@ import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
-import io.github.notenoughmail.kubejstfc.events.server.KubeDataEvent;
+import io.github.notenoughmail.kubejstfc.events.server.KubeTFCDataEvent;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.CalendarTrackingAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.HeatConsumerAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment;
@@ -87,6 +87,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("jug"), JugItemBuilder.class, JugItemBuilder::new);
             c.add(tfc("fluid_container"), FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
             c.add(tfc("glass_bottle"), GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
+            c.add(tfc("javelin"), JavelinItemBuilder.class, JavelinItemBuilder::new);
         });
 
         registry.of(Registries.FLUID, c -> {
@@ -186,7 +187,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     @Override
     public void generateData(KubeDataGenerator generator) {
         if (KubeJSTFCEventHandlers.data.hasListeners()) {
-            KubeJSTFCEventHandlers.data.post(new KubeDataEvent(generator));
+            KubeJSTFCEventHandlers.data.post(new KubeTFCDataEvent(generator));
         }
     }
 }
