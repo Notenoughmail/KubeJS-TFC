@@ -14,6 +14,7 @@ import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
+import io.github.notenoughmail.kubejstfc.blocks.*;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
@@ -65,10 +66,14 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.addDefault(ItemStackModifiers.KEY, ISMBuilder.class, ISMBuilder::new);
         registry.addDefault(ChiselMode.KEY, ChiselModeBuilder.class, ChiselModeBuilder::new);
         registry.addDefault(FoodTraits.KEY, FoodTraitBuilder.class, FoodTraitBuilder::new);
-        registry.addDefault(ClimateModels.KEY, KubeClimateModel.class, KubeClimateModel::new);
+        registry.addDefault(ClimateModels.KEY, KubeClimateModelBuilder.class, KubeClimateModelBuilder::new);
 
-        registry.of(Registries.BLOCK, callback -> {
-
+        registry.of(Registries.BLOCK, c -> {
+            c.add(tfc("anvil"), AnvilBlockBuilder.class, AnvilBlockBuilder::new);
+            c.add(tfc("aqueduct"), AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+            c.add(tfc("axle"), AxleBlockBuilder.class, AxleBlockBuilder::new);
+            c.add(tfc("log"), LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
+            c.add(tfc("encased-axle"), EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
         });
 
         registry.of(Registries.ITEM, c -> {

@@ -1,13 +1,12 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -28,7 +27,7 @@ public class WindmillBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new WindmillBlock(createExtendedProperties(), UtilsJS.cast(parent));
+        return new WindmillBlock(createExtendedProperties(), Cast.to(parent));
     }
 
     @Override
@@ -40,15 +39,10 @@ public class WindmillBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTableBasic(generator, this, parent);
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        bs.simpleVariant("", ModelUtil.TFC_EMPTY);
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {}
-
-    @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        bs.simpleVariant("", "tfc:block/empty");
-    }
+    protected void generateBlockModels(KubeAssetGenerator generator) {}
 }

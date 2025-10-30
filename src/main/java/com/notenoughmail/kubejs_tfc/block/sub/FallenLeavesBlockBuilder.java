@@ -1,13 +1,13 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCLeavesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;

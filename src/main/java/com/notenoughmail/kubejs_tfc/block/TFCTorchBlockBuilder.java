@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadTorchBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadWallTorchBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.TFCWallTorchBuilder;
@@ -18,6 +17,7 @@ import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCTorchBlock;
@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
+public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public static void randomTick(ServerLevel level, BlockPos pos, BlockState place, Supplier<Integer> decayLength) {
         if (decayLength.get() > 0) {

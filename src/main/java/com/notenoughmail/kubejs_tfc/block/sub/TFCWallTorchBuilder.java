@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCTorchBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
@@ -10,6 +9,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCWallTorchBlock;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class TFCWallTorchBuilder extends ExtendedPropertiesShapedBlockBuilder {
+public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
     private final TFCTorchBlockBuilder parent;
 

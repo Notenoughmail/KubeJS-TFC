@@ -1,7 +1,10 @@
 package io.github.notenoughmail.kubejstfc.events;
 
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
-import dev.latvian.mods.kubejs.event.*;
+import dev.latvian.mods.kubejs.event.EventGroup;
+import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.event.EventTargetType;
+import dev.latvian.mods.kubejs.event.TargetedEventHandler;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
@@ -78,6 +81,7 @@ public class KubeJSTFCEventHandlers {
         modBus.addListener(KubeJSTFCEventHandlers::loadFinish);
         modBus.addListener(EventPriority.LOWEST, KubeJSTFCEventHandlers::registerSpawnPlacements);
         modBus.addListener(KubeJSTFCEventHandlers::registerCapabilities);
+        modBus.addListener(BuilderRefs::hackBlockEntities);
 
         final IEventBus gameBus = NeoForge.EVENT_BUS;
         gameBus.addListener(KubeJSTFCEventHandlers::animalProduct);

@@ -4,7 +4,6 @@
   "package": "io.github.notenoughmail.kubejstfc.util.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AnvilBlockEntityMixin",
     "BlockEntityTooltipsMixin",
     "ChunkGeneratorMixin",
     "ChunkMapMixin",
@@ -21,6 +20,7 @@
     "TorchItemMixin",
     "accessor.BlockBuilderAccessor",
     "accessor.BlockEntityTypeAccessor",
+    "accessor.ExtendedPropertiesAccessor",
     "accessor.KubeJSCraftingRecipeAccessor"
   ],
   "client": [

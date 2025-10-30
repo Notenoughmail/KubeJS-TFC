@@ -1,16 +1,19 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.GearBoxBlock;
@@ -20,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
-public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
+public class GearBoxBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final AxleBlockBuilder parent;
     public transient BiConsumer<GearBoxModelType, ModelGenerator> models;
@@ -28,8 +31,9 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     public GearBoxBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.GEAR_BOX, this);
-        renderType("cutout");
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.GEAR_BOX, this);
+        renderType(BlockRenderType.CUTOUT);
+        ModelUtil.defaultTexture(this);
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.texture("overlay", p.defaultOverlay);
@@ -44,21 +48,19 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
             There are 2 parts: `PORT` and `FACE` with a `.port()` method which returns a boolean; true if the part in
             operation is `PORT`.
             """)
-    @Generics({ GearBoxModelType.class, ModelGenerator.class })
     public GearBoxBlockBuilder models(BiConsumer<GearBoxModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        return texture("all", tex);
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(ModelUtil.PARTICLE_ALL_TEXTURE_KEYS, tex);
     }
 
     @Override
     public Block createObject() {
-        return new GearBoxBlock(createExtendedProperties(), UtilsJS.cast(parent));
+        return new GearBoxBlock(createExtendedProperties(), Cast.to(parent));
     }
 
     @Override
@@ -69,27 +71,30 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent("tfc:block/ore");
-            m.texture("overlay", GearBoxModelType.PORT.defaultOverlay);
-            m.textures(textures);
-        }
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (GearBoxModelType p : GearBoxModelType.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
 
     @Override
-    protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String port = newID("block/", "_port").toString();
-        final String face = newID("block/", "_face").toString();
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m, g -> {
+            g.parent(KubeJSTFC.tfc("block/ore"));
+            g.textures(textures);
+            g.texture("overlay", GearBoxModelType.PORT.defaultOverlay);
+        });
+    }
+
+    @Override
+    protected boolean useMultipartBlockState() {
+        return true;
+    }
+
+    @Override
+    protected void generateMultipartBlockState(MultipartBlockStateGenerator bs) {
+        final ResourceLocation port = newID("block/", "_port");
+        final ResourceLocation face = newID("block/", "_face");
         bs.part("north=true", port);
         bs.part("north=false", face);
         bs.part("south=true", v -> v.model(port).y(180));
@@ -109,11 +114,13 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
         FACE("round");
 
         @HideFromJS
-        public final String defaultOverlay, defaultParent;
+        public final ResourceLocation defaultParent;
+        @HideFromJS
+        public final String defaultOverlay;
 
-        GearBoxModelType(String defaultOverlay) {
-            this.defaultOverlay = "tfc:block/axle_casing_" + defaultOverlay;
-            defaultParent = "tfc:block/gear_box_" + name().toLowerCase(Locale.ROOT);
+        GearBoxModelType(String overlay) {
+            defaultOverlay = "tfc:block/axle_casing_" + overlay;
+            defaultParent = KubeJSTFC.tfc("block/gear_box_" + name().toLowerCase(Locale.ROOT));
         }
 
         public static final GearBoxModelType[] VALUES = values();

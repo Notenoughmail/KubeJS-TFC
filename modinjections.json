@@ -1,5 +1,8 @@
 {
   "net/dries007/tfc/common/recipes/outputs/ItemStackProvider": [
     "io/github/notenoughmail/kubejstfc/implementation/extensions/ISPExtension"
+  ],
+  "net/dries007/tfc/common/blocks/ExtendedProperties": [
+    "io/github/notenoughmail/kubejstfc/util/mixin/accessor/ExtendedPropertiesAccessor"
   ]
 }

@@ -1,16 +1,17 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.sub.*;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.sub.*;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.AxleBlock;
@@ -22,6 +23,8 @@ import java.util.function.Consumer;
 
 public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
+    public static final String[] TEXTURE_KEYS = { "particle", "wood" };
+
     public transient final WindmillBlockBuilder windmill;
     public transient ResourceLocation texture;
     public transient WaterWheelBlockBuilder waterWheel;
@@ -31,62 +34,58 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public AxleBlockBuilder(ResourceLocation i) {
         super(i);
-        windmill = new WindmillBlockBuilder(newID("", "_windmill"), this);
-        texture = newID("block/", "");
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.AXLE, this);
+        parentModel(KubeJSTFC.tfc("block/axle"));
+        windmill = new WindmillBlockBuilder(id.withSuffix("_windmill"), this);
+        texture = id.withPrefix("block/");
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.AXLE, this);
+        ModelUtil.defaultTexture(this);
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Info("Sets the texture used for the axle")
     public AxleBlockBuilder axleTexture(ResourceLocation texture) {
         this.texture = texture;
-        texture("wood", texture.toString());
+        textures.put("wood", texture.toString());
         return this;
     }
 
     @Info("Sets the properties of the axle's windmill block")
-    @Generics(WindmillBlockBuilder.class)
     public AxleBlockBuilder windmill(Consumer<WindmillBlockBuilder> windmill) {
         windmill.accept(this.windmill);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's water wheel block")
-    @Generics(WaterWheelBlockBuilder.class)
     public AxleBlockBuilder waterWheel(Consumer<WaterWheelBlockBuilder> waterWheel) {
         this.waterWheel = Util.make(new WaterWheelBlockBuilder(newID("", "_waterwheel"), this), waterWheel);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's gear box block")
-    @Generics(GearBoxBlockBuilder.class)
     public AxleBlockBuilder gearBox(Consumer<GearBoxBlockBuilder> gearBox) {
         this.gearBox = Util.make(new GearBoxBlockBuilder(newID("", "_gearbox"), this), gearBox);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's clutch block")
-    @Generics(ClutchBlockBuilder.class)
     public AxleBlockBuilder clutch(Consumer<ClutchBlockBuilder> clutch) {
         this.clutch = Util.make(new ClutchBlockBuilder(newID("", "_clutch"), this), clutch);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's bladed axle block")
-    @Generics(BladedAxleBlockBuilder.class)
     public AxleBlockBuilder bladedAxle(Consumer<BladedAxleBlockBuilder> bladed) {
         bladedAxle = Util.make(new BladedAxleBlockBuilder(newID("", "_bladed"), this), bladed);
         return this;
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        return texture("wood", tex);
-    }
-
-    @Override
     public Block createObject() {
-        return new AxleBlock(createExtendedProperties(), UtilsJS.cast(windmill), texture);
+        return new AxleBlock(createExtendedProperties(), Cast.to(windmill), texture);
     }
 
     @Override
@@ -97,37 +96,25 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(windmill);
-        if (waterWheel != null) {
-            RegistryInfo.BLOCK.addBuilder(waterWheel);
-            waterWheel.createAdditionalObjects();
-        }
-        if (gearBox != null) {
-            RegistryInfo.BLOCK.addBuilder(gearBox);
-            gearBox.createAdditionalObjects();
-        }
-        if (clutch != null) {
-            RegistryInfo.BLOCK.addBuilder(clutch);
-            clutch.createAdditionalObjects();
-        }
-        if (bladedAxle != null) {
-            RegistryInfo.BLOCK.addBuilder(bladedAxle);
-            bladedAxle.createAdditionalObjects();
-        }
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, windmill);
+        Assistant.addBlock(registry, waterWheel);
+        Assistant.addBlock(registry, gearBox);
+        Assistant.addBlock(registry, clutch);
+        Assistant.addBlock(registry, bladedAxle);
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.hasModelOrElse(generator, this, g -> {
-            g.parent("tfc:block/axle");
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        bs.simpleVariant("", ModelUtil.TFC_EMPTY);
+    }
+
+    @Override
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotDefined(generator, this, g -> {
+            g.parent(parentModel);
             g.textures(textures);
         });
-    }
-
-    @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        bs.simpleVariant("", "tfc:block/empty");
     }
 }

@@ -11,6 +11,7 @@ import net.dries007.tfc.common.component.heat.IHeat;
 import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.component.size.Size;
 import net.dries007.tfc.common.component.size.Weight;
+import net.dries007.tfc.common.player.IPlayerInfo;
 import net.dries007.tfc.util.data.*;
 import net.dries007.tfc.util.registry.RegistryMetal;
 import net.dries007.tfc.util.registry.RegistryRock;
@@ -19,6 +20,7 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -65,6 +67,11 @@ public enum DataBindings {
         return ROCKS.get();
     }
     private static final Supplier<Map<ResourceLocation, RegistryRock>> ROCKS = Suppliers.memoize(KubeJSTFC::getRocks);
+
+    @Info("Gets TFC's nutrition and other attached data associated with the player")
+    public IPlayerInfo getPlayerInfo(Player player) {
+        return IPlayerInfo.get(player);
+    }
 
     @Info("Gets TFC's ChunkData at the given position")
     public ChunkData getChunkData(LevelReader level, BlockPos pos) {

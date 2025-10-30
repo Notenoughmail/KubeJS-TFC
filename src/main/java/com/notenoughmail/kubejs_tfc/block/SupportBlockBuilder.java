@@ -1,15 +1,14 @@
 package com.notenoughmail.kubejs_tfc.block;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.VerticalSupportBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
+public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final HorizontalSupportBlockBuilder horizontal;
     public transient String connection;
@@ -42,7 +41,6 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     }
 
     @Info("Sets the properties of the horizontal support block")
-    @Generics(HorizontalSupportBlockBuilder.class)
     public SupportBlockBuilder horizontal(Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
         horizontalSupport.accept(horizontal);
         return this;
@@ -54,9 +52,9 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     }
 
     @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(horizontal);
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, horizontal, false);
     }
 
     @Override

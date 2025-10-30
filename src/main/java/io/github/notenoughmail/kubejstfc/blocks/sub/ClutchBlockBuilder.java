@@ -1,16 +1,18 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.ClutchBlock;
@@ -23,20 +25,28 @@ import java.util.function.BiConsumer;
 
 public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
+    private static final String[] TEXTURE_KEYS = { "side", "end", "particle" };
+
     public transient final AxleBlockBuilder parent;
     public transient BiConsumer<ClutchModelType, ModelGenerator> models;
 
     public ClutchBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.CLUTCH, this);
-        texture("overlay_end", "tfc:block/axle_casing_front");
-        renderType("cutout");
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.CLUTCH, this);
+        renderType(BlockRenderType.CUTOUT);
+        ModelUtil.defaultTexture(this);
+        textures.put("overlay_end", "tfc:block/axle_casing_front");
         models = (m, g) -> {
-            g.parent("tfc:block/ore_column");
+            g.parent(ModelUtil.ORE_COLUMN);
             g.texture("overlay", m.defaultOverlay);
             g.textures(textures);
         };
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Info("""
@@ -46,7 +56,6 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
             There are 2 types: `POWERED` and `UNPOWERED` with a `.powered()` method which returns a boolean; true if the
             type in operation is `POWERED`.
             """)
-    @Generics({ ClutchModelType.class, ModelGenerator.class })
     public ClutchBlockBuilder models(BiConsumer<ClutchModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
@@ -54,7 +63,7 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new ClutchBlock(createExtendedProperties(), UtilsJS.cast(parent));
+        return new ClutchBlock(createExtendedProperties(), Cast.to(parent));
     }
 
     @Override
@@ -65,24 +74,16 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("side", tex);
-        texture("end", tex);
-        texture("particle", tex);
-        return this;
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (ClutchModelType t : ClutchModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String model = newID("block/", "").toString();
-        final String powered = model + "_powered";
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        final ResourceLocation model = id.withPrefix("block/");
+        final ResourceLocation powered = model.withSuffix("_powered");
         bs.simpleVariant("axis=y,powered=false", model);
         bs.simpleVariant("axis=y,powered=true", powered);
         bs.variant("axis=z,powered=false", v -> v.model(model).x(90));

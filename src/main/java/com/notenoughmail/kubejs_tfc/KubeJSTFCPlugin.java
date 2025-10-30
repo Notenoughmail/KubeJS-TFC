@@ -6,25 +6,19 @@ import com.notenoughmail.kubejs_tfc.recipe.schema.*;
 import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
-import com.notenoughmail.kubejs_tfc.util.implementation.data.TFCPlayerDataJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
-import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.ScriptType;
-import dev.latvian.mods.kubejs.util.AttachedData;
 import dev.latvian.mods.kubejs.util.ClassFilter;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.ClientForgeEventHandler;
-import net.dries007.tfc.common.TFCArmorMaterials;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.util.InteractionManager;
 import net.dries007.tfc.util.SelfTests;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -48,9 +42,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
-        addValues();
-
-        RegistryInfo.BLOCK.addType("tfc:aqueduct", AqueductBlockBuilder.class, AqueductBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:ground_cover", GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:rock_spike", RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
@@ -75,10 +66,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:anvil", AnvilBlockBuilder.class, AnvilBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:axle", AxleBlockBuilder.class, AxleBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:encased_axle", EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:log", LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
         RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:sapling", TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:leaves", TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
@@ -156,18 +143,5 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(InteractionManager.class);
         filter.deny(ClientEventHandler.class);
         filter.deny(ClientForgeEventHandler.class);
-    }
-
-    // TODO: 2.0.0 | This actually kinda sucks
-    @Override
-    public void attachPlayerData(AttachedData<Player> event) {
-        if (event.getParent() != null) {
-            event.add("tfc:player_data", new TFCPlayerDataJS(event.getParent()));
-        }
-    }
-    private void addValues() {
-        for (ArmorMaterial material : TFCArmorMaterials.values()) {
-            ItemBuilder.ARMOR_TIERS.put(material.toString().toLowerCase(), material);
-        }
     }
 }

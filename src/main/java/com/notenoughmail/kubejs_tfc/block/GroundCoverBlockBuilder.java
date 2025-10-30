@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.block;
 
 import com.google.common.base.Suppliers;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -11,6 +10,7 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.minecraft.core.registries.BuiltInRegistries;

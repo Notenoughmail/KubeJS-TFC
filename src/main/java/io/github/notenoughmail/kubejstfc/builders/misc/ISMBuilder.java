@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 import com.mojang.serialization.MapCodec;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifierType;
@@ -32,19 +31,16 @@ public class ISMBuilder extends BuilderBase<ItemStackModifierType<ISMBuilder>> i
         return applicator(applicator);
     }
 
-    @HideFromJS
     @Override
     public ItemStack apply(ItemStack stack, ItemStack input, Context context) {
         return applicator.apply(stack, input, context);
     }
 
-    @HideFromJS
     @Override
     public boolean dependsOnInput() {
         return inputDependent;
     }
 
-    @HideFromJS
     @Override
     public ItemStackModifierType<ISMBuilder> type() {
         return get();

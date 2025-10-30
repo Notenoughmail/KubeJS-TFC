@@ -1,16 +1,19 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.fluids.FluidProperty;
+import net.dries007.tfc.util.Helpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -24,7 +27,9 @@ import java.util.Locale;
 import java.util.function.BiConsumer;
 
 @SuppressWarnings("unused")
-public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
+public class AqueductBlockBuilder extends BlockBuilder {
+
+    private static final String[] TEXTURE_KEYS = { "texture", "particle" };
 
     public transient FluidProperty fluidProperty;
     public transient List<Object> fluids; // List<Object> so the fluid property builder doesn't complain at compile time
@@ -32,12 +37,18 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
     public AqueductBlockBuilder(ResourceLocation i) {
         super(i);
-        renderType("cutout");
+        renderType(BlockRenderType.CUTOUT);
         fluidProperty = AqueductBlock.FLUID;
+        ModelUtil.defaultTexture(this);
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.textures(textures);
         };
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Info("""
@@ -47,7 +58,6 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
             There are 5 parts: `BASE`, `NORTH`, `SOUTH`, `EAST`, and `WEST` all with `.base()`, `.north()`, `.south()`,
             `.east()`, and `.west()` methods which return true if the part in operation is the one indicated by the method.
             """)
-    @Generics({ AqueductModelPart.class, ModelGenerator.class })
     public AqueductBlockBuilder models(BiConsumer<AqueductModelPart, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
@@ -58,15 +68,9 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
     })
     public AqueductBlockBuilder allowedFluids(ResourceLocation[] fluids) {
         this.fluids = new ArrayList<>(fluids.length + 1);
-        this.fluids.add(new ResourceLocation("empty"));
+        this.fluids.add(Helpers.identifierMC("empty"));
         this.fluids.addAll(Arrays.asList(fluids));
         return this;
-    }
-
-    @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("texture", tex);
-        return texture("particle", tex);
     }
 
     @Override
@@ -90,28 +94,29 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Override
-    protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        bs.part("", AqueductModelPart.BASE.modelEx(this));
-        bs.part("east=false", AqueductModelPart.EAST.modelEx(this));
-        bs.part("west=false", AqueductModelPart.WEST.modelEx(this));
-        bs.part("north=false", AqueductModelPart.NORTH.modelEx(this));
-        bs.part("south=false", AqueductModelPart.SOUTH.modelEx(this));
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (AqueductModelPart p : AqueductModelPart.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent(AqueductModelPart.BASE.modelEx(this));
-        }
+    protected void generateItemModel(ModelGenerator m) {
+        m.parent(AqueductModelPart.BASE.modelEx(this));
+    }
+
+    @Override
+    protected boolean useMultipartBlockState() {
+        return true;
+    }
+
+    @Override
+    protected void generateMultipartBlockState(MultipartBlockStateGenerator bs) {
+        bs.part("", AqueductModelPart.BASE.modelEx(this));
+        bs.part("east=false", AqueductModelPart.EAST.modelEx(this));
+        bs.part("west=false", AqueductModelPart.WEST.modelEx(this));
+        bs.part("north=false", AqueductModelPart.NORTH.modelEx(this));
+        bs.part("south=false", AqueductModelPart.SOUTH.modelEx(this));
     }
 
     public enum AqueductModelPart {
@@ -122,10 +127,10 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
         WEST;
 
         @HideFromJS
-        public final String defaultParent;
+        public final ResourceLocation defaultParent;
 
         AqueductModelPart() {
-            this.defaultParent = "tfc:block/aqueduct/" + name().toLowerCase(Locale.ROOT);
+            this.defaultParent = KubeJSTFC.tfc("block/aqueduct/" + name().toLowerCase(Locale.ROOT));
         }
 
         public static final AqueductModelPart[] VALUES = values();
@@ -138,12 +143,12 @@ public class AqueductBlockBuilder extends MultipartShapedBlockBuilder {
 
         @HideFromJS
         public ResourceLocation model(BlockBuilder builder) {
-            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+            return builder.id.withSuffix("_" + name().toLowerCase(Locale.ROOT));
         }
 
         @HideFromJS
-        public String modelEx(BlockBuilder builder) {
-            return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
+        public ResourceLocation modelEx(BlockBuilder builder) {
+            return model(builder).withPrefix("block/");
         }
     }
 }

@@ -1,13 +1,14 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
+public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
+
+    private static final ResourceLocation[] LOGS = {
+            BlockTags.LOGS.location(),
+            TFCTags.Blocks.LOGS_THAT_LOG.location(),
+    };
+    private static final ResourceLocation[] LOG_PILE = Assistant.single(TFCTags.Items.LOG_PILE_LOGS.location());
+    private static final String[] TEXTURE_KEYS = { "particle", "side", "end" };
 
     @Nullable
     public transient LogBlockBuilder stripped;
@@ -27,9 +35,14 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         super(i);
         this.stripped = stripped;
         blockItemModel = false;
-        itemBuilder.texture("layer0", newID("item/", "").toString());
-        tag(BlockTags.LOGS.location());
-        tag(TFCTags.Items.LOG_PILE_LOGS.location());
+        ModelUtil.defaultTexture(this);
+        tag(LOGS);
+        tagItem(LOG_PILE);
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Override
@@ -44,45 +57,35 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     }
 
     @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        if (stripped != null) {
-            RegistryInfo.BLOCK.addBuilder(stripped);
-            stripped.createAdditionalObjects();
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, stripped);
+    }
+
+    @Override
+    protected void generateItemModel(ModelGenerator m) {
+        if (blockItemModel) {
+            m.parent(ModelUtil.plainModel(this));
+        } else {
+            m.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
+            m.texture("layer0", itemBuilder.baseTexture);
         }
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("block/cube_column");
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotParented(generator, this, m -> {
+            m.parent(ModelUtil.CUBE_COLUMN);
             m.textures(textures);
         });
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String m = ResourceUtils.plainModel(this);
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        final ResourceLocation m = ModelUtil.plainModel(this);
         bs.simpleVariant("axis=y", m);
         bs.variant("axis=z", v -> v.model(m).x(90));
         bs.variant("axis=x", v -> v.model(m).x(90).y(90));
-    }
-
-    @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        texture("side", tex);
-        return texture("end", tex);
-    }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (blockItemModel) {
-            m.parent(ResourceUtils.plainModel(this));
-        } else {
-            m.parent("item/generated");
-            m.textures(itemBuilder.textureJson);
-        }
     }
 
     public static class UnStripped extends LogBlockBuilder {

@@ -1,13 +1,13 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.AxleBlockBuilder;
-import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
-import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.UtilsJS;
+import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blockentities.rotation.WaterWheelBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -23,25 +23,27 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public WaterWheelBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        texture = parent.newID("entity/water_wheel/", "");
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
+        texture(id.withPrefix("block/").toString());
+        wheelTexture(parent.id);
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
+        BuilderRefs.waterWheels.add(this);
     }
 
     @Info("Sets the texture that will be used for the water wheel, the path will be relative to the `/textures/entity/water_wheel/` subdirectory")
-    public WaterWheelBlockBuilder texture(ResourceLocation tex) {
-        texture = tex.withPrefix("entity/water_wheel/");
+    public WaterWheelBlockBuilder wheelTexture(ResourceLocation tex) {
+        texture = tex.withPath(s -> "textures/entity/water_wheel" + s + ".png");
         return this;
     }
 
     @Info("sets the texture that will be used for the water wheel, the path is relative to the `/textures/` subdirectory")
-    public WaterWheelBlockBuilder textureRaw(ResourceLocation tex) {
-        texture = tex;
+    public WaterWheelBlockBuilder rawWheelTexture(ResourceLocation tex) {
+        texture = tex.withPath(s -> "textures/" + s + ".png");
         return this;
     }
 
     @Override
     public Block createObject() {
-        return new WaterWheelBlock(createExtendedProperties(), UtilsJS.cast(parent), texture.withPath(p -> "textures/" + p + ".png"));
+        return new WaterWheelBlock(createExtendedProperties(), Cast.to(parent));
     }
 
     @Override
@@ -53,22 +55,15 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent("item/generated");
-            m.texture("layer0", newID("item/", "").toString());
-        }
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        generator.blockModel(id, m -> m.texture("particle", baseTexture));
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        generator.blockModel(id, m -> m.textures(textures));
-    }
-
-    @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        bs.simpleVariant("", newID("block/", "").toString());
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m, g -> {
+            g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
+            g.texture("layer0", id.getNamespace() + ":item/" + id.getPath());
+        });
     }
 }

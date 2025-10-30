@@ -6,12 +6,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.BlockBuilderAccessor;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.loot.LootBuilderPool;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
@@ -159,28 +157,6 @@ public class ResourceUtils {
 
     public static final ItemStack STICK_STACK = new ItemStack(Items.STICK);
 
-    public static void fluidContainerModel(ItemBuilder builder, AssetJsonGenerator generator) {
-        if (builder.modelJson != null) {
-            generator.json(AssetJsonGenerator.asItemModelLocation(builder.id), builder.modelJson);
-        } else {
-            generator.itemModel(builder.id, m -> {
-                if (!builder.parentModel.isEmpty()) {
-                    m.parent(builder.parentModel);
-                } else {
-                    m.parent("kubejs_tfc:item/generated_fluid_container");
-
-                    if (builder.textureJson.size() == 0) {
-                        final String tex = builder.id.getNamespace() + ":item/" + builder.id.getPath();
-                        builder.texture("base", tex);
-                        builder.texture("fluid", tex + "_overlay");
-                    }
-
-                    m.textures(builder.textureJson);
-                }
-            });
-        }
-    }
-
     public static void hasModel(AssetJsonGenerator generator, BlockBuilder builder) {
         generator.blockModel(builder.id, m -> m.parent(builder.model));
     }
@@ -204,6 +180,4 @@ public class ResourceUtils {
     }
 
     public static final Direction[] CARDINAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
-
-    public static final Consumer<LootBuilder> EMPTY = BlockBuilderAccessor.kubejs_tfc$GetEmpty();
 }

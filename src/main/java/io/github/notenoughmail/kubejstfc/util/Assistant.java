@@ -1,15 +1,17 @@
 package io.github.notenoughmail.kubejstfc.util;
 
 import com.google.gson.JsonObject;
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.util.Cast;
-import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -82,6 +84,17 @@ public interface Assistant {
 
     static JsonObject json(Consumer<JsonObject> builder) {
         return Util.make(new JsonObject(), builder);
+    }
+
+    static void addBlock(AdditionalObjectRegistry registry, @Nullable BlockBuilder builder) {
+        addBlock(registry, builder, true);
+    }
+
+    static void addBlock(AdditionalObjectRegistry registry, @Nullable BlockBuilder builder, boolean nest) {
+        if (builder != null) {
+            registry.add(Registries.BLOCK, builder);
+            if (nest) builder.createAdditionalObjects(registry);
+        }
     }
 
     @FunctionalInterface
