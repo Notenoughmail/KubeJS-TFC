@@ -24,7 +24,6 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
             BlockTags.LOGS.location(),
             TFCTags.Blocks.LOGS_THAT_LOG.location(),
     };
-    private static final ResourceLocation[] LOG_PILE = Assistant.single(TFCTags.Items.LOG_PILE_LOGS.location());
     private static final String[] TEXTURE_KEYS = { "particle", "side", "end" };
 
     @Nullable
@@ -37,7 +36,7 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
         blockItemModel = false;
         ModelUtil.defaultTexture(this);
         tag(LOGS);
-        tagItem(LOG_PILE);
+        Assistant.singleTag(itemBuilder, TFCTags.Items.LOG_PILE_LOGS);
     }
 
     @Override

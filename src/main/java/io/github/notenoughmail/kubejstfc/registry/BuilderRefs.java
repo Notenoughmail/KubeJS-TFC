@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.WaterWheelBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
@@ -94,6 +95,11 @@ public interface BuilderRefs {
      */
     List<WaterWheelBlockBuilder> waterWheels = new ArrayList<>();
 
+    /**
+     * Blocks which should have TFC's connected grass block tinting
+     */
+    List<BlockBuilder> grassBlockColor = new ArrayList<>();
+
     @ApiStatus.Internal
     static void clear() {
         powderGlassOperations.clear();
@@ -104,5 +110,6 @@ public interface BuilderRefs {
         javelins.clear();
 
         waterWheels.clear();
+        grassBlockColor.clear();
     }
 }

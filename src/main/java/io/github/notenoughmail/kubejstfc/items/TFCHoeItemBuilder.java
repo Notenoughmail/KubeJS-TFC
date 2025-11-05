@@ -9,11 +9,9 @@ import net.minecraft.world.item.Item;
 
 public class TFCHoeItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(ItemTags.HOES.location());
-
     public TFCHoeItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, ItemTags.HOES);
     }
 
     @Override

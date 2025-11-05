@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.util.IModelSegment;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.fluids.FluidProperty;
@@ -119,18 +120,20 @@ public class AqueductBlockBuilder extends BlockBuilder {
         bs.part("south=false", AqueductModelPart.SOUTH.modelEx(this));
     }
 
-    public enum AqueductModelPart {
+    public enum AqueductModelPart implements IModelSegment {
         BASE,
         NORTH,
         SOUTH,
         EAST,
         WEST;
 
+        private final String str;
         @HideFromJS
         public final ResourceLocation defaultParent;
 
         AqueductModelPart() {
-            this.defaultParent = KubeJSTFC.tfc("block/aqueduct/" + name().toLowerCase(Locale.ROOT));
+            str = name().toLowerCase(Locale.ROOT);
+            defaultParent = KubeJSTFC.tfc("block/aqueduct/" + str);
         }
 
         public static final AqueductModelPart[] VALUES = values();
@@ -141,14 +144,10 @@ public class AqueductBlockBuilder extends BlockBuilder {
         public boolean east() { return this == EAST; }
         public boolean west() { return this == WEST; }
 
-        @HideFromJS
-        public ResourceLocation model(BlockBuilder builder) {
-            return builder.id.withSuffix("_" + name().toLowerCase(Locale.ROOT));
-        }
 
-        @HideFromJS
-        public ResourceLocation modelEx(BlockBuilder builder) {
-            return model(builder).withPrefix("block/");
+        @Override
+        public String str() {
+            return str;
         }
     }
 }

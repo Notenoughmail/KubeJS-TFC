@@ -6,9 +6,6 @@ import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 
 public class EventHandlers {
@@ -17,11 +14,6 @@ public class EventHandlers {
 
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> TFCWorldgenDataEventJS.class);
 
-    public static void init() {
-        final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        modBus.addListener(EventHandlers::commonSetup);
-    }
 
     @SuppressWarnings("SameReturnValue")
     @Nullable
@@ -34,11 +26,5 @@ public class EventHandlers {
             KubeJSTFC.error("KubeJSTFC data events failed to post due to wrapped event not being an instanceof DataPackEventJS, somehow");
         }
         return null;
-    }
-
-    private static void commonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            RegistryUtils.hackBlockEntities();
-        });
     }
 }

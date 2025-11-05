@@ -63,7 +63,7 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
     protected void generateItemModel(ModelGenerator m) {
         ModelUtil.itemModelGen(this, m, g -> {
             g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
-            g.texture("layer0", id.getNamespace() + ":item/" + id.getPath());
+            g.texture("layer0", ModelUtil.basicTexture(this, "item"));
         });
     }
 }

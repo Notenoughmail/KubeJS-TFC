@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.Block;
 @SuppressWarnings("unused")
 public class ToolItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] KNIFE_TAGS = Assistant.single(TFCTags.Items.TOOLS_KNIFE.location());
-
     public transient TagKey<Block> mineableBlocks;
 
     public ToolItemBuilder(ResourceLocation i) {
@@ -26,7 +24,7 @@ public class ToolItemBuilder extends HandheldItemBuilder {
     @Info("Adds this item to the `tfc:knives` tag and sets its mineable blocks tag to `tfc:mineable_with_knife`")
     public ToolItemBuilder knife() {
         mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
-        tag(KNIFE_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.TOOLS_KNIFE);
         return this;
     }
 

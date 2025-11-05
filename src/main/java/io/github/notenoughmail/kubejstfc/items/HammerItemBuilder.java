@@ -12,19 +12,16 @@ import net.minecraft.world.item.Item;
 @SuppressWarnings("unused")
 public class HammerItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(TFCTags.Items.TOOLS_HAMMER.location());
-    private static final ResourceLocation[] TRIP_HAMMER = Assistant.single(TFCTags.Items.TRIP_HAMMERS.location());
-
     public transient ResourceLocation tripHammerTexture;
 
     public HammerItemBuilder(ResourceLocation i) {
         super(i, 3, -2.4f);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.TOOLS_HAMMER);
     }
 
     @Info("Sets the texture to use when this hammer is in a trip hammer, also marks it as being allowed in a trip hammer")
     public HammerItemBuilder tripHammerTexture(ResourceLocation location) {
-        tag(TRIP_HAMMER);
+        Assistant.singleTag(this, TFCTags.Items.TRIP_HAMMERS);
         tripHammerTexture = location;
         BuilderRefs.hammers.add(this);
         return this;

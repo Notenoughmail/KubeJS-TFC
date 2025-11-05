@@ -1,7 +1,7 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.TFCDirtBlockBuilder;
 import net.dries007.tfc.common.blocks.soil.TFCRootedDirtBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;

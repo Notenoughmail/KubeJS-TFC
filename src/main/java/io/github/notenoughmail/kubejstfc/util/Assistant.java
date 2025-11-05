@@ -7,11 +7,12 @@ import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
-import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.kubejs.registry.BuilderBase;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -62,8 +63,12 @@ public interface Assistant {
         };
     }
 
-    static <T> T[] single(T t) {
-        return Cast.to(new Object[]{ t });
+    static void singleTag(BuilderBase<?> builder, TagKey<?> tag) {
+        singleTag(builder, tag.location());
+    }
+
+    static void singleTag(BuilderBase<?> builder, ResourceLocation tag) {
+        builder.defaultTags.add(tag);
     }
 
     static void toolItemAttributes(HandheldItemBuilder builder) {

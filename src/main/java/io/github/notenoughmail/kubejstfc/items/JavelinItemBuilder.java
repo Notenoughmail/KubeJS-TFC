@@ -23,8 +23,6 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class JavelinItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] SKELETON_WEAPON = Assistant.single(TFCTags.Items.SKELETON_WEAPONS.location());
-
     public static final ResourceLocation THROWING = KubeJSTFC.tfc("throwing");
 
     public float thrownDamage;
@@ -61,7 +59,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     @Info("Adds this to the 'tfc:skeleton_weapons' tag")
     public JavelinItemBuilder skeletonWeapon() {
-        tag(SKELETON_WEAPON);
+        Assistant.singleTag(this, TFCTags.Items.SKELETON_WEAPONS);
         return this;
     }
 

@@ -44,7 +44,6 @@ public class BuilderRefs {
     public static void clear() {
         leafColors.clear();
         grassColor.clear();
-        grassBlockColor.clear();
 
         ghostRenders.clear();
     }

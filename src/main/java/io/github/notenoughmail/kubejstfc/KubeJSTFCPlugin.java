@@ -38,6 +38,7 @@ import net.dries007.tfc.common.component.block.BarrelComponent;
 import net.dries007.tfc.common.component.block.CrucibleComponent;
 import net.dries007.tfc.common.component.fluid.FluidComponent;
 import net.dries007.tfc.common.component.food.FoodComponent;
+import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.FoodTraits;
 import net.dries007.tfc.common.component.forge.ForgingBonusComponent;
 import net.dries007.tfc.common.component.forge.ForgingComponent;
@@ -51,12 +52,19 @@ import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
+import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateModels;
+import net.dries007.tfc.util.data.Drinkable;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffects;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
+/**
+ * {@link dev.latvian.mods.kubejs.registry.RegistryType#register(ResourceKey, TypeInfo)}?
+ */
 public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
@@ -74,6 +82,11 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("axle"), AxleBlockBuilder.class, AxleBlockBuilder::new);
             c.add(tfc("log"), LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
             c.add(tfc("encased-axle"), EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
+            c.add(tfc("ground_cover"), GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+            c.add(tfc("sapling"), TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
+            c.add(tfc("rock_spike"), RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+            c.add(tfc("dirt"), TFCDirtBlockBuilder.class, TFCDirtBlockBuilder::new);
+            c.add(tfc("raw_rock"), RawRockBlockBuilder.class, RawRockBlockBuilder::new);
         });
 
         registry.of(Registries.ITEM, c -> {
@@ -137,6 +150,13 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
         registry.register(ItemStackProvider.class, ISPBindings::wrap);
         registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
+    }
+
+    @Override
+    public void registerRecordDefaults(RecordDefaultsRegistry registry) {
+        registry.register(new PhysicalDamage(0F, 0F, 0F));
+        registry.register(new FoodData(0, 0F, 0F, 0, new float[] { 0F, 0F, 0F, 0F, 0F }, 0F));
+        registry.register(new Drinkable.Effect(MobEffects.HEAL, 1, 1, 1F));
     }
 
     @Override

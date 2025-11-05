@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class WindmillBladeItemBuilder extends ItemBuilder {
 
-    static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(TFCTags.Items.WINDMILL_BLADES.location());
-
     static final ResourceLocation DEFAULT_TEXTURE = Helpers.identifier("textures/entity/misc/windmill_blade.png");
 
     public transient ResourceLocation texture = DEFAULT_TEXTURE;
@@ -24,7 +22,7 @@ public class WindmillBladeItemBuilder extends ItemBuilder {
 
     public WindmillBladeItemBuilder(ResourceLocation id) {
         super(id);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.WINDMILL_BLADES);
         BuilderRefs.windmillBlades.add(this);
     }
 

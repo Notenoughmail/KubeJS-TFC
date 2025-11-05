@@ -41,8 +41,6 @@ public class TFCWorldgenDataEventJS extends EventJS implements IDataConstructor 
 
     @Override
     public void addJson(ResourceLocation id, JsonElement json) {
-        KubeJSTFC.warningLog(id.toString());
-        KubeJSTFC.infoLog(json.toString());
         wrappedEvent.addJson(id, json);
     }
 

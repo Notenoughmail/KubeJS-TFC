@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
 import dev.latvian.mods.kubejs.block.BlockRenderType;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
@@ -62,10 +61,5 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         bs.simpleVariant("axis=y", m);
         bs.variant("axis=z", v -> v.model(m).x(90));
         bs.variant("axis=z", v -> v.model(m).x(90).y(90));
-    }
-
-    @Override
-    protected void generateItemModel(ModelGenerator m) {
-        super.generateItemModel(m);
     }
 }

@@ -157,16 +157,6 @@ public class ResourceUtils {
 
     public static final ItemStack STICK_STACK = new ItemStack(Items.STICK);
 
-    public static void hasModel(AssetJsonGenerator generator, BlockBuilder builder) {
-        generator.blockModel(builder.id, m -> m.parent(builder.model));
-    }
-
-    public static void hasModelOrElse(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
-        if (ifModelEmpty(generator, builder, m)) {
-            hasModel(generator, builder);
-        }
-    }
-
     public static boolean ifModelEmpty(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
         if (builder.model.isEmpty()) {
             generator.blockModel(builder.id, m);

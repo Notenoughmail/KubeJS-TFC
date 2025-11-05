@@ -10,13 +10,11 @@ import net.minecraft.world.item.Item;
 
 public class PropickItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(TFCTags.Items.TOOLS_PROPICK.location());
-
     public transient int level;
 
     public PropickItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.TOOLS_PROPICK);
     }
 
     @Info("Sets the tool level of this propick, determines the chance of having a false negative")

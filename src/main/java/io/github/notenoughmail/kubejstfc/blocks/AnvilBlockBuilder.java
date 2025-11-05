@@ -19,15 +19,13 @@ import net.minecraft.world.level.block.Block;
 @SuppressWarnings("unused")
 public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
-    private static final ResourceLocation[] ANVILS = Assistant.single(TFCTags.Items.ANVILS.location());
-
     public transient int tier;
 
     public AnvilBlockBuilder(ResourceLocation i) {
         super(i);
         tier = 0;
         BuilderRefs.hackBlockEntity(TFCBlockEntities.ANVIL, this);
-        tag(ANVILS);
+        Assistant.singleTag(this, TFCTags.Items.ANVILS);
         ModelUtil.defaultTexture(this);
     }
 

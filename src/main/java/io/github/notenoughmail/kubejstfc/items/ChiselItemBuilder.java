@@ -9,11 +9,9 @@ import net.minecraft.world.item.Item;
 
 public class ChiselItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(TFCTags.Items.TOOLS_CHISEL.location());
-
     public ChiselItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.TOOLS_CHISEL);
     }
 
     @Override

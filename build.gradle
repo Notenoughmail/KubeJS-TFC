@@ -102,19 +102,18 @@ repositories {
     }
 }
 
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-    implementation.extendsFrom tfcImplementation
-}
-
 modAccessor {
-    createTransformConfiguration(configurations.compileOnly)
+    createTransformConfiguration(configurations.implementation)
     accessTransformerFiles = project.files('src/main/resources/META-INF/modaccesstransformer.cfg')
     interfaceInjectionFiles = project.files('modinjections.json')
 }
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+    accessImplementation.extendsFrom tfcImplementation
+}
+
 dependencies {
-    accessCompileOnly("curse.maven:terrafirmacraft-302973:${tfc_file}")
     tfcImplementation "curse.maven:terrafirmacraft-302973:${tfc_file}"
         runtimeOnly "curse.maven:cyanide-541676:${cyanide_file}"
     implementation "curse.maven:precision-prospecting-700638:${precpros_file}"

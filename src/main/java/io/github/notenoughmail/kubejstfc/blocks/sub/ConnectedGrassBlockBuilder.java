@@ -1,30 +1,34 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.block.BlockItemBuilder;
-import dev.latvian.mods.kubejs.block.custom.MultipartShapedBlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.TFCDirtBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.IModelSegment;
+import io.github.notenoughmail.kubejstfc.util.LootUtil;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
+public class ConnectedGrassBlockBuilder extends BlockBuilder {
 
     public transient final TFCDirtBlockBuilder parent;
 
@@ -33,15 +37,22 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     public ConnectedGrassBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        renderType("cutout_mipped");
-        tagBlock(TFCTags.Blocks.GRASS.location());
-        itemBuilder.texture("block", textures.get("texture").getAsString());
+        renderType(BlockRenderType.CUTOUT_MIPPED);
+        Assistant.singleTag(this, TFCTags.Blocks.GRASS);
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.textures(textures);
         };
         BuilderRefs.grassBlockColor.add(this);
-        notSolid = false;
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        textures.put("texture", tex);
+        if (itemBuilder != null) {
+            itemBuilder.textures.put("block", tex);
+        }
+        return this;
     }
 
     @Info("""
@@ -52,18 +63,8 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
             which can be used to logically determine the part currently in operation. The properties are `.bottom`,
             `.top`, `.side`, and `.snowy`.
             """)
-    @Generics({ GrassModelPart.class, ModelGenerator.class })
     public ConnectedGrassBlockBuilder models(BiConsumer<GrassModelPart, ModelGenerator> models) {
         this.models = this.models.andThen(models);
-        return this;
-    }
-
-    @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("texture", tex);
-        if (itemBuilder != null) {
-            itemBuilder.texture("block", tex);
-        }
         return this;
     }
 
@@ -73,48 +74,42 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
     }
 
     @Override
-    @Generics(BlockItemBuilder.class)
-    public BlockBuilder item(@Nullable Consumer<BlockItemBuilder> i) {
-        if (i == null) {
-            itemBuilder = null;
+    @Nullable
+    public LootTable generateLootTable(KubeDataGenerator generator) {
+        if (parent.itemBuilder != null) {
+            return LootUtil.fallback(parent.itemBuilder::get, this);
         } else {
-            i.accept(getOrCreateItemBuilder());
+            return LootUtil.skipIfEmpty(drops);
         }
-
-        return this;
-    }
-
-    @Info("Makes the grass block use a unique texture for the dirt part of its texture, by default uses the texture of its parent dirt block")
-    public ConnectedGrassBlockBuilder uniqueDirtTexture() {
-        texture("texture", id.getNamespace() + ":block/" + id.getPath());
-        return this;
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTableBasic(generator, this, parent);
-    }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        m.parent("tfc:item/grass_inv");
-        m.textures(itemBuilder.textureJson);
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (GrassModelPart p : GrassModelPart.VALUES) {
             generator.blockModel(p.model(this), m -> models.accept(p, m));
         }
     }
 
     @Override
-    protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        final String bottom = GrassModelPart.BOTTOM.modelEx(this);
-        final String top = GrassModelPart.TOP.modelEx(this);
-        final String snowyTop = GrassModelPart.SNOWY_TOP.modelEx(this);
-        final String side = GrassModelPart.SIDE.modelEx(this);
-        final String snowySide = GrassModelPart.SNOWY_SIDE.modelEx(this);
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, false, m, g -> {
+            g.parent(ModelUtil.GRASS_INV);
+            g.textures(itemBuilder.textures);
+        });
+    }
+
+    @Override
+    protected boolean useMultipartBlockState() {
+        return true;
+    }
+
+    @Override
+    protected void generateMultipartBlockState(MultipartBlockStateGenerator bs) {
+        final ResourceLocation bottom = GrassModelPart.BOTTOM.modelEx(this);
+        final ResourceLocation top = GrassModelPart.TOP.modelEx(this);
+        final ResourceLocation snowyTop = GrassModelPart.SNOWY_TOP.modelEx(this);
+        final ResourceLocation side = GrassModelPart.SIDE.modelEx(this);
+        final ResourceLocation snowySide = GrassModelPart.SNOWY_SIDE.modelEx(this);
 
         bs.part("", p -> p.model(bottom).x(90));
         bs.part("snowy=false", p -> {
@@ -140,7 +135,7 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         }
     }
 
-    public enum GrassModelPart {
+    public enum GrassModelPart implements IModelSegment {
         BOTTOM(false, false, false, true),
         TOP(false, false, true, false),
         SNOWY_TOP(true, false, true, false),
@@ -148,27 +143,24 @@ public class ConnectedGrassBlockBuilder extends MultipartShapedBlockBuilder {
         SNOWY_SIDE(true, true, false, false);
 
         @HideFromJS
-        public final String defaultParent;
+        public final ResourceLocation defaultParent;
+        private final String str;
         public final boolean snowy, side, top, bottom;
 
         GrassModelPart(boolean snowy, boolean side, boolean top, boolean bottom) {
-            this.defaultParent = "tfc:block/grass_" + name().toLowerCase(Locale.ROOT);
+            str = name().toLowerCase(Locale.ROOT);
+            this.defaultParent = KubeJSTFC.tfc("block/grass_" + str);
             this.snowy = snowy;
             this.side = side;
             this.top = top;
             this.bottom = bottom;
         }
 
-        @HideFromJS
-        public ResourceLocation model(BlockBuilder builder) {
-            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
-        }
-
-        @HideFromJS
-        public String modelEx(BlockBuilder builder) {
-            return builder.newID("block/", "_" + name().toLowerCase(Locale.ROOT)).toString();
-        }
-
         public static final GrassModelPart[] VALUES = values();
+
+        @Override
+        public String str() {
+            return str;
+        }
     }
 }

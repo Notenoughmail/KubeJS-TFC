@@ -4,7 +4,6 @@ import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.client.TFCColors;
-import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -32,7 +31,6 @@ public class ClientEventHandlers {
         modBus.addListener(ClientEventHandlers::registerBlockColorHandlers);
     }
 
-    // This doesn't work very well with pure white 16x16 images for both textures
     private static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         final ItemColor grassColor = (stack, index) -> TFCColors.getGrassColor(null, index);
         final ItemColor foliageColor = (stack, index) -> TFCColors.getFoliageColor(null, index);
@@ -47,11 +45,9 @@ public class ClientEventHandlers {
 
     private static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         final BlockColor grassColor = (state, level, pos, tintIndex) -> TFCColors.getGrassColor(pos, tintIndex);
-        final BlockColor grassBlockColor = (state, level, pos, tintIndex) -> state.getValue(ConnectedGrassBlock.SNOWY) || tintIndex != 1 ? -1 : grassColor.getColor(state, level, pos, tintIndex);
         final BlockColor foliageColor = (state, level, pos, tintIndex) -> TFCColors.getFoliageColor(pos, tintIndex);
 
         event.register(grassColor, forBlockColors(BuilderRefs.grassColor));
-        event.register(grassBlockColor, forBlockColors(BuilderRefs.grassBlockColor));
         BuilderRefs.leafColors.forEach(builder -> event.register(
                 builder.seasonalColors() ?
                         (state, level, pos, tintIndex) -> TFCColors.getSeasonalFoliageColor(pos, tintIndex, builder.autumnIndex()) :

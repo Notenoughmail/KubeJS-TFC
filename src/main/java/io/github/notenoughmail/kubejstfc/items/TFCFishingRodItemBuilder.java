@@ -15,8 +15,6 @@ import net.minecraft.world.item.Item;
 @SuppressWarnings("unused")
 public class TFCFishingRodItemBuilder extends ItemBuilder {
 
-    private static final ResourceLocation[] SMALL_BAIT = Assistant.single(TFCTags.Items.HOLDS_SMALL_FISHING_BAIT.location());
-    private static final ResourceLocation[] LARGE_BAIT = Assistant.single(TFCTags.Items.HOLDS_LARGE_FISHING_BAIT.location());
     private static final ResourceLocation DEFAULT_PARENT = ResourceLocation.withDefaultNamespace("item/handheld_rod");
     private static final ResourceLocation DEFAULT_CAST_MODEL = ResourceLocation.withDefaultNamespace("item/fishing_rod/cast");
     public static final ResourceLocation CAST = KubeJSTFC.tfc("cast");
@@ -44,12 +42,14 @@ public class TFCFishingRodItemBuilder extends ItemBuilder {
 
     @Info("Allows this rod to hold small fishing bait by adding it to the correct tag")
     public TFCFishingRodItemBuilder smallBait() {
-        return (TFCFishingRodItemBuilder) tag(SMALL_BAIT);
+        Assistant.singleTag(this, TFCTags.Items.HOLDS_SMALL_FISHING_BAIT);
+        return this;
     }
 
     @Info("Allows this rod to hold large fishing bait by adding it the correct tag")
     public TFCFishingRodItemBuilder largeBait() {
-        return (TFCFishingRodItemBuilder) tag(LARGE_BAIT);
+        Assistant.singleTag(this, TFCTags.Items.HOLDS_LARGE_FISHING_BAIT);
+        return this;
     }
 
     @Override

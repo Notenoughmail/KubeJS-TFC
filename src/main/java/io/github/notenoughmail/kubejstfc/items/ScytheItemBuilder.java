@@ -10,11 +10,9 @@ import net.minecraft.world.item.Item;
 @SuppressWarnings("unused")
 public class ScytheItemBuilder extends HandheldItemBuilder {
 
-    private static final ResourceLocation[] DEFAULT_TAGS = Assistant.single(TFCTags.Items.TOOLS_SCYTHE.location());
-
     public ScytheItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
-        tag(DEFAULT_TAGS);
+        Assistant.singleTag(this, TFCTags.Items.TOOLS_SCYTHE);
     }
 
     @Override

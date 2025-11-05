@@ -1,29 +1,41 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.util.IModelSegment;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
+    private static final String[] TEXTURE_KEYS = { "texture", "particle" };
+
     public transient BiConsumer<SpikeModelType, ModelGenerator> models;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
-        renderType("cutout");
+        renderType(BlockRenderType.CUTOUT);
         models = (t, m) -> {
             m.parent(t.defaultParent);
             m.textures(textures);
         };
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Info("""
@@ -33,16 +45,9 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
             There are 3 parts: `BASE`, `MIDDLE`, and `TIP` all with `.base()`, `.middle()`, and `.tip()` methods which
             return true if the type is in operation is the one indicated by the method.
             """)
-    @Generics({ SpikeModelType.class, ModelGenerator.class })
     public RockSpikeBlockBuilder models(BiConsumer<SpikeModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
-    }
-
-    @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("texture", tex);
-        return texture("particle", tex);
     }
 
     @Override
@@ -51,35 +56,36 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        m.parent(newID("block/", "_base").toString());
-        m.textures(itemBuilder.textureJson);
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (SpikeModelType t : SpikeModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m, g -> g.parent(SpikeModelType.BASE.modelEx(this)));
+    }
+
+    @Override
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
         for (SpikeModelType t : SpikeModelType.VALUES) {
-            bs.simpleVariant("part=" + t.name().toLowerCase(Locale.ROOT), t.modelEx(this));
+            bs.simpleVariant("part=" + t.str(), t.modelEx(this));
         }
     }
 
-    public enum SpikeModelType {
+    public enum SpikeModelType implements IModelSegment {
         BASE,
         MIDDLE,
         TIP;
 
         @HideFromJS
-        public final String defaultParent;
+        public final ResourceLocation defaultParent;
+        private final String str;
 
         SpikeModelType() {
-            defaultParent = "tfc:block/rock/spike_" + name().toLowerCase(Locale.ROOT);
+            str = name().toLowerCase(Locale.ROOT);
+            defaultParent = KubeJSTFC.tfc("block/rock/spike_" + str);
         }
 
         public static final SpikeModelType[] VALUES = values();
@@ -88,14 +94,10 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         public boolean middle() { return this == MIDDLE; }
         public boolean tip() { return this == TIP; }
 
-        @HideFromJS
-        public String modelEx(BlockBuilder builder) {
-            return builder.newID("block/", "_") + name().toLowerCase(Locale.ROOT);
-        }
 
-        @HideFromJS
-        public ResourceLocation model(BlockBuilder builder) {
-            return builder.newID("", "_" + name().toLowerCase(Locale.ROOT));
+        @Override
+        public String str() {
+            return str;
         }
     }
 }

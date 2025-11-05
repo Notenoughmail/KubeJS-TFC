@@ -1,25 +1,29 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.google.common.base.Suppliers;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
+import dev.latvian.mods.kubejs.block.drop.BlockDrops;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
+import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
@@ -28,15 +32,27 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public transient String parent;
     public transient VoxelShape cachedShape;
     @Nullable
-    public transient Supplier<Item> preexistingItem;
+    public transient Holder<Item> preexistingItem;
 
     public GroundCoverBlockBuilder(ResourceLocation i) {
         super(i);
         type = Type.NONE;
         parent = "loose/igneous_intrusive_2";
         noCollision = true;
-        renderType("cutout");
-        preexistingItem = null;
+        renderType(BlockRenderType.CUTOUT);
+        drops(() -> {
+            final ItemLike item = pickItem();
+            if (item == null) {
+                return new BlockDrops(new ItemStack[0], ConstantValue.exactly(0.0F));
+            } else {
+                return BlockDrops.createDefault(item.asItem().getDefaultInstance());
+            }
+        });
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(ModelUtil.PARTICLE_ALL_TEXTURE_KEYS, tex);
     }
 
     @Info("Sets the block to have the same bounding box as TFC's ore pieces")
@@ -62,13 +78,6 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Deprecated(since = "1.3.3", forRemoval = true)
-    @Info("Invalid method, do not use")
-    public GroundCoverBlockBuilder notAxisAligned() {
-        ConsoleJS.STARTUP.warn("#notAxisAligned() is deprecated and marked for removal");
-        return this;
-    }
-
     @Info("Makes the block collide with entities")
     public GroundCoverBlockBuilder collision() {
         noCollision = false;
@@ -76,10 +85,10 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("Sets the 'block item' of this block to an existing item")
-    public GroundCoverBlockBuilder withPreexistingItem(ResourceLocation item) {
+    public GroundCoverBlockBuilder withPreexistingItem(Holder<Item> item) {
         itemBuilder = null;
-        preexistingItem = Suppliers.memoize(() -> BuiltInRegistries.ITEM.get(item));
-        KubeRegisterInteractionsEvent.addBlockItemPlacement(preexistingItem, this);
+        preexistingItem = item;
+        KubeRegisterInteractionsEvent.addBlockItemPlacement(item::value, this);
         return this;
     }
 
@@ -100,55 +109,53 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @HideFromJS
-    public Supplier<Item> itemSupplier() {
+    @Nullable
+    public ItemLike pickItem() {
         if (preexistingItem != null) {
-            return preexistingItem;
+            return preexistingItem::value;
         } else if (itemBuilder != null) {
-            return itemBuilder;
+            return itemBuilder::get;
         } else {
             return null;
         }
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        return texture("all", tex);
-    }
-
-    @Override
     public GroundcoverBlock createObject() {
-        return new GroundcoverBlock(createExtendedProperties(), getShape(), itemSupplier());
+        return new GroundcoverBlock(createExtendedProperties(), getShape());
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        m.parent("item/generated");
-        m.texture("layer0", newID("item/", "").toString());
+    public ExtendedProperties createExtendedProperties() {
+        return super.createExtendedProperties()
+                .cloneItem(pickItem());
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("kubejs_tfc:block/ground_cover/" + parent);
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotParented(generator, this, m -> {
+            m.parent(KubeJSTFC.tfc("block/ground_cover/" + parent));
             m.textures(textures);
         });
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String m = ResourceUtils.plainModel(this);
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m , g -> {
+            g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
+            g.texture("layer0", ModelUtil.basicTexture(this, "item"));
+        });
+    }
+
+    @Override
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        final ResourceLocation m = ModelUtil.plainModel(this);
         bs.variant("", v -> {
             v.model(m);
             v.model(m).y(90);
             v.model(m).y(180);
             v.model(m).y(270);
         });
-    }
-
-    @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTableBasic(generator, this, itemSupplier());
     }
 
     private enum Type {

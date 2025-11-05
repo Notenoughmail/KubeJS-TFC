@@ -15,8 +15,6 @@ import java.util.Map;
 
 public class MoldItemBuilder extends FluidCapacityItemBuilder {
 
-    private static final ResourceLocation[] MOLD_TABLE = Assistant.single(TFCTags.Items.USABLE_IN_MOLD_TABLE.location());
-
     public transient String @Nullable [] moldTablePattern;
     @Nullable
     public transient Map<String, String> moldTableTextures;
@@ -37,7 +35,7 @@ public class MoldItemBuilder extends FluidCapacityItemBuilder {
 
     @Info("Allows the mold to be placed in mold tables and sets the model it uses")
     public MoldItemBuilder allowedInMoldTable(String[] pattern, @Nullable Map<String, String> textures) {
-        tag(MOLD_TABLE);
+        Assistant.singleTag(this, TFCTags.Items.USABLE_IN_MOLD_TABLE);
         if (pattern.length != 14) {
             throw new IllegalArgumentException("Pattern must be 14 high by 14 wide! Was not in %s mold".formatted(id));
         }

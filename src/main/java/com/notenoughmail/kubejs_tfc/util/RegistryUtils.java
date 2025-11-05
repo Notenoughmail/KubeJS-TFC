@@ -1,7 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.BlockEntityTypeAccessor;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.minecraft.core.particles.ParticleOptions;
@@ -44,18 +43,4 @@ public class RegistryUtils {
     public static <T extends BlockEntity> void hackBlockEntity(Supplier<BlockEntityType<T>> be, Supplier<Block> block) {
         blockEntityHacks.computeIfAbsent(UtilsJS.cast(be), type -> new ArrayList<>()).add(block);
     }
-
-    @ApiStatus.Internal
-    static void hackBlockEntities() {
-        blockEntityHacks.forEach((type, blocks) -> {
-            KubeJSTFC.warningLog("For BE type {}", () -> BlockEntityType.getKey(type.get()));
-            KubeJSTFC.warningLog("Adding: {}", () -> blocks.stream().map(Supplier::get).toList());
-            final BlockEntityTypeAccessor accessor = (BlockEntityTypeAccessor) type.get();
-            final Set<Block> blockSet = new HashSet<>(accessor.kubejs_tfc$GetBlocks());
-            blocks.forEach(block -> blockSet.add(block.get()));
-            accessor.kubejs_tfc$SetBlocks(blockSet);
-        });
-        blockEntityHacks.clear();
-    }
-
 }
