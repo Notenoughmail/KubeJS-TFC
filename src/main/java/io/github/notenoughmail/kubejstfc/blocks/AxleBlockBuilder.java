@@ -38,7 +38,6 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         windmill = new WindmillBlockBuilder(id.withSuffix("_windmill"), this);
         texture = id.withPrefix("block/");
         BuilderRefs.hackBlockEntity(TFCBlockEntities.AXLE, this);
-        ModelUtil.defaultTexture(this);
     }
 
     @Override

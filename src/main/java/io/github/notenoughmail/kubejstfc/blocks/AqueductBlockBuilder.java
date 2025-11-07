@@ -10,8 +10,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.util.IModelSegment;
-import io.github.notenoughmail.kubejstfc.util.ModelUtil;
+import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.fluids.FluidProperty;
 import net.dries007.tfc.util.Helpers;
@@ -40,7 +39,6 @@ public class AqueductBlockBuilder extends BlockBuilder {
         super(i);
         renderType(BlockRenderType.CUTOUT);
         fluidProperty = AqueductBlock.FLUID;
-        ModelUtil.defaultTexture(this);
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.textures(textures);
@@ -120,7 +118,7 @@ public class AqueductBlockBuilder extends BlockBuilder {
         bs.part("south=false", AqueductModelPart.SOUTH.modelEx(this));
     }
 
-    public enum AqueductModelPart implements IModelSegment {
+    public enum AqueductModelPart implements ISupplyModels {
         BASE,
         NORTH,
         SOUTH,

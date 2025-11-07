@@ -22,7 +22,6 @@ public class RawRockBlockBuilder extends BlockBuilder {
     public RawRockBlockBuilder(ResourceLocation i) {
         super(i);
         uniqueSideTextures = false;
-        ModelUtil.defaultTexture(this);
     }
 
     @Override
@@ -79,6 +78,6 @@ public class RawRockBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, m, super::generateItemModel);
+        ModelUtil.itemModelGen(this, true, m, super::generateItemModel);
     }
 }

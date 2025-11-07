@@ -42,8 +42,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
 
     @Override
     public void init() {
-        RegistryInfo.BLOCK.addType("tfc:loose_rock", LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:thin_spike", ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_spreading_block", MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_spreading_slab", MossSpreadingSlabBuilder.class, MossGrowingSlabBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_spreading_stair", MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
@@ -52,7 +50,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:moss_growing_slab", MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_growing_stair", MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:moss_growing_wall", MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:lamp", LampBlockBuilder.class, LampBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:stationary_berry_bush", StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:spreading_berry_bush", SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:crop", DefaultCropBlockBuilder.class, DefaultCropBlockBuilder::new);
@@ -61,9 +58,7 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         RegistryInfo.BLOCK.addType("tfc:spreading_crop", SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:wild_crop", WildCropBlockBuilder.class, WildCropBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:support", SupportBlockBuilder.class, SupportBlockBuilder::new);
         RegistryInfo.BLOCK.addType("tfc:torch", TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:leaves", TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
     }
 
     @Override

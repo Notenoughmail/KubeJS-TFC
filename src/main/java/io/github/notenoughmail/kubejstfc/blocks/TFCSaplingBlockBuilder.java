@@ -34,7 +34,6 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
         growth = () -> 8;
         treeGrower = Wood.OAK.tree();
         sand = false;
-        ModelUtil.defaultTexture(this);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
     }
 
@@ -112,9 +111,6 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, m, g -> {
-            g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
-            g.texture("layer0", textures.get("cross"));
-        });
+        ModelUtil.basicItemModelGen(this, false, m);
     }
 }

@@ -14,7 +14,7 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.TFCDirtBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
-import io.github.notenoughmail.kubejstfc.util.IModelSegment;
+import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
@@ -29,6 +29,8 @@ import java.util.function.BiConsumer;
 
 @SuppressWarnings("unused")
 public class ConnectedGrassBlockBuilder extends BlockBuilder {
+
+    private static final ResourceLocation GRASS_INV = KubeJSTFC.tfc("item/grass_inv");
 
     public transient final TFCDirtBlockBuilder parent;
 
@@ -93,7 +95,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
     @Override
     protected void generateItemModel(ModelGenerator m) {
         ModelUtil.itemModelGen(this, false, m, g -> {
-            g.parent(ModelUtil.GRASS_INV);
+            g.parent(GRASS_INV);
             g.textures(itemBuilder.textures);
         });
     }
@@ -135,7 +137,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
         }
     }
 
-    public enum GrassModelPart implements IModelSegment {
+    public enum GrassModelPart implements ISupplyModels {
         BOTTOM(false, false, false, true),
         TOP(false, false, true, false),
         SNOWY_TOP(true, false, true, false),

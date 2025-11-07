@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.registry.BuilderBase;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface Assistant {
 
@@ -73,6 +75,11 @@ public interface Assistant {
 
     static void toolItemAttributes(HandheldItemBuilder builder) {
         builder.itemAttributeModifiers = ToolItem.productAttributes(builder.toolTier, builder.attackDamageBaseline, builder.speedBaseline);
+    }
+
+    @Nullable
+    static <T> Supplier<T> holderAsSupplier(@Nullable Holder<T> holder) {
+        return holder == null ? null : holder::value;
     }
 
     @Nullable

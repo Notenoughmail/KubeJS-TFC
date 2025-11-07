@@ -1,14 +1,16 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.notenoughmail.kubejs_tfc.block.sub.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.sub.HorizontalSupportBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.VerticalSupportBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -19,23 +21,26 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
+    private static final ResourceLocation CONNECTION = KubeJSTFC.tfc("block/wood/support/connection");
+    private static final ResourceLocation VERTICAL = KubeJSTFC.tfc("block/wood/support/vertical");
+    private static final ResourceLocation INVENTORY = KubeJSTFC.tfc("block/wood/support/inventory");
+
     public transient final HorizontalSupportBlockBuilder horizontal;
-    public transient String connection;
+    public transient ResourceLocation connectionModel;
     public transient boolean defaultConnection;
 
     public SupportBlockBuilder(ResourceLocation i) {
         super(i);
-        horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
+        horizontal = new HorizontalSupportBlockBuilder(id.withSuffix("_horizontal"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
-        connection = newID("block/", "_connection").toString();
+        Assistant.singleTag(this, TFCTags.Blocks.SUPPORT_BEAMS);
+        connectionModel = newID("block/", "_connection");
         defaultConnection = true;
-        tag(TFCTags.Blocks.SUPPORT_BEAM.location());
-        horizontal.textureAll(id.getNamespace() + ":block/" + id.getPath());
     }
 
     @Info("Sets the model used by this and the horizontal block for sideways connections")
-    public SupportBlockBuilder connectionModel(String model) {
-        this.connection = model;
+    public SupportBlockBuilder connectionModel(ResourceLocation model) {
+        this.connectionModel = model;
         defaultConnection = false;
         return this;
     }
@@ -58,35 +63,38 @@ public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    protected void generateMultipartBlockStateJson(MultipartBlockStateGenerator bs) {
-        bs.part("", ResourceUtils.plainModel(this));
-        bs.part("north=true", p -> p.model(connection).y(270));
-        bs.part("east=true", connection);
-        bs.part("south=true", p -> p.model(connection).y(90));
-        bs.part("west=true", p -> p.model(connection).y(180));
-    }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent("tfc:block/wood/support/inventory");
-            m.textures(textures);
-        }
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("tfc:block/wood/support/vertical");
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotDefined(generator, this, m -> {
+            m.parent(VERTICAL);
             m.textures(textures);
         });
         if (defaultConnection) {
-            generator.blockModel(newID("", "_connection"), m -> {
-                m.parent("tfc:block/wood/support/connection");
+            generator.blockModel(id.withSuffix("_connection"), m -> {
+                m.parent(CONNECTION);
                 m.textures(textures);
             });
         }
+    }
+
+    @Override
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m, g -> {
+            g.parent(INVENTORY);
+            g.textures(textures);
+        });
+    }
+
+    @Override
+    protected boolean useMultipartBlockState() {
+        return true;
+    }
+
+    @Override
+    protected void generateMultipartBlockState(MultipartBlockStateGenerator bs) {
+        bs.part("", ModelUtil.plainModel(this));
+        bs.part("north=true", p -> p.model(connectionModel).y(270));
+        bs.part("east=true", connectionModel);
+        bs.part("south=true", p -> p.model(connectionModel).y(90));
+        bs.part("west=true", p -> p.model(connectionModel).y(180));
     }
 }

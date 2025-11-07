@@ -5,7 +5,7 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 
 @HideFromJS
-public interface IModelSegment {
+public interface ISupplyModels {
 
     String str();
 

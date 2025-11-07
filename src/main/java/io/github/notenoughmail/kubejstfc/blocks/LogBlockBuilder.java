@@ -34,7 +34,6 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.stripped = stripped;
         blockItemModel = false;
-        ModelUtil.defaultTexture(this);
         tag(LOGS);
         Assistant.singleTag(itemBuilder, TFCTags.Items.LOG_PILE_LOGS);
     }
@@ -73,7 +72,7 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
+        ModelUtil.ifNotDefined(generator, this, m -> {
             m.parent(ModelUtil.CUBE_COLUMN);
             m.textures(textures);
         });

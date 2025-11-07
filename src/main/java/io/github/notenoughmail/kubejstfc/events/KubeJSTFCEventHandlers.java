@@ -40,10 +40,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -151,6 +148,11 @@ public class KubeJSTFCEventHandlers {
                 .filter(Predicate.not(FluidCapacityItemBuilder::mold))
                 .map(ItemBuilder::get)
                 .toArray(ItemLike[]::new);
+        final ItemLike[] lamps = BuilderRefs.lamps.stream()
+                .map(b -> b.itemBuilder)
+                .filter(Objects::nonNull)
+                .map(ItemBuilder::get)
+                .toArray(ItemLike[]::new);
 
         if (molds.length != 0) {
             event.registerItem(ItemCapabilities.MOLD, ItemCapabilities::forMold, molds);
@@ -160,6 +162,10 @@ public class KubeJSTFCEventHandlers {
 
         if (notMolds.length != 0) {
             event.registerItem(ItemCapabilities.FLUID, ItemCapabilities::forBucket, notMolds);
+        }
+
+        if (lamps.length != 0) {
+            event.registerItem(ItemCapabilities.FLUID, ItemCapabilities::forLamp, lamps);
         }
     }
 

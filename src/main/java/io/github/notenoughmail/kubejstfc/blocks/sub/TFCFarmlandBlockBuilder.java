@@ -13,6 +13,7 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
+import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -20,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
+
+    private static final ResourceLocation FARMLAND = Helpers.identifierMC("block/template_farmland");
 
     private static final String[] TEXTURE_KEYS = { "particle", "top", "dirt" };
 
@@ -60,7 +63,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
         ModelUtil.ifNotDefined(generator, this, m -> {
-            m.parent(ModelUtil.FARMLAND);
+            m.parent(FARMLAND);
             m.textures(textures);
         });
     }

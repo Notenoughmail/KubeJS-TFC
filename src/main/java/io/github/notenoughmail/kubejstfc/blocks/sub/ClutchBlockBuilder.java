@@ -35,7 +35,6 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         this.parent = parent;
         BuilderRefs.hackBlockEntity(TFCBlockEntities.CLUTCH, this);
         renderType(BlockRenderType.CUTOUT);
-        ModelUtil.defaultTexture(this);
         textures.put("overlay_end", "tfc:block/axle_casing_front");
         models = (m, g) -> {
             g.parent(ModelUtil.ORE_COLUMN);

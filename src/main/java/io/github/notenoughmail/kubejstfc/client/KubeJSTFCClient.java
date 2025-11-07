@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.color.KubeColor;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.WaterWheelBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
@@ -25,8 +26,11 @@ import net.dries007.tfc.client.render.blockentity.WindmillBlockEntityRenderer;
 import net.dries007.tfc.client.render.entity.ThrownJavelinRenderer;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
@@ -48,6 +52,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mod(value = KubeJSTFC.ID, dist = Dist.CLIENT)
@@ -70,6 +75,10 @@ public class KubeJSTFCClient {
         if (KubeJSTFCEventHandlers.placedItemModels.hasListeners()) {
             KubeJSTFCEventHandlers.placedItemModels.post(new KubePlacedItemModelEvent());
         }
+
+        final Predicate<RenderType> leaves = rt -> rt == (Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid());
+
+        BuilderRefs.leafColors.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
 
         event.enqueueWork(() -> {
             for (WindmillBladeItemBuilder builder : BuilderRefs.windmillBlades) {
@@ -123,9 +132,14 @@ public class KubeJSTFCClient {
             event.register(ContainedFluidModel.COLOR, BuilderRefs.fluidContainers.stream().map(ItemBuilder::get).toArray(ItemLike[]::new));
         }
 
-        final ItemColor grass = (stack, index) -> TFCColors.getGrassColor(null, index);
         if (!BuilderRefs.grassBlockColor.isEmpty()) {
+            final ItemColor grass = (stack, index) -> TFCColors.getGrassColor(null, index);
             event.register(grass, forItemColors(BuilderRefs.grassBlockColor));
+        }
+
+        if (!BuilderRefs.leafColors.isEmpty()) {
+            final ItemColor foliage = (stack, index) -> TFCColors.getFoliageColor(null, index);
+            event.register(foliage, forItemColors(Cast.to(BuilderRefs.leafColors)));
         }
     }
 
@@ -143,6 +157,15 @@ public class KubeJSTFCClient {
         if (!BuilderRefs.grassBlockColor.isEmpty()) {
             event.register(grassBlock, forBlockColors(BuilderRefs.grassBlockColor));
         }
+        final BlockColor foliageColor = (state, level, pos, index) -> TFCColors.getFoliageColor(pos, index);
+        BuilderRefs.leafColors.forEach(b -> event.register(
+                b.seasonalColors() ?
+                        (state, level, pos, index) -> TFCColors.getSeasonalFoliageColor(pos, index, b.autumnIndex()) :
+                        b.isFallen() ?
+                                (state, level, pos, index) -> 0xCF7D13 :
+                                foliageColor,
+                b.get()
+        ));
     }
 
     private static Block[] forBlockColors(List<? extends Supplier<Block>> builders) {

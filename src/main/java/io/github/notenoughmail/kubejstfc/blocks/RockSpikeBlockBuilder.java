@@ -9,7 +9,7 @@ import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.util.IModelSegment;
+import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -74,7 +74,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         }
     }
 
-    public enum SpikeModelType implements IModelSegment {
+    public enum SpikeModelType implements ISupplyModels {
         BASE,
         MIDDLE,
         TIP;

@@ -33,7 +33,6 @@ public class GearBoxBlockBuilder extends ExtendedPropertiesBlockBuilder {
         this.parent = parent;
         BuilderRefs.hackBlockEntity(TFCBlockEntities.GEAR_BOX, this);
         renderType(BlockRenderType.CUTOUT);
-        ModelUtil.defaultTexture(this);
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.texture("overlay", p.defaultOverlay);

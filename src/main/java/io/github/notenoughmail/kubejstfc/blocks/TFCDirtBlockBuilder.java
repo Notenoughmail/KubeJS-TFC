@@ -90,7 +90,7 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
+        ModelUtil.ifNotDefined(generator, this, m -> {
             m.parent(KubeAssetGenerator.CUBE_BLOCK_MODEL);
             m.textures(textures);
         });

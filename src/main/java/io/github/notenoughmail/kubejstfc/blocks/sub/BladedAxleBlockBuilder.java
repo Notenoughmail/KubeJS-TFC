@@ -24,7 +24,6 @@ public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.parent = parent;
         BuilderRefs.hackBlockEntity(TFCBlockEntities.BLADED_AXLE, this);
-        ModelUtil.defaultTexture(this);
     }
 
     @Override

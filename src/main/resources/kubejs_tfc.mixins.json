@@ -18,10 +18,7 @@
     "StructureMixin$StructureStartMixin",
     "TFCChunkGeneratorMixin",
     "TorchItemMixin",
-    "accessor.BlockBuilderAccessor",
-    "accessor.BlockEntityTypeAccessor",
-    "accessor.ExtendedPropertiesAccessor",
-    "accessor.KubeJSCraftingRecipeAccessor"
+    "accessor.ExtendedPropertiesAccessor"
   ],
   "client": [
   ],

@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.registry;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.WaterWheelBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
 import io.github.notenoughmail.kubejstfc.items.HammerItemBuilder;
@@ -100,6 +101,16 @@ public interface BuilderRefs {
      */
     List<BlockBuilder> grassBlockColor = new ArrayList<>();
 
+    /**
+     * Blocks which should have TFC's seasonal leaf block tinting
+     */
+    List<LeavesBuilder> leafColors = new ArrayList<>();
+
+    /**
+     * Blocks whose items should have the lamp fluid capability attached
+     */
+    List<BlockBuilder> lamps = new ArrayList<>();
+
     @ApiStatus.Internal
     static void clear() {
         powderGlassOperations.clear();
@@ -111,5 +122,7 @@ public interface BuilderRefs {
 
         waterWheels.clear();
         grassBlockColor.clear();
+        leafColors.clear();
+        lamps.clear();
     }
 }

@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.TFCDirtBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -16,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class TFCPathBlockBuilder extends BlockBuilder {
 
+    private static final ResourceLocation GRASS_PATH = KubeJSTFC.tfc("block/grass_path");
+
     private static final String[] TEXTURE_KEYS = { "particle", "top", "side", "dirt" };
 
     public transient final TFCDirtBlockBuilder parent;
@@ -23,7 +26,6 @@ public class TFCPathBlockBuilder extends BlockBuilder {
     public TFCPathBlockBuilder(ResourceLocation i, TFCDirtBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        ModelUtil.defaultTexture(this);
     }
 
     @Override
@@ -47,8 +49,8 @@ public class TFCPathBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
-            m.parent(ModelUtil.GRASS_PATH);
+        ModelUtil.ifNotDefined(generator, this, m -> {
+            m.parent(GRASS_PATH);
             m.textures(textures);
         });
     }

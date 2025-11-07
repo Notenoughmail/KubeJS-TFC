@@ -26,7 +26,6 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
         tier = 0;
         BuilderRefs.hackBlockEntity(TFCBlockEntities.ANVIL, this);
         Assistant.singleTag(this, TFCTags.Items.ANVILS);
-        ModelUtil.defaultTexture(this);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
+        ModelUtil.ifNotDefined(generator, this, m -> {
             m.parent(KubeJSTFC.tfc("block/anvil"));
             m.textures(textures);
         });

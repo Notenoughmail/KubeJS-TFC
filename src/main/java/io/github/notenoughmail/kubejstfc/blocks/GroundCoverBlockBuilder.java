@@ -133,7 +133,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
+        ModelUtil.ifNotDefined(generator, this, m -> {
             m.parent(KubeJSTFC.tfc("block/ground_cover/" + parent));
             m.textures(textures);
         });
@@ -141,10 +141,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, m , g -> {
-            g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
-            g.texture("layer0", ModelUtil.basicTexture(this, "item"));
-        });
+        ModelUtil.basicItemModelGen(this, false, m);
     }
 
     @Override

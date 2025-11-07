@@ -26,7 +26,6 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public EncasedAxleBlockBuilder(ResourceLocation i) {
         super(i);
         textures(OVERLAY_TEXTURES);
-        ModelUtil.defaultTexture(this);
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.ENCASED_AXLE, this);
     }
@@ -49,7 +48,7 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotParented(generator, this, m -> {
+        ModelUtil.ifNotDefined(generator, this, m -> {
             m.parent(ModelUtil.ORE_COLUMN);
             m.textures(textures);
         });

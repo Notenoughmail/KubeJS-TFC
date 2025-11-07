@@ -23,7 +23,6 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public WaterWheelBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
-        texture(id.withPrefix("block/").toString());
         wheelTexture(parent.id);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
         BuilderRefs.waterWheels.add(this);
@@ -61,9 +60,6 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, m, g -> {
-            g.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
-            g.texture("layer0", ModelUtil.basicTexture(this, "item"));
-        });
+        ModelUtil.basicItemModelGen(this, false, m);
     }
 }

@@ -2,8 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.KubeJSCraftingRecipeAccessor;
-import dev.latvian.mods.kubejs.core.CraftingContainerKJS;
 import dev.latvian.mods.kubejs.core.PlayerKJS;
 import dev.latvian.mods.kubejs.recipe.ModifyRecipeCraftingGrid;
 import dev.latvian.mods.kubejs.recipe.ModifyRecipeResultCallback;
@@ -21,7 +19,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -56,7 +53,7 @@ public class KubeAdvancedShapelessRecipe extends AdvancedShapelessRecipe impleme
     @Override
     public ItemStack assemble(CraftingContainer inventory, RegistryAccess registryAccess) {
         if (!stage.isEmpty()) {
-            final Player player = KubeJSCraftingRecipeAccessor.kubejs_tfc$getPlayer(((CraftingContainerKJS) inventory).kjs$getMenu());
+            // final Player player = KubeJSCraftingRecipeAccessor.kubejs_tfc$getPlayer(((CraftingContainerKJS) inventory).kjs$getMenu());
             if (player == null || !((PlayerKJS) player).kjs$getStages().has(stage)) {
                 return ItemStack.EMPTY;
             }

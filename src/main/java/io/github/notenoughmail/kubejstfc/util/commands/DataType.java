@@ -83,7 +83,7 @@ public interface DataType<T> {
         }
 
         private static final DynamicCommandExceptionType ERROR_INVALID = new DynamicCommandExceptionType(loc -> Component.literal("Unknown DataType '%s'".formatted(loc)));
-        private static final DynamicCommandExceptionType ERROR_UNSEARCHABLE = new DynamicCommandExceptionType(loc -> Component.literal("DataType %s cannot be searched".formatted(loc)));
+        private static final DynamicCommandExceptionType ERROR_UNSEARCHABLE = new DynamicCommandExceptionType(loc -> Component.literal("DataType '%s' cannot be searched".formatted(loc)));
 
         static DataType<?> getDataType(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
             final ResourceLocation loc = ctx.getArgument(name, ResourceLocation.class);
