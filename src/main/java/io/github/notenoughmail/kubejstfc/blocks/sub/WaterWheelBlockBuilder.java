@@ -25,12 +25,11 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
         this.parent = parent;
         wheelTexture(parent.id);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
-        BuilderRefs.waterWheels.add(this);
     }
 
     @Info("Sets the texture that will be used for the water wheel, the path will be relative to the `/textures/entity/water_wheel/` subdirectory")
     public WaterWheelBlockBuilder wheelTexture(ResourceLocation tex) {
-        texture = tex.withPath(s -> "textures/entity/water_wheel" + s + ".png");
+        texture = tex.withPath(s -> "textures/entity/water_wheel/" + s + ".png");
         return this;
     }
 
@@ -42,7 +41,7 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new WaterWheelBlock(createExtendedProperties(), Cast.to(parent));
+        return new WaterWheelBlock(createExtendedProperties(), Cast.to(parent), texture);
     }
 
     @Override

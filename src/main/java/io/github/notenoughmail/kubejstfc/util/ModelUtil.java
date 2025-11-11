@@ -4,7 +4,6 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
@@ -13,9 +12,9 @@ public interface ModelUtil {
 
     ResourceLocation DEFAULT_ITEM_PARENT = ResourceLocation.fromNamespaceAndPath("neoforge", "item/default");
     ResourceLocation TFC_EMPTY = KubeJSTFC.tfc("block/empty");
-    ResourceLocation CUBE_COLUMN = Helpers.identifierMC("block/cube_column");
+    ResourceLocation CUBE_COLUMN = KubeJSTFC.mc("block/cube_column");
     ResourceLocation ORE_COLUMN = KubeJSTFC.tfc("block/ore_column");
-    ResourceLocation CROSS = Helpers.identifierMC("block/cross");
+    ResourceLocation CROSS = KubeJSTFC.mc("block/cross");
 
     String[] PARTICLE_ALL_TEXTURE_KEYS = { "particle", "all" };
 

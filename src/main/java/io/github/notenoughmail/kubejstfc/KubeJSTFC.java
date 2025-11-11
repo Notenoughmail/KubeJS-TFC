@@ -114,6 +114,10 @@ public class KubeJSTFC {
         return Helpers.identifier(path);
     }
 
+    public static ResourceLocation mc(String path) {
+        return Helpers.identifierMC(path);
+    }
+
     @FunctionalInterface
     public interface MapBuilder<T> extends Consumer<ImmutableMap.Builder<ResourceLocation, T>> {}
 }

@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
+import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;

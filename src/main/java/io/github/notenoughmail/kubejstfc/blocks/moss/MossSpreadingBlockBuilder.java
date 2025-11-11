@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.block.moss;
+package io.github.notenoughmail.kubejstfc.blocks.moss;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import net.dries007.tfc.common.blocks.rock.MossSpreadingBlock;

@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.events;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventTargetType;

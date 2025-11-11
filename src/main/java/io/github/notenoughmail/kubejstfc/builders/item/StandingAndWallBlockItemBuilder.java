@@ -1,4 +1,4 @@
-package com.notenoughmail.kubejs_tfc.item.internal;
+package io.github.notenoughmail.kubejstfc.builders.item;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;

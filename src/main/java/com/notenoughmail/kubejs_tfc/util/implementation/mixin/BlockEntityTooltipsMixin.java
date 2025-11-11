@@ -3,7 +3,7 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import net.dries007.tfc.compat.jade.common.BlockEntityTooltips;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;

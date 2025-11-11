@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.util;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.drop.BlockDropSupplier;
 import dev.latvian.mods.kubejs.block.drop.BlockDrops;
+import net.minecraft.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -43,6 +44,8 @@ public interface LootUtil {
             pool.add(item);
         }
 
+        p.accept(pool);
+
         return new LootTable.Builder().withPool(pool).build();
     }
 
@@ -51,6 +54,17 @@ public interface LootUtil {
         final BlockDrops drops = determineDrops(builder);
         if (drops == null) return null;
         return singlePool(drops, p);
+    }
+
+    @Nullable
+    static LootTable singlePool(BlockDropSupplier drops, Consumer<LootPool.Builder> p) {
+        if (drops == null) {
+            return new LootTable.Builder().withPool(Util.make(new LootPool.Builder(), p)).build();
+        } else if (drops == BlockDropSupplier.NO_DROPS) {
+            return null;
+        } else {
+            return basic(drops.get());
+        }
     }
 
     @Nullable

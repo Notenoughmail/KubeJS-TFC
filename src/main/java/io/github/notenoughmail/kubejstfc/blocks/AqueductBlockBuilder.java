@@ -13,7 +13,6 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.fluids.FluidProperty;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -67,7 +66,7 @@ public class AqueductBlockBuilder extends BlockBuilder {
     })
     public AqueductBlockBuilder allowedFluids(ResourceLocation[] fluids) {
         this.fluids = new ArrayList<>(fluids.length + 1);
-        this.fluids.add(Helpers.identifierMC("empty"));
+        this.fluids.add(KubeJSTFC.mc("empty"));
         this.fluids.addAll(Arrays.asList(fluids));
         return this;
     }

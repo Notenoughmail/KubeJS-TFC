@@ -6,7 +6,6 @@ import dev.latvian.mods.kubejs.color.KubeColor;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.blocks.sub.WaterWheelBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.events.client.KubePlacedItemModelEvent;
@@ -21,7 +20,6 @@ import net.dries007.tfc.client.model.ContainedFluidModel;
 import net.dries007.tfc.client.model.entity.WindmillBladeModel;
 import net.dries007.tfc.client.render.blockentity.BowlBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.TripHammerBlockEntityRenderer;
-import net.dries007.tfc.client.render.blockentity.WaterWheelBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.WindmillBlockEntityRenderer;
 import net.dries007.tfc.client.render.entity.ThrownJavelinRenderer;
 import net.dries007.tfc.common.blocks.soil.ConnectedGrassBlock;
@@ -108,10 +106,6 @@ public class KubeJSTFCClient {
                         e != null && ((e.isUsingItem() && e.getUseItem() == s) || (e instanceof Monster m && m.isAggressive())) ? 1F : 0F
                 );
                 ThrownJavelinRenderer.JAVELIN_TEXTURES.put(builder.get(), builder.thrownTexture);
-            }
-
-            for (WaterWheelBlockBuilder builder : BuilderRefs.waterWheels) {
-                WaterWheelBlockEntityRenderer.TEXTURES.put(builder.get(), builder.texture);
             }
         });
     }

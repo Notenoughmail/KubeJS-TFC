@@ -2,8 +2,8 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.player.ChiselMode;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
@@ -99,11 +99,11 @@ public class ChiselModeBuilder extends BuilderBase<ChiselMode> {
 
     private record RecipeIcon(ResourceLocation tex, int u, int v, int width, int height) {
 
-        static final RecipeIcon DEFAULT = new RecipeIcon(Helpers.identifierMC("missingno"), 0, 0, 16, 16);
+        static final RecipeIcon DEFAULT = new RecipeIcon(KubeJSTFC.mc("missingno"), 0, 0, 16, 16);
     }
 
     private record HotbarIcon(ResourceLocation tex, int u, int v) {
 
-        static final HotbarIcon DEFAULT = new HotbarIcon(Helpers.identifierMC("missingno"), 0, 0);
+        static final HotbarIcon DEFAULT = new HotbarIcon(KubeJSTFC.mc("missingno"), 0, 0);
     }
 }

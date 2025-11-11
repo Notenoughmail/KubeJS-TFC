@@ -1,15 +1,16 @@
-package com.notenoughmail.kubejs_tfc.block.sub;
+package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.block.TFCTorchBlockBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.TFCTorchBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCWallTorchBlock;
@@ -20,29 +21,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
+    private static final ResourceLocation WALL_TORCH = KubeJSTFC.mc("block/wall_torch");
+
     private final TFCTorchBlockBuilder parent;
 
     public TFCWallTorchBuilder(ResourceLocation i, TFCTorchBlockBuilder parent) {
         super(i);
-        noItem();
-        lootTable = null;
+        itemBuilder = null;
         this.parent = parent;
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
-        textureAll("minecraft:block/torch");
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
         lightLevel(14F / 15F);
-        renderType("cutout");
+        renderType(BlockRenderType.CUTOUT);
+    }
+
+    @Override
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TFCTorchBlockBuilder.TEXTURE_KEYS, tex);
     }
 
     @Override
@@ -59,25 +66,16 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        return texture("torch", tex);
-    }
-
-    @Override
-    protected void generateItemModelJson(ModelGenerator m) {}
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("minecraft:block/wall_torch");
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotDefined(generator, this, m -> {
+            m.parent(WALL_TORCH);
             m.textures(textures);
         });
     }
 
     @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
-        final String m = ResourceUtils.plainModel(this);
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        final ResourceLocation m = ModelUtil.plainModel(this);
         bs.simpleVariant("facing=east", m);
         bs.variant("facing=north", v -> v.model(m).y(270));
         bs.variant("facing=south", v -> v.model(m).y(90));
@@ -85,7 +83,10 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {}
+    @Nullable
+    public LootTable generateLootTable(KubeDataGenerator generator) {
+        return null;
+    }
 
     private class Impl extends TFCWallTorchBlock implements ICustomTorchBlock {
 
@@ -100,8 +101,12 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
                     x = pPos.getX() + 0.5D + 0.27D * (double) dir.getStepX(),
                     y = pPos.getY() + 0.92D,
                     z = pPos.getZ() + 0.5D + 0.27D * (double) dir.getStepZ();
-            parent.smokeParticle.get().ifPresent(p -> pLevel.addParticle(p, x, y, z, 0.0D, 0.0D, 0.0D));
-            parent.flameParticle.get().ifPresent(p -> pLevel.addParticle(p, x, y, z, 0.0D, 0.0D, 0.0D));
+            if (parent.smokeParticle != null) {
+                pLevel.addParticle(parent.smokeParticle.get(), x, y, z, 0D, 0D, 0D);
+            }
+            if (parent.flameParticle != null) {
+                pLevel.addParticle(parent.flameParticle.get(), x, y, z, 0D, 0D, 0D);
+            }
         }
 
         @Override
@@ -116,8 +121,8 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
         }
 
         @Override
-        public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-            return parent.get().use(state, world, pos, player, hand, result);
+        protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+            return parent.get().defaultBlockState().useItemOn(stack, level, player, hand, hitResult);
         }
 
         @Override

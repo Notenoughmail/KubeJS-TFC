@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import io.github.notenoughmail.kubejstfc.blocks.sub.WaterWheelBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.GlassOperationBuilder;
@@ -66,6 +65,7 @@ public interface BuilderRefs {
 
     // Blocks
 
+    @ApiStatus.Internal
     Map<Holder<BlockEntityType<?>>, List<Supplier<Block>>> blockEntityHacks = new IdentityHashMap<>();
 
     /**
@@ -92,11 +92,6 @@ public interface BuilderRefs {
     }
 
     /**
-     * Water wheel blocks, used to register their texture with the renderer
-     */
-    List<WaterWheelBlockBuilder> waterWheels = new ArrayList<>();
-
-    /**
      * Blocks which should have TFC's connected grass block tinting
      */
     List<BlockBuilder> grassBlockColor = new ArrayList<>();
@@ -120,7 +115,6 @@ public interface BuilderRefs {
         rodCast.clear();
         javelins.clear();
 
-        waterWheels.clear();
         grassBlockColor.clear();
         leafColors.clear();
         lamps.clear();

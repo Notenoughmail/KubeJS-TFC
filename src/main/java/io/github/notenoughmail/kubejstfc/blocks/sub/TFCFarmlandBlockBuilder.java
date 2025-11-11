@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.blocks.sub;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.TFCDirtBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -13,7 +14,6 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
-    private static final ResourceLocation FARMLAND = Helpers.identifierMC("block/template_farmland");
+    private static final ResourceLocation FARMLAND = KubeJSTFC.mc("block/template_farmland");
 
     private static final String[] TEXTURE_KEYS = { "particle", "top", "dirt" };
 

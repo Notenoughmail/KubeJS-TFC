@@ -2,13 +2,13 @@ package io.github.notenoughmail.kubejstfc.builders.block;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
-import net.dries007.tfc.util.Helpers;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
 
-    protected static final ResourceLocation LEAVES = Helpers.identifierMC("block/leaves");
+    protected static final ResourceLocation LEAVES = KubeJSTFC.mc("block/leaves");
 
     public transient int autumnIndex;
     public transient boolean seasonalColors;

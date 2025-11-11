@@ -1,5 +1,8 @@
 package io.github.notenoughmail.kubejstfc;
 
+import io.github.notenoughmail.kubejstfc.blocks.moss.MossSpreadingStairBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.moss.*;
+import io.github.notenoughmail.kubejstfc.blocks.TFCTorchBlockBuilder;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentRegistry;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
@@ -95,6 +98,15 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("support"), SupportBlockBuilder.class, SupportBlockBuilder::new);
             c.add(tfc("leaves"), TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
             c.add(tfc("thin_spike"), ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+            c.add(tfc("torch"), TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
+            c.add(tfc("moss_growing_block"), MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
+            c.add(tfc("moss_spreading_block"), MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
+            c.add(tfc("moss_growing_slab"), MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
+            c.add(tfc("moss_spreading_slab"), MossSpreadingSlabBuilder.class, MossSpreadingSlabBuilder::new);
+            c.add(tfc("moss_growing_stair"), MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
+            c.add(tfc("moss_spreading_stair"), MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
+            c.add(tfc("moss_growing_wall"), MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
+            c.add(tfc("moss_spreading_wall"), MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
         });
 
         registry.of(Registries.ITEM, c -> {

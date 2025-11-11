@@ -1,43 +1,57 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
 import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.block.sub.DeadTorchBuilder;
-import com.notenoughmail.kubejs_tfc.block.sub.DeadWallTorchBuilder;
-import com.notenoughmail.kubejs_tfc.block.sub.TFCWallTorchBuilder;
-import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
+import io.github.notenoughmail.kubejstfc.blocks.sub.DeadTorchBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.sub.DeadWallTorchBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.sub.TFCWallTorchBuilder;
+import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
-import dev.latvian.mods.kubejs.block.BlockBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.loot.LootTableEntry;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
+import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.LootUtil;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCTorchBlock;
+import net.dries007.tfc.common.items.Powder;
+import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.common.items.TorchItem;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.events.DouseFireEvent;
+import net.dries007.tfc.util.loot.IsBurntOutCondition;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Lazy;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -53,8 +67,13 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         }
     }
 
+    public static final String[] TEXTURE_KEYS = { "particle", "torch" };
+
+    public static final ResourceLocation TORCH = KubeJSTFC.mc("block/torch");
+
     public transient Supplier<Integer> decayLength;
-    public transient Supplier<Optional<ParticleOptions>> flameParticle, smokeParticle;
+    @Nullable
+    public transient Supplier<ParticleOptions> flameParticle, smokeParticle;
     @HideFromJS
     public final DeadTorchBuilder dead;
     @HideFromJS
@@ -66,24 +85,21 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public TFCTorchBlockBuilder(ResourceLocation i) {
         super(i);
         decayLength = TFCConfig.SERVER.torchTicks;
-        flameParticle = Lazy.of(() -> Optional.of(ParticleTypes.FLAME));
-        smokeParticle = Lazy.of(() -> Optional.of(ParticleTypes.SMOKE));
-        dead = new DeadTorchBuilder(newID("", "_dead"), this);
-        wall = new TFCWallTorchBuilder(newID("", "_wall"), this);
-        deadWall = new DeadWallTorchBuilder(newID("", "_dead_wall"), this);
+        flameParticle = () -> ParticleTypes.FLAME;
+        smokeParticle = () -> ParticleTypes.SMOKE;
+        dead = new DeadTorchBuilder(id.withSuffix("_dead"), this);
+        wall = new TFCWallTorchBuilder(id.withSuffix("_wall"), this);
+        deadWall = new DeadWallTorchBuilder(id.withSuffix("_dead_wall"), this);
         itemBuilder = new StandingAndWallBlockItemBuilder(i, this, wall) {
             @Override
             public Item createObject() {
                 return new TorchItem(TFCTorchBlockBuilder.this.get(), wall.get(), createItemProperties());
             }
         };
-        deadTorchItem = new StandingAndWallBlockItemBuilder(newID("", "_dead"), dead, deadWall);
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
-        itemBuilder.texture("layer0", "minecraft:block/torch");
-        deadTorchItem.texture("layer0", "tfc:block/torch_off");
-        textureAll("minecraft:block/torch");
+        deadTorchItem = new StandingAndWallBlockItemBuilder(dead.id, dead, deadWall);
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
         lightLevel(14F / 15F); // WTF Kube
-        renderType("cutout");
+        renderType(BlockRenderType.CUTOUT);
         noCollision();
         dead.noCollision();
         wall.noCollision();
@@ -91,9 +107,8 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public BlockBuilder textureAll(String tex) {
-        texture("particle", tex);
-        return texture("torch", tex);
+    public ModelledBuilderBase<Block> texture(String tex) {
+        return texture(TEXTURE_KEYS, tex);
     }
 
     @Info("Sets the properties for the dead item, may be null to remove")
@@ -103,15 +118,6 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         } else {
             item.accept(deadTorchItem);
         }
-        return this;
-    }
-
-    @Info("Sets the model for the dead block")
-    public TFCTorchBlockBuilder deadModel(String model) {
-        if (deadTorchItem != null) {
-            deadTorchItem.parentModel(model);
-        }
-        dead.model(model);
         return this;
     }
 
@@ -128,14 +134,14 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("Sets the torch's flame particle, may be null to not have one")
-    public TFCTorchBlockBuilder flameParticle(@Nullable ResourceLocation particle) {
-        flameParticle = RegistryUtils.getParticleOrLogError(particle);
+    public TFCTorchBlockBuilder flameParticle(@Nullable Holder<ParticleOptions> particle) {
+        flameParticle = Assistant.holderAsSupplier(particle);
         return this;
     }
 
     @Info("Sets the torch's smoke particle, may be null to not have one")
-    public TFCTorchBlockBuilder smokeParticle(@Nullable ResourceLocation particle) {
-        smokeParticle = RegistryUtils.getParticleOrLogError(particle);
+    public TFCTorchBlockBuilder smokeParticle(@Nullable Holder<ParticleOptions> particle) {
+        smokeParticle = Assistant.holderAsSupplier(particle);
         return this;
     }
 
@@ -170,49 +176,51 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
-    public void generateAssetJsons(AssetJsonGenerator generator) {
-        super.generateAssetJsons(generator);
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, dead);
+        Assistant.addBlock(registry, wall);
+        Assistant.addBlock(registry, deadWall);
         if (deadTorchItem != null) {
-            if (deadTorchItem.modelJson != null) {
-                generator.json(deadTorchItem.newID("models/item/", ""), deadTorchItem.modelJson);
-            } else {
-                generator.itemModel(deadTorchItem.id, this::deadItemModel);
-            }
+            registry.add(Registries.ITEM, deadTorchItem);
         }
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        m.parent(itemBuilder.parentModel.isEmpty() ? "item/generated" : itemBuilder.parentModel);
-        m.textures(itemBuilder.textureJson);
-    }
-
-    private void deadItemModel(ModelGenerator m) {
-        m.parent(deadTorchItem.parentModel.isEmpty() ? "item/generated" : deadTorchItem.parentModel);
-        m.textures(deadTorchItem.textureJson);
+    public void generateAssets(KubeAssetGenerator generator) {
+        super.generateAssets(generator);
+        if (deadTorchItem != null) {
+            generator.itemModel(deadTorchItem.id, m -> ModelUtil.basicItemModelGen(this, false, m));
+        }
     }
 
     @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        ResourceUtils.ifModelEmpty(generator, this, m -> {
-            m.parent("minecraft:block/torch");
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.basicItemModelGen(this, false, m);
+    }
+
+    @Override
+    protected void generateBlockModels(KubeAssetGenerator generator) {
+        ModelUtil.ifNotDefined(generator, this, m -> {
+            m.parent(TORCH);
             m.textures(textures);
         });
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTable(generator, this, p -> {
-            p.survivesExplosion();
-            p.addEntry(ResourceUtils.alternatives(
-                    (LootTableEntry) ResourceUtils.createEntry("minecraft:stick")
-                            .addCondition(burntOut())
-                            .randomChance(0.25D),
-                    (LootTableEntry) ResourceUtils.createEntry("tfc:powder/wood_ash")
-                            .addCondition(burntOut())
-                            .randomChance(0.25D),
-                    ResourceUtils.createEntry(id.toString())
-                            .addCondition(notBurntOut())
+    @Nullable
+    public LootTable generateLootTable(KubeDataGenerator generator) {
+        return LootUtil.singlePool(drops, p -> {
+            p.when(ExplosionCondition.survivesExplosion());
+            p.add(AlternativesEntry.alternatives(
+                    LootItem.lootTableItem(Items.STICK)
+                            .when(() -> IsBurntOutCondition.INSTANCE)
+                            .when(LootItemRandomChanceCondition.randomChance(0.25F)),
+                    LootItem.lootTableItem(TFCItems.POWDERS.get(Powder.WOOD_ASH))
+                            .when(() -> IsBurntOutCondition.INSTANCE)
+                            .when(LootItemRandomChanceCondition.randomChance(0.25F)),
+                    LootItem.lootTableItem(get())
+                            .when(InvertedLootItemCondition.invert(() -> IsBurntOutCondition.INSTANCE))
             ));
         });
     }
@@ -226,17 +234,6 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
             json.addProperty("condition", "minecraft:inverted");
             json.add("term", burntOut());
         });
-    }
-
-    @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        if (deadTorchItem != null) {
-            RegistryInfo.ITEM.addBuilder(deadTorchItem);
-        }
-        RegistryInfo.BLOCK.addBuilder(dead);
-        RegistryInfo.BLOCK.addBuilder(wall);
-        RegistryInfo.BLOCK.addBuilder(deadWall);
     }
 
     private class Impl extends TFCTorchBlock implements ICustomTorchBlock {
@@ -256,8 +253,12 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
                     x = pPos.getX() + 0.5D,
                     y = pPos.getY() + 0.7D,
                     z = pPos.getZ() + 0.5D;
-            smokeParticle.get().ifPresent(particle -> pLevel.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D));
-            TFCTorchBlockBuilder.this.flameParticle.get().ifPresent(particle -> pLevel.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D));
+            if (smokeParticle != null) {
+                pLevel.addParticle(smokeParticle.get(), x, y, z, 0D, 0D, 0D);
+            }
+            if (TFCTorchBlockBuilder.this.flameParticle != null) {
+                pLevel.addParticle(TFCTorchBlockBuilder.this.flameParticle.get(), x, y, z, 0D, 0D, 0D);
+            }
         }
 
         @Override
