@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
-import com.notenoughmail.kubejs_tfc.util.EventHandlers;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
@@ -109,7 +108,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
         filter.deny(KubeJSTFCPlugin.class);
         filter.deny(RegistryUtils.class);
-        filter.deny(EventHandlers.class);
         filter.deny(ClientEventHandlers.class);
         filter.deny("com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin");

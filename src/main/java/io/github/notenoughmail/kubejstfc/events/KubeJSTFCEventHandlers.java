@@ -1,6 +1,5 @@
 package io.github.notenoughmail.kubejstfc.events;
 
-import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.event.EventTargetType;
@@ -13,6 +12,7 @@ import io.github.notenoughmail.kubejstfc.events.common.KubeCustomNutritionEvent;
 import io.github.notenoughmail.kubejstfc.events.server.*;
 import io.github.notenoughmail.kubejstfc.events.startup.*;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import net.dries007.tfc.common.capabilities.ItemCapabilities;
@@ -59,6 +59,7 @@ public class KubeJSTFCEventHandlers {
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> KubeSelectClimateModelEvent.class);
     public static final TargetedEventHandler<ResourceKey<MenuType<?>>> limitContainers = TFCEvents.startup("limitContainers", () -> KubeLimitContainerEvent.class).requiredTarget(PlayerEvents.MENU_TARGET);
     public static final EventHandler data = TFCEvents.server("data", () -> KubeTFCDataEvent.class);
+    public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> KubeTFCWorldgenDataEvent.class);
 
     // STARTUP
     public static final EventHandler defaultWorldSettings = TFCEvents.startup("defaultWorldSettings", () -> KubeDefaultWorldSettingsEvent.class);

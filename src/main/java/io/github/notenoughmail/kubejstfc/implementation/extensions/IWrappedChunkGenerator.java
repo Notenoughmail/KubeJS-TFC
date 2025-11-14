@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.implementation.extensions;
 
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.generator.WrappedChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 
 public interface IWrappedChunkGenerator {

@@ -1,12 +1,7 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
 import com.google.gson.JsonObject;
-import io.github.notenoughmail.kubejstfc.blocks.sub.DeadTorchBuilder;
-import io.github.notenoughmail.kubejstfc.blocks.sub.DeadWallTorchBuilder;
-import io.github.notenoughmail.kubejstfc.blocks.sub.TFCWallTorchBuilder;
-import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
-import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
@@ -17,7 +12,12 @@ import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.sub.DeadTorchBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.sub.DeadWallTorchBuilder;
+import io.github.notenoughmail.kubejstfc.blocks.sub.TFCWallTorchBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;

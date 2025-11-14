@@ -1,6 +1,6 @@
 package com.notenoughmail.kubejs_tfc.util.implementation;
 
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomCropBlock;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomCropBlock;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;

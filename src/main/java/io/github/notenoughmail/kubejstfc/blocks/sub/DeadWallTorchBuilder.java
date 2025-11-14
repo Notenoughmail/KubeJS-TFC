@@ -1,14 +1,14 @@
 package io.github.notenoughmail.kubejstfc.blocks.sub;
 
 import dev.latvian.mods.kubejs.block.BlockRenderType;
+import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.TFCTorchBlockBuilder;
-import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
-import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.DeadWallTorchBlock;
 import net.dries007.tfc.common.blocks.ExtendedProperties;

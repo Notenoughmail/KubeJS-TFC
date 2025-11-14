@@ -1,9 +1,9 @@
-package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
+package io.github.notenoughmail.kubejstfc.util.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomCropBlock;
+import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomCropBlock;
 import net.dries007.tfc.common.blocks.crop.CropHelpers;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.At;
  * <b>Purpose:</b><p>
  * Allow custom crops to specify their growth and expiry time
  */
-@Mixin(value = CropHelpers.class, remap = false)
+@Mixin(CropHelpers.class)
 public abstract class CropHelpersMixin {
 
-    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 0), remap = false)
+    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 0))
     private static float kubejs_tfc$ModifyGrowthRate(Double instance, Operation<Float> original, @Local(argsOnly = true) BlockState state) {
         float val = original.call(instance);
         if (state.getBlock() instanceof ICustomCropBlock custom) {
@@ -25,7 +25,7 @@ public abstract class CropHelpersMixin {
         return val;
     }
 
-    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 1), remap = false)
+    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 1))
     private static float kubejs_tfc$ModifyExpiryRate(Double instance, Operation<Float> original, @Local(argsOnly = true) BlockState state) {
         float val = original.call(instance);
         if (state.getBlock() instanceof ICustomCropBlock custom) {

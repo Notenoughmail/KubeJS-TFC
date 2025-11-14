@@ -1,8 +1,5 @@
 package io.github.notenoughmail.kubejstfc;
 
-import io.github.notenoughmail.kubejstfc.blocks.moss.MossSpreadingStairBuilder;
-import io.github.notenoughmail.kubejstfc.blocks.moss.*;
-import io.github.notenoughmail.kubejstfc.blocks.TFCTorchBlockBuilder;
 import dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentRegistry;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
@@ -18,10 +15,12 @@ import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.blocks.*;
+import io.github.notenoughmail.kubejstfc.blocks.moss.*;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.events.server.KubeTFCDataEvent;
+import io.github.notenoughmail.kubejstfc.events.server.KubeTFCWorldgenDataEvent;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.CalendarTrackingAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.HeatConsumerAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment;
@@ -29,6 +28,9 @@ import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventory
 import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.TFCBindings;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.TreeRootBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.VeinBaseBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.Weighted;
 import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
@@ -59,11 +61,16 @@ import net.dries007.tfc.common.recipes.outputs.MealModifier;
 import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateModels;
 import net.dries007.tfc.util.data.Drinkable;
+import net.dries007.tfc.world.feature.cave.ThinSpikeConfig;
+import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
+import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.Blocks;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
@@ -170,6 +177,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
         registry.register(ItemStackProvider.class, ISPBindings::wrap);
         registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
+        registry.register(Weighted.class, Weighted::wrap);
     }
 
     @Override
@@ -178,6 +186,12 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(new FoodData(0, 0F, 0F, 0, new float[] { 0F, 0F, 0F, 0F, 0F }, 0F));
         registry.register(new Drinkable.Effect(MobEffects.HEAL, 1, 1, 1F));
         registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
+        registry.register(new Weighted<>(null, 1));
+        registry.register(new VeinBaseBuilder(Map.of(), 1, 1F, -64, 320, true, true, 0L, false, null));
+        registry.register(new ThinSpikeConfig(Blocks.AIR.defaultBlockState(), 1, 1, 1, 10, false));
+        registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
+        registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
+        registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
     }
 
     @Override
@@ -234,6 +248,9 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void generateData(KubeDataGenerator generator) {
         if (KubeJSTFCEventHandlers.data.hasListeners()) {
             KubeJSTFCEventHandlers.data.post(new KubeTFCDataEvent(generator));
+        }
+        if (KubeJSTFCEventHandlers.worldgenData.hasListeners()) {
+            KubeJSTFCEventHandlers.worldgenData.post(new KubeTFCWorldgenDataEvent(generator));
         }
     }
 }

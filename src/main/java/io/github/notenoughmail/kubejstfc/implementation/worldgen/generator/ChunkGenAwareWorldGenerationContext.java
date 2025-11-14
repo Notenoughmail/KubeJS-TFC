@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.implementation.worldgen;
+package io.github.notenoughmail.kubejstfc.implementation.worldgen.generator;
 
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.chunk.ChunkGenerator;

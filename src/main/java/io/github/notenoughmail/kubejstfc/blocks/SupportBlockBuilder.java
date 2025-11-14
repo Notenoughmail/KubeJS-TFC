@@ -1,6 +1,5 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
-import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
@@ -9,6 +8,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.HorizontalSupportBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;

@@ -4,42 +4,23 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import com.notenoughmail.kubejs_tfc.event.TFCWorldgenDataEventJS;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
-import dev.latvian.mods.kubejs.client.ModelGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.loot.LootBuilder;
 import dev.latvian.mods.kubejs.loot.LootBuilderPool;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * Helper class used by methods in {@link TFCDataEventJS TFCDataEventJS},
- * {@link TFCWorldgenDataEventJS TFCWorldgenDataEventJS},
- * and various block's data/asset gen
- */
 public class ResourceUtils {
-
-    public static ResourceLocation dataID(ResourceLocation base, String mod, String category) {
-        return dataID(base.getNamespace(), base.getPath(), mod, category);
-    }
-
-    public static ResourceLocation dataID(String namespace, String path, String mod, String category) {
-        return new ResourceLocation(namespace, mod + "/" + category + "/" + path);
-    }
 
     public static <T> void nullable(JsonObject obj, String key, @Nullable T t, Function<T, JsonElement> serializer) {
         if (t != null) {
@@ -75,22 +56,6 @@ public class ResourceUtils {
         return Util.make(new JsonObject(), consumer);
     }
 
-    // "worldgen" is my favorite mod!
-    public static ResourceLocation configuredFeatureName(String path) {
-        return dataID(normalizeResourceLocation(path), "worldgen", "configured_feature");
-    }
-
-    public static ResourceLocation placedFeatureName(String path) {
-        return dataID(normalizeResourceLocation(path), "worldgen", "placed_feature");
-    }
-
-    public static ResourceLocation normalizeResourceLocation(String resourceLocation) {
-        if (resourceLocation.lastIndexOf(":") != -1) {
-            return new ResourceLocation(resourceLocation);
-        }
-        return KubeJSTFC.identifier(resourceLocation);
-    }
-
     public static void lootTable(Consumer<LootBuilder> c, DataJsonGenerator generator, BlockBuilder builder) {
         // Kube uses EMPTY as an indicator that the block should not have a loot table
         if (builder.lootTable != EMPTY) {
@@ -116,10 +81,6 @@ public class ResourceUtils {
             p.survivesExplosion();
             p.addItem(drop.get());
         });
-    }
-
-    public static void lootTableBasic(DataJsonGenerator geenrator, BlockBuilder builder, Supplier<? extends ItemLike> drop) {
-        lootTable(geenrator, builder, drop.get().asItem()::getDefaultInstance);
     }
 
     public static JsonObject sharpToolsCondition() {
@@ -156,14 +117,6 @@ public class ResourceUtils {
     }
 
     public static final ItemStack STICK_STACK = new ItemStack(Items.STICK);
-
-    public static boolean ifModelEmpty(AssetJsonGenerator generator, BlockBuilder builder, Consumer<ModelGenerator> m) {
-        if (builder.model.isEmpty()) {
-            generator.blockModel(builder.id, m);
-            return false;
-        }
-        return true;
-    }
 
     public static String plainModel(BlockBuilder builder) {
         return builder.model.isEmpty() ? (builder.id.getNamespace() + ":block/" + builder.id.getPath()) : builder.model;

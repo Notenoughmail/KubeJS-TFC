@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.implementation.worldgen;
+package io.github.notenoughmail.kubejstfc.implementation.worldgen.generator;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;

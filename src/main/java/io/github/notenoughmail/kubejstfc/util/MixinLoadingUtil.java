@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util;
 
-import com.notenoughmail.kubejs_tfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.LoadingModList;
 import org.objectweb.asm.Type;
@@ -26,7 +26,7 @@ public class MixinLoadingUtil {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            KubeJSTFC.error("Unable to determine if mixin should apply due to an exception", e);
+            KubeJSTFC.LOGGER.error("Unable to determine if mixin should apply due to an exception", e);
         }
         return true; // The worst that happens is the log has some ugly warnings about missing classes
     }
