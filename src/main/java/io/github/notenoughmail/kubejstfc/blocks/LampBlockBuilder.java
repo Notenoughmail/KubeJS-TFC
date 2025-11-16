@@ -19,14 +19,12 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
-import net.dries007.tfc.util.loot.CopyFluidFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
@@ -63,8 +61,8 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
             Sets the model generation of the lamp block, accepts a `BiConsumer` of a `LampModelType` and a model generator.
             The generator is unique for each type.
             
-            There are 4 types: `OFF`, HANGING_OFF`, `ON`, and `HANGING_ON`. There have 2 boolean properties which can
-            be used to determine the type currently in operation. The properties are `.on` and `.hanging`.
+            There are four types: `OFF`, HANGING_OFF`, `ON`, and `HANGING_ON`. These have two boolean properties which can
+            be used to determine the model currently being generated. The properties are `.on` and `.hanging`.
             """)
     public LampBlockBuilder models(BiConsumer<LampModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
@@ -94,7 +92,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     @Nullable
     public LootTable generateLootTable(KubeDataGenerator generator) {
-        return LootUtil.determinedSinglePool(this, p -> p.apply(() -> new CopyFluidFunction(List.of())));
+        return LootUtil.determinedSinglePool(this, p -> p.apply(LootUtil.copyFluid()));
     }
 
     @Override
@@ -106,7 +104,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.basicItemModelGen(this, false, m);
+        ModelUtil.basicItemModelGen(this, m);
     }
 
     @Override

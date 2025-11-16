@@ -1,7 +1,5 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
@@ -30,12 +28,10 @@ import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.common.items.TorchItem;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.events.DouseFireEvent;
-import net.dries007.tfc.util.loot.IsBurntOutCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -45,11 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
-import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -181,22 +173,18 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         Assistant.addBlock(registry, dead);
         Assistant.addBlock(registry, wall);
         Assistant.addBlock(registry, deadWall);
-        if (deadTorchItem != null) {
-            registry.add(Registries.ITEM, deadTorchItem);
-        }
+        Assistant.addItem(registry, deadTorchItem);
     }
 
     @Override
     public void generateAssets(KubeAssetGenerator generator) {
         super.generateAssets(generator);
-        if (deadTorchItem != null) {
-            generator.itemModel(deadTorchItem.id, m -> ModelUtil.basicItemModelGen(this, false, m));
-        }
+        ModelUtil.basicItemModelGen(deadTorchItem, generator);
     }
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.basicItemModelGen(this, false, m);
+        ModelUtil.basicItemModelGen(this, m);
     }
 
     @Override
@@ -211,28 +199,17 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Nullable
     public LootTable generateLootTable(KubeDataGenerator generator) {
         return LootUtil.singlePool(drops, p -> {
-            p.when(ExplosionCondition.survivesExplosion());
-            p.add(AlternativesEntry.alternatives(
+            LootUtil.survivesExplosion(p);
+            p.add(LootUtil.alternatives(
                     LootItem.lootTableItem(Items.STICK)
-                            .when(() -> IsBurntOutCondition.INSTANCE)
-                            .when(LootItemRandomChanceCondition.randomChance(0.25F)),
+                            .when(LootUtil.burntOut())
+                            .when(LootUtil.chance(0.25F)),
                     LootItem.lootTableItem(TFCItems.POWDERS.get(Powder.WOOD_ASH))
-                            .when(() -> IsBurntOutCondition.INSTANCE)
-                            .when(LootItemRandomChanceCondition.randomChance(0.25F)),
+                            .when(LootUtil.burntOut())
+                            .when(LootUtil.chance(0.25F)),
                     LootItem.lootTableItem(get())
-                            .when(InvertedLootItemCondition.invert(() -> IsBurntOutCondition.INSTANCE))
+                            .when(LootUtil.not(LootUtil.burntOut()))
             ));
-        });
-    }
-
-    private JsonObject burntOut() {
-        return ResourceUtils.buildJson(json -> json.addProperty("condition", "tfc:is_burnt_out"));
-    }
-
-    private JsonObject notBurntOut() {
-        return ResourceUtils.buildJson(json -> {
-            json.addProperty("condition", "minecraft:inverted");
-            json.add("term", burntOut());
         });
     }
 

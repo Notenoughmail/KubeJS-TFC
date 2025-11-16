@@ -12,14 +12,10 @@ import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -69,7 +65,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
             Sets the model generation of the loose rock block, accepts a `BiConsumer` of a `PebbleCount` and a model generator.
             The generator is unique for each type.
             
-            There are 3 types: `ONE`, `TWO`, and `THREE` with a `.count` property which returns the number of pebbles the
+            There are three types: `ONE`, `TWO`, and `THREE` with a `.count` property which returns the number of pebbles the
             `PebbleCount` represents.
             """)
     public LooseRockBlockBuilder models(BiConsumer<PebbleCount, ModelGenerator> models) {
@@ -91,7 +87,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.basicItemModelGen(this, false, m);
+        ModelUtil.basicItemModelGen(this, m);
     }
 
     @Override
@@ -112,16 +108,10 @@ public class LooseRockBlockBuilder extends BlockBuilder {
     public LootTable generateLootTable(KubeDataGenerator generator) {
         return LootUtil.determinedSinglePool(this, p -> {
             p.apply(ApplyExplosionDecay.explosionDecay())
-                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(2F))
-                            .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(get()).setProperties(
-                                    StatePropertiesPredicate.Builder.properties()
-                                            .hasProperty(LooseRockBlock.COUNT, 2)
-                            )))
-                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(3F))
-                            .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(get()).setProperties(
-                                    StatePropertiesPredicate.Builder.properties()
-                                            .hasProperty(LooseRockBlock.COUNT, 3)
-                            )));
+                    .apply(LootUtil.count(2F)
+                            .when(LootUtil.withState(get(), b -> b.hasProperty(LooseRockBlock.COUNT, 2))))
+                    .apply(LootUtil.count(3F)
+                            .when(LootUtil.withState(get(), b -> b.hasProperty(LooseRockBlock.COUNT, 3))));
         });
     }
 

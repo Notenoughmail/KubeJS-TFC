@@ -1,30 +1,33 @@
-package com.notenoughmail.kubejs_tfc.block;
+package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
-import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
+import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.kubejs.item.custom.BasicItemJS;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
-import dev.latvian.mods.kubejs.typings.Generics;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
-import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.LootUtil;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.common.blocks.plant.fruit.StationaryBerryBushBlock;
 import net.dries007.tfc.util.calendar.Month;
 import net.dries007.tfc.util.climate.ClimateRange;
+import net.dries007.tfc.util.data.DataManager;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.util.Lazy;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -36,36 +39,34 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     public static final Lifecycle[] LC_VALUES = Lifecycle.values();
 
     public transient final Lifecycle[] lifecycles;
-    public transient final ItemBuilder productItem;
+    public transient final DataManager.Reference<ClimateRange> climateRange;
     @Nullable
-    public transient ResourceLocation product;
+    public transient ItemBuilder productItem;
+    @Nullable
+    public transient Supplier<Item> product;
     public transient ModelFunc models;
 
     public StationaryBerryBushBlockBuilder(ResourceLocation i) {
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
-        productItem = new BasicItemJS.Builder(newID("", "_product"));
+        climateRange = ClimateRange.MANAGER.getReference(id);
+        productItem = new ItemBuilder(id.withSuffix("_product"));
         product = null;
         models = initModels();
-        renderType("cutout_mipped");
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
+        renderType(BlockRenderType.CUTOUT_MIPPED);
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.BERRY_BUSH, this);
     }
 
     protected ModelFunc initModels() {
         return (lc, stage, m) -> {
-            m.parent("tfc:block/plant/stationary_bush_" + stage);
-            m.texture(
-                    "bush",
-                    textures.has("#" + lc.ordinal() + "_" + stage) ?
-                            textures.get("#" + lc.ordinal() + "_" + stage).getAsString() :
-                            newID("block/", "_" + lc.getSerializedName()).toString()
-            );
+            m.parent(KubeJSTFC.tfc("block/plant/stationary_bush_" + stage));
+            m.textures(textures);
         };
     }
 
     @HideFromJS
     public Supplier<Item> productGetter()  {
-        return product == null ? productItem : Lazy.of(() -> RegistryInfo.ITEM.getValue(product));
+        return product == null ? productItem : product;
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -78,15 +79,15 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     }
 
     @Info("Modifies the bush's product item")
-    @Generics(ItemBuilder.class)
     public StationaryBerryBushBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
         productItem.accept(this.productItem);
         return this;
     }
 
     @Info("Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
-    public StationaryBerryBushBlockBuilder productItem(ResourceLocation productId) {
-        product = productId;
+    public StationaryBerryBushBlockBuilder WithProduct(Holder<Item> product) {
+        this.product = Assistant.holderAsSupplier(product);
+        productItem = null;
         return this;
     }
 
@@ -110,66 +111,57 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
         return this;
     }
 
-    @Deprecated
-    @Info("Deprecated, please use `#models` and its new syntax")
-    public StationaryBerryBushBlockBuilder allModels(BushModelsCreator modelsCreator) {
-        return models(modelsCreator.upgrade());
-    }
-
-    @Info("Sets the texture for the given lifecycle and stage")
-    public StationaryBerryBushBlockBuilder texture(Lifecycle lifecycle, int stage, String tex) {
-        textures.addProperty("#" + lifecycle.ordinal() + "_" + stage, tex);
-        return this;
-    }
-
     @Override
     public Block createObject() {
-        return new StationaryBerryBushBlock(createExtendedProperties(), productGetter(), lifecycles, ClimateRange.MANAGER.register(id));
+        return new StationaryBerryBushBlock(createExtendedProperties(), productGetter(), lifecycles, climateRange);
     }
 
     @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        if (product == null) {
-            RegistryInfo.ITEM.addBuilder(productItem);
-        }
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addItem(registry, productItem);
+    }
+
+    private static String modelSuffix(int stage, Lifecycle lc) {
+        return "_" + lc.getSerializedName() + "_" + stage;
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent(newID("block/", "_healthy_1").toString());
-        }
-    }
-
-    @Override
-    protected void generateBlockModelJsons(AssetJsonGenerator generator) {
-        for (Lifecycle l : LC_VALUES) {
-            for (int i = 0 ; i < 3 ; i++) {
-                final int stage = i;
-                generator.blockModel(newID("", "_" + l.getSerializedName() + "_" + i), m -> models.apply(l, stage, m));
-            }
-        }
-    }
-
-    @Override
-    protected void generateBlockStateJson(VariantBlockStateGenerator bs) {
+    protected void generateBlockModels(KubeAssetGenerator generator) {
         for (Lifecycle lc : LC_VALUES) {
             for (int i = 0 ; i < 3 ; i++) {
-                bs.simpleVariant("lifecycle=" + lc.getSerializedName() + ",stage=" + i, newID("block/", "_" + lc.getSerializedName() + "_" + i).toString());
+                final int stage = i;
+                generator.blockModel(id.withSuffix(modelSuffix(stage, lc)), m -> models.apply(lc, stage, m));
             }
         }
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTable(generator, this, p -> {
-            p.survivesExplosion();
-            p.addItem(itemBuilder.get().getDefaultInstance())
-                    .addCondition(ResourceUtils.sharpToolsCondition());
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.itemModelGen(this, m, g -> {
+            m.parent(newID("block/", "_healthy_1"));
         });
+    }
+
+    @Override
+    protected void generateBlockState(VariantBlockStateGenerator bs) {
+        for (Lifecycle lc : LC_VALUES) {
+            for (int i = 0 ; i < 3 ; i++) {
+                bs.simpleVariant("lifecycle=" + lc.getSerializedName() + ",stage=" + i, newID("block/", modelSuffix(i, lc)));
+            }
+        }
+    }
+
+    @Override
+    public void generateAssets(KubeAssetGenerator generator) {
+        super.generateAssets(generator);
+        ModelUtil.basicItemModelGen(productItem, generator);
+    }
+
+    @Override
+    @Nullable
+    public LootTable generateLootTable(KubeDataGenerator generator) {
+        return LootUtil.determinedSinglePool(this, p -> p.when(LootUtil.sharpTools()));
     }
 
     @Override
@@ -177,8 +169,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
         return super.createExtendedProperties()
                 .noOcclusion()
                 .randomTicks()
-                .blockEntity(TFCBlockEntities.BERRY_BUSH)
-                .serverTicks(BerryBushBlockEntity::serverTick);
+                .blockEntity(TFCBlockEntities.BERRY_BUSH);
     }
 
     @FunctionalInterface
@@ -189,28 +180,6 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
             return (l, s, m) -> {
                 apply(l, s, m);
                 func.apply(l, s, m);
-            };
-        }
-    }
-
-    @Deprecated
-    @FunctionalInterface
-    public interface BushModelsCreator {
-        @Nullable
-        @Generics({ ModelGenerator.class })
-        Consumer<ModelGenerator> getFor(Lifecycle lifecycle, int stage);
-
-        // The consumers must be 'precomputed' so there is a top level context for interface adaption
-        default ModelFunc upgrade() {
-            final Consumer<ModelGenerator>[][] gens = new Consumer[4][3];
-            for (Lifecycle lc : LC_VALUES) {
-                for (int i = 0 ; i < 3 ; i++) {
-                    gens[lc.ordinal()][i] = getFor(lc, i);
-                }
-            }
-            return (l, s, m) -> {
-                final Consumer<ModelGenerator> gen = gens[l.ordinal()][s];
-                if (gen != null) gen.accept(m);
             };
         }
     }

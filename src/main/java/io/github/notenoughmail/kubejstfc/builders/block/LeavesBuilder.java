@@ -15,7 +15,7 @@ public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
 
     public LeavesBuilder(ResourceLocation i) {
         super(i);
-        BuilderRefs.leafColors.add(this);
+        BuilderRefs.leafColor.add(this);
         autumnIndex = 0;
         seasonalColors = false;
     }
@@ -34,7 +34,7 @@ public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Info("Removes the dynamic item and block tinting that is applied to this block by default")
     public LeavesBuilder noDynamicTinting() {
-        BuilderRefs.leafColors.remove(this);
+        BuilderRefs.leafColor.remove(this);
         return this;
     }
 

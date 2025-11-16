@@ -76,7 +76,7 @@ public class KubeJSTFCClient {
 
         final Predicate<RenderType> leaves = rt -> rt == (Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid());
 
-        BuilderRefs.leafColors.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
+        BuilderRefs.leafColor.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
 
         event.enqueueWork(() -> {
             for (WindmillBladeItemBuilder builder : BuilderRefs.windmillBlades) {
@@ -131,9 +131,14 @@ public class KubeJSTFCClient {
             event.register(grass, forItemColors(BuilderRefs.grassBlockColor));
         }
 
-        if (!BuilderRefs.leafColors.isEmpty()) {
+        if (!BuilderRefs.leafColor.isEmpty()) {
             final ItemColor foliage = (stack, index) -> TFCColors.getFoliageColor(null, index);
-            event.register(foliage, forItemColors(Cast.to(BuilderRefs.leafColors)));
+            event.register(foliage, forItemColors(Cast.to(BuilderRefs.leafColor)));
+        }
+
+        if (!BuilderRefs.grassColor.isEmpty()) {
+            final ItemColor grassColor = (stack, index) -> TFCColors.getGrassColor(null, index);
+            event.register(grassColor, forItemColors(BuilderRefs.grassColor));
         }
     }
 
@@ -151,8 +156,11 @@ public class KubeJSTFCClient {
         if (!BuilderRefs.grassBlockColor.isEmpty()) {
             event.register(grassBlock, forBlockColors(BuilderRefs.grassBlockColor));
         }
+        if (!BuilderRefs.grassColor.isEmpty()) {
+            event.register(grass, forBlockColors(BuilderRefs.grassColor));
+        }
         final BlockColor foliageColor = (state, level, pos, index) -> TFCColors.getFoliageColor(pos, index);
-        BuilderRefs.leafColors.forEach(b -> event.register(
+        BuilderRefs.leafColor.forEach(b -> event.register(
                 b.seasonalColors() ?
                         (state, level, pos, index) -> TFCColors.getSeasonalFoliageColor(pos, index, b.autumnIndex()) :
                         b.isFallen() ?

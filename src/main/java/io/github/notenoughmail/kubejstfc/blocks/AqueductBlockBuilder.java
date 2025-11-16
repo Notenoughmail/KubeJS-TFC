@@ -53,7 +53,7 @@ public class AqueductBlockBuilder extends BlockBuilder {
             Sets the model generation of the aqueduct, accepts a `BiConsumer` of a `AqueductModelPart` and a model generator.
             The generator is unique for each part.
             
-            There are 5 parts: `BASE`, `NORTH`, `SOUTH`, `EAST`, and `WEST` all with `.base()`, `.north()`, `.south()`,
+            There are five parts: `BASE`, `NORTH`, `SOUTH`, `EAST`, and `WEST` all with `.base()`, `.north()`, `.south()`,
             `.east()`, and `.west()` methods which return true if the part in operation is the one indicated by the method.
             """)
     public AqueductBlockBuilder models(BiConsumer<AqueductModelPart, ModelGenerator> models) {

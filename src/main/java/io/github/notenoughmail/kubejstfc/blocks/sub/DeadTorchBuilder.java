@@ -16,7 +16,6 @@ import net.dries007.tfc.util.events.StartFireEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import org.jetbrains.annotations.Nullable;
 
 public class DeadTorchBuilder extends ExtendedPropertiesBlockBuilder {
@@ -53,7 +52,7 @@ public class DeadTorchBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     @Nullable
     public LootTable generateLootTable(KubeDataGenerator generator) {
-        return LootUtil.determinedSinglePool(this, p -> p.when(LootItemRandomChanceCondition.randomChance(0.5F)));
+        return LootUtil.determinedSinglePool(this, p -> p.when(LootUtil.chance(0.5F)));
     }
 
     private class Impl extends DeadTorchBlock implements ICustomTorchBlock {

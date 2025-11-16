@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.implementation.worldgen.data;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.placement.ClimatePlacement;
-import net.minecraft.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +11,19 @@ import java.util.function.Consumer;
 public class ClimatePlacementBuilder {
 
     public static ClimatePlacement make(Consumer<ClimatePlacementBuilder> builder) {
-        return Util.make(() -> {
-            final ClimatePlacementBuilder b = new ClimatePlacementBuilder();
-            builder.accept(b);
-            return new ClimatePlacement(
-                    b.minT, b.maxT,
-                    b.minGW, b.maxGW,
-                    b.minRV, b.maxRV,
-                    b.absoluteRainVariance,
-                    b.minF, b.maxF,
-                    b.forestTypes,
-                    b.minE, b.maxE,
-                    b.fuzzy,
-                    b.ignoreRivers
-            );
-        });
+        final ClimatePlacementBuilder b = new ClimatePlacementBuilder();
+        builder.accept(b);
+        return new ClimatePlacement(
+                b.minT, b.maxT,
+                b.minGW, b.maxGW,
+                b.minRV, b.maxRV,
+                b.absoluteRainVariance,
+                b.minF, b.maxF,
+                b.forestTypes,
+                b.minE, b.maxE,
+                b.fuzzy,
+                b.ignoreRivers
+        );
     }
 
     private float

@@ -114,6 +114,12 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("moss_spreading_stair"), MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
             c.add(tfc("moss_growing_wall"), MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
             c.add(tfc("moss_spreading_wall"), MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
+            c.add(tfc("spreading_berry_bush"), SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
+            c.add(tfc("stationary_berry_bush"), StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
+            c.add(tfc("wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::normal);
+            c.add(tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::flooded);
+            c.add(tfc("tall_wild_crop"), WildCropBlockBuilder.Double.class, WildCropBlockBuilder.Double::new);
+            c.add(tfc("spreading_wild_crop"), WildCropBlockBuilder.Spreading.class, WildCropBlockBuilder.Spreading::new);
         });
 
         registry.of(Registries.ITEM, c -> {

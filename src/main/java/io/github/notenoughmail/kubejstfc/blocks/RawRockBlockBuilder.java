@@ -78,6 +78,6 @@ public class RawRockBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, true, m, super::generateItemModel);
+        ModelUtil.itemModelGen(this, m, super::generateItemModel);
     }
 }

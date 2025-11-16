@@ -25,10 +25,10 @@ public class KubeHotWaterBlock extends HotWaterBlock {
         final double z = pos.getZ() + random.nextFloat();
 
         if (builder.bubbleParticle != null && random.nextInt(3) == 0) {
-            level.addParticle(builder.bubbleParticle.get(), x, y + random.nextFloat(), z, 0.0D, 0.04D, 0.0D);
+            level.addParticle(builder.bubbleParticle, x, y + random.nextFloat(), z, 0.0D, 0.04D, 0.0D);
         }
         if (builder.steamParticle != null && level.isEmptyBlock(pos.above())) {
-            level.addParticle(builder.steamParticle.get(), x, y + 1.0D, z, 0.0D, 0.0D, 0.0D);
+            level.addParticle(builder.steamParticle, x, y + 1.0D, z, 0.0D, 0.0D, 0.0D);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.notenoughmail.kubejs_tfc.util;
 
-import dev.latvian.mods.kubejs.block.BlockBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,10 +19,6 @@ import java.util.function.Supplier;
 public class BuilderRefs {
 
     // Blocks & Items
-    /**
-     * Blocks which should have TFC's grass color block and item color tinting
-     */
-    public static final List<BlockBuilder> grassColor = new ArrayList<>();
 
     /**
      * Blocks which should have a ghost render layer, pots on fire pits & sticks on double crops
@@ -32,8 +27,6 @@ public class BuilderRefs {
 
     @ApiStatus.Internal
     public static void clear() {
-        grassColor.clear();
-
         ghostRenders.clear();
     }
 }

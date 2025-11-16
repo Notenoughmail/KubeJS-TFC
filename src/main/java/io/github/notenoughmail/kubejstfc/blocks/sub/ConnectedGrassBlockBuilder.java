@@ -61,9 +61,9 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
             Sets the model generation of the grass block, accepts a `BiConsumer` of a `GrassModelPart` and a model generator.
             The generator is unique for each part.
             
-            There are 5 parts: `BOTTOM`, `TOP`, `SNOWY_TOP`, `SIDE`, and `SNOWY_SIDE`. These have 4 boolean properties
-            which can be used to logically determine the part currently in operation. The properties are `.bottom`,
-            `.top`, `.side`, and `.snowy`.
+            There are five parts: `BOTTOM`, `TOP`, `SNOWY_TOP`, `SIDE`, and `SNOWY_SIDE`. These have four boolean properties
+            which can be used determine the model currently being generated. The properties are `.bottom`, `.top`,
+            `.side`, and `.snowy`.
             """)
     public ConnectedGrassBlockBuilder models(BiConsumer<GrassModelPart, ModelGenerator> models) {
         this.models = this.models.andThen(models);
@@ -94,7 +94,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, false, m, g -> {
+        ModelUtil.itemModelGen(this, m, g -> {
             g.parent(GRASS_INV);
             g.textures(itemBuilder.textures);
         });

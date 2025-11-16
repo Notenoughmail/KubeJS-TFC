@@ -7,7 +7,6 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -39,11 +38,11 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     }
 
     @Info("""
-            Sets the model generation of the spike, accepts a `BiConsumer` of a `SpikeModelPart` and a model generator.
+            Sets the model generation of the spike, accepts a `BiConsumer` of a `SpikeModelType` and a model generator.
             The generator is unique for each type.
             
-            There are 3 parts: `BASE`, `MIDDLE`, and `TIP` all with `.base()`, `.middle()`, and `.tip()` methods which
-            return true if the type is in operation is the one indicated by the method.
+            There are three parts: `BASE`, `MIDDLE`, and `TIP` all with `.base()`, `.middle()`, and `.tip()` methods which
+            return true if the type is the same as the method nad with a `.defaultParent` property which is the default parent of that model type.
             """)
     public RockSpikeBlockBuilder models(BiConsumer<SpikeModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
@@ -79,7 +78,6 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         MIDDLE,
         TIP;
 
-        @HideFromJS
         public final ResourceLocation defaultParent;
         private final String str;
 

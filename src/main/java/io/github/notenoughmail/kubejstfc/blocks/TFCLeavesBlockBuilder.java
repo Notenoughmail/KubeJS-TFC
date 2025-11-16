@@ -42,7 +42,7 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     @Info("Sets the properties of the fallen leaves block. May be null to not have fallen leaves")
     public TFCLeavesBlockBuilder fallenLeaves(@Nullable Consumer<FallenLeavesBlockBuilder> fallenLeaves) {
         if (fallenLeaves == null) {
-            BuilderRefs.leafColors.remove(this.fallenLeaves);
+            BuilderRefs.leafColor.remove(this.fallenLeaves);
             this.fallenLeaves = null;
         } else {
             fallenLeaves.accept(this.fallenLeaves);
@@ -77,6 +77,6 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.inheritItemModelGen(this, false, m);
+        ModelUtil.inheritItemModelGen(this, m);
     }
 }

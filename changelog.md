@@ -6,6 +6,7 @@
 - Custom chisel modes can now be registered
 - Birthday modifications are no longer possible
 - There is no longer a jar item builder type
+- Wild crops have been split into 4 builder types, similar to non-wild crops
 
 ### 1.3.3
 - The list ids command is now paginated

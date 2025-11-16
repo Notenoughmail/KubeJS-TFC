@@ -141,7 +141,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.basicItemModelGen(this, false, m);
+        ModelUtil.basicItemModelGen(this, m);
     }
 
     @Override

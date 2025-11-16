@@ -12,12 +12,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 @SuppressWarnings("unused")
 public class SpringWaterBuilder extends FluidBuilder {
 
-    public transient Supplier<ParticleOptions> bubbleParticle, steamParticle;
+    @Nullable
+    public transient ParticleOptions bubbleParticle, steamParticle;
     public transient float healingAmount;
 
     public SpringWaterBuilder(ResourceLocation i) {
@@ -30,13 +29,13 @@ public class SpringWaterBuilder extends FluidBuilder {
 
     @Info("Sets the liquid's bubble particle")
     public SpringWaterBuilder bubbleParticle(@Nullable Holder<ParticleType<?>> particle) {
-        this.bubbleParticle = Assistant.mapNull(particle, h -> () -> h::value);
+        this.bubbleParticle = Assistant.mapNull(particle, h -> h::value);
         return this;
     }
 
     @Info("Sets the liquid's steam particle")
     public SpringWaterBuilder steamParticle(@Nullable Holder<ParticleType<?>> particle) {
-        this.steamParticle = Assistant.mapNull(particle, h -> () -> h::value);
+        this.steamParticle = Assistant.mapNull(particle, h -> h::value);
         return this;
     }
 

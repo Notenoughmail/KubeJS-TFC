@@ -3,8 +3,10 @@ package io.github.notenoughmail.kubejstfc.util;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -15,6 +17,7 @@ public interface ModelUtil {
     ResourceLocation CUBE_COLUMN = KubeJSTFC.mc("block/cube_column");
     ResourceLocation ORE_COLUMN = KubeJSTFC.tfc("block/ore_column");
     ResourceLocation CROSS = KubeJSTFC.mc("block/cross");
+    ResourceLocation CROP = KubeJSTFC.mc("block/crop");
 
     String[] PARTICLE_ALL_TEXTURE_KEYS = { "particle", "all" };
 
@@ -35,28 +38,28 @@ public interface ModelUtil {
         return b.id.withPrefix("block/");
     }
 
-    static void basicItemModelGen(BlockBuilder builder, boolean useBlockParent, ModelGenerator generator) {
-        itemModelGen(builder, useBlockParent, generator, m -> {
+    static void basicItemModelGen(@Nullable ItemBuilder builder, KubeAssetGenerator generator) {
+        if (builder != null) {
+            builder.generateAssets(generator);
+        }
+    }
+
+    static void basicItemModelGen(BlockBuilder builder, ModelGenerator generator) {
+        itemModelGen(builder, generator, m -> {
             m.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
             m.textures(builder.itemBuilder.textures);
         });
     }
 
-    static void itemModelGen(BlockBuilder builder, boolean useBlockParent, ModelGenerator generator, Consumer<ModelGenerator> m) {
+    static void itemModelGen(BlockBuilder builder, ModelGenerator generator, Consumer<ModelGenerator> m) {
         if (builder.itemBuilder.modelGenerator != null) {
             builder.itemBuilder.modelGenerator.accept(generator);
-        } else if (useBlockParent && builder.parentModel != null) {
-            generator.parent(builder.parentModel);
         } else {
             m.accept(generator);
         }
     }
 
-    static void itemModelGen(BlockBuilder builder, ModelGenerator generator, Consumer<ModelGenerator> m) {
-        itemModelGen(builder, true, generator, m);
-    }
-
-    static void inheritItemModelGen(BlockBuilder builder, boolean useBlockParent, ModelGenerator generator) {
-        itemModelGen(builder, useBlockParent, generator, m -> m.parent(builder.id.withPrefix("block/")));
+    static void inheritItemModelGen(BlockBuilder builder, ModelGenerator generator) {
+        itemModelGen(builder, generator, m -> m.parent(builder.id.withPrefix("block/")));
     }
 }

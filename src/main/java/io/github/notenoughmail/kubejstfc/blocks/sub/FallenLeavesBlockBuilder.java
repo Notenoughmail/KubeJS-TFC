@@ -47,7 +47,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
             Sets the model generation of the fallen leaves block, accepts a `BiConsumer` of a model generator and a `FallenLeafModelType`.
             The generator is unique for each type.
             
-            There are 8 types and all have two properties named `.layer` and `.parentModel`, the value of the `layer` state property and the default parent model, respectively.
+            There are eight types and all have two properties named `.layer` and `.parentModel`, the value of the `layer` state property and the default parent model, respectively.
             """)
     public FallenLeavesBlockBuilder models(BiConsumer<FallenLeafModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
@@ -68,7 +68,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.basicItemModelGen(this, false, m);
+        ModelUtil.basicItemModelGen(this, m);
     }
 
     @Override

@@ -1,11 +1,11 @@
 package io.github.notenoughmail.kubejstfc.blocks.sub;
 
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
@@ -22,7 +22,7 @@ public class WindmillBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.parent = parent;
         itemBuilder = null;
-        RegistryUtils.hackBlockEntity(TFCBlockEntities.WINDMILL, this);
+        BuilderRefs.hackBlockEntity(TFCBlockEntities.WINDMILL, this);
     }
 
     @Override

@@ -99,12 +99,17 @@ public interface BuilderRefs {
     /**
      * Blocks which should have TFC's seasonal leaf block tinting
      */
-    List<LeavesBuilder> leafColors = new ArrayList<>();
+    List<LeavesBuilder> leafColor = new ArrayList<>();
 
     /**
      * Blocks whose items should have the lamp fluid capability attached
      */
     List<BlockBuilder> lamps = new ArrayList<>();
+
+    /**
+     * Blocks which should have TFC's non-connected grass block and item tinting
+     */
+    List<BlockBuilder> grassColor = new ArrayList<>();
 
     @ApiStatus.Internal
     static void clear() {
@@ -116,7 +121,8 @@ public interface BuilderRefs {
         javelins.clear();
 
         grassBlockColor.clear();
-        leafColors.clear();
+        leafColor.clear();
         lamps.clear();
+        grassColor.clear();
     }
 }

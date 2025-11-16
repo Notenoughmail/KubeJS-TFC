@@ -5,12 +5,14 @@ import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +27,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface Assistant {
+
+    Direction[] CARDINAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
     static LevelTier levelTier(Tier tier, int level) {
         return new LevelTier() {
@@ -79,7 +83,7 @@ public interface Assistant {
 
     @Nullable
     static <T> Supplier<T> holderAsSupplier(@Nullable Holder<T> holder) {
-        return holder == null ? null : holder::value;
+        return mapNull(holder, h -> h::value);
     }
 
     @Nullable
@@ -107,6 +111,19 @@ public interface Assistant {
             registry.add(Registries.BLOCK, builder);
             if (nest) builder.createAdditionalObjects(registry);
         }
+    }
+
+    static void addItem(AdditionalObjectRegistry registry, @Nullable ItemBuilder builder) {
+        if (builder != null) {
+            registry.add(Registries.ITEM, builder);
+        }
+    }
+
+    static <T> T applyIf(T t, boolean condition, Consumer<T> apply) {
+        if (condition) {
+            apply.accept(t);
+        }
+        return t;
     }
 
     @FunctionalInterface
