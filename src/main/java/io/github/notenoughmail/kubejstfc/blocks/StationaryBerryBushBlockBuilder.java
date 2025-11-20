@@ -138,9 +138,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
-        ModelUtil.itemModelGen(this, m, g -> {
-            m.parent(newID("block/", "_healthy_1"));
-        });
+        ModelUtil.itemModelGen(this, m, g -> m.parent(newID("block/", "_healthy_1")));
     }
 
     @Override

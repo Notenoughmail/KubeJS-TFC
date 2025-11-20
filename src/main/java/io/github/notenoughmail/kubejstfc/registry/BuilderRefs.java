@@ -111,6 +111,8 @@ public interface BuilderRefs {
      */
     List<BlockBuilder> grassColor = new ArrayList<>();
 
+    List<BlockBuilder> ghostRendering = new ArrayList<>();
+
     @ApiStatus.Internal
     static void clear() {
         powderGlassOperations.clear();
@@ -124,5 +126,6 @@ public interface BuilderRefs {
         leafColor.clear();
         lamps.clear();
         grassColor.clear();
+        ghostRendering.clear();
     }
 }

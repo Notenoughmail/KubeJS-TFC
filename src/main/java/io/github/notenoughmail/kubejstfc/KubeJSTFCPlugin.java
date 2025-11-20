@@ -16,6 +16,7 @@ import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.blocks.*;
 import io.github.notenoughmail.kubejstfc.blocks.moss.*;
+import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
@@ -120,6 +121,12 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             c.add(tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::flooded);
             c.add(tfc("tall_wild_crop"), WildCropBlockBuilder.Double.class, WildCropBlockBuilder.Double::new);
             c.add(tfc("spreading_wild_crop"), WildCropBlockBuilder.Spreading.class, WildCropBlockBuilder.Spreading::new);
+            c.add(tfc("crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::normal);
+            c.add(tfc("flooded_crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::flooded);
+            c.add(tfc("pickable_crop"), PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
+            c.add(tfc("spreading_crop"), SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
+            c.add(tfc("double_crop"), DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
+            c.add(tfc("climbing_crop"), ClimbingCropBlockBuilder.class, ClimbingCropBlockBuilder::new);
         });
 
         registry.of(Registries.ITEM, c -> {

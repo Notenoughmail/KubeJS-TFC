@@ -3,12 +3,9 @@ package com.notenoughmail.kubejs_tfc;
 import com.notenoughmail.kubejs_tfc.block.*;
 import com.notenoughmail.kubejs_tfc.block.moss.*;
 import com.notenoughmail.kubejs_tfc.recipe.schema.*;
-import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import com.notenoughmail.kubejs_tfc.util.client.ClientEventHandlers;
 import com.notenoughmail.kubejs_tfc.util.implementation.recipe.KubeJSTFCRecipeSerializers;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
 import net.dries007.tfc.ForgeEventHandler;
@@ -38,15 +35,6 @@ import net.minecraftforge.fml.config.ModConfig;
  * </ul>
  */
 public class KubeJSTFCPlugin extends KubeJSPlugin {
-
-    @Override
-    public void init() {
-        RegistryInfo.BLOCK.addType("tfc:crop", DefaultCropBlockBuilder.class, DefaultCropBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:flooded_crop", FloodedCropBlockBuilder.class, FloodedCropBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:pickable_crop", PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:spreading_crop", SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
-        RegistryInfo.BLOCK.addType("tfc:double_crop", DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
-    }
 
     @Override
     public void afterInit() {
@@ -104,8 +92,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.allow("com.notenoughmail.kubejs_tfc");
         filter.deny("com.notenoughmail.kubejs_tfc.util.implementation.mixin");
         filter.deny(KubeJSTFCPlugin.class);
-        filter.deny(RegistryUtils.class);
-        filter.deny(ClientEventHandlers.class);
         filter.deny("com.notenoughmail.kubejs_tfc.addons.precpros.PrecProsPlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.firmalife.FirmaLifePlugin");
         filter.deny("com.notenoughmail.kubejs_tfc.addons.afc.AFCPlugin");

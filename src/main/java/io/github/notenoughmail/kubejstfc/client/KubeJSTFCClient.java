@@ -29,6 +29,7 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
@@ -74,9 +75,19 @@ public class KubeJSTFCClient {
             KubeJSTFCEventHandlers.placedItemModels.post(new KubePlacedItemModelEvent());
         }
 
-        final Predicate<RenderType> leaves = rt -> rt == (Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid());
+        if (!BuilderRefs.ghostRendering.isEmpty()) {
+            final Predicate<RenderType> ghost = rt -> rt == RenderType.cutoutMipped() || rt == Sheets.translucentCullBlockSheet();
+            for (BlockBuilder b : BuilderRefs.ghostRendering) {
+                ItemBlockRenderTypes.setRenderLayer(b.get(), ghost);
+            }
+        }
 
-        BuilderRefs.leafColor.forEach(b -> ItemBlockRenderTypes.setRenderLayer(b.get(), leaves));
+        if (!BuilderRefs.leafColor.isEmpty()) {
+            final Predicate<RenderType> leaves = rt -> rt == (Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid());
+            for (BlockBuilder b : BuilderRefs.leafColor) {
+                ItemBlockRenderTypes.setRenderLayer(b.get(), leaves);
+            }
+        }
 
         event.enqueueWork(() -> {
             for (WindmillBladeItemBuilder builder : BuilderRefs.windmillBlades) {

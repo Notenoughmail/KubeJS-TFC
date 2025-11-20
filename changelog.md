@@ -7,6 +7,8 @@
 - Birthday modifications are no longer possible
 - There is no longer a jar item builder type
 - Wild crops have been split into 4 builder types, similar to non-wild crops
+- Crop model generation methods have been cut down to be much simpler and concise
+- The climbing crop builder has been split from the double crop builder
 
 ### 1.3.3
 - The list ids command is now paginated

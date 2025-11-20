@@ -62,6 +62,7 @@ public interface LootUtil {
         return new LootTable.Builder().withPool(pool).build();
     }
 
+    // Passing an empty consumer to this is more-or-less equivalent to using the default loot table from #generateLootTable()
     @Nullable
     static LootTable determinedSinglePool(BlockBuilder builder, Consumer<LootPool.Builder> p) {
         final BlockDrops drops = determineDrops(builder);

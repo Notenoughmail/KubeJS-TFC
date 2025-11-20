@@ -1,20 +1,23 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
-import com.google.gson.JsonObject;
-import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
-import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.loot.LootTableEntry;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.SpreadingCaneBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.LootUtil;
+import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.plant.fruit.SpreadingBushBlock;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -58,46 +61,37 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
     }
 
     @Override
-    public void createAdditionalObjects() {
-        super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(cane);
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, cane);
     }
 
     @Override
-    public void generateDataJsons(DataJsonGenerator generator) {
-        ResourceUtils.lootTable(b -> {
-            b.addPool(p -> {
-                p.survivesExplosion();
-                p.addItem(ResourceUtils.STICK_STACK);
+    @Nullable
+    public LootTable generateLootTable(KubeDataGenerator generator) {
+        return LootUtil.fullTable(null, t -> {
+            LootUtil.pool(t, p -> {
+                LootUtil.survivesExplosion(p);
+                p.add(LootItem.lootTableItem(Items.STICK));
             });
             if (itemBuilder != null) {
-                b.addPool(p -> {
-                    p.survivesExplosion();
-                    p.addEntry(ResourceUtils.alternatives(
-                            lootEntryBase()
-                                    .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("stage", "2"))),
-                            (LootTableEntry) lootEntryBase()
-                                    .randomChance(0.5D)
+                LootUtil.pool(t, p -> {
+                    LootUtil.survivesExplosion(p);
+                    p.add(LootUtil.alternatives(
+                            LootItem.lootTableItem(itemBuilder.get())
+                                    .when(LootUtil.sharpTools())
+                                    .when(LootUtil.withState(get(), s -> s.hasProperty(SpreadingBushBlock.STAGE, 2))),
+                            LootItem.lootTableItem(itemBuilder.get())
+                                    .when(LootUtil.sharpTools())
+                                    .when(LootUtil.chance(0.5F))
                     ));
                 });
             }
-        }, generator, this);
-    }
-
-    private LootTableEntry lootEntryBase() {
-        final JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:item");
-        json.addProperty("name", itemBuilder.id.toString());
-        return new LootTableEntry(json).addCondition(ResourceUtils.sharpToolsCondition());
+        });
     }
 
     @Override
-    protected void generateItemModelJson(ModelGenerator m) {
-        if (!model.isEmpty()) {
-            m.parent(model);
-        } else {
-            m.parent("item/generated");
-            m.textures(textures);
-        }
+    protected void generateItemModel(ModelGenerator m) {
+        ModelUtil.basicItemModelGen(this, m);
     }
 }

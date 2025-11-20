@@ -50,12 +50,11 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     @Info("Sets the model for the given lifecycle and stage")
     public SpreadingCaneBlockBuilder model(Lifecycle lifecycle, int stage, Consumer<ModelGenerator> modelGenerator) {
-        models = models.andThen((l, s, m) -> {
+        return models((l, s, m) -> {
             if (l == lifecycle && s == stage) {
                 modelGenerator.accept(m);
             }
         });
-        return this;
     }
 
     @Info("""
