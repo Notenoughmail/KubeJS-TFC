@@ -33,8 +33,8 @@ public class BooleanTypeInfo<T, A extends ArgumentType<T>, I extends BooleanType
     public Template<T, A, I> deserializeFromNetwork(FriendlyByteBuf buffer) {
         return new Template<>(
                 buffer.readBoolean(),
-                Cast.to(templateBuilder),
-                Cast.to(this)
+                templateBuilder,
+                this
         );
     }
 
@@ -47,12 +47,12 @@ public class BooleanTypeInfo<T, A extends ArgumentType<T>, I extends BooleanType
     public Template<T, A, I> unpack(A argument) {
         return new Template<>(
                 valueExtractor.test(argument),
-                Cast.to(templateBuilder),
-                Cast.to(this)
+                templateBuilder,
+                this
         );
     }
 
-    public record Template<T, A extends ArgumentType<T>, I extends BooleanTypeInfo<T, A, I>>(boolean value, BiFunction<CommandBuildContext, Boolean, A> builder, I type) implements ArgumentTypeInfo.Template<A> {
+    public record Template<T, A extends ArgumentType<T>, I extends BooleanTypeInfo<T, A, I>>(boolean value, BiFunction<CommandBuildContext, Boolean, A> builder, BooleanTypeInfo<T, A, I> type) implements ArgumentTypeInfo.Template<A> {
 
         @Override
         public A instantiate(CommandBuildContext context) {

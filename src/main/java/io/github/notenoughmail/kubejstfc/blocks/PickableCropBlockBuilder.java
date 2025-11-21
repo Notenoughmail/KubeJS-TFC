@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class PickableCropBlockBuilder extends AbstractCropBlockBuilder {
+public class PickableCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct {
 
     @Nullable
     public transient Supplier<Item> fruit;

@@ -26,6 +26,8 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+
 @SuppressWarnings("unused")
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct {
 
@@ -171,7 +173,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
         };
 
         private final boolean stick, bottom, mature, requiresStick;
-        private final String variant;
+        private final String variant, str;
 
         DeadModels(boolean bottom, boolean mature) {
             this(false, bottom, false, mature);
@@ -203,6 +205,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
             this.mature = mature;
             this.requiresStick = requiresStick;
             this.variant = variant;
+            str = name().toLowerCase(Locale.ROOT);
         }
 
         @Override
@@ -213,18 +216,6 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
         @Override
         public boolean mature() {
             return mature;
-        }
-
-        @Override
-        public ResourceLocation model(DeadCropBlockBuilder dead) {
-            if (mature) {
-                return dead.newID("", "_" + (bottom ? "bottom" : "top"));
-            } else {
-                if (requiresStick && stick) {
-                    return dead.newID("", "_young_stick" + (bottom ? "" : "_top"));
-                }
-                return dead.newID("", "_young");
-            }
         }
 
         @Info("If the bottom state property is true for the variant")
@@ -240,6 +231,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
         @HideFromJS
         public boolean requiresStick() {
             return requiresStick;
+        }
+
+        @Override
+        public String str() {
+            return str;
         }
     }
 

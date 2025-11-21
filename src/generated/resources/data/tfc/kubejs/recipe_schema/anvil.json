@@ -1,0 +1,37 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": "kubejs_tfc:forge_rule"
+      },
+      "name": "rules"
+    },
+    {
+      "type": "non_negative_int",
+      "default_optional": true,
+      "function_names": [
+        "tier"
+      ],
+      "name": "tier"
+    },
+    {
+      "type": "boolean",
+      "default_optional": true,
+      "function_names": [
+        "applyBonus"
+      ],
+      "name": "apply_bonus"
+    }
+  ]
+}

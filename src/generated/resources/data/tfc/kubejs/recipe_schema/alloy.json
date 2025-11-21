@@ -1,0 +1,20 @@
+{
+  "keys": [
+    {
+      "type": {
+        "type": "registry_element",
+        "registry": "minecraft:fluid"
+      },
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": "kubejs_tfc:alloy_range"
+      },
+      "name": "contents",
+      "role": "input"
+    }
+  ]
+}

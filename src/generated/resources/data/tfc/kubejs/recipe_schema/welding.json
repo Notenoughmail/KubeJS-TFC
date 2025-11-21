@@ -1,0 +1,35 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "first_input",
+      "role": "input"
+    },
+    {
+      "type": "ingredient",
+      "name": "second_input",
+      "role": "input"
+    },
+    {
+      "type": "non_negative_int",
+      "default_optional": true,
+      "function_names": [
+        "tier"
+      ],
+      "name": "tier"
+    },
+    {
+      "type": "kubejs_tfc:welding_behavior",
+      "default_optional": true,
+      "function_names": [
+        "bonusBehavior"
+      ],
+      "name": "bonus"
+    }
+  ]
+}

@@ -4,7 +4,10 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.dries007.tfc.mixin.accessor.ChunkMapAccessor;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
+import net.dries007.tfc.world.ChunkMapBridge;
+import net.dries007.tfc.world.RandomStateExtension;
 import net.dries007.tfc.world.Seed;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkDataGenerator;
@@ -130,17 +133,16 @@ public class WrappedChunkGenerator extends ChunkGenerator implements ChunkGenera
     public void initRandomState(ChunkMap chunkMap, ServerLevel level) {
         if (chunkDataGenerator != null) {
             final WrappedChunkGenerator copy = new WrappedChunkGenerator(copy(wrapped), key, settings);
-            chunkMap.tfc$updateGenerator(copy);
-            copy.initRandomState(chunkMap, level);
+            ((ChunkMapBridge) chunkMap).tfc$updateGenerator(copy);
             return;
         }
 
-        final RandomState rs = chunkMap.accessor$getRandomState();
+        final RandomState rs = ((ChunkMapAccessor) chunkMap).accessor$getRandomState();
 
         chunkDataGenerator = KubeChunkDataGenerator.create(key, settings, Seed.of(level.getSeed()), rs);
         climateSampler = rs.sampler();
 
-        rs.tfc$setChunkGeneratorExtension(this);
+        ((RandomStateExtension) (Object) rs).tfc$setChunkGeneratorExtension(this);
     }
 
     @Override

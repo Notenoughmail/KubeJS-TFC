@@ -32,9 +32,13 @@ public interface ISPExtension extends WithCodec {
     }
 
     @Info("The modifiers that will be applied to the stack, may be immutable")
-    List<ItemStackModifier> modifiers();
+    default List<ItemStackModifier> modifiers() {
+        throw new AssertionError("Not injected");
+    }
     @Info("The base stack of the ISP, may be empty")
-    ItemStack stack();
+    default ItemStack stack() {
+        throw new AssertionError("Not injected");
+    }
 
     private ItemStackProvider kubejs_tfc$self() {
         return Cast.to(this);

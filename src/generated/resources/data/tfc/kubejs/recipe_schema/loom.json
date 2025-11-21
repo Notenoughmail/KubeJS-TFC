@@ -1,0 +1,24 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "flat_sized_ingredient",
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "int"
+      },
+      "name": "steps"
+    },
+    {
+      "type": "id",
+      "name": "texture"
+    }
+  ]
+}

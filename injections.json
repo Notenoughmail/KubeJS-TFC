@@ -1,12 +1,5 @@
 {
   "net/minecraft/world/level/chunk/ChunkGenerator": [
     "io/github/notenoughmail/kubejstfc/implementation/extensions/IWrappedChunkGenerator"
-  ],
-  "net/minecraft/server/level/ChunkMap": [
-    "net/dries007/tfc/world/ChunkMapBridge",
-    "net/dries007/tfc/mixin/accessor/ChunkMapAccessor"
-  ],
-  "net/minecraft/world/level/levelgen/RandomState": [
-    "net/dries007/tfc/world/RandomStateExtension"
   ]
 }

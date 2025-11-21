@@ -8,6 +8,8 @@ import dev.latvian.mods.kubejs.plugin.ClassFilter;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.plugin.builtin.event.ItemEvents;
 import dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper;
+import dev.latvian.mods.kubejs.recipe.component.EnumComponent;
+import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
@@ -46,6 +48,7 @@ import net.dries007.tfc.common.component.fluid.FluidComponent;
 import net.dries007.tfc.common.component.food.FoodComponent;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.FoodTraits;
+import net.dries007.tfc.common.component.forge.ForgeRule;
 import net.dries007.tfc.common.component.forge.ForgingBonusComponent;
 import net.dries007.tfc.common.component.forge.ForgingComponent;
 import net.dries007.tfc.common.component.glass.GlassOperation;
@@ -55,6 +58,7 @@ import net.dries007.tfc.common.component.item.ItemComponent;
 import net.dries007.tfc.common.component.item.ItemListComponent;
 import net.dries007.tfc.common.component.mold.VesselComponent;
 import net.dries007.tfc.common.player.ChiselMode;
+import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
@@ -222,11 +226,16 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerRecipeSchemaFunctionTypes(RecipeSchemaFunctionRegistry registry) {
     }
 
+    public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
+    public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("welding_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
+
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {
         registry.register(ISPComponent.TYPE);
         registry.register(BlockIngredientComponent.TYPE);
         registry.register(AlloyRangeComponent.TYPE);
+        registry.register(FORGE_RULE_RECIPE_COMPONENT_TYPE);
+        registry.register(WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE);
     }
 
     @Override

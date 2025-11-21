@@ -2,7 +2,7 @@ package io.github.notenoughmail.kubejstfc.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.LayeredArea;
+import io.github.notenoughmail.kubejstfc.implementation.worldgen.generator.LayeredArea;
 import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.layer.UniformLayer;
 import net.dries007.tfc.world.layer.framework.SourceLayer;
