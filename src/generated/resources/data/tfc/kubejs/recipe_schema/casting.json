@@ -1,0 +1,31 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "mold",
+      "role": "input"
+    },
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "name": "fluid",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "float",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "function_names": [
+        "breakChance"
+      ],
+      "name": "break_chance",
+      "optional": 1
+    }
+  ]
+}

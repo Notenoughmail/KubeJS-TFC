@@ -1,0 +1,33 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": "id",
+      "name": "output_texture"
+    },
+    {
+      "type": "id",
+      "name": "input_texture"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "function_names": [
+        "extraDrop"
+      ],
+      "name": "result_item",
+      "optional": {
+        "modifiers": []
+      },
+      "role": "output"
+    }
+  ]
+}

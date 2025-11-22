@@ -1,0 +1,24 @@
+{
+  "keys": [
+    {
+      "type": "item_stack",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "batch",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": {
+          "type": "registry_element",
+          "registry": "tfc:glass_operation"
+        }
+      },
+      "name": "operations"
+    }
+  ]
+}

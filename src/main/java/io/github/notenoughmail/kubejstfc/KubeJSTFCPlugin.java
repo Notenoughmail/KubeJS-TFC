@@ -38,6 +38,7 @@ import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.ISPComponent;
+import io.github.notenoughmail.kubejstfc.recipe.components.FixedSizePatternComponent;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.component.EggComponent;
@@ -227,15 +228,17 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     }
 
     public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
-    public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("welding_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
+    public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("welding_bonus_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
 
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {
-        registry.register(ISPComponent.TYPE);
+        registry.register(ISPComponent.ISP);
+        registry.register(ISPComponent.OPTIONAL_ISP);
         registry.register(BlockIngredientComponent.TYPE);
         registry.register(AlloyRangeComponent.TYPE);
         registry.register(FORGE_RULE_RECIPE_COMPONENT_TYPE);
         registry.register(WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE);
+        registry.register(FixedSizePatternComponent.TYPE);
     }
 
     @Override

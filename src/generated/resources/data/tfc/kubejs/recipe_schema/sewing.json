@@ -1,0 +1,25 @@
+{
+  "keys": [
+    {
+      "type": "item_stack",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": {
+        "type": "kubejs_tfc:fixed_size_pattern",
+        "height": 5,
+        "width": 9
+      },
+      "name": "stitches"
+    },
+    {
+      "type": {
+        "type": "kubejs_tfc:fixed_size_pattern",
+        "height": 4,
+        "width": 8
+      },
+      "name": "squares"
+    }
+  ]
+}

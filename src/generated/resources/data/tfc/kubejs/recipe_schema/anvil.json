@@ -19,19 +19,19 @@
     },
     {
       "type": "non_negative_int",
-      "default_optional": true,
       "function_names": [
         "tier"
       ],
-      "name": "tier"
+      "name": "tier",
+      "optional": 0
     },
     {
       "type": "boolean",
-      "default_optional": true,
       "function_names": [
         "applyBonus"
       ],
-      "name": "apply_bonus"
+      "name": "apply_bonus",
+      "optional": false
     }
   ]
 }

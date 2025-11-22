@@ -1,0 +1,41 @@
+{
+  "keys": [
+    {
+      "type": "ingredient",
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": "non_negative_float",
+      "name": "temperature"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "function_names": [
+        "itemOutput"
+      ],
+      "name": "result_item",
+      "optional": {
+        "modifiers": []
+      },
+      "role": "output"
+    },
+    {
+      "type": "optional_fluid_stack",
+      "function_names": [
+        "fluidOutput"
+      ],
+      "name": "result_fluid",
+      "optional": {},
+      "role": "output"
+    },
+    {
+      "type": "boolean",
+      "function_names": [
+        "useDurability"
+      ],
+      "name": "use_durability",
+      "optional": false
+    }
+  ]
+}

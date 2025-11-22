@@ -17,19 +17,19 @@
     },
     {
       "type": "non_negative_int",
-      "default_optional": true,
       "function_names": [
         "tier"
       ],
-      "name": "tier"
+      "name": "tier",
+      "optional": 0
     },
     {
-      "type": "kubejs_tfc:welding_behavior",
-      "default_optional": true,
+      "type": "kubejs_tfc:welding_bonus_behavior",
       "function_names": [
         "bonusBehavior"
       ],
-      "name": "bonus"
+      "name": "bonus",
+      "optional": "ignore"
     }
   ]
 }

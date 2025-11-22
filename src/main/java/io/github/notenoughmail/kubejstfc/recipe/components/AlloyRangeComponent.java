@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import dev.latvian.mods.kubejs.recipe.RecipeScriptContext;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
+import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.rhino.type.RecordTypeInfo;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.util.AlloyRange;
@@ -12,7 +14,7 @@ public class AlloyRangeComponent implements RecipeComponent<AlloyRange> {
 
     public static final RecipeComponentType<AlloyRange> TYPE = RecipeComponentType.unit(KubeJSTFC.id("alloy_range"), new AlloyRangeComponent());
 
-    private static final TypeInfo TYPE_INFO = TypeInfo.of(AlloyRange.class);
+    private static final RecordTypeInfo TYPE_INFO = Cast.to(TypeInfo.of(AlloyRange.class));
 
     @Override
     public RecipeComponentType<AlloyRange> type() {
@@ -31,7 +33,7 @@ public class AlloyRangeComponent implements RecipeComponent<AlloyRange> {
 
     @Override
     public AlloyRange wrap(RecipeScriptContext cx, Object from) {
-        return (AlloyRange) cx.cx().jsToJava(from, TYPE_INFO);
+        return (AlloyRange) TYPE_INFO.wrap(cx.cx(), from, TYPE_INFO);
     }
 
     @Override

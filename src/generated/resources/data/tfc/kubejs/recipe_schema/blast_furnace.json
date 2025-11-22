@@ -1,0 +1,19 @@
+{
+  "keys": [
+    {
+      "type": "fluid_stack",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "catalyst",
+      "role": "input"
+    },
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "name": "fluid",
+      "role": "input"
+    }
+  ]
+}
