@@ -1,7 +1,34 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "pattern",
+        "key"
+      ]
+    }
+  ],
+  "functions": {
+    "inputPosition": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "input_row",
+        "input_column"
+      ]
+    },
+    "noNotification": {
+      "type": "set",
+      "key": "show_notification",
+      "value": false
+    }
+  },
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
@@ -10,6 +37,9 @@
         "type": "list",
         "component": "string"
       },
+      "alternative_names": [
+        "pattern"
+      ],
       "name": "pattern"
     },
     {
@@ -17,17 +47,29 @@
         "type": "pattern",
         "component": "ingredient"
       },
+      "alternative_names": [
+        "key"
+      ],
       "name": "key",
       "role": "input"
     },
     {
       "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "remainder"
+      ],
       "default_optional": true,
+      "function_names": [
+        "remainder"
+      ],
       "name": "remainder",
       "role": "output"
     },
     {
       "type": "boolean",
+      "alternative_names": [
+        "show_notification"
+      ],
       "function_names": [
         "showNotification"
       ],
@@ -36,6 +78,9 @@
     },
     {
       "type": "non_negative_int",
+      "alternative_names": [
+        "input_row"
+      ],
       "function_names": [
         "inputRow"
       ],
@@ -44,11 +89,19 @@
     },
     {
       "type": "non_negative_int",
+      "alternative_names": [
+        "input_column"
+      ],
       "function_names": [
         "inputColumn"
       ],
       "name": "input_column",
       "optional": 0
+    }
+  ],
+  "post_processors": [
+    {
+      "type": "kubejs:key_pattern_cleanup"
     }
   ]
 }

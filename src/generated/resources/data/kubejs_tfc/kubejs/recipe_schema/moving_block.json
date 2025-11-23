@@ -1,16 +1,30 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "ingredient"
+      ]
+    },
+    {
+      "keys": [
+        "ingredient"
+      ]
+    }
+  ],
   "hidden": false,
   "keys": [
     {
-      "type": "kubejs_tfc:isp",
+      "type": "optional_block_state",
       "alternative_names": [
         "result"
       ],
+      "default_optional": true,
       "name": "result",
       "role": "output"
     },
     {
-      "type": "ingredient",
+      "type": "kubejs_tfc:block_ingredient",
       "alternative_names": [
         "ingredient"
       ],

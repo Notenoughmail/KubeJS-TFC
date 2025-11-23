@@ -1,22 +1,8 @@
 {
-  "keys": [
-    {
-      "type": "ingredient",
-      "name": "ingredients",
-      "role": "input"
-    },
-    {
-      "type": "flat_sized_fluid_ingredient",
-      "name": "fluid_ingredient",
-      "role": "input"
-    },
-    {
-      "type": "non_negative_int",
-      "name": "duration"
-    },
-    {
-      "type": "non_negative_float",
-      "name": "temperature"
-    }
-  ]
+  "parent": "kubejs_tfc:basic_pot",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true
+  }
 }

@@ -1,16 +1,48 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "ingredient",
+        "temperature"
+      ]
+    }
+  ],
+  "functions": {
+    "outputs": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "result_item",
+        "result_fluid"
+      ]
+    },
+    "useDurability": {
+      "type": "set",
+      "key": "use_durability",
+      "value": true
+    }
+  },
+  "hidden": false,
   "keys": [
     {
       "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
     {
       "type": "non_negative_float",
+      "alternative_names": [
+        "temperature"
+      ],
       "name": "temperature"
     },
     {
       "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "result_item"
+      ],
       "function_names": [
         "itemOutput"
       ],
@@ -22,6 +54,9 @@
     },
     {
       "type": "optional_fluid_stack",
+      "alternative_names": [
+        "result_fluid"
+      ],
       "function_names": [
         "fluidOutput"
       ],
@@ -31,6 +66,9 @@
     },
     {
       "type": "boolean",
+      "alternative_names": [
+        "use_durability"
+      ],
       "function_names": [
         "useDurability"
       ],

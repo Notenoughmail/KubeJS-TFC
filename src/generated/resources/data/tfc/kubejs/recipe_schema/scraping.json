@@ -1,25 +1,51 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "ingredient",
+        "output_texture",
+        "input_texture"
+      ]
+    }
+  ],
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
     {
       "type": "id",
+      "alternative_names": [
+        "output_texture"
+      ],
       "name": "output_texture"
     },
     {
       "type": "id",
+      "alternative_names": [
+        "input_texture"
+      ],
       "name": "input_texture"
     },
     {
       "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "result_item"
+      ],
       "function_names": [
         "extraDrop"
       ],

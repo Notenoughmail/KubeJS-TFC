@@ -1,17 +1,44 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "ingredient",
+        "knapping_type",
+        "pattern"
+      ]
+    }
+  ],
+  "functions": {
+    "defaultOn": {
+      "type": "set",
+      "key": "default_on",
+      "value": true
+    }
+  },
+  "hidden": false,
   "keys": [
     {
       "type": "item_stack",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
     {
       "type": "id",
+      "alternative_names": [
+        "knapping_type"
+      ],
       "name": "knapping_type"
     },
     {
@@ -20,10 +47,16 @@
         "component": "string",
         "max": 5
       },
+      "alternative_names": [
+        "pattern"
+      ],
       "name": "pattern"
     },
     {
       "type": "boolean",
+      "alternative_names": [
+        "default_on"
+      ],
       "function_names": [
         "defaultOn"
       ],

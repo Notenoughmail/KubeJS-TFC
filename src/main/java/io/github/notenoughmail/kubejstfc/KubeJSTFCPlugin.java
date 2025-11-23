@@ -80,6 +80,7 @@ import java.util.Optional;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
+// TODO: 2.0.0 | TFC recipe filters & component replacements
 public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override

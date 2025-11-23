@@ -84,8 +84,7 @@ neoForge {
                     '--all',
                     '--output', file('src/generated/resources/').getAbsolutePath(),
                     '--existing', file('src/main/resources/').getAbsolutePath(),
-                    '--existing-mod', 'tfc',
-                    '--existing-mod', 'kubejs'
+                    '--existing-mod', 'tfc'
             )
         }
     }

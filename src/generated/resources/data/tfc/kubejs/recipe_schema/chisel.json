@@ -1,12 +1,28 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "ingredient",
+        "mode"
+      ]
+    }
+  ],
+  "hidden": false,
   "keys": [
     {
       "type": "block_state",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "kubejs_tfc:block_ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
@@ -15,10 +31,16 @@
         "type": "registry_element",
         "registry": "tfc:chisel_mode"
       },
+      "alternative_names": [
+        "mode"
+      ],
       "name": "mode"
     },
     {
       "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "item_output"
+      ],
       "function_names": [
         "itemOutput"
       ],

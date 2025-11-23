@@ -1,12 +1,19 @@
 {
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "flat_sized_ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
@@ -14,10 +21,16 @@
       "type": {
         "type": "int"
       },
+      "alternative_names": [
+        "steps"
+      ],
       "name": "steps"
     },
     {
       "type": "id",
+      "alternative_names": [
+        "texture"
+      ],
       "name": "texture"
     }
   ]

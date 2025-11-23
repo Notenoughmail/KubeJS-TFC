@@ -1,12 +1,19 @@
 {
+  "hidden": false,
   "keys": [
     {
       "type": "item_stack",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "batch"
+      ],
       "name": "batch",
       "role": "input"
     },
@@ -18,6 +25,9 @@
           "registry": "tfc:glass_operation"
         }
       },
+      "alternative_names": [
+        "operations"
+      ],
       "name": "operations"
     }
   ]

@@ -1,14 +1,8 @@
 {
-  "keys": [
-    {
-      "type": "optional_block_state",
-      "name": "result",
-      "role": "output"
-    },
-    {
-      "type": "kubejs_tfc:block_ingredient",
-      "name": "ingredient",
-      "role": "input"
-    }
-  ]
+  "parent": "kubejs_tfc:moving_block",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true
+  }
 }

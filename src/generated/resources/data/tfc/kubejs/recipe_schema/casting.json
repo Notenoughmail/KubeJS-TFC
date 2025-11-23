@@ -1,17 +1,27 @@
 {
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "mold"
+      ],
       "name": "mold",
       "role": "input"
     },
     {
       "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "fluid"
+      ],
       "name": "fluid",
       "role": "input"
     },
@@ -21,6 +31,9 @@
         "max": 1.0,
         "min": 0.0
       },
+      "alternative_names": [
+        "break_chance"
+      ],
       "function_names": [
         "breakChance"
       ],

@@ -1,17 +1,27 @@
 {
+  "hidden": false,
   "keys": [
     {
       "type": "fluid_stack",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "catalyst"
+      ],
       "name": "catalyst",
       "role": "input"
     },
     {
       "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "fluid"
+      ],
       "name": "fluid",
       "role": "input"
     }

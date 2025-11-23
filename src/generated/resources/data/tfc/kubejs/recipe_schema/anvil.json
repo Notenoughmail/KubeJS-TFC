@@ -1,12 +1,28 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "ingredient",
+        "rules"
+      ]
+    }
+  ],
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
       "name": "ingredient",
       "role": "input"
     },
@@ -15,10 +31,16 @@
         "type": "list",
         "component": "kubejs_tfc:forge_rule"
       },
+      "alternative_names": [
+        "rules"
+      ],
       "name": "rules"
     },
     {
       "type": "non_negative_int",
+      "alternative_names": [
+        "tier"
+      ],
       "function_names": [
         "tier"
       ],
@@ -27,6 +49,9 @@
     },
     {
       "type": "boolean",
+      "alternative_names": [
+        "apply_bonus"
+      ],
       "function_names": [
         "applyBonus"
       ],

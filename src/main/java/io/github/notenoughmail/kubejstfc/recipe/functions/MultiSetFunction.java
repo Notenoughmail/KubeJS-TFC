@@ -28,6 +28,10 @@ public record MultiSetFunction(List<String> keys) implements RecipeSchemaFunctio
             )
     );
 
+    public static MultiSetFunction of(String... keys) {
+        return new MultiSetFunction(List.of(keys));
+    }
+
     @Override
     public RecipeSchemaFunctionType<?> type() {
         return TYPE;

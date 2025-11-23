@@ -1,7 +1,11 @@
 {
+  "hidden": false,
   "keys": [
     {
       "type": "item_stack",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
@@ -11,6 +15,9 @@
         "height": 5,
         "width": 9
       },
+      "alternative_names": [
+        "stitches"
+      ],
       "name": "stitches"
     },
     {
@@ -19,6 +26,9 @@
         "height": 4,
         "width": 8
       },
+      "alternative_names": [
+        "squares"
+      ],
       "name": "squares"
     }
   ]

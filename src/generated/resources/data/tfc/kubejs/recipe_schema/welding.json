@@ -1,22 +1,44 @@
 {
+  "constructors": [
+    {
+      "keys": [
+        "result",
+        "first_input",
+        "second_input"
+      ]
+    }
+  ],
+  "hidden": false,
   "keys": [
     {
       "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
       "name": "result",
       "role": "output"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "first_input"
+      ],
       "name": "first_input",
       "role": "input"
     },
     {
       "type": "ingredient",
+      "alternative_names": [
+        "second_input"
+      ],
       "name": "second_input",
       "role": "input"
     },
     {
       "type": "non_negative_int",
+      "alternative_names": [
+        "tier"
+      ],
       "function_names": [
         "tier"
       ],
@@ -25,6 +47,9 @@
     },
     {
       "type": "kubejs_tfc:welding_bonus_behavior",
+      "alternative_names": [
+        "bonus"
+      ],
       "function_names": [
         "bonusBehavior"
       ],

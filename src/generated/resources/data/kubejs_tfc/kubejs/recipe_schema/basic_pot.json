@@ -2,27 +2,19 @@
   "hidden": false,
   "keys": [
     {
-      "type": "kubejs_tfc:isp",
+      "type": "ingredient",
       "alternative_names": [
-        "result"
+        "ingredients"
       ],
-      "name": "result",
-      "role": "output"
-    },
-    {
-      "type": "flat_sized_ingredient",
-      "alternative_names": [
-        "catalyst"
-      ],
-      "name": "catalyst",
+      "name": "ingredients",
       "role": "input"
     },
     {
       "type": "flat_sized_fluid_ingredient",
       "alternative_names": [
-        "fluid"
+        "fluid_ingredient"
       ],
-      "name": "fluid",
+      "name": "fluid_ingredient",
       "role": "input"
     },
     {
@@ -31,6 +23,13 @@
         "duration"
       ],
       "name": "duration"
+    },
+    {
+      "type": "non_negative_float",
+      "alternative_names": [
+        "temperature"
+      ],
+      "name": "temperature"
     }
   ]
 }
