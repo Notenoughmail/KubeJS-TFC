@@ -6,12 +6,13 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.RawRockBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class RawRockBlockBuilder extends BlockBuilder {
 

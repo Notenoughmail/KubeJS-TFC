@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.SpreadingBushBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.StationaryBerryBushBlockBuilder;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public class SpreadingCaneBlockBuilder extends BlockBuilder {
 
     private static final String[] TEXTURE_KEYS = { "cane", "bush" };

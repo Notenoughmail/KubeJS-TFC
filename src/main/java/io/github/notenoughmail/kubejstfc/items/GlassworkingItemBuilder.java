@@ -2,12 +2,14 @@ package io.github.notenoughmail.kubejstfc.items;
 
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.items.GlassworkingItem;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class GlassworkingItemBuilder extends ItemBuilder {
 

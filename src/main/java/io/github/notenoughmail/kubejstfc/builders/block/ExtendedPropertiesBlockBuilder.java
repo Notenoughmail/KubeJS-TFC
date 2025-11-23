@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.builders.block;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.mixin.accessor.ExtendedPropertiesAccessor;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.minecraft.Util;
@@ -10,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public abstract class ExtendedPropertiesBlockBuilder extends BlockBuilder {
 
     public transient Consumer<ExtendedProperties> props;

@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -16,6 +17,7 @@ import net.dries007.tfc.common.blocks.devices.AnvilBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class AnvilBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

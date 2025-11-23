@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.LampBlockItemBuilder;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import it.unimi.dsi.fastutil.longs.Long2FloatFunction;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
@@ -20,10 +21,10 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.LongPredicate;
 
-// TODO 2.0.0 | This needs to change
+@ReturnsSelf
 public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeClimateModelBuilder.Model>> {
 
-    public static final Map<String, BiFunction<Float, Boolean, ClimateModel>> modelInstances = new HashMap<>();
+    public static final Map<String, BiFunction<Float, Boolean, ClimateModel>> modelFactories = new HashMap<>();
 
     public transient WindFunction wind = (m, l, p, c, d) -> Vec2.ZERO;
     public transient TimelessValueFunction fog = (m, l, p) -> 0F;
@@ -38,7 +39,7 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
 
     public KubeClimateModelBuilder(ResourceLocation id) {
         super(id);
-        modelInstances.put(id.toString(), Model::new);
+        modelFactories.put(id.toString(), Model::new);
     }
 
     @Info("The wind calculation of this model")

@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
 
-public record ISPComponent(Codec<ItemStackProvider> codec, RecipeComponentType<ItemStackProvider> type) implements RecipeComponent<ItemStackProvider> {
+public record ItemStackProviderComponent(Codec<ItemStackProvider> codec, RecipeComponentType<ItemStackProvider> type) implements RecipeComponent<ItemStackProvider> {
 
     private static final Codec<ItemStackProvider> OPTIONAL_CODEC = Codec.either(
             RecordCodecBuilder.<ItemStackProvider>create(i -> i.group(
@@ -28,8 +28,8 @@ public record ISPComponent(Codec<ItemStackProvider> codec, RecipeComponentType<I
             p -> p.stack() != ItemStack.EMPTY && p.modifiers().isEmpty() ? Either.right(p.stack()) : Either.left(p) // The entire difference from the normal one
     );
 
-    public static final RecipeComponentType<ItemStackProvider> ISP = RecipeComponentType.unit(KubeJSTFC.id("isp"), type -> new ISPComponent(ItemStackProvider.CODEC, type));
-    public static final RecipeComponentType<ItemStackProvider> OPTIONAL_ISP = RecipeComponentType.unit(KubeJSTFC.id("optional_isp"), type -> new ISPComponent(OPTIONAL_CODEC, type));
+    public static final RecipeComponentType<ItemStackProvider> ISP = RecipeComponentType.unit(KubeJSTFC.id("isp"), type -> new ItemStackProviderComponent(ItemStackProvider.CODEC, type));
+    public static final RecipeComponentType<ItemStackProvider> OPTIONAL_ISP = RecipeComponentType.unit(KubeJSTFC.id("optional_isp"), type -> new ItemStackProviderComponent(OPTIONAL_CODEC, type));
 
     private static final TypeInfo TYPE_INFO = TypeInfo.of(ItemStackProvider.class).or(TypeInfo.of(ItemStack.class));
 

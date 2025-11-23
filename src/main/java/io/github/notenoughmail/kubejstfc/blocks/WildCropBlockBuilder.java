@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -34,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public abstract class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

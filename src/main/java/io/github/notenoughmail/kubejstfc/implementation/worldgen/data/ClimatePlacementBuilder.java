@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.implementation.worldgen.data;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.placement.ClimatePlacement;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public class ClimatePlacementBuilder {
 
     public static ClimatePlacement make(Consumer<ClimatePlacementBuilder> builder) {

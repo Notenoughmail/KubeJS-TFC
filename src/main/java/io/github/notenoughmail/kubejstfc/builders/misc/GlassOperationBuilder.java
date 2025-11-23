@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.component.heat.Heat;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
+@ReturnsSelf
 public class GlassOperationBuilder extends BuilderBase<GlassOperation> {
 
     public transient boolean powder = false;

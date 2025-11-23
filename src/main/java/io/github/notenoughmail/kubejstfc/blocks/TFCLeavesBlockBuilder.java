@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.FallenLeavesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public class TFCLeavesBlockBuilder extends LeavesBuilder {
 
     public transient int autumnIndex;

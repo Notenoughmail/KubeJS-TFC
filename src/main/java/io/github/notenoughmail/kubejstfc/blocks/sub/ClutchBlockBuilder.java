@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.material.PushReaction;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private static final String[] TEXTURE_KEYS = { "side", "end", "particle" };

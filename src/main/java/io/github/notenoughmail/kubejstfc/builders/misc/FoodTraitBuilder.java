@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 import dev.latvian.mods.kubejs.client.LangKubeEvent;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.dries007.tfc.common.component.food.FoodTrait;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public class FoodTraitBuilder extends BuilderBase<FoodTrait> {
 
     public transient Supplier<Double> decayModifier = () -> 1D;

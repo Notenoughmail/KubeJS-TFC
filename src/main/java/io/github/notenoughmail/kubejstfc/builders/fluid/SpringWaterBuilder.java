@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.fluid;
 
 import dev.latvian.mods.kubejs.fluid.FluidBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.HotWaterFluidBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.client.particle.TFCParticles;
@@ -12,6 +13,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class SpringWaterBuilder extends FluidBuilder {
 

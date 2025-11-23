@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
 
+@ReturnsSelf
 public class BladedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final AxleBlockBuilder parent;

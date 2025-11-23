@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct {
 

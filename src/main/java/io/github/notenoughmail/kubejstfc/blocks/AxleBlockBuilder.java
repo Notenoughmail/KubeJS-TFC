@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.*;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public static final String[] TEXTURE_KEYS = { "particle", "wood" };

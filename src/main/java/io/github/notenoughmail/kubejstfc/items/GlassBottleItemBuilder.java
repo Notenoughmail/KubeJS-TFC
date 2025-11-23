@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.items;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import net.dries007.tfc.common.items.GlassBottleItem;
 import net.minecraft.resources.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public class GlassBottleItemBuilder extends FluidCapacityItemBuilder.WithLang {
 
     public transient Supplier<Double> breakChance;

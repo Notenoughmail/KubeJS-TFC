@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.items;
 import com.google.gson.JsonArray;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+@ReturnsSelf
 public class MoldItemBuilder extends FluidCapacityItemBuilder {
 
     public transient String @Nullable [] moldTablePattern;

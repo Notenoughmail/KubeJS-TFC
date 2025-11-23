@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.TFCLeavesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 public class FallenLeavesBlockBuilder extends LeavesBuilder {
 
     public transient final TFCLeavesBlockBuilder parent;

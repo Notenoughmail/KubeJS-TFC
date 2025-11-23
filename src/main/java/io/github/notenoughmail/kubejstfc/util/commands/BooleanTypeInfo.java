@@ -2,7 +2,6 @@ package io.github.notenoughmail.kubejstfc.util.commands;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.arguments.ArgumentType;
-import dev.latvian.mods.kubejs.util.Cast;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;

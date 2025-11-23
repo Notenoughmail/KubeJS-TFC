@@ -1,0 +1,54 @@
+{
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": "string"
+      },
+      "name": "pattern"
+    },
+    {
+      "type": {
+        "type": "pattern",
+        "component": "ingredient"
+      },
+      "name": "key",
+      "role": "input"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "default_optional": true,
+      "name": "remainder",
+      "role": "output"
+    },
+    {
+      "type": "boolean",
+      "function_names": [
+        "showNotification"
+      ],
+      "name": "show_notification",
+      "optional": true
+    },
+    {
+      "type": "non_negative_int",
+      "function_names": [
+        "inputRow"
+      ],
+      "name": "input_row",
+      "optional": 0
+    },
+    {
+      "type": "non_negative_int",
+      "function_names": [
+        "inputColumn"
+      ],
+      "name": "input_column",
+      "optional": 0
+    }
+  ]
+}

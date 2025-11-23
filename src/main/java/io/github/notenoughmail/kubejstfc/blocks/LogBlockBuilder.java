@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private static final ResourceLocation[] LOGS = {

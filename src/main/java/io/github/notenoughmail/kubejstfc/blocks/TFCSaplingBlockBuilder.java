@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private static final String[] TEXTURE_KEYS = { "particle", "cross" };

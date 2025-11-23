@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class AqueductBlockBuilder extends BlockBuilder {
 

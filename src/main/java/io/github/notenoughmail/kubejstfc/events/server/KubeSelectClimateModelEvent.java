@@ -51,7 +51,7 @@ public class KubeSelectClimateModelEvent implements KubeLevelEvent {
 
     @Info("Gets a climate model as defined by a model type registered through scripts")
     public ClimateModel kubeModel(String id, float hemisphereScale, boolean supportsRain) {
-        return KubeClimateModelBuilder.modelInstances.get(id).apply(hemisphereScale, supportsRain);
+        return KubeClimateModelBuilder.modelFactories.get(id).apply(hemisphereScale, supportsRain);
     }
 
     @Info(value = "Sets the event's climate model")

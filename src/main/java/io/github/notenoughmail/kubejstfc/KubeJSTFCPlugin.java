@@ -13,7 +13,6 @@ import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
-import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.blocks.*;
@@ -37,8 +36,9 @@ import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.Weighted;
 import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.ISPComponent;
 import io.github.notenoughmail.kubejstfc.recipe.components.FixedSizePatternComponent;
+import io.github.notenoughmail.kubejstfc.recipe.components.ItemStackProviderComponent;
+import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.component.EggComponent;
@@ -71,7 +71,6 @@ import net.dries007.tfc.world.feature.cave.ThinSpikeConfig;
 import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.Blocks;
@@ -81,16 +80,13 @@ import java.util.Optional;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
-/**
- * {@link dev.latvian.mods.kubejs.registry.RegistryType#register(ResourceKey, TypeInfo)}?
- */
 public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
     public void registerBuilderTypes(BuilderTypeRegistry registry) {
 
         registry.addDefault(GlassOperation.KEY, GlassOperationBuilder.class, GlassOperationBuilder::new);
-        registry.addDefault(ItemStackModifiers.KEY, ISMBuilder.class, ISMBuilder::new);
+        registry.addDefault(ItemStackModifiers.KEY, ItemStackModifierBuilder.class, ItemStackModifierBuilder::new);
         registry.addDefault(ChiselMode.KEY, ChiselModeBuilder.class, ChiselModeBuilder::new);
         registry.addDefault(FoodTraits.KEY, FoodTraitBuilder.class, FoodTraitBuilder::new);
         registry.addDefault(ClimateModels.KEY, KubeClimateModelBuilder.class, KubeClimateModelBuilder::new);
@@ -159,10 +155,6 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     }
 
     @Override
-    public void registerServerRegistries(ServerRegistryRegistry registry) {
-    }
-
-    @Override
     public void registerEvents(EventGroupRegistry registry) {
         registry.register(KubeJSTFCEventHandlers.TFCEvents);
         ItemEvents.TOOL_TIER_REGISTRY.listenJava(ScriptType.STARTUP, null, Assistant.handleKube((ItemToolTierRegistryKubeEvent e) -> {
@@ -225,6 +217,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
     public void registerRecipeSchemaFunctionTypes(RecipeSchemaFunctionRegistry registry) {
+        registry.register(MultiSetFunction.TYPE);
     }
 
     public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
@@ -232,8 +225,8 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {
-        registry.register(ISPComponent.ISP);
-        registry.register(ISPComponent.OPTIONAL_ISP);
+        registry.register(ItemStackProviderComponent.ISP);
+        registry.register(ItemStackProviderComponent.OPTIONAL_ISP);
         registry.register(BlockIngredientComponent.TYPE);
         registry.register(AlloyRangeComponent.TYPE);
         registry.register(FORGE_RULE_RECIPE_COMPONENT_TYPE);

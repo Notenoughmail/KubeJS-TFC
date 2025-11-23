@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.AxleBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -15,6 +16,7 @@ import net.dries007.tfc.common.blocks.rotation.WaterWheelBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+@ReturnsSelf
 public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public transient final AxleBlockBuilder parent;

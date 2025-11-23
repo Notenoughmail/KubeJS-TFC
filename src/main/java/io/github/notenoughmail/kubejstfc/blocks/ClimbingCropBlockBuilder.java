@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 public class ClimbingCropBlockBuilder extends DoubleCropBlockBuilder {
 
     public static final ResourceLocation STICK = KubeJSTFC.tfc("block/crop/stick");

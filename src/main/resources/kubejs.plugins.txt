@@ -1,3 +1,3 @@
 io.github.notenoughmail.kubejstfc.KubeJSTFCPlugin
 io.github.notenoughmail.kubejstfc.addons.precpros.PrecProsPlugin __precisionprospecting
-io.github.notenoughmail.kubejstfc.addons.entityjs.EntityJSTFCPlugin __entityjs
+io.github.notenoughmail.kubejstfc.addons.entityjs.EntityJSTFCPlugin entityjs

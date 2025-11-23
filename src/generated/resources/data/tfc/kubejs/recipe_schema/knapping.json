@@ -1,0 +1,34 @@
+{
+  "keys": [
+    {
+      "type": "item_stack",
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": "id",
+      "name": "knapping_type"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": "string",
+        "max": 5
+      },
+      "name": "pattern"
+    },
+    {
+      "type": "boolean",
+      "function_names": [
+        "defaultOn"
+      ],
+      "name": "default_on",
+      "optional": false
+    }
+  ]
+}

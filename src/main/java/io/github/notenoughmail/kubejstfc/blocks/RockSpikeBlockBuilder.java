@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 public class RockSpikeBlockBuilder extends BlockBuilder {
 
     private static final String[] TEXTURE_KEYS = { "texture", "particle" };

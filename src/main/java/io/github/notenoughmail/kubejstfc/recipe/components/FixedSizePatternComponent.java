@@ -3,12 +3,15 @@ package io.github.notenoughmail.kubejstfc.recipe.components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.latvian.mods.kubejs.error.InvalidRecipeComponentValueException;
-import dev.latvian.mods.kubejs.recipe.component.*;
+import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
+import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
+import dev.latvian.mods.kubejs.recipe.component.RecipeValidationContext;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 
 import java.util.List;
 
+// TODO: 2.0.0 | Verify this properly encodes in the way TFC expects
 public record FixedSizePatternComponent(Codec<List<String>> codec, int width, int height) implements RecipeComponent<List<String>> {
 
     private static Codec<List<String>> codec(int width, int height) {

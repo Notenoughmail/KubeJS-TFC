@@ -20,19 +20,6 @@ public class KubeJSTFC {
 
 
     public KubeJSTFC() {
-
-        final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        KubeJSTFCRecipeSerializers.REG.register(modBus);
-
-        RecipeFilter.PARSE.register((ctx, filters, map) -> {
-            final Object o = map.get("tfc");
-            if (o != null) {
-                final RecipeFilter filter = TFCRecipeFilter.parse(ctx, o);
-                if (filter != null) {
-                    filters.add(filter);
-                }
-            }
-        });
     }
 
 }

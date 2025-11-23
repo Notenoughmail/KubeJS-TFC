@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.items;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -12,6 +13,7 @@ import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class TFCFishingRodItemBuilder extends ItemBuilder {
 

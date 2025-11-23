@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.ConnectedGrassBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.TFCFarmlandBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.TFCPathBlockBuilder;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class TFCDirtBlockBuilder extends BlockBuilder {
 

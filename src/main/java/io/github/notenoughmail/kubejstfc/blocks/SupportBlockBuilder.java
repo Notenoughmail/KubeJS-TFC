@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.HorizontalSupportBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

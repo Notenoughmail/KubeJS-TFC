@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.plugin.builtin.wrapper.StringUtilsWrapper;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public abstract class FluidCapacityItemBuilder extends ItemBuilder {
 
     public transient String overlayTexture;

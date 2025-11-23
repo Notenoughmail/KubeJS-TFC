@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.blocks;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class PickableCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct {
 

@@ -2,10 +2,12 @@ package io.github.notenoughmail.kubejstfc.builders.block;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import net.minecraft.resources.ResourceLocation;
 
+@ReturnsSelf
 public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
 
     protected static final ResourceLocation LEAVES = KubeJSTFC.mc("block/leaves");

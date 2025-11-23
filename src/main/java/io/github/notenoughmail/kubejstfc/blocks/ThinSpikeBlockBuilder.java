@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class ThinSpikeBlockBuilder extends BlockBuilder {
 

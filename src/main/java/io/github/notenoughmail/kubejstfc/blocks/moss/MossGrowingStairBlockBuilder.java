@@ -1,6 +1,8 @@
 package io.github.notenoughmail.kubejstfc.blocks.moss;
 
 import dev.latvian.mods.kubejs.block.custom.StairBlockBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.blocks.rock.MossGrowingStairsBlock;
 import net.minecraft.core.Holder;
@@ -10,6 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
 
@@ -20,6 +23,7 @@ public class MossGrowingStairBlockBuilder extends StairBlockBuilder {
         mossyBlock = () -> Blocks.OAK_STAIRS;
     }
 
+    @Info("The block this converts into when moss grows to it")
     public MossGrowingStairBlockBuilder mossyBlock(Holder<Block> block) {
         mossyBlock = Assistant.holderAsSupplier(block);
         return this;

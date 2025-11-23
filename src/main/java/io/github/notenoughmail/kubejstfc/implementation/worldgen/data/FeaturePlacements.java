@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.implementation.worldgen.data;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.dries007.tfc.world.placement.*;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@ReturnsSelf
 public class FeaturePlacements {
 
     public static PlacedFeature make(Holder<ConfiguredFeature<?, ?>> configuredFeature, Consumer<FeaturePlacements> placement) {
@@ -35,7 +37,7 @@ public class FeaturePlacements {
 
     @Info("Add a `tfc:biome` modifier")
     public FeaturePlacements tfcBiome() {
-        return add(new BiomePlacement()); // TODO: 2.0.0 | How will the codec respond to this?
+        return add(new BiomePlacement());
     }
 
     @Info("Add a `tfc:underground` modifier")

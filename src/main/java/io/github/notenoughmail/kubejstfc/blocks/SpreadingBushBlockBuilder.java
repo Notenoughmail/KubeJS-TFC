@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.SpreadingCaneBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 

@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.items;
 
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
@@ -9,6 +10,7 @@ import net.dries007.tfc.common.items.HammerItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class HammerItemBuilder extends HandheldItemBuilder {
 

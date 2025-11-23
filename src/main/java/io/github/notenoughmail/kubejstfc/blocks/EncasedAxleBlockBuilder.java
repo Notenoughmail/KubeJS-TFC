@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 
+@ReturnsSelf
 public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private static final String[] TEXTURE_KEYS = { "side", "end", "particle" };

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -20,6 +21,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class JavelinItemBuilder extends HandheldItemBuilder {
 

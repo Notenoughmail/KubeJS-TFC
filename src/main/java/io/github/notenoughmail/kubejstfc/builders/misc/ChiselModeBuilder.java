@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+@ReturnsSelf
 public class ChiselModeBuilder extends BuilderBase<ChiselMode> {
 
     public transient int priority = 300;

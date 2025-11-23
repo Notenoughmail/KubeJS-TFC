@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.items;
 import dev.latvian.mods.kubejs.color.KubeColor;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
+@ReturnsSelf
 public class WindmillBladeItemBuilder extends ItemBuilder {
 
     static final ResourceLocation DEFAULT_TEXTURE = Helpers.identifier("textures/entity/misc/windmill_blade.png");
@@ -26,7 +28,7 @@ public class WindmillBladeItemBuilder extends ItemBuilder {
         BuilderRefs.windmillBlades.add(this);
     }
 
-    @Info("Sets the color to use ")
+    @Info("Sets the color to use")
     public WindmillBladeItemBuilder bladeColor(@Nullable KubeColor color) {
         this.color = color;
         return this;

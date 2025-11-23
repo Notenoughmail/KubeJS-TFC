@@ -11,6 +11,7 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -39,6 +40,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 

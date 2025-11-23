@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.items;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.component.glass.IGlassworkingTool;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.block.Block;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class GlassworkingToolItemBuilder extends ToolItemBuilder {
 

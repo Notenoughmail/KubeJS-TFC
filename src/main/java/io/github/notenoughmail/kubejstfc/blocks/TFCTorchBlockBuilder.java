@@ -9,6 +9,7 @@ import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadTorchBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadWallTorchBuilder;
@@ -47,6 +48,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public static void randomTick(ServerLevel level, BlockPos pos, BlockState place, Supplier<Integer> decayLength) {

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.ClimbingCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.DoubleCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
+@ReturnsSelf
 public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private final AbstractCropBlockBuilder alive;

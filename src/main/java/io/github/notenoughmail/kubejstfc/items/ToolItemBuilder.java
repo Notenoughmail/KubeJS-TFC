@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.items;
 
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ToolItem;
@@ -11,6 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+@ReturnsSelf
 @SuppressWarnings("unused")
 public class ToolItemBuilder extends HandheldItemBuilder {
 
