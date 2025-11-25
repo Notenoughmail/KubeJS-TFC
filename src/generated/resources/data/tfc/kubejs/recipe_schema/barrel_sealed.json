@@ -1,0 +1,55 @@
+{
+  "parent": "kubejs_tfc:barrel",
+  "constructors": [
+    {
+      "keys": [
+        "input_fluid",
+        "duration"
+      ]
+    }
+  ],
+  "functions": {
+    "seal": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "on_seal",
+        "on_unseal"
+      ]
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": "non_negative_int",
+      "alternative_names": [
+        "duration"
+      ],
+      "name": "duration"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "on_seal"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "onSeal"
+      ],
+      "name": "on_seal"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "on_unseal"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "onUnseal"
+      ],
+      "name": "on_unseal"
+    }
+  ],
+  "merge": {
+    "keys": true
+  }
+}

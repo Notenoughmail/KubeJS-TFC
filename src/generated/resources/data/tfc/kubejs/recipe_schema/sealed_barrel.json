@@ -1,0 +1,11 @@
+{
+  "parent": "tfc:barrel_sealed",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true,
+    "post_processors": true,
+    "unique": true
+  },
+  "override_type": "tfc:barrel_sealed"
+}

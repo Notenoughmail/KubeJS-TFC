@@ -1,0 +1,11 @@
+{
+  "parent": "tfc:advanced_shaped_crafting",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true,
+    "post_processors": true,
+    "unique": true
+  },
+  "override_type": "tfc:advanced_shaped_crafting"
+}

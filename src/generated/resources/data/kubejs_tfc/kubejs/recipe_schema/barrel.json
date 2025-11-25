@@ -1,0 +1,81 @@
+{
+  "constructors": [
+    {
+      "keys": [
+        "input_fluid"
+      ]
+    }
+  ],
+  "functions": {
+    "outputs": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "output_item",
+        "output_fluid"
+      ]
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "input_fluid"
+      ],
+      "name": "input_fluid",
+      "role": "input"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "output_item"
+      ],
+      "function_names": [
+        "outputItem"
+      ],
+      "name": "output_item",
+      "optional": {
+        "modifiers": []
+      },
+      "role": "output"
+    },
+    {
+      "type": "optional_fluid_stack",
+      "alternative_names": [
+        "output_fluid"
+      ],
+      "function_names": [
+        "outputFluid"
+      ],
+      "name": "output_fluid",
+      "optional": {},
+      "role": "output"
+    },
+    {
+      "type": "optional_flat_sized_ingredient",
+      "alternative_names": [
+        "input_item"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "inputItem"
+      ],
+      "name": "input_item",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "registry_element",
+        "registry": "minecraft:sound_event"
+      },
+      "alternative_names": [
+        "sound"
+      ],
+      "function_names": [
+        "sound"
+      ],
+      "name": "sound",
+      "optional": "minecraft:block.brewing_stand.brew"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "parent": "kubejs_tfc:basic_pot",
+  "constructors": [
+    {
+      "keys": [
+        "unsealed_result",
+        "sealed_result",
+        "ingredients",
+        "fluid_ingredients",
+        "duration",
+        "temperature",
+        "texture"
+      ]
+    }
+  ],
+  "hidden": false,
+  "keys": [
+    {
+      "type": "item_stack",
+      "alternative_names": [
+        "unsealed_result"
+      ],
+      "name": "unsealed_result",
+      "role": "output"
+    },
+    {
+      "type": "item_stack",
+      "alternative_names": [
+        "sealed_result"
+      ],
+      "name": "sealed_result",
+      "role": "output"
+    },
+    {
+      "type": "id",
+      "alternative_names": [
+        "texture"
+      ],
+      "name": "texture"
+    }
+  ],
+  "merge": {
+    "keys": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "parent": "tfc:pot_jam",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true,
+    "post_processors": true,
+    "unique": true
+  },
+  "override_type": "tfc:pot_jam"
+}

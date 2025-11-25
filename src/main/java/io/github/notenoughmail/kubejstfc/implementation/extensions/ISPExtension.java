@@ -88,7 +88,7 @@ public interface ISPExtension extends WithCodec {
     }
 
     @Info("Adds a `tfc:copy_heat` modifier")
-    default ItemStackProvider kubejs_tfc$copyheat() {
+    default ItemStackProvider kubejs_tfc$copyHeat() {
         return kubejs_tfc$addModifier(CopyHeatModifier.INSTANCE);
     }
 

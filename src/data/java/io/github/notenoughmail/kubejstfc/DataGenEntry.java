@@ -18,18 +18,20 @@ import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
 import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static net.dries007.tfc.common.recipes.TFCRecipeSerializers.*;
@@ -45,7 +47,7 @@ public class DataGenEntry {
             @Override
             public void add(HolderLookup.Provider lookup) {
                 add(ALLOY,
-                        new RegistryComponent<Fluid>(registryAccessContainer(), BuiltInRegistries.FLUID.key()).outputKey("result"),
+                        registry(Registries.FLUID).outputKey("result"),
                         new AlloyRangeComponent().asList().inputKey("contents")
                 );
                 add(LOOM,
@@ -60,11 +62,9 @@ public class DataGenEntry {
                             KubeJSTFCPlugin.FORGE_RULE_RECIPE_COMPONENT_TYPE.instance().asList().otherKey("rules"),
                             // Above should be the only constructor args, below should be methods only
                             NumberComponent.NON_NEGATIVE_INT.otherKey("tier")
-                                    .optional(0)
-                                    .functionNames(l("tier")),
+                                    .optional(0),
                             BooleanComponent.BOOLEAN.otherKey("apply_bonus")
                                     .optional(false)
-                                    .functionNames(l("applyBonus"))
                         )
                         .constructors(constructor("result", "ingredient", "rules"))
                 );
@@ -74,22 +74,20 @@ public class DataGenEntry {
                                 IngredientComponent.INGREDIENT.inputKey("second_input"),
                                 // Above should be the only constructor args, below should be methods only
                                 NumberComponent.NON_NEGATIVE_INT.otherKey("tier")
-                                        .optional(0)
-                                        .functionNames(l("tier")),
+                                        .optional(0),
                                 KubeJSTFCPlugin.WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE.otherKey("bonus")
                                         .optional(WeldingRecipe.Behavior.IGNORE)
-                                        .functionNames(l("bonusBehavior"))
+                                        .functionNames("bonusBehavior")
                         )
                         .constructors(constructor("result", "first_input", "second_input"))
                 );
                 add(CHISEL, b -> b.keys(
                             BlockStateComponent.BLOCK.outputKey("result"),
                             BlockIngredientComponent.TYPE.inputKey("ingredient"),
-                            new RegistryComponent<ChiselMode>(registryAccessContainer(), ChiselMode.KEY).otherKey("mode"),
+                            registry(ChiselMode.KEY).otherKey("mode"),
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("item_output")
                                     .optional(ItemStackProvider.empty())
-                                    .functionNames(l("itemOutput"))
                         )
                         .constructors(constructor("result", "ingredient", "mode"))
                 );
@@ -99,17 +97,16 @@ public class DataGenEntry {
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("result_item")
                                     .optional(ItemStackProvider.empty())
-                                    .functionNames(l("itemOutput")),
+                                    .functionNames("itemOutput"),
                             FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("result_fluid")
                                     .optional(FluidStack.EMPTY)
-                                    .functionNames(l("fluidOutput")),
+                                    .functionNames("fluidOutput"),
                             BooleanComponent.BOOLEAN.otherKey("use_durability")
                                     .optional(false)
-                                    .functionNames(l("useDurability"))
                         )
                         .constructors(constructor("ingredient", "temperature"))
                         .function("outputs", MultiSetFunction.of("result_item", "result_fluid"))
-                        .function("useDurability", new SetFunction("use_durability", new JsonPrimitive(true)))
+                        .function("useDurability", setBool("use_durability", true))
                 );
                 add(QUERN,
                         ItemStackProviderComponent.ISP.outputKey("result"),
@@ -123,7 +120,7 @@ public class DataGenEntry {
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("result_item")
                                     .optional(ItemStackProvider.empty())
-                                    .functionNames(l("extraDrop"))
+                                    .functionNames("extraDrop")
                         )
                         .constructors(constructor("result", "ingredient", "output_texture", "input_texture"))
                 );
@@ -133,7 +130,6 @@ public class DataGenEntry {
                         SizedFluidIngredientComponent.FLAT.inputKey("fluid"),
                         NumberComponent.floatRange(0F, 1F).otherKey("break_chance")
                                 .optional(1F)
-                                .functionNames(l("breakChance"))
                 );
                 add(BLOOMERY,
                         ItemStackProviderComponent.ISP.outputKey("result"),
@@ -149,7 +145,7 @@ public class DataGenEntry {
                 add(GLASSWORKING,
                         ItemStackComponent.ITEM_STACK.outputKey("result"),
                         IngredientComponent.INGREDIENT.inputKey("batch"),
-                        new RegistryComponent<GlassOperation>(registryAccessContainer(), GlassOperation.KEY).asList().otherKey("operations")
+                        registry(GlassOperation.KEY).asList().otherKey("operations")
                 );
                 add(SEWING,
                         ItemStackComponent.ITEM_STACK.outputKey("result"),
@@ -164,10 +160,9 @@ public class DataGenEntry {
                             // Above should be the only constructor args, below should be methods only
                             BooleanComponent.BOOLEAN.otherKey("default_on")
                                     .optional(false)
-                                    .functionNames(l("defaultOn"))
                         )
                         .constructors(constructor("result", "ingredient", "knapping_type", "pattern"))
-                        .function("defaultOn", new SetFunction("default_on", new JsonPrimitive(true)))
+                        .function("defaultOn", setBool("default_on", true))
                 );
 
                 final ResourceLocation movingBlock = KubeJSTFC.id("moving_block");
@@ -191,13 +186,75 @@ public class DataGenEntry {
                             NumberComponent.NON_NEGATIVE_FLOAT.otherKey("temperature")
                 ));
                 parent(POT_SOUP, basicPot);
-                // Pot - parent basic pot
-                // Pot Jam - parent basic pot
+                alias("soup_pot", POT_SOUP);
+                add(POT_SIMPLE, b -> b.keys(
+                            FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("fluid_output")
+                                    .optional(FluidStack.EMPTY),
+                            ItemStackProviderComponent.ISP.instance()
+                                    .asList()
+                                    .outputKey("item_output")
+                                    .optional(List.of()),
+                            BooleanComponent.BOOLEAN.otherKey("uses_all_fluid")
+                                    .optional(true)
+                        )
+                        .parent(basicPot)
+                        .constructors(constructor("ingredients", "fluid_ingredient", "duration", "temperature"))
+                        .function("usesAllFluid", setBool("uses_all_fluid", true))
+                        .function("outputs", MultiSetFunction.of("item_output", "fluid_output"))
+                        .mergeData(true, false, false, false)
+                );
+                add(POT_JAM, b -> b.keys(
+                            ItemStackComponent.ITEM_STACK.outputKey("unsealed_result"),
+                            ItemStackComponent.ITEM_STACK.outputKey("sealed_result"),
+                            StringComponent.ID.otherKey("texture")
+                        )
+                        .parent(basicPot)
+                        .constructors(constructor("unsealed_result", "sealed_result", "ingredients", "fluid_ingredients", "duration", "temperature", "texture"))
+                        .mergeData(true, false, false, false)
+                );
+                alias("jam_pot", POT_JAM);
 
-                // TODO: 2.0.0 | Generic barrel parent
-                // Barrel Sealed
-                // Barrel Instant
-                // Barrel Instant Fluid
+                final ResourceLocation barrel = KubeJSTFC.id("barrel");
+                add(barrel, b -> b.keys(
+                            SizedFluidIngredientComponent.FLAT.inputKey("input_fluid"),
+                            ItemStackProviderComponent.OPTIONAL_ISP.outputKey("output_item")
+                                    .optional(ItemStackProvider.empty()),
+                            FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("output_fluid")
+                                    .optional(FluidStack.EMPTY),
+                            SizedIngredientComponent.OPTIONAL_FLAT.inputKey("input_item")
+                                    .defaultOptional(),
+                            registry(Registries.SOUND_EVENT).otherKey("sound")
+                                    .optional(serializableSoundEvent(SoundEvents.BREWING_STAND_BREW))
+                        )
+                        .constructors(constructor("input_fluid"))
+                        .function("outputs", MultiSetFunction.of("output_item", "output_fluid"))
+                );
+                add(SEALED_BARREL, b -> b.keys(
+                            NumberComponent.NON_NEGATIVE_INT.otherKey("duration"),
+                            ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_seal")
+                                    .defaultOptional(),
+                            ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_unseal")
+                                    .defaultOptional()
+                        )
+                        .parent(barrel)
+                        .constructors(constructor("input_fluid", "duration"))
+                        .mergeData(true, false, false, false)
+                        .function("seal", MultiSetFunction.of("on_seal", "on_unseal"))
+                );
+                alias("sealed_barrel", SEALED_BARREL);
+                parent(INSTANT_BARREL, barrel);
+                alias("instant_barrel", INSTANT_BARREL);
+                add(INSTANT_FLUID_BARREL, b -> b.keys(
+                            SizedFluidIngredientComponent.FLAT.inputKey("primary_fluid"),
+                            SizedFluidIngredientComponent.FLAT.inputKey("secondary_fluid"),
+                            FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("output_fluid")
+                                    .optional(FluidStack.EMPTY), // Why is this technically optional...
+                            registry(Registries.SOUND_EVENT).otherKey("sound")
+                                    .optional(serializableSoundEvent(SoundEvents.BREWING_STAND_BREW))
+                        )
+                        .constructors(constructor("primary_fluid", "secondary_fluid"))
+                );
+                alias("instant_fluid_barrel", INSTANT_FLUID_BARREL);
 
                 add(ADVANCED_SHAPED_CRAFTING, b -> b.keys(
                             ItemStackProviderComponent.ISP.outputKey("result"),
@@ -205,27 +262,24 @@ public class DataGenEntry {
                             IngredientComponent.INGREDIENT.instance().asPatternKey().inputKey("key"),
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("remainder")
-                                    .defaultOptional()
-                                    .functionNames(l("remainder")),
+                                    .defaultOptional(),
                             BooleanComponent.BOOLEAN.otherKey("show_notification")
-                                    .optional(true)
-                                    .functionNames(l("showNotification")),
+                                    .optional(true),
                             NumberComponent.NON_NEGATIVE_INT.otherKey("input_row")
-                                    .optional(0)
-                                    .functionNames(l("inputRow")),
+                                    .optional(0),
                             NumberComponent.NON_NEGATIVE_INT.otherKey("input_column")
                                     .optional(0)
-                                    .functionNames(l("inputColumn"))
                         )
                         .constructors(constructor("result", "pattern", "key"))
                         .function("inputPosition", MultiSetFunction.of("input_row", "input_column"))
-                        .function("noNotification", new SetFunction("show_notification", new JsonPrimitive(false)))
+                        .function("noNotification", setBool("show_notification", false))
                         .postProcessors(new KeyPatternCleanupPostProcessor(
                                 "pattern",
                                 "key",
                                 IngredientComponent.INGREDIENT.instance()
                         ))
                 );
+                alias("shaped", ADVANCED_SHAPED_CRAFTING);
                 add(ADVANCED_SHAPELESS_CRAFTING, b -> b.keys(
                             ItemStackProviderComponent.ISP.outputKey("result"),
                             IngredientComponent.INGREDIENT.instance().asList()
@@ -234,14 +288,42 @@ public class DataGenEntry {
                                     .inputKey("ingredients"),
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("remainder")
-                                    .defaultOptional()
-                                    .functionNames(l("remainder")),
+                                    .defaultOptional(),
                             IngredientComponent.OPTIONAL_INGREDIENT.inputKey("primary_ingredient")
                                     .defaultOptional()
-                                    .functionNames(l("primaryIngredient"))
                         )
                         .constructors(constructor("result", "ingredients"))
                 );
+                alias("shapeless", ADVANCED_SHAPELESS_CRAFTING);
+            }
+
+            @Override
+            public RecipeSchemaData.RecipeKeyData keyData(RecipeKey<?> key) {
+                if (key.functionNames == null && key.optional()) {
+                    key.functionNames(toMethodName(key.name));
+                }
+                return super.keyData(key);
+            }
+
+            String toMethodName(String name) {
+                final String[] parts = name.split("_");
+                return switch (parts.length) {
+                    case 1 -> parts[0];
+                    case 2 -> parts[0] + capitalize(parts[1]);
+                    default -> {
+                        final Iterator<String> iter = Arrays.stream(parts).iterator();
+                        final StringBuilder builder = new StringBuilder();
+                        builder.append(iter.next());
+                        while (iter.hasNext()) builder.append(capitalize(iter.next()));
+                        yield builder.toString();
+                    }
+                };
+            }
+
+            String capitalize(String str) {
+                final char[] chars = str.toCharArray();
+                chars[0] = Character.toUpperCase(chars[0]);
+                return new String(chars);
             }
 
             void add(TFCRecipeSerializers.Id<?> serializer, Consumer<SchemaDataBuilder> builder) {
@@ -256,13 +338,28 @@ public class DataGenEntry {
                 add(serializer, b -> b.parent(parent).mergeData(true, true, false, false));
             }
 
+            void alias(String name, TFCRecipeSerializers.Id<?> parent) {
+                add(KubeJSTFC.tfc(name), b ->
+                        b.parent(parent.getId())
+                                .mergeData(true, true, true, true)
+                                .overrideType(parent.getId())
+                );
+            }
+
             RecipeSchemaData.ConstructorData constructor(String... args) {
                 return new RecipeSchemaData.ConstructorData(List.of(args), Map.of());
             }
 
-            // TODO: 2.0.0 | I fucked up when adding the nice helper
-            List<String> l(String... s) {
-                return List.of(s);
+            SetFunction setBool(String key, boolean value) {
+                return new SetFunction(key, new JsonPrimitive(value));
+            }
+
+            <T> RegistryComponent<T> registry(ResourceKey<? extends Registry<T>> registry) {
+                return new RegistryComponent<>(registryAccessContainer(), registry);
+            }
+
+            Holder<SoundEvent> serializableSoundEvent(SoundEvent soundEvent) {
+                return Holder.Reference.createStandAlone(recipeTypeRegistryContext().registries().access().lookupOrThrow(Registries.SOUND_EVENT), ResourceKey.create(Registries.SOUND_EVENT, soundEvent.getLocation()));
             }
         });
     }

@@ -1,0 +1,55 @@
+{
+  "constructors": [
+    {
+      "keys": [
+        "primary_fluid",
+        "secondary_fluid"
+      ]
+    }
+  ],
+  "hidden": false,
+  "keys": [
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "primary_fluid"
+      ],
+      "name": "primary_fluid",
+      "role": "input"
+    },
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "secondary_fluid"
+      ],
+      "name": "secondary_fluid",
+      "role": "input"
+    },
+    {
+      "type": "optional_fluid_stack",
+      "alternative_names": [
+        "output_fluid"
+      ],
+      "function_names": [
+        "outputFluid"
+      ],
+      "name": "output_fluid",
+      "optional": {},
+      "role": "output"
+    },
+    {
+      "type": {
+        "type": "registry_element",
+        "registry": "minecraft:sound_event"
+      },
+      "alternative_names": [
+        "sound"
+      ],
+      "function_names": [
+        "sound"
+      ],
+      "name": "sound",
+      "optional": "minecraft:block.brewing_stand.brew"
+    }
+  ]
+}

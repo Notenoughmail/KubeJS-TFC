@@ -1,0 +1,71 @@
+{
+  "parent": "kubejs_tfc:basic_pot",
+  "constructors": [
+    {
+      "keys": [
+        "ingredients",
+        "fluid_ingredient",
+        "duration",
+        "temperature"
+      ]
+    }
+  ],
+  "functions": {
+    "outputs": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "item_output",
+        "fluid_output"
+      ]
+    },
+    "usesAllFluid": {
+      "type": "set",
+      "key": "uses_all_fluid",
+      "value": true
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": "optional_fluid_stack",
+      "alternative_names": [
+        "fluid_output"
+      ],
+      "function_names": [
+        "fluidOutput"
+      ],
+      "name": "fluid_output",
+      "optional": {},
+      "role": "output"
+    },
+    {
+      "type": {
+        "type": "list",
+        "component": "kubejs_tfc:isp"
+      },
+      "alternative_names": [
+        "item_output"
+      ],
+      "function_names": [
+        "itemOutput"
+      ],
+      "name": "item_output",
+      "optional": [],
+      "role": "output"
+    },
+    {
+      "type": "boolean",
+      "alternative_names": [
+        "uses_all_fluid"
+      ],
+      "function_names": [
+        "usesAllFluid"
+      ],
+      "name": "uses_all_fluid",
+      "optional": true
+    }
+  ],
+  "merge": {
+    "keys": true
+  }
+}

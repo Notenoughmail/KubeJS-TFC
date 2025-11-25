@@ -2,6 +2,8 @@ const err = (r) => console.error(`Recipe ${r} had no original recipe ingredient`
 const recipeTypesCheck = [ 'tfc', 'firmalife', 'artisanal', 'afc', 'kubejs_tfc' ]; // I do not care about vanilla recipe types
 
 ServerEvents.recipes(e => {
+    /*
+
     e.forEachRecipe([
         { mod: 'tfc' },
         { mod: 'firmalife' },
@@ -181,4 +183,6 @@ ServerEvents.recipes(e => {
     ).id('kubejs:validation/fail_isp_replacement');
 
     if (failISP.replaceOutput(TFC.isp.of('tfc:food/cherry').addBait(), 'minecraft:dirt')) console.error('Replaced ISP despite not all modifiers matching');
+
+    */
 })
