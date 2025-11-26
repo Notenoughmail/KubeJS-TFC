@@ -61,6 +61,6 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         final ResourceLocation m = ModelUtil.plainModel(this);
         bs.simpleVariant("axis=y", m);
         bs.variant("axis=z", v -> v.model(m).x(90));
-        bs.variant("axis=z", v -> v.model(m).x(90).y(90));
+        bs.variant("axis=x", v -> v.model(m).x(90).y(90));
     }
 }

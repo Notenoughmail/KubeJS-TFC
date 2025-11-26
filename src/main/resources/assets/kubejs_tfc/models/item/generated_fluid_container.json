@@ -1,8 +1,0 @@
-{
-  "loader": "tfc:contained_fluid",
-  "parent": "forge:item/default",
-  "textures": {
-    "base": "#base",
-    "fluid": "#fluid"
-  }
-}

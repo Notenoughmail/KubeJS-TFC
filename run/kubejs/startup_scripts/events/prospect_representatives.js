@@ -1,3 +1,3 @@
-TFCEvents.prospectRepresentative(e => {
-    e.registerRepresentative('minecraft:dirt', ['minecraft:stone', 'minecraft:deepslate', 'minecraft:gravel'])
+TFCEvents.prospectRepresentatives(e => {
+    e.register('minecraft:dirt', ['minecraft:stone', 'minecraft:deepslate', 'minecraft:gravel'])
 })

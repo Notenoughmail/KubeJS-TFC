@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CalendarTrackingAttachment implements BlockEntityAttachment {
 
-    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.id("calendar_tracking"), Factory.class);
+    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("calendar_tracking"), Factory.class);
 
     public record Factory() implements BlockEntityAttachmentFactory {
 

@@ -15,9 +15,9 @@ StartupEvents.registry('block', e => {
     e.create('leaves', 'tfc:leaves')
         .twig('kubejs:ore')
         .autumnIndex(23)
-        .textureAll('minecraft:block/oak_leaves')
+        .texture('minecraft:block/oak_leaves')
         .fallenLeaves(fallen => {
-            fallen.textureAll('minecraft:block/spruce_leaves');
+            fallen.texture('minecraft:block/spruce_leaves');
             fallen.noDynamicTinting();
         });
 })

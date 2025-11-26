@@ -36,7 +36,6 @@ public class ClimbingCropBlockBuilder extends DoubleCropBlockBuilder {
     public ClimbingCropBlockBuilder(ResourceLocation i) {
         super(i, Type.CLIMBING);
         BuilderRefs.ghostRendering.add(this);
-        renderType(null);
         stickModels = (a, m) -> {
             m.parent(ModelUtil.CROP);
             m.textures(textures);

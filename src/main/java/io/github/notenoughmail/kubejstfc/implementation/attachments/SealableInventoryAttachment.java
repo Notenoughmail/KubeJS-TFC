@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 
 public class SealableInventoryAttachment extends TFCInventoryAttachment {
 
-    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.id("sealable_inventory"), Factory.class);
+    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("sealable_inventory"), Factory.class);
 
     public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter, boolean canSeal, boolean requiresSeal, Holder<FoodTrait> trait) implements BlockEntityAttachmentFactory {
         @Override

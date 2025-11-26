@@ -22,7 +22,7 @@ import java.util.List;
 
 public class HeatConsumerAttachment implements BlockEntityAttachment {
 
-    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.id("heat_consumer"), Factory.class);
+    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("heat_consumer"), Factory.class);
 
     public record Factory(float decayAmount) implements BlockEntityAttachmentFactory {
 

@@ -1,19 +1,11 @@
 StartupEvents.registry('block', e => {
     e.create('crop', 'tfc:crop')
-        .model('minecraft:block/deepslate');
+        .models((i, m) => m.parent('minecraft:block/deepslate'));
     e.create('flooded_crop', 'tfc:flooded_crop');
     e.create('pickable_crop', 'tfc:pickable_crop')
-        .setModel(m => m.parent('minecraft:block/light_blue_wool'));
+        .models((i, m) => m.parent('minecraft:block/light_blue_wool'));
     e.create('spreading_crop', 'tfc:spreading_crop')
-        .textureAt(0, 'minecraft:block/dirt')
-        .textureAt(1, 'minecraft:block/dirt')
-        .textureAt(2, 'minecraft:block/dirt')
-        .textureAt(3, 'minecraft:block/dirt')
-        .textureAt(4, 'minecraft:block/dirt')
-        .textureAt(5, 'minecraft:block/dirt')
-        .textureAt(6, 'minecraft:block/dirt')
-        .textureAt(7, 'minecraft:block/dirt')
-        .textureAt(8, 'minecraft:block/dirt')
+        .models((i, m) => m.texture('crop', 'minecraft:block/dirt'))
         .stages(7)
         .deadBlock(d => {
             d.models((stage, m) => {
@@ -25,8 +17,6 @@ StartupEvents.registry('block', e => {
             });
         });
     e.create('double_crop', 'tfc:double_crop')
-        .textureAt(5, 'minecraft:block/cobblestone')
-        .topTexture(0, 'minecraft:block/sand')
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (!stage.mature()) {
@@ -36,9 +26,7 @@ StartupEvents.registry('block', e => {
                 }
             });
         });
-    e.create('double_crop_stick', 'tfc:double_crop')
-        .requiresStick(true)
-        .stickTexture(2, 'minecraft:block/stone')
+    e.create('double_crop_stick', 'tfc:climbing_crop')
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (stage.bottom()) {
@@ -48,30 +36,15 @@ StartupEvents.registry('block', e => {
         });
     e.create('wild_crop', 'tfc:wild_crop')
         .seeds('kubejs:crop_seeds')
-        .food('minecraft:chorus_fruit')
-        .deadModel('minecraft:block/cobblestone');
+        .food('minecraft:chorus_fruit');
 
     e.create('crop_2', 'tfc:crop')
         .expiryModifier(250)
-        .stages(2)
-        .model(0, 'minecraft:block/white_wool')
-        .setModel(1, m => m.parent('minecraft:block/red_wool'));
+        .stages(2);
     e.create('crop_4', 'tfc:crop')
         .growthModifier(2)
-        .stages(4)
-        .model(0, 'minecraft:block/white_wool')
-        .model(1, 'minecraft:block/red_wool')
-        .model(2, 'minecraft:block/pink_wool')
-        .model(3, 'minecraft:block/black_wool');
+        .stages(4);
     e.create('crop_8', 'tfc:crop')
         .growthModifier(4)
-        .stages(8)
-        .model(0, 'minecraft:block/white_wool')
-        .model(1, 'minecraft:block/red_wool')
-        .model(2, 'minecraft:block/pink_wool')
-        .model(3, 'minecraft:block/black_wool')
-        .model(4, 'minecraft:block/green_wool')
-        .model(5, 'minecraft:block/yellow_wool')
-        .model(6, 'minecraft:block/lime_wool')
-        .model(7, 'minecraft:block/blue_wool')
+        .stages(8);
 })

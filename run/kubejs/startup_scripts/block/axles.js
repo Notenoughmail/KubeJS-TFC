@@ -1,19 +1,18 @@
 StartupEvents.registry('block', e => {
     e.create('axle', 'tfc:axle')
-        .textureAll('tfc:block/metal/smooth/gold')
         .axleTexture('tfc:block/metal/smooth/gold')
         .waterWheel(w => {
             w.texture('tfc:kapok');
         })
         .gearBox(b => {
-            b.textureAll('tfc:block/metal/smooth/wrought_iron');
+            b.texture('tfc:block/metal/smooth/wrought_iron');
         })
         .clutch(c => {
-            c.textureAll('tfc:block/metal/smooth/blue_steel');
+            c.texture('tfc:block/metal/smooth/blue_steel');
         })
         .bladedAxle(a => {
-            a.textureAll('tfc:block/metal/smooth/rose_gold');
+            a.texture('tfc:block/metal/smooth/rose_gold');
         });
     e.create('encased_axle', 'tfc:encased_axle')
-        .textureAll('tfc:block/metal/smooth/bismuth');
+        .texture('tfc:block/metal/smooth/bismuth');
 })

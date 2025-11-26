@@ -1,4 +1,5 @@
 // requires entityjs
+// requires absent
 
 StartupEvents.registry('entity_type', e => {
     e.create('mammal_test', 'tfc:mammal')

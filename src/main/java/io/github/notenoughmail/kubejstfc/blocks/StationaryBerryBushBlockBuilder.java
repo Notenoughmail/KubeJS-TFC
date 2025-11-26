@@ -87,7 +87,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     }
 
     @Info("Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
-    public StationaryBerryBushBlockBuilder WithProduct(Holder<Item> product) {
+    public StationaryBerryBushBlockBuilder withProduct(Holder<Item> product) {
         this.product = Assistant.holderAsSupplier(product);
         productItem = null;
         return this;

@@ -136,7 +136,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
         ModelUtil.ifNotDefined(generator, this, m -> {
-            m.parent(KubeJSTFC.tfc("block/ground_cover/" + parent));
+            m.parent(KubeJSTFC.id("block/ground_cover/" + parent));
             m.textures(textures);
         });
     }

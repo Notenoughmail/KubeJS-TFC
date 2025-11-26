@@ -13,6 +13,7 @@ import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.JavelinItem;
 import net.dries007.tfc.util.Helpers;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -28,7 +29,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     public static final ResourceLocation THROWING = KubeJSTFC.tfc("throwing");
 
     public float thrownDamage;
-    public transient final Map<ItemDisplayContext, String> perspectives = new EnumMap<>(ItemDisplayContext.class);
+    public transient final Map<ItemDisplayContext, Consumer<ModelGenerator>> perspectives = new EnumMap<>(ItemDisplayContext.class);
     public transient ResourceLocation throwingModel;
     private boolean generateThrownModel = false, generateHandModel = false;
     public transient ResourceLocation thrownTexture;
@@ -37,7 +38,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         super(i, 0.7F, -2.6F);
         thrownDamage = -1F;
         thrownTexture(id);
-        guiModel(newID("item/", "_gui").toString());
+        guiModel(newID("item/", "_gui"));
         BuilderRefs.javelins.add(this);
     }
 
@@ -69,17 +70,30 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
             @Param(name = "perspective", value = "The display context which the specified model should be shown"),
             @Param(name = "model", value = "The model to use with the given perspective")
     })
-    public JavelinItemBuilder modelAtPerspective(ItemDisplayContext perspective, String model) {
+    public JavelinItemBuilder modelAtPerspective(ItemDisplayContext perspective, ResourceLocation model) {
+        return fullModelAtPerspective(perspective, m -> m.parent(model));
+    }
+
+    @Info(value = "Modifies the model to use at the specified display context", params = {
+            @Param(name = "perspective", value = "The display context which the model applies to"),
+            @Param(name = "model", value = "The model to use")
+    })
+    public JavelinItemBuilder fullModelAtPerspective(ItemDisplayContext perspective, Consumer<ModelGenerator> model) {
         perspectives.put(perspective, model);
         return this;
     }
 
     @Info("Sets the model to be used for the 'none', 'fixed', 'ground', and 'gui' display contexts")
-    public JavelinItemBuilder guiModel(String model) {
-        perspectives.put(ItemDisplayContext.NONE, model);
-        perspectives.put(ItemDisplayContext.FIXED, model);
-        perspectives.put(ItemDisplayContext.GROUND, model);
-        perspectives.put(ItemDisplayContext.GUI, model);
+    public JavelinItemBuilder guiModel(ResourceLocation model) {
+        return guiFullModel(m -> m.parent(model));
+    }
+
+    @Info("Modifies the model to be used for the 'none', 'fixed', 'ground', and 'gui' display contexts")
+    public JavelinItemBuilder guiFullModel(Consumer<ModelGenerator> m) {
+        perspectives.put(ItemDisplayContext.NONE, m);
+        perspectives.put(ItemDisplayContext.FIXED, m);
+        perspectives.put(ItemDisplayContext.GROUND, m);
+        perspectives.put(ItemDisplayContext.GUI, m);
         return this;
     }
 
@@ -152,7 +166,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         model.addProperty("gui_light", "front");
         model.add("perspectives", Assistant.json(p ->
                 perspectives.forEach((ctx, m) ->
-                        p.addProperty(ctx.getSerializedName(), m))
+                        p.add(ctx.getSerializedName(), Util.make(new ModelGenerator(), m).toJson()))
         ));
     }
 }

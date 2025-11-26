@@ -1,71 +1,63 @@
 StartupEvents.registry('block', e => {
     e.create('inventory')
         .blockEntity(be => {
-            be.attach('tfc:inventory', {
+            be.attach('inv', 'tfc:inventory', [], {
                 width: 9,
                 height: 1,
-                size: size => size.isSmallerThan('normal')
+                size: s => s.isSmallerThan('normal')
             });
-            be.rightClickOpensInventory();
+            be.rightClickOpensInventory('inv');
         })
-        .textureAll('tfc:block/mud/silt');
-    e.create('heat')
+        .texture('tfc:block/mud/silt');
+    e.create('heat_consumer')
         .blockEntity(be => {
-            be.attach('tfc:heat', {
-                temperatureCallback: (be, t, c, j) => {
-                    return Math.min(t + 1, 1500);
-                },
-                providesHeat: true
-            })
+            be.attach('heat', 'tfc:heat_consumer', [], {
+                decayAmount: 6
+            });
+            be.inventory('inv', [], 9, 1);
+            be.rightClickOpensInventory('inv');
         })
-        .textureAll('tfc:block/metal/block/copper');
+        .texture('tfc:block/metal/block/copper');
 
     e.create('calendar_example')
         .blockEntity(be => {
-            be.attach('tfc:calendar', {
-                defaultDuration: 500
-            })
-            be.serverTick(be => {
-                let cal = be.attachments[0];
-                if (cal.calendarTick != -1 && cal.hasDurationElapsed()) {
-                    be.level.playSound(null, be.x, be.y, be.z, 'minecraft:block.anvil.place', 'blocks', 1, 1);
-                    cal.reset();
-                }
-            })
+            be.attach('cal', 'tfc:calendar_tracking', [], {});
         })
-        .textureAll('minecraft:block/gold_block')
+        .texture('minecraft:block/gold_block')
         .rightClick(event => {
-            event.block.entity.attachments[0].startTiming();
+            event.block.entity.attachments['inv'].set();
         });
 
     e.create('sealable_example')
         .blockEntity(be => {
-            be.attach('tfc:sealable_inventory', {
+            be.attach('inv', 'tfc:sealable_inventory', [], {
                 width: 9,
                 height: 1,
-                trait: 'kubejs:sealed'
+                trait: 'kubejs:trait'
             });
         })
         .rightClick(event => {
             let { player } = event;
             let be = event.block.entity;
             if (!player.shiftKeyDown) {
-                player.openInventoryGUI(be.inventory, event.block.blockState.block.name);
+                player.openInventoryGUI(be.attachments['inv'], event.block.blockState.block.name);
             } else {
-                be.inventory.toggleSeal();
+                be.attachments['inv'].toggleSeal();
             }
         })
-        .textureAll('minecraft:block/iron_block');
+        .texture('minecraft:block/iron_block');
     e.create('preserve_example')
         .blockEntity(be => {
-            be.attach('tfc:sealable_inventory', {
+            be.attach('inv', 'tfc:sealable_inventory', [], {
                 width: 9,
                 height: 1,
                 requiresSeal: false,
                 canSeal: false,
-                trait: 'kubejs:sealed'
+                trait: 'kubejs:trait'
             });
-            be.rightClickOpensInventory();
+            be.rightClickOpensInventory('inv');
         })
-        .textureAll('tfc:block/metal/block/wrought_iron');
+        .texture('tfc:block/metal/block/wrought_iron');
 })
+
+

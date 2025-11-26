@@ -40,6 +40,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -58,7 +59,7 @@ import java.util.function.Supplier;
 public class KubeJSTFCClient {
 
     public KubeJSTFCClient(IEventBus modBus) {
-        modBus.addListener(this::setup);
+        modBus.addListener(EventPriority.LOWEST, this::setup);
         modBus.addListener(this::itemColorHandlers);
         modBus.addListener(this::blockColorHandlers);
     }

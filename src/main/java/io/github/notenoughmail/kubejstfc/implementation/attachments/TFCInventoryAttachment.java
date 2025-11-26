@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.implementation.attachments;
 
 import dev.latvian.mods.kubejs.block.entity.*;
 import dev.latvian.mods.kubejs.item.ItemPredicate;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.component.size.IItemSize;
 import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.component.size.Size;
@@ -18,7 +19,7 @@ import java.util.function.Predicate;
 
 public class TFCInventoryAttachment extends InventoryAttachment {
 
-    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(Helpers.identifier("inventory"), Factory.class);
+    public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("inventory"), Factory.class);
 
     public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter) implements BlockEntityAttachmentFactory {
 

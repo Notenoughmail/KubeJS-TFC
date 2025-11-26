@@ -1,5 +1,9 @@
+
+/*
 StartupEvents.registry('fluid', e => {
     e.create('spring', 'tfc:spring')
-        .thinTexture(0xFF00FF)
+        .stillTexture('minecraft:block/cobblestone')
+        .flowingTexture('minecraft:block/stone')
         .healingAmount(5);
 })
+*/

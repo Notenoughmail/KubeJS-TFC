@@ -21,13 +21,11 @@ import java.util.function.Supplier;
 @ReturnsSelf
 public abstract class FluidCapacityItemBuilder extends ItemBuilder {
 
-    public transient String overlayTexture;
     public transient Supplier<Integer> capacity;
     public transient TagKey<Fluid> allowedFluids;
 
     public FluidCapacityItemBuilder(ResourceLocation id) {
         super(id);
-        overlayTexture = "";
         capacity = () -> 100;
         allowedFluids = TFCTags.Fluids.USABLE_IN_JUG;
         BuilderRefs.fluidContainers.add(this);
@@ -40,31 +38,29 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
 
     @Override
     public FluidCapacityItemBuilder texture(String tex) {
-        baseTexture = tex;
-        overlayTexture = tex + "_overlay";
-        return this;
+        return textures(tex, tex + "_overlay");
     }
 
     @Info("Sets the base and overlay textures")
     public FluidCapacityItemBuilder textures(String base, String overlay) {
-        baseTexture = base;
-        overlayTexture = overlay;
+        textures.put("base", base);
+        textures.put("overlay", overlay);
         return this;
     }
 
-    @Info("Sets the capacity fo the mold")
+    @Info("Sets the capacity fo the fluid container")
     public FluidCapacityItemBuilder capacity(int amount) {
         capacity = () -> amount;
         return this;
     }
 
-    @Info("Sets the capacity of the mold via a supplier")
+    @Info("Sets the capacity of the fluid container via a supplier")
     public FluidCapacityItemBuilder capacitySupplier(Supplier<Integer> amount) {
         capacity = amount;
         return this;
     }
 
-    @Info("Sets which fluids the mold can hold")
+    @Info("Sets which fluids the fluid container can hold")
     public FluidCapacityItemBuilder allowedFluids(TagKey<Fluid> allowed) {
         allowedFluids = allowed;
         return this;
@@ -80,10 +76,7 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
                 modelGenerator.accept(m);
             } else {
                 m.parent(parentModel == null ? ModelUtil.DEFAULT_ITEM_PARENT : parentModel);
-                if (textures.isEmpty()) {
-                    m.texture("base", baseTexture);
-                    m.texture("overlay", overlayTexture);
-                } else {
+                if (!textures.isEmpty()) {
                     m.textures(textures);
                 }
                 m.custom(j -> j.addProperty("loader", "tfc:fluid_container"));
@@ -91,6 +84,7 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
         });
     }
 
+    @ReturnsSelf
     public static abstract class WithLang extends FluidCapacityItemBuilder {
 
         public transient String filledKey;
@@ -98,6 +92,12 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
 
         public WithLang(ResourceLocation id) {
             super(id);
+        }
+
+        @Info("Sets the display name of the fluid container when filled")
+        public WithLang filledDisplayName(Component text) {
+            filledName = text;
+            return this;
         }
 
         @HideFromJS

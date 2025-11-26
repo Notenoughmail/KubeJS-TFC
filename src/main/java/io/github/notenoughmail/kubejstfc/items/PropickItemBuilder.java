@@ -20,7 +20,7 @@ public class PropickItemBuilder extends HandheldItemBuilder {
     }
 
     @Info("Sets the tool level of this propick, determines the chance of having a false negative")
-    public PropickItemBuilder toolLevel(int level) {
+    public PropickItemBuilder level(int level) {
         this.level = level;
         return this;
     }
