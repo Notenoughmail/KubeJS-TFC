@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.itemSize(
         'minecraft:gold_ingot',
         'huge',
@@ -19,4 +20,5 @@ TFCEvents.data(e => {
         'very_heavy',
         'kubejs:size_print'
     );
+    */
 })

@@ -1,6 +1,7 @@
 
 
 TFCEvents.worldgenData(event => {
+    /*
     event.krummholz(
         'example_krummholz',
         'tfc:plant/spruce_krummholz',
@@ -100,5 +101,6 @@ TFCEvents.worldgenData(event => {
         null,
         placement => {}
     );
+    */
 })
 

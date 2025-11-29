@@ -15,7 +15,7 @@
   "hidden": false,
   "keys": [
     {
-      "type": "optional_block_state",
+      "type": "kubejs_tfc:block_state",
       "alternative_names": [
         "result"
       ],

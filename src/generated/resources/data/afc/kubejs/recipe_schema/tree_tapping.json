@@ -1,0 +1,91 @@
+{
+  "constructors": [
+    {
+      "keys": [
+        "result_fluid",
+        "input_block"
+      ]
+    }
+  ],
+  "functions": {
+    "springOnly": {
+      "type": "set",
+      "key": "spring_only",
+      "value": true
+    },
+    "tempRange": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "minimum_temperature",
+        "maximum_temperature"
+      ]
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": "fluid_stack",
+      "alternative_names": [
+        "result_fluid"
+      ],
+      "name": "result_fluid",
+      "role": "output"
+    },
+    {
+      "type": "kubejs_tfc:block_ingredient",
+      "alternative_names": [
+        "input_block"
+      ],
+      "name": "input_block",
+      "role": "input"
+    },
+    {
+      "type": "boolean",
+      "alternative_names": [
+        "requires_natural_log"
+      ],
+      "function_names": [
+        "requiresNaturalLog"
+      ],
+      "name": "requires_natural_log",
+      "optional": true
+    },
+    {
+      "type": "boolean",
+      "alternative_names": [
+        "spring_only"
+      ],
+      "function_names": [
+        "springOnly"
+      ],
+      "name": "spring_only",
+      "optional": false
+    },
+    {
+      "type": {
+        "type": "float"
+      },
+      "alternative_names": [
+        "minimum_temperature"
+      ],
+      "function_names": [
+        "minTemp"
+      ],
+      "name": "minimum_temperature",
+      "optional": 1.4E-45
+    },
+    {
+      "type": {
+        "type": "float"
+      },
+      "alternative_names": [
+        "maximum_temperature"
+      ],
+      "function_names": [
+        "maxTemp"
+      ],
+      "name": "maximum_temperature",
+      "optional": 3.4028235E38
+    }
+  ]
+}

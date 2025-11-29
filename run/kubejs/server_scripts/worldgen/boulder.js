@@ -1,4 +1,5 @@
 TFCEvents.worldgenData(e => {
+    /*
     e.boulder(
         'boulder',
         [
@@ -84,4 +85,5 @@ TFCEvents.worldgenData(e => {
             });
         }
     );
+    */
 })

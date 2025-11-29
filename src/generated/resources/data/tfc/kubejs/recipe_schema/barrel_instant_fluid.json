@@ -3,7 +3,7 @@
     {
       "keys": [
         "primary_fluid",
-        "secondary_fluid"
+        "added_fluid"
       ]
     }
   ],
@@ -20,9 +20,9 @@
     {
       "type": "flat_sized_fluid_ingredient",
       "alternative_names": [
-        "secondary_fluid"
+        "added_fluid"
       ],
-      "name": "secondary_fluid",
+      "name": "added_fluid",
       "role": "input"
     },
     {

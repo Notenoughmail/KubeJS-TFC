@@ -43,16 +43,20 @@ public class RawRockBlockBuilder extends BlockBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        if (parentModel == null) {
-            generator.blockModel(id, m -> {
-                m.parent(uniqueSideTextures ? ModelUtil.CUBE_COLUMN : KubeAssetGenerator.CUBE_ALL_BLOCK_MODEL);
-                m.textures(textures);
-            });
-            generator.blockModel(id.withSuffix("_mirrored"), m -> {
-                m.parent(uniqueSideTextures ? ModelUtil.CUBE_COLUMN : KubeAssetGenerator.CUBE_ALL_BLOCK_MODEL);
-                m.textures(textures);
-            });
-        }
+        final ResourceLocation parent = parentModel != null ?
+                parentModel :
+                uniqueSideTextures ?
+                        ModelUtil.CUBE_COLUMN :
+                        KubeAssetGenerator.CUBE_ALL_BLOCK_MODEL;
+
+        generator.blockModel(id, m -> {
+            m.parent(parent);
+            m.textures(textures);
+        });
+        generator.blockModel(id.withSuffix("_mirrored"), m -> {
+            m.parent(parent);
+            m.textures(textures);
+        });
     }
 
     @Override

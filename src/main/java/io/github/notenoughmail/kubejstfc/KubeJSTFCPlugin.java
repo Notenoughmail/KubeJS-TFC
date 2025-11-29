@@ -12,6 +12,7 @@ import dev.latvian.mods.kubejs.recipe.component.EnumComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
+import dev.latvian.mods.kubejs.recipe.schema.postprocessing.RecipePostProcessorTypeRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
@@ -34,12 +35,14 @@ import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.TreeRootBu
 import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.VeinBaseBuilder;
 import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.Weighted;
 import io.github.notenoughmail.kubejstfc.items.*;
-import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.FixedSizePatternComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.ItemStackProviderComponent;
+import io.github.notenoughmail.kubejstfc.recipe.components.*;
 import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
+import io.github.notenoughmail.kubejstfc.recipe.processors.ExplodeIfEmptyProcessor;
+import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
+import net.dries007.tfc.ForgeEventHandler;
+import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.component.EggComponent;
 import net.dries007.tfc.common.component.TFCComponents;
@@ -81,6 +84,21 @@ import java.util.Optional;
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
 // TODO: 2.0.0 | TFC recipe filters & component replacements
+// Mild Javadoc abuse
+
+/**
+ * TODO: [Future]
+ * <ul>
+ *     <li>Blocks
+ *         <ul>
+ *             <li>Kinetics -- custom</li>
+ *         </ul>
+ *     </li>
+ * 	   <li>Custom BiomeExtensions -- 1.21</li>
+ * 	   <li><a href="https://discord.com/channels/303440391124942858/1279992681652682874">Attach TFC entity properties to existing entities, ping mo_mo</a>
+ * 	   It may be possible to fudge this with attributes</li>
+ * </ul>
+ */
 public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
@@ -177,6 +195,16 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
     public void registerClasses(ClassFilter filter) {
+        filter.deny(TerraFirmaCraft.class);
+        filter.deny(KubeJSTFCEventHandlers.class);
+        filter.deny(KubeJSTFC.class);
+        filter.deny(MixinLoadingUtil.class);
+        filter.deny(BuilderRefs.class);
+        filter.deny(ForgeEventHandler.class);
+        filter.allow(KubeJSTFC.class.getPackageName());
+        filter.deny(KubeJSTFC.class.getPackageName() + ".util.mixin");
+        filter.allow(TerraFirmaCraft.class.getPackageName());
+        filter.deny(TerraFirmaCraft.class.getPackageName() + ".mixin");
     }
 
     @Override
@@ -233,6 +261,12 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(FORGE_RULE_RECIPE_COMPONENT_TYPE);
         registry.register(WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE);
         registry.register(FixedSizePatternComponent.TYPE);
+        registry.register(TFCBlockStateComponent.TYPE);
+    }
+
+    @Override
+    public void registerRecipePostProcessors(RecipePostProcessorTypeRegistry registry) {
+        registry.register(ExplodeIfEmptyProcessor.TYPE);
     }
 
     @Override

@@ -1,5 +1,6 @@
-ServerEvents.highPriorityData(e => {
-    e.addJson(
+ServerEvents.generateData('last', e => {
+    /*
+    e.json(
         'tfc:worldgen/world_preset/overworld',
         {
             dimensions: {
@@ -15,8 +16,9 @@ ServerEvents.highPriorityData(e => {
                             spawn_distance: 4000,
                             spawn_center_x: 0,
                             spawn_center_z: 0,
+                            grass_density: 0.5,
                             rock_layer_settings: {
-                                rocks: {
+                                rocks: { // TODO: 2.0.0 | To test this the entirety of the rock needs to be defined, there are no longer pre-defined settings
                                     granite: 'tfc:granite',
                                     diorite: 'tfc:diorite',
                                     gabbro: 'tfc:gabbro',
@@ -150,7 +152,8 @@ ServerEvents.highPriorityData(e => {
                             temperature_scale: 20000,
                             rainfall_scale: 20000,
                             flat_bedrock: false,
-                            continentalness: 0.5
+                            continentalness: 0.5,
+                            finite_continents: false,
                         }
                     }
                 },
@@ -174,9 +177,18 @@ ServerEvents.highPriorityData(e => {
                             spawn_center_z: 0,
                             temperature_scale: 0,
                             rainfall_scale: 0,
+                            finite_continents: false,
+                            grass_density: 0.5,
                             rock_layer_settings: {
                                 rocks: {
-                                    nether: 'kubejs:netherrack'
+                                    nether: {
+                                        raw: 'minecraft:netherrack',
+                                        hardened: 'minecraft:basalt',
+                                        gravel: 'minecraft:gravel',
+                                        cobble: 'minecraft:blackstone',
+                                        sand: 'minecraft:soul_sand',
+                                        sandstone: 'minecraft:soul_soil'
+                                    }
                                 },
                                 bottom: [ 'nether' ],
                                 layers: [
@@ -209,8 +221,9 @@ ServerEvents.highPriorityData(e => {
             }
         }
     );
+    */
 
-    e.addJson(
+    e.json(
         'minecraft:worldgen/structure_set/igloos',
         {
             placement: {
@@ -231,6 +244,7 @@ ServerEvents.highPriorityData(e => {
         }
     );
 
+    /*
     e.addJson(
         'kubejs:forge/biome_modifier/nether_boulders',
         {
@@ -243,4 +257,5 @@ ServerEvents.highPriorityData(e => {
             step: 'fluid_springs'
         }
     );
+    */
 })

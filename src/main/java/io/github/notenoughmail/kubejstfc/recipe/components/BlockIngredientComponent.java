@@ -8,12 +8,14 @@ import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.Set;
 
-public class BlockIngredientComponent implements RecipeComponent<BlockIngredient> {
+public enum BlockIngredientComponent implements RecipeComponent<BlockIngredient> {
+    INSTANCE;
 
-    public static final RecipeComponentType<BlockIngredient> TYPE = RecipeComponentType.unit(KubeJSTFC.id("block_ingredient"), new BlockIngredientComponent());
+    public static final RecipeComponentType<BlockIngredient> TYPE = RecipeComponentType.unit(KubeJSTFC.id("block_ingredient"), INSTANCE);
 
     @Override
     public RecipeComponentType<BlockIngredient> type() {
@@ -37,11 +39,11 @@ public class BlockIngredientComponent implements RecipeComponent<BlockIngredient
 
     @Override
     public boolean isEmpty(BlockIngredient value) {
-        return value.either().left().map(Set::isEmpty).orElse(false);
-    }
-
-    @Override
-    public String toString() {
-        return "tfc_block_ingredient";
+        return value.either().map(
+                Set::isEmpty,
+                t -> BuiltInRegistries.BLOCK.getTag(t)
+                        .map(n -> n.size() == 0)
+                        .orElse(true)
+        );
     }
 }

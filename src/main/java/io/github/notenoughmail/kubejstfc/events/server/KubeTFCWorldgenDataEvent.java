@@ -19,6 +19,7 @@ import net.dries007.tfc.world.feature.vein.DiscVeinConfig;
 import net.dries007.tfc.world.feature.vein.PipeVeinConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -51,7 +52,7 @@ public class KubeTFCWorldgenDataEvent extends KubeDataEvent {
 
     public KubeTFCWorldgenDataEvent(KubeResourceGenerator gen) {
         super(gen);
-        confLookup = gen.getRegistries().access().lookupOrThrow(Registries.CONFIGURED_FEATURE);
+        confLookup = null /*gen.getRegistries().access().lookupOrThrow(Registries.CONFIGURED_FEATURE)*/;
     }
 
     private <FC extends FeatureConfiguration, F extends Feature<FC>> void conf(FC fc, TFCFeatures.Id<F> f, KubeResourceLocation id) {
@@ -65,7 +66,7 @@ public class KubeTFCWorldgenDataEvent extends KubeDataEvent {
     private void placed(@Nullable Consumer<FeaturePlacements> placement, KubeResourceLocation id) {
         if (placement != null) {
             placedFeature(id, Holder.Reference.createStandAlone(
-                    confLookup,
+                    universalOwner(),
                     ResourceKey.create(Registries.CONFIGURED_FEATURE, id.wrapped())
             ), placement);
         }

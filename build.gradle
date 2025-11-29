@@ -143,6 +143,7 @@ dependencies {
     accessTfcImplementation "curse.maven:terrafirmacraft-302973:${tfc_file}"
         runtimeOnly "curse.maven:cyanide-541676:${cyanide_file}"
     implementation "curse.maven:precision-prospecting-700638:${precpros_file}"
+    implementation "curse.maven:arborfirmacraft-877545:${arbor_file}"
 
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 

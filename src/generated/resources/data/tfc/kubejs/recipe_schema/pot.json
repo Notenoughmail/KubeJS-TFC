@@ -41,7 +41,9 @@
     {
       "type": {
         "type": "list",
-        "component": "kubejs_tfc:isp"
+        "component": "kubejs_tfc:isp",
+        "max": 5,
+        "min": 0
       },
       "alternative_names": [
         "item_output"

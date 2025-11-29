@@ -57,7 +57,7 @@ public class KubeJSTFCEventHandlers {
     public static final EventHandler prospect = TFCEvents.server("prospect", () -> KubeProspectEvent.class);
     public static final EventHandler startFire = TFCEvents.server("startFire", () -> KubeStartFireEvent.class);
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> KubeSelectClimateModelEvent.class);
-    public static final TargetedEventHandler<ResourceKey<MenuType<?>>> limitContainers = TFCEvents.startup("limitContainers", () -> KubeLimitContainerEvent.class).requiredTarget(PlayerEvents.MENU_TARGET);
+    public static final TargetedEventHandler<ResourceKey<MenuType<?>>> limitContainer = TFCEvents.server("limitContainer", () -> KubeLimitContainerEvent.class).requiredTarget(PlayerEvents.MENU_TARGET);
     public static final EventHandler data = TFCEvents.server("data", () -> KubeTFCDataEvent.class);
     public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> KubeTFCWorldgenDataEvent.class);
 
@@ -235,7 +235,7 @@ public class KubeJSTFCEventHandlers {
      * <i>Oversized Item in Storage Area</i> is licenced under the <a href="https://www.curseforge.com/minecraft/mc-mods/oversized-item-in-storage-area/comments#license">BSD Licence</a>
      */
     private static void limitContainer(PlayerContainerEvent event) {
-        if (limitContainers.hasListeners()) {
+        if (limitContainer.hasListeners()) {
             final AbstractContainerMenu container = event.getContainer();
             final MenuType<?> menuType;
             try {
@@ -250,7 +250,7 @@ public class KubeJSTFCEventHandlers {
                     .filter(s -> !(s.container instanceof Inventory))
                     .toList();
 
-            limitContainers.post(new KubeLimitContainerEvent(
+            limitContainer.post(new KubeLimitContainerEvent(
                     slotsToHandle,
                     event.getEntity().level(),
                     event.getEntity().getOnPos()

@@ -31,7 +31,7 @@ public record ItemStackProviderComponent(Codec<ItemStackProvider> codec, RecipeC
     public static final RecipeComponentType<ItemStackProvider> ISP = RecipeComponentType.unit(KubeJSTFC.id("isp"), type -> new ItemStackProviderComponent(ItemStackProvider.CODEC, type));
     public static final RecipeComponentType<ItemStackProvider> OPTIONAL_ISP = RecipeComponentType.unit(KubeJSTFC.id("optional_isp"), type -> new ItemStackProviderComponent(OPTIONAL_CODEC, type));
 
-    private static final TypeInfo TYPE_INFO = TypeInfo.of(ItemStackProvider.class).or(TypeInfo.of(ItemStack.class));
+    private static final TypeInfo TYPE_INFO = TypeInfo.of(ItemStackProvider.class);
 
     @Override
     public TypeInfo typeInfo() {

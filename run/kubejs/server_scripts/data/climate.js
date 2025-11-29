@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.climateRange(c => {
         c.maxHydration(120);
     }, 'kubejs:crop');
@@ -26,6 +27,7 @@ TFCEvents.data(e => {
         c.minTemperature(5);
         c.temperatureWiggle(0.4);
     }, 'kubejs:stationary_bush');
+    */
 
     e.climateRange(c => {}, 'kubejs:crop_2');
     e.climateRange(c => {}, 'kubejs:crop_4');

@@ -1,4 +1,5 @@
 TFCEvents.worldgenData(e => {
+    /*
     e.simpleBlockState(
         'kubejs:dirt_simple_block',
         'tfc:wild_crop/barely',
@@ -111,4 +112,5 @@ TFCEvents.worldgenData(e => {
             });
         }
     );
+    */
 })

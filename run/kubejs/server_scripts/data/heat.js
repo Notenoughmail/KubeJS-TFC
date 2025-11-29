@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.itemHeat(
         'minecraft:netherite_ingot',
         0.7,
@@ -12,4 +13,5 @@ TFCEvents.data(e => {
         null,
         'kubejs:heat'
     );
+    */
 })

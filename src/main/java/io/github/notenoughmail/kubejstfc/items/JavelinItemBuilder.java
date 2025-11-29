@@ -149,7 +149,7 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     }
 
     private final Consumer<ModelGenerator> simple = m -> {
-        m.parent(Helpers.identifier("item/trident/throwing"));
+        m.parent(KubeJSTFC.mc("item/trident/throwing")); // TODO: 2.0.0 | What is this now?
         tex(m);
     };
 

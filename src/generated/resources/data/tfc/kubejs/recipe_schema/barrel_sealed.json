@@ -20,8 +20,14 @@
   "hidden": false,
   "keys": [
     {
-      "type": "non_negative_int",
+      "type": {
+        "type": "int"
+      },
       "alternative_names": [
+        "duration"
+      ],
+      "default_optional": true,
+      "function_names": [
         "duration"
       ],
       "name": "duration"
@@ -51,5 +57,13 @@
   ],
   "merge": {
     "keys": true
-  }
+  },
+  "post_processors": [
+    {
+      "type": "kubejs_tfc:explode_if_empty",
+      "keys": [
+        "duration"
+      ]
+    }
+  ]
 }

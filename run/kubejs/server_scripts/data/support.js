@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.support(
         'minecraft:cobblestone_wall',
         3,
@@ -12,4 +13,5 @@ TFCEvents.data(e => {
         5,
         'kubejs:support'
     );
+    */
 })

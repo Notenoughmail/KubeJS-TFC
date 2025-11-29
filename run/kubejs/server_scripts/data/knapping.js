@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.knappingType(
         'minecraft:deepslate',
         1,
@@ -10,4 +11,5 @@ TFCEvents.data(e => {
         'minecraft:deepslate',
         'kubejs:knap'
     );
+    */
 })

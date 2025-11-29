@@ -30,6 +30,16 @@ import org.jetbrains.annotations.Nullable;
         """)
 public class KubeFaunaSpawnsEvent implements KubeStartupEvent {
 
+    public static <E extends Entity> SpawnPlacements.SpawnPredicate<E> make(ResourceLocation id) {
+        return new Predicate<>(Fauna.MANAGER.getReference(id));
+    }
+
+    private static <E extends Entity>SpawnPlacements.SpawnPredicate<E> make(EntityType<E> type, @Nullable String suffix) {
+        ResourceLocation loc = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+        if (suffix != null) loc = loc.withSuffix(suffix);
+        return make(loc);
+    }
+
     private final RegisterSpawnPlacementsEvent event;
 
     public KubeFaunaSpawnsEvent(RegisterSpawnPlacementsEvent event) {
@@ -67,12 +77,12 @@ public class KubeFaunaSpawnsEvent implements KubeStartupEvent {
             @Param(name = "placementType", value = "The placement type to use for spawning"),
             @Param(name = "heightmap", value = "The heightmap to use for spawning")
     })
-    public void replace(EntityType<? extends Entity> entityType, @Nullable String suffix, SpawnPlacementType placementType, Heightmap.Types heightmap) {
+    public <E extends Entity> void replace(EntityType<E> entityType, @Nullable String suffix, SpawnPlacementType placementType, Heightmap.Types heightmap) {
         event.register(
                 entityType,
                 placementType,
                 heightmap,
-                new Predicate<>(get(entityType, suffix)),
+                make(entityType, suffix),
                 RegisterSpawnPlacementsEvent.Operation.REPLACE
         );
     }
@@ -92,12 +102,12 @@ public class KubeFaunaSpawnsEvent implements KubeStartupEvent {
             @Param(name = "placementType", value = "The placement type to use for spawning"),
             @Param(name = "heightmap", value = "The heightmap to use for spawning")
     })
-    public void and(EntityType<? extends Entity> entityType, @Nullable String suffix) {
+    public <E extends Entity> void and(EntityType<E> entityType, @Nullable String suffix) {
         event.register(
                 entityType,
                 null,
                 null,
-                new Predicate<>(get(entityType, suffix)),
+                make(entityType, suffix),
                 RegisterSpawnPlacementsEvent.Operation.AND
         );
     }
@@ -117,20 +127,14 @@ public class KubeFaunaSpawnsEvent implements KubeStartupEvent {
             @Param(name = "placementType", value = "The placement type to use for spawning"),
             @Param(name = "heightmap", value = "The heightmap to use for spawning")
     })
-    public void or(EntityType<? extends Entity> entityType, @Nullable String suffix) {
+    public <E extends Entity> void or(EntityType<E> entityType, @Nullable String suffix) {
         event.register(
                 entityType,
                 null,
                 null,
-                new Predicate<>(get(entityType, suffix)),
+                make(entityType, suffix),
                 RegisterSpawnPlacementsEvent.Operation.OR
         );
-    }
-
-    private static DataManager.Reference<Fauna> get(EntityType<?> entityType, @Nullable String suffix) {
-        ResourceLocation loc = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        if (suffix != null) loc = loc.withSuffix(suffix);
-        return Fauna.MANAGER.getReference(loc);
     }
 
     private record Predicate<E extends Entity>(DataManager.Reference<Fauna> faunaRef) implements SpawnPlacements.SpawnPredicate<E> {

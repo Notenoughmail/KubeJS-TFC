@@ -1,14 +1,4 @@
 {
-  "constructors": [
-    {
-      "keys": [
-        "result",
-        "ingredient",
-        "output_texture",
-        "input_texture"
-      ]
-    }
-  ],
   "hidden": false,
   "keys": [
     {
@@ -47,7 +37,8 @@
         "result_item"
       ],
       "function_names": [
-        "extraDrop"
+        "extraDrop",
+        "resultItem"
       ],
       "name": "result_item",
       "optional": {

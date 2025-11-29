@@ -272,15 +272,11 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     @Info("Removes the given layer from the generator")
     public void removeLayer(String layerId) {
         layers.removeIf(layer -> layer.id().equals(layerId));
-        layers.forEach(layer -> {
-            final List<String> removals = new ArrayList<>(layer.layers().size());
-            layer.layers().forEach((rock, rockLayer) -> {
-                if (rockLayer.equals(layerId)) {
-                    removals.add(rock);
-                }
-            });
-            removals.forEach(rock -> layer.layers().remove(rock));
-        });
+        layers.forEach(layer ->
+                layer.layers().entrySet().removeIf(entry ->
+                        entry.getValue().equals(layerId)
+                )
+        );
         oceanFloor.remove(layerId);
         land.remove(layerId);
         volcanic.remove(layerId);

@@ -1,17 +1,8 @@
 {
-  "constructors": [
-    {
-      "keys": [
-        "result",
-        "ingredient",
-        "mode"
-      ]
-    }
-  ],
   "hidden": false,
   "keys": [
     {
-      "type": "block_state",
+      "type": "kubejs_tfc:block_state",
       "alternative_names": [
         "result"
       ],
@@ -42,6 +33,7 @@
         "item_output"
       ],
       "function_names": [
+        "extraDrop",
         "itemOutput"
       ],
       "name": "item_output",

@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.fuel(
         'minecraft:coal_block',
         1500,
@@ -46,4 +47,5 @@ TFCEvents.data(e => {
         null,
         'kubejs:cobble_3'
     );
+    */
 })

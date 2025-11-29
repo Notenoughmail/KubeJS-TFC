@@ -1,4 +1,2 @@
-// requires firmalife
-
 TFCEvents.data(e => {
 })

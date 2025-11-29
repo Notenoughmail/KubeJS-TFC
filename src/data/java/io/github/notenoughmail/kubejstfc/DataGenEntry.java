@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc;
 
 import com.google.gson.JsonPrimitive;
+import com.therighthon.afc.common.recipe.AFCRecipeSerializers;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.RecipeSchemaProvider;
 import dev.latvian.mods.kubejs.recipe.component.*;
@@ -8,11 +9,9 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchemaData;
 import dev.latvian.mods.kubejs.recipe.schema.function.SetFunction;
 import dev.latvian.mods.kubejs.recipe.schema.postprocessing.KeyPatternCleanupPostProcessor;
 import dev.latvian.mods.kubejs.util.IntBounds;
-import io.github.notenoughmail.kubejstfc.recipe.components.AlloyRangeComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.BlockIngredientComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.FixedSizePatternComponent;
-import io.github.notenoughmail.kubejstfc.recipe.components.ItemStackProviderComponent;
+import io.github.notenoughmail.kubejstfc.recipe.components.*;
 import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
+import io.github.notenoughmail.kubejstfc.recipe.processors.ExplodeIfEmptyProcessor;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
@@ -48,7 +47,7 @@ public class DataGenEntry {
             public void add(HolderLookup.Provider lookup) {
                 add(ALLOY,
                         registry(Registries.FLUID).outputKey("result"),
-                        new AlloyRangeComponent().asList().inputKey("contents")
+                        AlloyRangeComponent.INSTANCE.asList().inputKey("contents")
                 );
                 add(LOOM,
                         ItemStackProviderComponent.ISP.outputKey("result"),
@@ -73,7 +72,7 @@ public class DataGenEntry {
                                 IngredientComponent.INGREDIENT.inputKey("first_input"),
                                 IngredientComponent.INGREDIENT.inputKey("second_input"),
                                 // Above should be the only constructor args, below should be methods only
-                                NumberComponent.NON_NEGATIVE_INT.otherKey("tier")
+                                NumberComponent.INT.otherKey("tier") // All of the tin welding recipes are tier -1 for some reason
                                         .optional(0),
                                 KubeJSTFCPlugin.WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE.otherKey("bonus")
                                         .optional(WeldingRecipe.Behavior.IGNORE)
@@ -81,15 +80,13 @@ public class DataGenEntry {
                         )
                         .constructors(constructor("result", "first_input", "second_input"))
                 );
-                add(CHISEL, b -> b.keys(
-                            BlockStateComponent.BLOCK.outputKey("result"),
-                            BlockIngredientComponent.TYPE.inputKey("ingredient"),
-                            registry(ChiselMode.KEY).otherKey("mode"),
-                            // Above should be the only constructor args, below should be methods only
-                            ItemStackProviderComponent.OPTIONAL_ISP.outputKey("item_output")
-                                    .optional(ItemStackProvider.empty())
-                        )
-                        .constructors(constructor("result", "ingredient", "mode"))
+                add(CHISEL,
+                        TFCBlockStateComponent.INSTANCE.outputKey("result"),
+                        BlockIngredientComponent.TYPE.inputKey("ingredient"),
+                        registry(ChiselMode.KEY).otherKey("mode"),
+                        ItemStackProviderComponent.OPTIONAL_ISP.outputKey("item_output")
+                                .optional(ItemStackProvider.empty())
+                                .functionNames("extraDrop", "itemOutput")
                 );
                 add(HEATING, b -> b.keys(
                             IngredientComponent.INGREDIENT.inputKey("ingredient"),
@@ -112,17 +109,14 @@ public class DataGenEntry {
                         ItemStackProviderComponent.ISP.outputKey("result"),
                         IngredientComponent.INGREDIENT.inputKey("ingredient")
                 );
-                add(SCRAPING, b -> b.keys(
-                            ItemStackProviderComponent.ISP.outputKey("result"),
-                            IngredientComponent.INGREDIENT.inputKey("ingredient"),
-                            StringComponent.ID.otherKey("output_texture"),
-                            StringComponent.ID.otherKey("input_texture"),
-                            // Above should be the only constructor args, below should be methods only
-                            ItemStackProviderComponent.OPTIONAL_ISP.outputKey("result_item")
-                                    .optional(ItemStackProvider.empty())
-                                    .functionNames("extraDrop")
-                        )
-                        .constructors(constructor("result", "ingredient", "output_texture", "input_texture"))
+                add(SCRAPING,
+                        ItemStackProviderComponent.ISP.outputKey("result"),
+                        IngredientComponent.INGREDIENT.inputKey("ingredient"),
+                        StringComponent.ID.otherKey("output_texture"),
+                        StringComponent.ID.otherKey("input_texture"),
+                        ItemStackProviderComponent.OPTIONAL_ISP.outputKey("result_item")
+                                .optional(ItemStackProvider.empty())
+                                .functionNames("extraDrop", "resultItem")
                 );
                 add(CASTING,
                         ItemStackProviderComponent.ISP.outputKey("result"),
@@ -147,27 +141,28 @@ public class DataGenEntry {
                         IngredientComponent.INGREDIENT.inputKey("batch"),
                         registry(GlassOperation.KEY).asList().otherKey("operations")
                 );
-                add(SEWING,
+                add(SEWING, // TODO: 2.0.0 | TFC PR for proper squares functionality?
                         ItemStackComponent.ITEM_STACK.outputKey("result"),
                         FixedSizePatternComponent.of(9, 5).otherKey("stitches"),
-                        FixedSizePatternComponent.of(8, 4).otherKey("squares") // TODO: 2.0.0 | Post processor that expands/clips these to the right size if needed
+                        FixedSizePatternComponent.of(8, 4).otherKey("squares")
                 );
                 add(KNAPPING, b -> b.keys(
                             ItemStackComponent.ITEM_STACK.outputKey("result"),
-                            IngredientComponent.INGREDIENT.inputKey("ingredient"),
                             StringComponent.ID.otherKey("knapping_type"),
                             StringComponent.STRING.instance().asList().withBounds(IntBounds.of(1, 5)).otherKey("pattern"),
                             // Above should be the only constructor args, below should be methods only
+                            IngredientComponent.OPTIONAL_INGREDIENT.inputKey("ingredient")
+                                    .defaultOptional(),
                             BooleanComponent.BOOLEAN.otherKey("default_on")
                                     .optional(false)
                         )
-                        .constructors(constructor("result", "ingredient", "knapping_type", "pattern"))
+                        .constructors(constructor("result", "knapping_type", "pattern"))
                         .function("defaultOn", setBool("default_on", true))
                 );
 
                 final ResourceLocation movingBlock = KubeJSTFC.id("moving_block");
                 add(movingBlock, b -> b.keys(
-                            BlockStateComponent.OPTIONAL_BLOCK.outputKey("result").defaultOptional(),
+                            TFCBlockStateComponent.INSTANCE.outputKey("result").defaultOptional(),
                             BlockIngredientComponent.TYPE.inputKey("ingredient")
                         )
                         .constructors(
@@ -180,7 +175,10 @@ public class DataGenEntry {
 
                 final ResourceLocation basicPot = KubeJSTFC.id("basic_pot");
                 add(basicPot, b -> b.keys(
-                            IngredientComponent.INGREDIENT.inputKey("ingredients"),
+                            IngredientComponent.OPTIONAL_INGREDIENT.instance()
+                                    .asList()
+                                    .withBounds(IntBounds.of(1, 5))
+                                    .inputKey("ingredients"),
                             SizedFluidIngredientComponent.FLAT.inputKey("fluid_ingredient"),
                             NumberComponent.NON_NEGATIVE_INT.otherKey("duration"),
                             NumberComponent.NON_NEGATIVE_FLOAT.otherKey("temperature")
@@ -192,6 +190,7 @@ public class DataGenEntry {
                                     .optional(FluidStack.EMPTY),
                             ItemStackProviderComponent.ISP.instance()
                                     .asList()
+                                    .withBounds(IntBounds.of(0, 5))
                                     .outputKey("item_output")
                                     .optional(List.of()),
                             BooleanComponent.BOOLEAN.otherKey("uses_all_fluid")
@@ -209,7 +208,7 @@ public class DataGenEntry {
                             StringComponent.ID.otherKey("texture")
                         )
                         .parent(basicPot)
-                        .constructors(constructor("unsealed_result", "sealed_result", "ingredients", "fluid_ingredients", "duration", "temperature", "texture"))
+                        .constructors(constructor("unsealed_result", "sealed_result", "ingredients", "fluid_ingredient", "duration", "temperature", "texture"))
                         .mergeData(true, false, false, false)
                 );
                 alias("jam_pot", POT_JAM);
@@ -230,7 +229,8 @@ public class DataGenEntry {
                         .function("outputs", MultiSetFunction.of("output_item", "output_fluid"))
                 );
                 add(SEALED_BARREL, b -> b.keys(
-                            NumberComponent.NON_NEGATIVE_INT.otherKey("duration"),
+                            NumberComponent.INT.otherKey("duration") // Durations may be -1 (or any negative number?) to be indefinite
+                                    .defaultOptional(), // This is required due to short-sighted kube requirements
                             ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_seal")
                                     .defaultOptional(),
                             ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_unseal")
@@ -240,19 +240,21 @@ public class DataGenEntry {
                         .constructors(constructor("input_fluid", "duration"))
                         .mergeData(true, false, false, false)
                         .function("seal", MultiSetFunction.of("on_seal", "on_unseal"))
+                        .postProcessors(ExplodeIfEmptyProcessor.of("duration"))
                 );
                 alias("sealed_barrel", SEALED_BARREL);
                 parent(INSTANT_BARREL, barrel);
                 alias("instant_barrel", INSTANT_BARREL);
                 add(INSTANT_FLUID_BARREL, b -> b.keys(
                             SizedFluidIngredientComponent.FLAT.inputKey("primary_fluid"),
-                            SizedFluidIngredientComponent.FLAT.inputKey("secondary_fluid"),
+                            SizedFluidIngredientComponent.FLAT.inputKey("added_fluid"),
+                            // Above should be the only constructor args, below should be methods only
                             FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("output_fluid")
                                     .optional(FluidStack.EMPTY), // Why is this technically optional...
                             registry(Registries.SOUND_EVENT).otherKey("sound")
                                     .optional(serializableSoundEvent(SoundEvents.BREWING_STAND_BREW))
                         )
-                        .constructors(constructor("primary_fluid", "secondary_fluid"))
+                        .constructors(constructor("primary_fluid", "added_fluid"))
                 );
                 alias("instant_fluid_barrel", INSTANT_FLUID_BARREL);
 
@@ -295,6 +297,26 @@ public class DataGenEntry {
                         .constructors(constructor("result", "ingredients"))
                 );
                 alias("shapeless", ADVANCED_SHAPELESS_CRAFTING);
+
+                add(AFCRecipeSerializers.TREE_TAPPING.getId(), b -> b.keys(
+                            FluidStackComponent.FLUID_STACK.outputKey("result_fluid"),
+                            BlockIngredientComponent.TYPE.inputKey("input_block"),
+                            // Above should be the only constructor args, below should be methods only
+                            BooleanComponent.BOOLEAN.otherKey("requires_natural_log")
+                                    .optional(true),
+                            BooleanComponent.BOOLEAN.otherKey("spring_only")
+                                    .optional(false),
+                            NumberComponent.FLOAT.otherKey("minimum_temperature")
+                                    .optional(Float.MIN_VALUE)
+                                    .functionNames("minTemp"),
+                            NumberComponent.FLOAT.otherKey("maximum_temperature")
+                                    .optional(Float.MAX_VALUE)
+                                    .functionNames("maxTemp")
+                        )
+                        .constructors(constructor("result_fluid", "input_block"))
+                        .function("springOnly", setBool("spring_only", true))
+                        .function("tempRange", MultiSetFunction.of("minimum_temperature", "maximum_temperature"))
+                );
             }
 
             @Override

@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.drinkable('tfc:metal/steel', d => {
         d.consumeChance(1);
         d.thirst(3);
@@ -14,5 +15,6 @@ TFCEvents.data(e => {
         d.food(f => {
             f.protein(3);
         });
-    }, 'kubejs:drinkable')
+    }, 'kubejs:drinkable');
+    */
 })

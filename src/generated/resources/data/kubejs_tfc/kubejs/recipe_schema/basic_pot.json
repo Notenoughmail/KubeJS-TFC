@@ -2,7 +2,11 @@
   "hidden": false,
   "keys": [
     {
-      "type": "ingredient",
+      "type": {
+        "type": "list",
+        "component": "optional_ingredient",
+        "max": 5
+      },
       "alternative_names": [
         "ingredients"
       ],

@@ -20,4 +20,8 @@ StartupEvents.registry('block', e => {
             fallen.texture('minecraft:block/spruce_leaves');
             fallen.noDynamicTinting();
         });
+
+    e.create('sapling', 'tfc:sapling')
+        .placeableOnSand()
+        .texture('minecraft:block/oak_planks');
 })

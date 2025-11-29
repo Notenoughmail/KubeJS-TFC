@@ -35,7 +35,9 @@
       "role": "input"
     },
     {
-      "type": "non_negative_int",
+      "type": {
+        "type": "int"
+      },
       "alternative_names": [
         "tier"
       ],

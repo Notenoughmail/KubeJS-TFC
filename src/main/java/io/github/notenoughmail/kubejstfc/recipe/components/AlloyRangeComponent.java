@@ -10,9 +10,10 @@ import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.util.AlloyRange;
 
-public class AlloyRangeComponent implements RecipeComponent<AlloyRange> {
+public enum AlloyRangeComponent implements RecipeComponent<AlloyRange> {
+    INSTANCE;
 
-    public static final RecipeComponentType<AlloyRange> TYPE = RecipeComponentType.unit(KubeJSTFC.id("alloy_range"), new AlloyRangeComponent());
+    public static final RecipeComponentType<AlloyRange> TYPE = RecipeComponentType.unit(KubeJSTFC.id("alloy_range"), INSTANCE);
 
     private static final RecordTypeInfo TYPE_INFO = Cast.to(TypeInfo.of(AlloyRange.class));
 
@@ -34,10 +35,5 @@ public class AlloyRangeComponent implements RecipeComponent<AlloyRange> {
     @Override
     public AlloyRange wrap(RecipeScriptContext cx, Object from) {
         return (AlloyRange) TYPE_INFO.wrap(cx.cx(), from, TYPE_INFO);
-    }
-
-    @Override
-    public String toString() {
-        return "tfc_alloy_range";
     }
 }

@@ -1,4 +1,5 @@
 TFCEvents.worldgenData(e => {
+    /*
     e.clusterVein(
         'cluster_vein',
         [
@@ -159,4 +160,5 @@ TFCEvents.worldgenData(e => {
             );
         }
     );
+    */
 })

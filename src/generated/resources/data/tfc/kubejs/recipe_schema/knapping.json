@@ -3,7 +3,6 @@
     {
       "keys": [
         "result",
-        "ingredient",
         "knapping_type",
         "pattern"
       ]
@@ -27,14 +26,6 @@
       "role": "output"
     },
     {
-      "type": "ingredient",
-      "alternative_names": [
-        "ingredient"
-      ],
-      "name": "ingredient",
-      "role": "input"
-    },
-    {
       "type": "id",
       "alternative_names": [
         "knapping_type"
@@ -51,6 +42,18 @@
         "pattern"
       ],
       "name": "pattern"
+    },
+    {
+      "type": "optional_ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "ingredient"
+      ],
+      "name": "ingredient",
+      "role": "input"
     },
     {
       "type": "boolean",

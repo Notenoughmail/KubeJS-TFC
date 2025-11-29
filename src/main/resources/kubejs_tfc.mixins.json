@@ -10,6 +10,7 @@
     "CropHelpersMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
+    "KubeRecipeMixin",
     "Noise2DMixin",
     "Noise3DMixin",
     "PlacementContextMixin",
@@ -18,7 +19,8 @@
     "StructureMixin$StructureStartMixin",
     "TFCChunkGeneratorMixin",
     "TorchItemMixin",
-    "accessor.ExtendedPropertiesAccessor"
+    "accessor.ExtendedPropertiesAccessor",
+    "entityjs.BaseLivingEntityBuilderMixin"
   ],
   "client": [
   ],

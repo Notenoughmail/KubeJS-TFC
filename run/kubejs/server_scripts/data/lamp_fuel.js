@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.lampFuel(
         '#tfc:milks',
         '#tfc:lamps',
@@ -19,4 +20,5 @@ TFCEvents.data(e => {
         -1,
         'tfc:lava'
     );
+    */
 })

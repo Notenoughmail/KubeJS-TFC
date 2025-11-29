@@ -6,7 +6,7 @@
         "unsealed_result",
         "sealed_result",
         "ingredients",
-        "fluid_ingredients",
+        "fluid_ingredient",
         "duration",
         "temperature",
         "texture"

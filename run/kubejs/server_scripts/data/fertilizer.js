@@ -1,4 +1,5 @@
 TFCEvents.data(e => {
+    /*
     e.fertilizer(
         'minecraft:dirt',
         5,
@@ -12,4 +13,5 @@ TFCEvents.data(e => {
         2,
         'kubejs:fertilzier'
     );
+    */
 })
