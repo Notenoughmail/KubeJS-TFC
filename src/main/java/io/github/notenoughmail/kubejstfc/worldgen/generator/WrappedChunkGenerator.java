@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.implementation.worldgen.generator;
+package io.github.notenoughmail.kubejstfc.worldgen.generator;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;

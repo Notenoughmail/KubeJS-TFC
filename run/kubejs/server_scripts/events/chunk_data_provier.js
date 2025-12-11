@@ -1,8 +1,8 @@
 TFCEvents.createChunkDataProvider('nether', event => {
 
     // Use a LayeredArea for the rocks as noises can be slow when used with the rock rule source
-    const randomSource = event.getRandomSource('nether');
-    const rockLayer = TFC.misc.uniformLayeredArea(randomSource.nextLong());
+    const randomSource = event.stableRandomSource();
+    const rockLayer = TFC.worldgen.uniformLayeredArea(randomSource.nextLong());
     for (let i = 0 ; i < 3 ; i++) {
         rockLayer.zoom(true, randomSource.nextLong()).smooth(randomSource.nextLong());
     }
@@ -14,17 +14,17 @@ TFCEvents.createChunkDataProvider('nether', event => {
         .zoom(true, randomSource.nextLong())
         .smooth(randomSource.nextLong());
 
-    const rain = TFC.misc.lerpFloatLayer(0, 0, 0, 0);
-    const tempLayer = TFC.misc.newOpenSimplex2D(event.worldSeed + 4621678939469)
+    const rain = TFC.worldgen.lerpFloatLayer(0, 0, 0, 0);
+    const tempLayer = TFC.noise.openSimplex2D(event.worldSeed + 4621678939469)
         .spread(0.2)
         .octaves(3)
         .scaled(70, 90);
-    const forestLayer = TFC.misc.newOpenSimplex2D(event.worldSeed + 98713856895664)
+    const forestLayer = TFC.noise.openSimplex2D(event.worldSeed + 98713856895664)
         .spread(0.8)
         .terraces(9)
         .affine(6, 12)
         .scaled(6, 18, 0, 1);
-    const rockLayerHeightNoise = TFC.misc.newOpenSimplex2D(event.worldSeed + 30121796313692)
+    const rockLayerHeightNoise = TFC.noise.openSimplex2D(event.worldSeed + 30121796313692)
         .octaves(6)
         .scaled(12, 34)
         .spread(0.009);
@@ -37,11 +37,11 @@ TFCEvents.createChunkDataProvider('nether', event => {
         i++;
     }
 
-    event.partial((data, chunk) => {
-        var x = chunk.pos.minBlockX;
-        var z = chunk.pos.minBlockZ;
+    event.partial(data => {
+        let { pos } = data;
+        let { minBlockX: x, minBlockZ: z } = pos;
 
-        var temp = TFC.misc.lerpFloatLayer(
+        var temp = TFC.worldgen.lerpFloatLayer(
             tempLayer.noise(x, z),
             tempLayer.noise(x, z + 15),
             tempLayer.noise(x + 15, z),
@@ -50,10 +50,10 @@ TFCEvents.createChunkDataProvider('nether', event => {
 
         data.generatePartial(
             rain,
+            rain,
+            rain,
             temp,
-            forestLayer.noise(x, z) * 4, // Kube accepts ordinal numbers for enum constants
-            forestLayer.noise(x * 78423 + 869, z),
-            forestLayer.noise(x, z * 651349 - 698763)
+            forestLayer.noise(x, z) * 28 // Kube accepts ordinal numbers for enum constants
         );
     });
 

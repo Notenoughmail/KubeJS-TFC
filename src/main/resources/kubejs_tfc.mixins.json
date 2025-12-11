@@ -10,7 +10,6 @@
     "CropHelpersMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
-    "KubeRecipeMixin",
     "Noise2DMixin",
     "Noise3DMixin",
     "PlacementContextMixin",

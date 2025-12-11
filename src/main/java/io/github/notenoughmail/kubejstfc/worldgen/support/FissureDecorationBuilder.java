@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.implementation.worldgen.data;
+package io.github.notenoughmail.kubejstfc.worldgen.support;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.world.feature.FissureConfig;
@@ -16,7 +16,7 @@ public record FissureDecorationBuilder(
 ) {
 
     @HideFromJS
-    public FissureConfig.Decoration builder() {
+    public FissureConfig.Decoration build() {
         return new FissureConfig.Decoration(
                 Weighted.toTFC(states),
                 rarity,

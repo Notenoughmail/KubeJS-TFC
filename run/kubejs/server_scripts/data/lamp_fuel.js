@@ -1,24 +1,7 @@
 TFCEvents.data(e => {
-    /*
-    e.lampFuel(
-        '#tfc:milks',
-        '#tfc:lamps',
-        2
-    );
-    e.lampFuel(
-        'tfc:salt_water',
-        '#tfc:lamps',
-        1,
-        'kubejs:lamp_fuel'
-    );
-    e.lampFuel(
-        'minecraft:lava',
-        [
-            'kubejs:lamp',
-            'tfc:metal/lamp/blue_steel'
-        ],
-        -1,
-        'tfc:lava'
-    );
-    */
+    e.lampFuel({
+        fluid: Fluid.of('minecraft:milk'),
+        lamps: 'kubejs:lamp',
+        burnRate: 200
+    });
 })

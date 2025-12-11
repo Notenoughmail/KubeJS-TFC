@@ -1,7 +1,7 @@
 package io.github.notenoughmail.kubejstfc.util.mixin;
 
 import io.github.notenoughmail.kubejstfc.implementation.extensions.IWrappedChunkGenerator;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.generator.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.worldgen.generator.WrappedChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

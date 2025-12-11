@@ -1,13 +1,11 @@
 TFCEvents.data(e => {
-    /*
-    e.foodItem('minecraft:cooked_porkchop', d => {
-        d.hunger(3);
-        d.saturation(2);
-        d.protein(4);
+    e.food({
+        ingredient: 'minecraft:bread',
+        food: {
+            hunger: 4,
+            nutrients: [
+                0, 0, 1, 0, 0
+            ]
+        }
     });
-    e.foodItem('minecraft:apple', d => {
-        d.fruit(4);
-        d.hunger(5);
-    }, 'kubejs:food_item');
-    */
 })

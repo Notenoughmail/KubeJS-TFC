@@ -1,164 +1,85 @@
-TFCEvents.worldgenData(e => {
-    /*
-    e.clusterVein(
-        'cluster_vein',
-        [
-            e.blockToWeightedBlockState(
-                [
-                    'tfc:rock/raw/gabbro',
-                    'tfc:rock/raw/dacite',
-                    'tfc:rock/raw/basalt'
-                ],
-                [
-                    '5 minecraft:dirt',
-                    'minecraft:gold_block'
-                ]
-            ),
-            e.blockToWeightedBlockState(
-                [
-                    'tfc:rock/raw/andesite',
-                    'tfc:rock/raw/diorite'
-                ],
-                [
-                    '8 minecraft:gold_block',
-                    '3 minecraft:gravel'
-                ]
-            )
-        ],
-        1,
-        1,
-        -64,
-        100,
-        30,
-        optional => {
-            optional.indicator(
-                30,
-                1,
-                1,
-                10,
-                [ 'minecraft:diamond_block' ]
-            );
-        },
-        placement => {}
-    );
+ServerEvents.registry('worldgen/configured_feature', e => {
 
-    e.pipeVein(
-        'pipe_vein',
-        [
-        ],
-        1,
-        1,
-        -64,
-        100,
-        30,
-        5,
-        2,
-        4,
-        1,
-        7,
-        1,
-        optional => {
-            optional.indicator(
-                30,
-                1,
-                1,
-                10,
-                [ 'minecraft:iron_block' ]
-            );
-        },
-        placement => {}
-    );
-
-    e.discVein(
-        'disc_vein',
-        [
-            e.blockToWeightedBlockState(
-                [
-                    'tfc:rock/raw/andesite',
-                    'tfc:rock/raw/basalt'
-                ],
-                [
-                    '18 minecraft:iron_block',
-                    'minecraft:gravel'
-                ]
-            )
-        ],
-        1,
-        1,
-        -64,
-        100,
-        14,
-        3,
-        optional => {
-            optional.indicator(
-                30,
-                1,
-                1,
-                10,
-                [ 'minecraft:gravel' ]
-            );
-        },
-        placement => {}
-    );
-
-    let raws = [
-        'tfc:dirt/loam',
-        'tfc:dirt/sandy_loam',
-        'tfc:dirt/silt',
-        'tfc:dirt/silty_loam',
-        'tfc:grass/loam',
-        'tfc:grass/sandy_loam',
-        'tfc:grass/silt',
-        'tfc:grass/silty_loam',
-        'tfc:sand/white',
-        'tfc:sand/black',
-        'tfc:sand/yellow',
-        'tfc:sand/pink',
-        'tfc:sand/brown',
-        'tfc:sand/green',
-        'tfc:sand/red',
-        'tfc:raw_sandstone/white',
-        'tfc:raw_sandstone/black',
-        'tfc:raw_sandstone/yellow',
-        'tfc:raw_sandstone/pink',
-        'tfc:raw_sandstone/brown',
-        'tfc:raw_sandstone/green',
-        'tfc:raw_sandstone/red'
-    ];
-    TFC.misc.rock.keySet().forEach(rock => {
-        raws.push(
-            `tfc:rock/raw/${rock}`.toString(),
-            `tfc:rock/gravel/${rock}`.toString(),
-            `tfc:rock/hardened/${rock}`.toString()
-        );
+    let all = Utils.newMap();
+    TFC.data.rocks.forEach((n, rock) => {
+        all.put(rock.getBlock('raw').get(), [
+            'minecraft:gold_ore',
+            {
+                value: 'minecraft:oak_fence',
+                weight: 5
+            }
+        ]);
     });
-    e.clusterVein(
-        'big_cluster',
-        [
-            e.blockToWeightedBlockState(
-                raws,
-                [ 'minecraft:green_stained_glass' ]
-            ),
-            e.blockToWeightedBlockState(
-                [ 'minecraft:air' ],
-                [ 'minecraft:red_stained_glass' ]
-            )
-        ],
-        8,
-        1,
-        60,
-        90,
-        16,
-        optional => {
-            optional.biomes(
-                'tfc:land'
-            );
-        },
-        placement => {
-            placement.heightMap(
-                'world_surface_wg'
-            );
-        }
-    );
-    */
+
+    e.create('cluster_vein', 'tfc:cluster_vein')
+        .replacementStates(all)
+        .rarity(12)
+        .density(1)
+        .maxY(70)
+        .seed(7852127852)
+        .indicator({
+            depth: 20,
+            rarity: 6,
+            states: [
+                {
+                    value: 'minecraft:torch',
+                    weight: 5
+                },
+                'minecraft:coal_block'
+            ]
+        })
+        .size(30)
+        .withPlacement(p => p.tag('tfc:in_biome/veins'));
+
+    e.create('pipe_vein', 'tfc:pipe_vein')
+        .replacementStates(all)
+        .rarity(12)
+        .density(0.2)
+        .minY(-30)
+        .maxY(40)
+        .seed(7862549652)
+        .sign(0.5)
+        .height(20)
+        .radius(5)
+        .skew(1, 3)
+        .slant(1, 3)
+        .withPlacement(p => p.tag('tfc:in_biome/veins'));
+
+    e.create('disc_vein', 'tfc:disc_vein')
+        .replacementStates(all)
+        .rarity(12)
+        .density(0.8)
+        .minY(30)
+        .maxY(80)
+        .seed(98745321)
+        .size(10)
+        .height(5)
+        .withPlacement(p => p.tag('tfc:in_biome/veins'));
+
+    e.create('geode', 'tfc:geode')
+        .outer('minecraft:oak_log[axis=z]')
+        .middle('tfc:rock/hardened/basalt')
+        .inner([
+            'minecraft:cut_copper',
+            {
+                value: 'tfc:rock/hardened/quartzite',
+                weight: 6
+            }
+        ])
+        .withPlacement(p => p.tfcBiome()
+                            .rarityFilter(3)
+                            .inSquare()
+                            .jsonPlacement({
+                                type: 'minecraft:height_range',
+                                height: {
+                                    type: 'uniform',
+                                    min_inclusive: {
+                                        absolute: -40
+                                    },
+                                    max_inclusive: {
+                                        absolute: 32
+                                    }
+                                }
+                            })
+                            .tag('tfc:in_biome/veins'));
 })

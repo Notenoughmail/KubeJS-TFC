@@ -63,6 +63,10 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(fluidHeat, FluidHeat.CODEC, id, f -> f.fluid().toString().replace(":", "/"), "tfc/fluid_heat");
     }
 
+    public void fluidHeat(FluidHeat fluidHeat) {
+        fluidHeat(fluidHeat, null);
+    }
+
     public void knappingType(KnappingType knappingType, KubeResourceLocation id) {
         add(knappingType, KnappingType.CODEC, id, "tfc/knapping_type");
     }
@@ -87,8 +91,8 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(Util.make(new Fauna.Builder(), builder).build(), Fauna.CODEC, id, "tfc/fauna");
     }
 
-    public void climateRange(Consumer<ClimateRange.Builder> builder, KubeResourceLocation id) {
-        add(Util.make(new ClimateRange.Builder(), builder).build(), ClimateRange.CODEC, id, "tfc/climate_range");
+    public void climateRange(ClimateRange range, KubeResourceLocation id) {
+        add(range, ClimateRange.CODEC, id, "tfc/climate_range");
     }
 
     public void lampFuel(LampFuel lampFuel, @Nullable KubeResourceLocation id) {

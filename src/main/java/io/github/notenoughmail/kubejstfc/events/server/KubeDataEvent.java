@@ -1,18 +1,11 @@
 package io.github.notenoughmail.kubejstfc.events.server;
 
-import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Lifecycle;
 import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.generator.KubeResourceGenerator;
-import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
-import net.minecraft.core.*;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
@@ -20,54 +13,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class KubeDataEvent implements KubeEvent {
 
-    private static final HolderOwner<?> UNIVERSAL_OWNER = new HolderOwner<>() {
-        @Override
-        public boolean canSerializeIn(HolderOwner<Object> owner) {
-            return true;
-        }
-    };
-    protected static <T> HolderOwner<T> universalOwner() {
-        return Cast.to(UNIVERSAL_OWNER);
-    }
-    private static final HolderGetter<?> UNIVERSAL_GETTER = new HolderGetter<>() {
-        @Override
-        public Optional<Holder.Reference<Object>> get(ResourceKey<Object> resourceKey) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Optional<HolderSet.Named<Object>> get(TagKey<Object> tagKey) {
-            return Optional.empty();
-        }
-    };
-    protected static <T> HolderGetter<T> universalGetter() {
-        return Cast.to(UNIVERSAL_GETTER);
-    }
-
     protected final KubeResourceGenerator gen;
-    private final RegistryOps<JsonElement> fakeRegistryExtension;
 
     protected KubeDataEvent(KubeResourceGenerator gen) {
         this.gen = gen;
-        final RegistryOps<JsonElement> realRegistryAccess = gen.getRegistries().json();
-        fakeRegistryExtension = RegistryOps.create(realRegistryAccess, new RegistryOps.RegistryInfoLookup() {
-            @Override
-            public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> registryKey) {
-                return Optional.of(
-                        realRegistryAccess.lookupProvider.lookup(registryKey)
-                                .orElseGet(() -> new RegistryOps.RegistryInfo<>(
-                                        universalOwner(),
-                                        universalGetter(),
-                                        Lifecycle.experimental()
-                                ))
-                );
-            }
-        });
     }
 
     protected String makePath(Object path) {
@@ -96,7 +49,7 @@ public abstract class KubeDataEvent implements KubeEvent {
     }
 
     protected <T> void add(ResourceLocation id, T t, Codec<T> codec) {
-        gen.json(id, codec.encodeStart(fakeRegistryExtension, t).getOrThrow());
+        gen.json(id, codec.encodeStart(gen.getRegistries().json(), t).getOrThrow());
     }
 
     protected <T> void add(T t, Codec<T> codec, @Nullable KubeResourceLocation id, Function<T, String> func, String prefix) {

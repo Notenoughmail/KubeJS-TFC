@@ -11,7 +11,6 @@ import dev.latvian.mods.kubejs.recipe.schema.postprocessing.KeyPatternCleanupPos
 import dev.latvian.mods.kubejs.util.IntBounds;
 import io.github.notenoughmail.kubejstfc.recipe.components.*;
 import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
-import io.github.notenoughmail.kubejstfc.recipe.processors.ExplodeIfEmptyProcessor;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.TFCRecipeSerializers;
@@ -229,8 +228,7 @@ public class DataGenEntry {
                         .function("outputs", MultiSetFunction.of("output_item", "output_fluid"))
                 );
                 add(SEALED_BARREL, b -> b.keys(
-                            NumberComponent.INT.otherKey("duration") // Durations may be -1 (or any negative number?) to be indefinite
-                                    .defaultOptional(), // This is required due to short-sighted kube requirements
+                            NumberComponent.INT.otherKey("duration"), // Durations may be -1 (or any negative number?) to be indefinite
                             ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_seal")
                                     .defaultOptional(),
                             ItemStackProviderComponent.OPTIONAL_ISP.otherKey("on_unseal")
@@ -240,7 +238,6 @@ public class DataGenEntry {
                         .constructors(constructor("input_fluid", "duration"))
                         .mergeData(true, false, false, false)
                         .function("seal", MultiSetFunction.of("on_seal", "on_unseal"))
-                        .postProcessors(ExplodeIfEmptyProcessor.of("duration"))
                 );
                 alias("sealed_barrel", SEALED_BARREL);
                 parent(INSTANT_BARREL, barrel);
@@ -296,7 +293,7 @@ public class DataGenEntry {
                         )
                         .constructors(constructor("result", "ingredients"))
                 );
-                alias("shapeless", ADVANCED_SHAPELESS_CRAFTING);
+                alias("shapeless", ADVANCED_SHAPELESS_CRAFTING); // TODO: 2.0.0 | This doesn't work?
 
                 add(AFCRecipeSerializers.TREE_TAPPING.getId(), b -> b.keys(
                             FluidStackComponent.FLUID_STACK.outputKey("result_fluid"),

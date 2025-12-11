@@ -6,9 +6,11 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.JsonOps;
 import dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.Wrapper;
+import dev.latvian.mods.rhino.type.RecordTypeInfo;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import net.dries007.tfc.common.component.food.FoodTrait;
 import net.dries007.tfc.common.recipes.ingredients.*;
@@ -27,7 +29,7 @@ import java.util.List;
 public enum IngredientBindings {
     INSTANCE;
 
-    public static final TypeInfo BLOCK_ING_TYPE_INFO = TypeInfo.of(BlockIngredient.class);
+    public static final RecordTypeInfo BLOCK_ING_TYPE_INFO = Cast.to(TypeInfo.of(BlockIngredient.class));
 
     public static BlockIngredient wrapBlock(Context ctx, Object o) {
         o = Wrapper.unwrapped(o);

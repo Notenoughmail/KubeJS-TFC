@@ -8,11 +8,12 @@ import dev.latvian.mods.kubejs.plugin.ClassFilter;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.plugin.builtin.event.ItemEvents;
 import dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper;
+import dev.latvian.mods.kubejs.plugin.builtin.wrapper.ItemWrapper;
 import dev.latvian.mods.kubejs.recipe.component.EnumComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
-import dev.latvian.mods.kubejs.recipe.schema.postprocessing.RecipePostProcessorTypeRegistry;
+import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
@@ -23,7 +24,6 @@ import io.github.notenoughmail.kubejstfc.builders.fluid.SpringWaterBuilder;
 import io.github.notenoughmail.kubejstfc.builders.misc.*;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.events.server.KubeTFCDataEvent;
-import io.github.notenoughmail.kubejstfc.events.server.KubeTFCWorldgenDataEvent;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.CalendarTrackingAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.HeatConsumerAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment;
@@ -31,16 +31,25 @@ import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventory
 import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.TFCBindings;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.TreeRootBuilder;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.VeinBaseBuilder;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.data.Weighted;
 import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.*;
 import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
-import io.github.notenoughmail.kubejstfc.recipe.processors.ExplodeIfEmptyProcessor;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.*;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.base.PlacedFeatureBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.block.SpreadingBushBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.block.SpreadingCropBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.block.TallWildCropBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.forest.*;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.vanilla.RandomPatchBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.vanilla.SimpleBlockBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.ClusterVeinBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.DiscVeinBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.PipeVeinBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.support.TreeRootBuilder;
+import io.github.notenoughmail.kubejstfc.worldgen.support.Weighted;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.TFCTiers;
@@ -51,6 +60,7 @@ import net.dries007.tfc.common.component.block.CrucibleComponent;
 import net.dries007.tfc.common.component.fluid.FluidComponent;
 import net.dries007.tfc.common.component.food.FoodComponent;
 import net.dries007.tfc.common.component.food.FoodData;
+import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.food.FoodTraits;
 import net.dries007.tfc.common.component.forge.ForgeRule;
 import net.dries007.tfc.common.component.forge.ForgingBonusComponent;
@@ -69,17 +79,21 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.common.recipes.outputs.MealModifier;
 import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateModels;
+import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.Drinkable;
-import net.dries007.tfc.world.feature.cave.ThinSpikeConfig;
+import net.dries007.tfc.util.data.Fuel;
+import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
@@ -111,66 +125,98 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.addDefault(ClimateModels.KEY, KubeClimateModelBuilder.class, KubeClimateModelBuilder::new);
 
         registry.of(Registries.BLOCK, c -> {
-            c.add(tfc("anvil"), AnvilBlockBuilder.class, AnvilBlockBuilder::new);
-            c.add(tfc("aqueduct"), AqueductBlockBuilder.class, AqueductBlockBuilder::new);
-            c.add(tfc("axle"), AxleBlockBuilder.class, AxleBlockBuilder::new);
-            c.add(tfc("log"), LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
-            c.add(tfc("encased_axle"), EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
-            c.add(tfc("ground_cover"), GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
-            c.add(tfc("sapling"), TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
-            c.add(tfc("rock_spike"), RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
-            c.add(tfc("dirt"), TFCDirtBlockBuilder.class, TFCDirtBlockBuilder::new);
-            c.add(tfc("raw_rock"), RawRockBlockBuilder.class, RawRockBlockBuilder::new);
-            c.add(tfc("lamp"), LampBlockBuilder.class, LampBlockBuilder::new);
-            c.add(tfc("loose_rock"), LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
-            c.add(tfc("support"), SupportBlockBuilder.class, SupportBlockBuilder::new);
-            c.add(tfc("leaves"), TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
-            c.add(tfc("thin_spike"), ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
-            c.add(tfc("torch"), TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
-            c.add(tfc("moss_growing_block"), MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
-            c.add(tfc("moss_spreading_block"), MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
-            c.add(tfc("moss_growing_slab"), MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
-            c.add(tfc("moss_spreading_slab"), MossSpreadingSlabBuilder.class, MossSpreadingSlabBuilder::new);
-            c.add(tfc("moss_growing_stair"), MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
-            c.add(tfc("moss_spreading_stair"), MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
-            c.add(tfc("moss_growing_wall"), MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
-            c.add(tfc("moss_spreading_wall"), MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
-            c.add(tfc("spreading_berry_bush"), SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
-            c.add(tfc("stationary_berry_bush"), StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
-            c.add(tfc("wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::normal);
-            c.add(tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::flooded);
-            c.add(tfc("tall_wild_crop"), WildCropBlockBuilder.Double.class, WildCropBlockBuilder.Double::new);
-            c.add(tfc("spreading_wild_crop"), WildCropBlockBuilder.Spreading.class, WildCropBlockBuilder.Spreading::new);
-            c.add(tfc("crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::normal);
-            c.add(tfc("flooded_crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::flooded);
-            c.add(tfc("pickable_crop"), PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
-            c.add(tfc("spreading_crop"), SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
-            c.add(tfc("double_crop"), DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
-            c.add(tfc("climbing_crop"), ClimbingCropBlockBuilder.class, ClimbingCropBlockBuilder::new);
+            add(c, tfc("anvil"), AnvilBlockBuilder.class, AnvilBlockBuilder::new);
+            add(c, tfc("aqueduct"), AqueductBlockBuilder.class, AqueductBlockBuilder::new);
+            add(c, tfc("axle"), AxleBlockBuilder.class, AxleBlockBuilder::new);
+            add(c, tfc("log"), LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
+            add(c, tfc("encased_axle"), EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
+            add(c, tfc("ground_cover"), GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+            add(c, tfc("sapling"), TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
+            add(c, tfc("rock_spike"), RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
+            add(c, tfc("dirt"), TFCDirtBlockBuilder.class, TFCDirtBlockBuilder::new);
+            add(c, tfc("raw_rock"), RawRockBlockBuilder.class, RawRockBlockBuilder::new);
+            add(c, tfc("lamp"), LampBlockBuilder.class, LampBlockBuilder::new);
+            add(c, tfc("loose_rock"), LooseRockBlockBuilder.class, LooseRockBlockBuilder::new);
+            add(c, tfc("support"), SupportBlockBuilder.class, SupportBlockBuilder::new);
+            add(c, tfc("leaves"), TFCLeavesBlockBuilder.class, TFCLeavesBlockBuilder::new);
+            add(c, tfc("thin_spike"), ThinSpikeBlockBuilder.class, ThinSpikeBlockBuilder::new);
+            add(c, tfc("torch"), TFCTorchBlockBuilder.class, TFCTorchBlockBuilder::new);
+            add(c, tfc("moss_growing_block"), MossGrowingBlockBuilder.class, MossGrowingBlockBuilder::new);
+            add(c, tfc("moss_spreading_block"), MossSpreadingBlockBuilder.class, MossSpreadingBlockBuilder::new);
+            add(c, tfc("moss_growing_slab"), MossGrowingSlabBlockBuilder.class, MossGrowingSlabBlockBuilder::new);
+            add(c, tfc("moss_spreading_slab"), MossSpreadingSlabBuilder.class, MossSpreadingSlabBuilder::new);
+            add(c, tfc("moss_growing_stair"), MossGrowingStairBlockBuilder.class, MossGrowingStairBlockBuilder::new);
+            add(c, tfc("moss_spreading_stair"), MossSpreadingStairBuilder.class, MossSpreadingStairBuilder::new);
+            add(c, tfc("moss_growing_wall"), MossGrowingWallBlockBuilder.class, MossGrowingWallBlockBuilder::new);
+            add(c, tfc("moss_spreading_wall"), MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
+            add(c, tfc("spreading_berry_bush"), SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
+            add(c, tfc("stationary_berry_bush"), StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
+            add(c, tfc("wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::normal);
+            add(c, tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::flooded);
+            add(c, tfc("tall_wild_crop"), WildCropBlockBuilder.Double.class, WildCropBlockBuilder.Double::new);
+            add(c, tfc("spreading_wild_crop"), WildCropBlockBuilder.Spreading.class, WildCropBlockBuilder.Spreading::new);
+            add(c, tfc("crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::normal);
+            add(c, tfc("flooded_crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::flooded);
+            add(c, tfc("pickable_crop"), PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
+            add(c, tfc("spreading_crop"), SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
+            add(c, tfc("double_crop"), DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
+            add(c, tfc("climbing_crop"), ClimbingCropBlockBuilder.class, ClimbingCropBlockBuilder::new);
         });
 
         registry.of(Registries.ITEM, c -> {
-            c.add(tfc("windmill_blade"), WindmillBladeItemBuilder.class, WindmillBladeItemBuilder::new);
-            c.add(tfc("glassworking"), GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
-            c.add(tfc("chisel"), ChiselItemBuilder.class, ChiselItemBuilder::new);
-            c.add(tfc("glassworking_tool"), GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
-            c.add(tfc("tool"), ToolItemBuilder.class, ToolItemBuilder::new);
-            c.add(tfc("hammer"), HammerItemBuilder.class, HammerItemBuilder::new);
-            c.add(tfc("mace"), MaceItemBuilder.class, MaceItemBuilder::new);
-            c.add(tfc("propick"), PropickItemBuilder.class, PropickItemBuilder::new);
-            c.add(tfc("hoe"), TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
-            c.add(tfc("scythe"), ScytheItemBuilder.class, ScytheItemBuilder::new);
-            c.add(tfc("fishing_rod"), TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
-            c.add(tfc("mold"), MoldItemBuilder.class, MoldItemBuilder::new);
-            c.add(tfc("jug"), JugItemBuilder.class, JugItemBuilder::new);
-            c.add(tfc("fluid_container"), FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
-            c.add(tfc("glass_bottle"), GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
-            c.add(tfc("javelin"), JavelinItemBuilder.class, JavelinItemBuilder::new);
+            add(c, tfc("windmill_blade"), WindmillBladeItemBuilder.class, WindmillBladeItemBuilder::new);
+            add(c, tfc("glassworking"), GlassworkingItemBuilder.class, GlassworkingItemBuilder::new);
+            add(c, tfc("chisel"), ChiselItemBuilder.class, ChiselItemBuilder::new);
+            add(c, tfc("glassworking_tool"), GlassworkingToolItemBuilder.class, GlassworkingToolItemBuilder::new);
+            add(c, tfc("tool"), ToolItemBuilder.class, ToolItemBuilder::new);
+            add(c, tfc("hammer"), HammerItemBuilder.class, HammerItemBuilder::new);
+            add(c, tfc("mace"), MaceItemBuilder.class, MaceItemBuilder::new);
+            add(c, tfc("propick"), PropickItemBuilder.class, PropickItemBuilder::new);
+            add(c, tfc("hoe"), TFCHoeItemBuilder.class, TFCHoeItemBuilder::new);
+            add(c, tfc("scythe"), ScytheItemBuilder.class, ScytheItemBuilder::new);
+            add(c, tfc("fishing_rod"), TFCFishingRodItemBuilder.class, TFCFishingRodItemBuilder::new);
+            add(c, tfc("mold"), MoldItemBuilder.class, MoldItemBuilder::new);
+            add(c, tfc("jug"), JugItemBuilder.class, JugItemBuilder::new);
+            add(c, tfc("fluid_container"), FluidContainerItemBuilder.class, FluidContainerItemBuilder::new);
+            add(c, tfc("glass_bottle"), GlassBottleItemBuilder.class, GlassBottleItemBuilder::new);
+            add(c, tfc("javelin"), JavelinItemBuilder.class, JavelinItemBuilder::new);
         });
 
-        registry.of(Registries.FLUID, c -> {
-            c.add(tfc("spring"), SpringWaterBuilder.class, SpringWaterBuilder::new);
+        registry.of(Registries.FLUID, c -> add(c, tfc("spring"), SpringWaterBuilder.class, SpringWaterBuilder::new));
+
+        registry.of(Registries.CONFIGURED_FEATURE, c -> {
+            add(c, tfc("geode"), GeodeBuilder.class, GeodeBuilder::new);
+            add(c, tfc("boulder"), BoulderBuilder.class, i -> new BoulderBuilder<>(i, TFCFeatures.BOULDER));
+            add(c, tfc("baby_boulder"), BoulderBuilder.class, i -> new BoulderBuilder<>(i, TFCFeatures.BABY_BOULDER));
+            add(c, tfc("thin_spike"), ThinSpikeBuilder.class, ThinSpikeBuilder::new);
+            add(c, tfc("cluster_vein"), ClusterVeinBuilder.class, ClusterVeinBuilder::new);
+            add(c, tfc("pipe_vein"), PipeVeinBuilder.class, PipeVeinBuilder::new);
+            add(c, tfc("disc_vein"), DiscVeinBuilder.class, DiscVeinBuilder::new);
+            add(c, tfc("if_then"), IfThenBuilder.class, IfThenBuilder::new);
+            add(c, tfc("soil_disc"), SoilDiscBuilder.class, SoilDiscBuilder::new);
+            add(c, tfc("hot_spring"), HotSpringBuilder.class, HotSpringBuilder::new);
+            add(c, tfc("spreading_crop"), SpreadingCropBuilder.class, SpreadingCropBuilder::new);
+            add(c, tfc("spreading_bush"), SpreadingBushBuilder.class, SpreadingBushBuilder::new);
+            add(c, tfc("tall_wild_crop"), TallWildCropBuilder.class, TallWildCropBuilder::new);
+            add(c, tfc("fissure"), FissureBuilder.class, FissureBuilder::new);
+            add(c, tfc("forest"), ForestBuilder.class, ForestBuilder::new);
+            add(c, tfc("forest_entry"), ForestEntryBuilder.class, ForestEntryBuilder::new);
+            add(c, tfc("overlay_tree"), OverlayTreeBuilder.class, OverlayTreeBuilder::new);
+            add(c, tfc("random_tree"), RandomTreeBuilder.class, RandomTreeBuilder::new);
+            add(c, tfc("stacked_tree"), StackedTreeBuilder.class, StackedTreeBuilder::new);
+            add(c, tfc("krummholz"), KrummholzBuilder.class, KrummholzBuilder::new);
+            add(c, KubeJSTFC.id("random_patch"), RandomPatchBuilder.class, RandomPatchBuilder::new);
+            add(c, KubeJSTFC.id("simple_block"), SimpleBlockBuilder.class, SimpleBlockBuilder::new);
+            add(c, KubeJSTFC.id("generic"), GenericFeatureBuilder.class, GenericFeatureBuilder::new);
+            add(c, tfc("cave_vegetation"), CaveVegetationBuilder.class, CaveVegetationBuilder::new);
+            add(c, tfc("flood_fill_lake"), FloodFillLakeBuilder.class, FloodFillLakeBuilder::new);
         });
+
+        registry.of(Registries.PLACED_FEATURE, c -> add(c, KubeJSTFC.id("placed_feature"), PlacedFeatureBuilder.class, PlacedFeatureBuilder::new));
+    }
+    
+    private static <T, B extends BuilderBase<? extends T>> void add(BuilderTypeRegistry.Callback<T> c, ResourceLocation type, Class<B> builder, Function<ResourceLocation, B> factory) {
+        c.add(type, builder, factory::apply);
     }
 
     @Override
@@ -222,25 +268,31 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     @Override
     public void registerRecordDefaults(RecordDefaultsRegistry registry) {
         registry.register(new PhysicalDamage(0F, 0F, 0F));
-        registry.register(new FoodData(0, 0F, 0F, 0, new float[] { 0F, 0F, 0F, 0F, 0F }, 0F));
-        registry.register(new Drinkable.Effect(MobEffects.HEAL, 1, 1, 1F));
+        registry.register(FoodData.of(1F));
+        registry.register(FoodDefinition.DEFAULT);
+        registry.register(new Drinkable(null, 1F, false, FoodData.of(1F), List.of()));
         registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
-        registry.register(new Weighted<>(null, 1));
-        registry.register(new VeinBaseBuilder(Map.of(), 1, 1F, -64, 320, true, true, 0L, false, null));
-        registry.register(new ThinSpikeConfig(Blocks.AIR.defaultBlockState(), 1, 1, 1, 10, false));
         registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
         registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
         registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
+        registry.register(new ClimateRange(0, 100, 0, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 0));
+        registry.register(new Fuel(null, 0, 0, 1F));
     }
 
     @Override
     public void registerTypeDescriptions(TypeDescriptionRegistry registry) {
         registry.register(
                 BlockIngredient.class,
-                BlockWrapper.TYPE_INFO
-                        .asArray()
-                        .or(TypeInfo.of(TagKey.class)
-                                .withParams(BlockWrapper.TYPE_INFO))
+                IngredientBindings.BLOCK_ING_TYPE_INFO.createCombinedType(
+                        BlockWrapper.TYPE_INFO.asArray(),
+                        BlockWrapper.TYPE_INFO,
+                        TypeInfo.of(TagKey.class)
+                                .withParams(BlockWrapper.TYPE_INFO)
+                )
+        );
+        registry.register(
+                ItemStackProvider.class,
+                ItemStackProviderComponent.TYPE_INFO.createCombinedType(ItemWrapper.TYPE_INFO)
         );
     }
 
@@ -262,11 +314,6 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE);
         registry.register(FixedSizePatternComponent.TYPE);
         registry.register(TFCBlockStateComponent.TYPE);
-    }
-
-    @Override
-    public void registerRecipePostProcessors(RecipePostProcessorTypeRegistry registry) {
-        registry.register(ExplodeIfEmptyProcessor.TYPE);
     }
 
     @Override
@@ -296,14 +343,10 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(TFCComponents.CRUCIBLE.get(), TypeInfo.of(CrucibleComponent.class));
     }
 
-    // TODO: 2.0.0 | Will this finally work for the data events?
     @Override
     public void generateData(KubeDataGenerator generator) {
         if (KubeJSTFCEventHandlers.data.hasListeners()) {
             KubeJSTFCEventHandlers.data.post(new KubeTFCDataEvent(generator));
-        }
-        if (KubeJSTFCEventHandlers.worldgenData.hasListeners()) {
-            KubeJSTFCEventHandlers.worldgenData.post(new KubeTFCWorldgenDataEvent(generator));
         }
     }
 }

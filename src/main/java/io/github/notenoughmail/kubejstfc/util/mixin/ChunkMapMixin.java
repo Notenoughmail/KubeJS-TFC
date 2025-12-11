@@ -3,7 +3,7 @@ package io.github.notenoughmail.kubejstfc.util.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.generator.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.worldgen.generator.WrappedChunkGenerator;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;

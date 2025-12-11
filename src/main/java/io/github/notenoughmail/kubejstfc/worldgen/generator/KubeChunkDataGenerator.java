@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.implementation.worldgen.generator;
+package io.github.notenoughmail.kubejstfc.worldgen.generator;
 
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;

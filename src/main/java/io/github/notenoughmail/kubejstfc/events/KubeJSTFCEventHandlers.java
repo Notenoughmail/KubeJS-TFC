@@ -15,6 +15,7 @@ import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands;
 import net.dries007.tfc.common.capabilities.ItemCapabilities;
 import net.dries007.tfc.util.DispenserBehaviors;
 import net.dries007.tfc.util.data.DataManager;
@@ -59,7 +60,6 @@ public class KubeJSTFCEventHandlers {
     public static final EventHandler selectClimateModel = TFCEvents.server("selectClimateModel", () -> KubeSelectClimateModelEvent.class);
     public static final TargetedEventHandler<ResourceKey<MenuType<?>>> limitContainer = TFCEvents.server("limitContainer", () -> KubeLimitContainerEvent.class).requiredTarget(PlayerEvents.MENU_TARGET);
     public static final EventHandler data = TFCEvents.server("data", () -> KubeTFCDataEvent.class);
-    public static final EventHandler worldgenData = TFCEvents.server("worldgenData", () -> KubeTFCWorldgenDataEvent.class);
 
     // STARTUP
     public static final EventHandler defaultWorldSettings = TFCEvents.startup("defaultWorldSettings", () -> KubeDefaultWorldSettingsEvent.class);
@@ -82,6 +82,7 @@ public class KubeJSTFCEventHandlers {
         modBus.addListener(BuilderRefs::hackBlockEntities);
 
         final IEventBus gameBus = NeoForge.EVENT_BUS;
+        gameBus.addListener(KubeJSTFCCommands::register);
         gameBus.addListener(KubeJSTFCEventHandlers::animalProduct);
         gameBus.addListener(KubeJSTFCEventHandlers::collapse);
         gameBus.addListener(KubeJSTFCEventHandlers::douseFire);

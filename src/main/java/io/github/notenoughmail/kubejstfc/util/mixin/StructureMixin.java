@@ -1,6 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util.mixin;
 
-import io.github.notenoughmail.kubejstfc.implementation.worldgen.generator.WrappedChunkGenerator;
+import io.github.notenoughmail.kubejstfc.worldgen.generator.WrappedChunkGenerator;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;

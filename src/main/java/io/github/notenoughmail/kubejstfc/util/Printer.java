@@ -226,7 +226,7 @@ public interface Printer {
                 .withStyle(s -> s
                         .withUnderlined(true)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("List %s entries".formatted(tag.location()))))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/forge tags %s get %s".formatted(tag.registry().location(), tag.location())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neoforge tags %s get %s".formatted(tag.registry().location(), tag.location())))
                 );
     }
 

@@ -6,6 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.latvian.mods.kubejs.recipe.RecipeScriptContext;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
+import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.rhino.type.RecordTypeInfo;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
@@ -31,7 +33,7 @@ public record ItemStackProviderComponent(Codec<ItemStackProvider> codec, RecipeC
     public static final RecipeComponentType<ItemStackProvider> ISP = RecipeComponentType.unit(KubeJSTFC.id("isp"), type -> new ItemStackProviderComponent(ItemStackProvider.CODEC, type));
     public static final RecipeComponentType<ItemStackProvider> OPTIONAL_ISP = RecipeComponentType.unit(KubeJSTFC.id("optional_isp"), type -> new ItemStackProviderComponent(OPTIONAL_CODEC, type));
 
-    private static final TypeInfo TYPE_INFO = TypeInfo.of(ItemStackProvider.class);
+    public static final RecordTypeInfo TYPE_INFO = Cast.to(TypeInfo.of(ItemStackProvider.class));
 
     @Override
     public TypeInfo typeInfo() {

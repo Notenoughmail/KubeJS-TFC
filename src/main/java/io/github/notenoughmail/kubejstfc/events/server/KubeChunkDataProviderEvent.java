@@ -100,7 +100,7 @@ public class KubeChunkDataProviderEvent implements KubeEvent {
             
             Defaults to creating an aquifer filled with air at -2^31
             """)
-    public void erosionalAquifer(AquiferMaker maker) {
+    public void erosionalAquifer(Function<ChunkAccess, Aquifer> maker) {
         createAquifer = maker;
     }
 
@@ -125,10 +125,5 @@ public class KubeChunkDataProviderEvent implements KubeEvent {
         })
         @Nullable
         RockSettings generate(int x, int y, int z, int surfaceY, @Nullable ChunkRockDataCache cache, RockLayerSettings rockLayers);
-    }
-
-    @FunctionalInterface
-    public interface AquiferMaker extends Function<ChunkAccess, Aquifer> {
-        Aquifer apply(ChunkAccess access);
     }
 }

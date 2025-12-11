@@ -9,6 +9,7 @@
 - Wild crops have been split into 4 builder types, similar to non-wild crops
 - Crop model generation methods have been cut down to be much simpler and concise
 - The climbing crop builder has been split from the double crop builder
+- Configured & placed features are now made through builders in the `ServerEvents.registry` event instead of the `TFCEvents.worldgenData`event
 
 ### 1.3.3
 - The list ids command is now paginated

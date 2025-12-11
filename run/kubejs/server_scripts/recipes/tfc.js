@@ -32,7 +32,7 @@ ServerEvents.recipes(e => {
         .id('kubejs:barrel_instant');
     tfc.instant_barrel(
         Fluid.of('minecraft:lava', 800)
-    ).inputItem('minecraft:dirt')
+    ).outputItem('minecraft:dirt')
         .id('kubejs:instant_barrel_alias')
 
     tfc.barrel_instant_fluid(
@@ -108,7 +108,7 @@ ServerEvents.recipes(e => {
 
     tfc.knapping(
         'minecraft:obsidian',
-        'tfc:clay',
+        'kubejs:knap',
         [
             'X X',
             ' X ',
@@ -255,7 +255,7 @@ ServerEvents.recipes(e => {
             '#minecraft:flowers',
             'minecraft:water_bucket'
         ]
-    ).id('kubejs:shapeless_alias');
+    ).id('kubejs:shapeless_alias'); // This does not work, the dirt does not display in EMI
 
     if (e.addedRecipes.stream().filter(r => r.getId().startsWith('kubejs:')).toList().isEmpty()) {
         console.error('No added recipes, somehow')

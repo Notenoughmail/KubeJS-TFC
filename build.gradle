@@ -151,7 +151,8 @@ dependencies {
 
     runtimeOnly "curse.maven:jade-324717:${jade_file}"
 
-    implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    // implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    implementation fileTree(dir: 'libs', include: "*.jar")
     implementation "dev.latvian.mods:rhino:${rhino_version}"
 
     implementation "curse.maven:entityjs-967617:${entityjs_file}"
