@@ -36,6 +36,7 @@ import io.github.notenoughmail.kubejstfc.recipe.components.*;
 import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.CropUtil;
 import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
 import io.github.notenoughmail.kubejstfc.worldgen.builders.*;
 import io.github.notenoughmail.kubejstfc.worldgen.builders.base.PlacedFeatureBuilder;
@@ -53,6 +54,8 @@ import io.github.notenoughmail.kubejstfc.worldgen.support.Weighted;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.TFCTiers;
+import net.dries007.tfc.common.blocks.crop.FloodedWildCropBlock;
+import net.dries007.tfc.common.blocks.crop.WildCropBlock;
 import net.dries007.tfc.common.component.EggComponent;
 import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.block.BarrelComponent;
@@ -71,6 +74,9 @@ import net.dries007.tfc.common.component.heat.HeatComponent;
 import net.dries007.tfc.common.component.item.ItemComponent;
 import net.dries007.tfc.common.component.item.ItemListComponent;
 import net.dries007.tfc.common.component.mold.VesselComponent;
+import net.dries007.tfc.common.component.size.ItemSizeDefinition;
+import net.dries007.tfc.common.component.size.Size;
+import net.dries007.tfc.common.component.size.Weight;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -88,7 +94,9 @@ import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 import java.util.List;
 import java.util.Map;
@@ -122,7 +130,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.addDefault(ItemStackModifiers.KEY, ItemStackModifierBuilder.class, ItemStackModifierBuilder::new);
         registry.addDefault(ChiselMode.KEY, ChiselModeBuilder.class, ChiselModeBuilder::new);
         registry.addDefault(FoodTraits.KEY, FoodTraitBuilder.class, FoodTraitBuilder::new);
-        registry.addDefault(ClimateModels.KEY, KubeClimateModelBuilder.class, KubeClimateModelBuilder::new);
+        registry.addDefault(ClimateModels.KEY, ClimateModelTypeBuilder.class, ClimateModelTypeBuilder::new);
 
         registry.of(Registries.BLOCK, c -> {
             add(c, tfc("anvil"), AnvilBlockBuilder.class, AnvilBlockBuilder::new);
@@ -151,12 +159,12 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             add(c, tfc("moss_spreading_wall"), MossSpreadingWallBlockBuilder.class, MossSpreadingWallBlockBuilder::new);
             add(c, tfc("spreading_berry_bush"), SpreadingBushBlockBuilder.class, SpreadingBushBlockBuilder::new);
             add(c, tfc("stationary_berry_bush"), StationaryBerryBushBlockBuilder.class, StationaryBerryBushBlockBuilder::new);
-            add(c, tfc("wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::normal);
-            add(c, tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder::flooded);
+            add(c, tfc("wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder.builder(WildCropBlock::new));
+            add(c, tfc("flooded_wild_crop"), WildCropBlockBuilder.Normal.class, WildCropBlockBuilder.builder(FloodedWildCropBlock::new));
             add(c, tfc("tall_wild_crop"), WildCropBlockBuilder.Double.class, WildCropBlockBuilder.Double::new);
             add(c, tfc("spreading_wild_crop"), WildCropBlockBuilder.Spreading.class, WildCropBlockBuilder.Spreading::new);
-            add(c, tfc("crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::normal);
-            add(c, tfc("flooded_crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder::flooded);
+            add(c, tfc("crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder.builder(AbstractCropBlockBuilder.Type.DEFAULT, CropUtil::defaultCrop));
+            add(c, tfc("flooded_crop"), AbstractCropBlockBuilder.WithProduct.class, AbstractCropBlockBuilder.builder(AbstractCropBlockBuilder.Type.FLOODED, CropUtil::floodedCrop));
             add(c, tfc("pickable_crop"), PickableCropBlockBuilder.class, PickableCropBlockBuilder::new);
             add(c, tfc("spreading_crop"), SpreadingCropBlockBuilder.class, SpreadingCropBlockBuilder::new);
             add(c, tfc("double_crop"), DoubleCropBlockBuilder.class, DoubleCropBlockBuilder::new);
@@ -270,13 +278,14 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(new PhysicalDamage(0F, 0F, 0F));
         registry.register(FoodData.of(1F));
         registry.register(FoodDefinition.DEFAULT);
-        registry.register(new Drinkable(null, 1F, false, FoodData.of(1F), List.of()));
+        registry.register(new Drinkable(FluidIngredient.empty(), 1F, false, FoodData.of(1F), List.of()));
         registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
         registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
         registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
         registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
         registry.register(new ClimateRange(0, 100, 0, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 0));
-        registry.register(new Fuel(null, 0, 0, 1F));
+        registry.register(new Fuel(Ingredient.EMPTY, 0, 0, 1F));
+        registry.register(new ItemSizeDefinition(Ingredient.EMPTY, Size.SMALL, Weight.LIGHT));
     }
 
     @Override

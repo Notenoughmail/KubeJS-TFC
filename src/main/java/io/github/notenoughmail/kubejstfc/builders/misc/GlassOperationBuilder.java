@@ -48,8 +48,8 @@ public class GlassOperationBuilder extends BuilderBase<GlassOperation> {
         return this;
     }
 
-    @Info("Sets the sound played upon this operation being used")
-    public GlassOperationBuilder useSound(Holder<SoundEvent> sound) {
+    @Info("Sets the sound played when this operation is applied")
+    public GlassOperationBuilder applicationSound(Holder<SoundEvent> sound) {
         useSound = sound;
         return this;
     }

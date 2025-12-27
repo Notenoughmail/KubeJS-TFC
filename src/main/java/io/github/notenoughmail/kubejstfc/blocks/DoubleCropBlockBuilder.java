@@ -5,7 +5,6 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
@@ -26,8 +25,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
 
 @ReturnsSelf
 @SuppressWarnings("unused")
@@ -57,7 +54,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
 
     @Override
     public DeadCropBlockBuilder.DeadModelVariant[] deadModels() {
-        return requiresStick ? DeadModels.VALUES_STICK : DeadModels.VALUES_NO_STICK;
+        return DeadDoubleModels.VALUES;
     }
 
     @Info("Sets how many stages the crop has in its bottom state")
@@ -152,62 +149,20 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
         }
     }
 
-    public enum DeadModels implements DeadCropBlockBuilder.DeadModelVariant {
-        YOUNG_STICK(false, false, true, false),
-        YOUNG_TOP(true, false, true, false),
-        YOUNG_BOTTOM(true, true, true, false),
-        YOUNG(false, false),
-        MATURE_BOTTOM(true, true),
-        MATURE_TOP(false, true)
-        ;
+    public enum DeadDoubleModels implements DeadCropBlockBuilder.DeadModelVariant {
+        YOUNG(false ,false),
+        BOTTOM(true, false),
+        TOP(true, true);
 
-        public static final DeadModels[] VALUES_STICK = {
-                YOUNG_STICK,
-                YOUNG_TOP,
-                YOUNG_BOTTOM,
-                MATURE_BOTTOM,
-                MATURE_TOP
-        };
-        public static final DeadModels[] VALUES_NO_STICK = {
-                YOUNG,
-                MATURE_BOTTOM,
-                MATURE_TOP
-        };
+        public static final DeadDoubleModels[] VALUES = values();
 
-        private final boolean stick, bottom, mature, requiresStick;
-        private final String variant, str;
+        private final String str, variant;
 
-        DeadModels(boolean bottom, boolean mature) {
-            this(false, bottom, false, mature);
-        }
-
-        DeadModels(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
-            this(stick, bottom, mature, requiresStick, makeVariant(stick, bottom, requiresStick, mature));
-        }
-
-        private static String makeVariant(boolean stick, boolean bottom, boolean requiresStick, boolean mature) {
-            if (requiresStick) {
-                if (stick) {
-                    return "mature=false,stick=true,part=" + (bottom ? "bottom" : "top");
-                } else {
-                    return "mature=false,stick=false";
-                }
-            } else {
-                if (mature) {
-                    return "mature=true,part=" + (bottom ? "bottom" : "top");
-                } else {
-                    return "mature=false";
-                }
-            }
-        }
-
-        DeadModels(boolean stick, boolean bottom, boolean mature, boolean requiresStick, String variant) {
-            this.stick = stick;
-            this.bottom = bottom;
-            this.mature = mature;
-            this.requiresStick = requiresStick;
-            this.variant = variant;
-            str = name().toLowerCase(Locale.ROOT);
+        DeadDoubleModels(boolean mature, boolean top) {
+            str = makeStr();
+            variant = mature ?
+                    "mature=true,part=" + (top ? "top" : "bottom") :
+                    "mature=false";
         }
 
         @Override
@@ -217,22 +172,11 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
 
         @Override
         public boolean mature() {
-            return mature;
+            return this != YOUNG;
         }
 
-        @Info("If the bottom state property is true for the variant")
         public boolean bottom() {
-            return bottom;
-        }
-
-        @Info("If the stick state property is true for the variant")
-        public boolean stick() {
-            return stick;
-        }
-
-        @HideFromJS
-        public boolean requiresStick() {
-            return requiresStick;
+            return this != TOP;
         }
 
         @Override

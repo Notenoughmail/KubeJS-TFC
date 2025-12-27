@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
-import it.unimi.dsi.fastutil.longs.Long2FloatFunction;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.climate.ClimateModel;
@@ -19,43 +18,42 @@ import net.minecraft.world.phys.Vec2;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.LongPredicate;
 
 @ReturnsSelf
-public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeClimateModelBuilder.Model>> {
+public class ClimateModelTypeBuilder extends BuilderBase<ClimateModelType<ClimateModelTypeBuilder.Model>> {
 
-    public static final Map<String, BiFunction<Float, Boolean, ClimateModel>> modelFactories = new HashMap<>();
+    public static final Map<ResourceLocation, BiFunction<Float, Boolean, ClimateModel>> modelFactories = new HashMap<>();
 
-    public transient WindFunction wind = (m, l, p, c, d) -> Vec2.ZERO;
+    public transient WindFunction wind = (m, l, p, c, d, w) -> Vec2.ZERO;
     public transient TimelessValueFunction fog = (m, l, p) -> 0F;
     public transient TimelessValueFunction avgTemp = (m, l, p) -> 0F;
     public transient TimelessValueFunction avgRain = (m, l, p) -> 0F;
     public transient TimelessValueFunction rainVariance = (m, l, p) -> 0F;
-    public transient LongPredicate isThundering = l -> false;
-    public transient Long2FloatFunction rainIntensity = l -> 0F;
-    public transient ValueFunction temp = (m, l, p, c, d) -> 0F;
-    public transient ValueFunction variableRain = (m, l, p, c, d) -> 0F;
+    public transient ThunderFunction isThundering = (m, l) -> false;
+    public transient RainIntensityFunction rainIntensity = (m, l) -> -1F;
+    public transient ValueFunction instTemp = (m, l, p, c, d) -> 0F;
+    public transient ValueFunction instRain = (m, l, p, c, d) -> 0F;
     public transient TimelessValueFunction baseGroundwater = (m, l, p) -> 0F;
 
-    public KubeClimateModelBuilder(ResourceLocation id) {
+    public ClimateModelTypeBuilder(ResourceLocation id) {
         super(id);
-        modelFactories.put(id.toString(), Model::new);
+        modelFactories.put(id, Model::new);
     }
 
     @Info("The wind calculation of this model")
-    public KubeClimateModelBuilder wind(WindFunction wind) {
+    public ClimateModelTypeBuilder wind(WindFunction wind) {
         this.wind = wind;
         return this;
     }
 
     @Info("The fog calculation of this model")
-    public KubeClimateModelBuilder fog(TimelessValueFunction fog) {
+    public ClimateModelTypeBuilder fog(TimelessValueFunction fog) {
         this.fog = fog;
         return this;
     }
 
     @Info("The fog calculation of this model")
-    public KubeClimateModelBuilder calendarFog(ValueFunction fog) {
+    public ClimateModelTypeBuilder calendarFog(ValueFunction fog) {
         this.fog = (m, l, p) -> {
             final ICalendar calendar = Calendars.get(l);
             return fog.get(m, l, p, calendar.getCalendarTicks(), calendar.getCalendarDaysInMonth());
@@ -64,49 +62,49 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
     }
 
     @Info("The yearly average temperature calculation of this model")
-    public KubeClimateModelBuilder averageTemperature(TimelessValueFunction temp) {
+    public ClimateModelTypeBuilder averageTemperature(TimelessValueFunction temp) {
         avgTemp = temp;
         return this;
     }
 
     @Info("The yearly average rainfall calculation of this model")
-    public KubeClimateModelBuilder averageRainfall(TimelessValueFunction rain) {
+    public ClimateModelTypeBuilder averageRainfall(TimelessValueFunction rain) {
         avgRain = rain;
         return this;
     }
 
     @Info("The rain variance of this model")
-    public KubeClimateModelBuilder rainVariance(TimelessValueFunction variance) {
+    public ClimateModelTypeBuilder rainVariance(TimelessValueFunction variance) {
         rainVariance = variance;
         return this;
     }
 
     @Info("The thunder calculation of this model")
-    public KubeClimateModelBuilder thunder(LongPredicate thunder) {
+    public ClimateModelTypeBuilder thunder(ThunderFunction thunder) {
         isThundering = thunder;
         return this;
     }
 
     @Info("The rain intensity calculation of this model")
-    public KubeClimateModelBuilder rainIntensity(Long2FloatFunction intensity) {
+    public ClimateModelTypeBuilder rainIntensity(RainIntensityFunction intensity) {
         rainIntensity = intensity;
         return this;
     }
 
     @Info("The current temperature calculation of this model")
-    public KubeClimateModelBuilder currentTemperature(ValueFunction temp) {
-        this.temp = temp;
+    public ClimateModelTypeBuilder instantaneousTemperature(ValueFunction temp) {
+        instTemp = temp;
         return this;
     }
 
     @Info("The temporally-local average rainfall calculation of this model")
-    public KubeClimateModelBuilder variableRainfall(ValueFunction rain) {
-        variableRain = rain;
+    public ClimateModelTypeBuilder instantaneousRainfall(ValueFunction rain) {
+        instRain = rain;
         return this;
     }
 
     @Info("The rainfall-equivalent groundwater calculation of this model")
-    public KubeClimateModelBuilder baseGroundwater(TimelessValueFunction groundwater) {
+    public ClimateModelTypeBuilder baseGroundwater(TimelessValueFunction groundwater) {
         baseGroundwater = groundwater;
         return this;
     }
@@ -123,9 +121,24 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
     }
 
     @FunctionalInterface
+    public interface ThunderFunction {
+        boolean isThundering(ClimateModel model, long calendarTick);
+    }
+
+    @FunctionalInterface
+    public interface RainIntensityFunction {
+        float intensity(ClimateModel model, long calendarTick);
+    }
+
+    @FunctionalInterface
+    public interface Wind {
+        Vec2 blow(float x, float z);
+    }
+
+    @FunctionalInterface
     public interface WindFunction {
 
-        Vec2 blow(ClimateModel model, Level level, BlockPos pos, long calendarTicks, int daysInMonth);
+        Vec2 blow(ClimateModel model, Level level, BlockPos pos, long calendarTick, int daysInMonth, Wind wind);
     }
 
     @FunctionalInterface
@@ -180,7 +193,7 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
 
         @Override
         public float getTemperature(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
-            return temp.get(this, level, pos, calendarTicks, daysInMonth);
+            return instTemp.get(this, level, pos, calendarTicks, daysInMonth);
         }
 
         @Override
@@ -190,7 +203,7 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
 
         @Override
         public float getRainfall(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
-            return variableRain.clamp(this, level, pos, calendarTicks, daysInMonth, 0F, Float.MAX_VALUE);
+            return instRain.clamp(this, level, pos, calendarTicks, daysInMonth, 0F, Float.MAX_VALUE);
         }
 
         // These are "rainfall-equivalent" groundwater values?
@@ -212,12 +225,12 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
 
         @Override
         public float getRain(long calendarTicks) {
-            return rainIntensity.get(calendarTicks);
+            return rainIntensity.intensity(this, calendarTicks);
         }
 
         @Override
         public boolean getThunder(long calendarTicks) {
-            return isThundering.test(calendarTicks);
+            return isThundering.isThundering(this, calendarTicks);
         }
 
         @Override
@@ -227,7 +240,7 @@ public class KubeClimateModelBuilder extends BuilderBase<ClimateModelType<KubeCl
 
         @Override
         public Vec2 getWind(Level level, BlockPos pos, long calendarTicks, int daysInMonth) {
-            return wind.blow(this, level, pos, calendarTicks, daysInMonth);
+            return wind.blow(this, level, pos, calendarTicks, daysInMonth, Vec2::new);
         }
 
         @Override

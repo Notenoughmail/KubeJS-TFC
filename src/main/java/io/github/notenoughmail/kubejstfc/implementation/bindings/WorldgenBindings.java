@@ -28,7 +28,7 @@ public enum WorldgenBindings {
         return layeredAreaFromNoise(noise, d -> (int) Math.round(d), seed);
     }
 
-    @Info("Creates a new LayeredArea with values uniformly distributed across the 32-bit sign integer range")
+    @Info("Creates a new LayeredArea with values uniformly distributed across the 32-bit signed integer range")
     public LayeredArea uniformLayeredArea(long seed) {
         return layeredArea(UniformLayer.INSTANCE, seed);
     }

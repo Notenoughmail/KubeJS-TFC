@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.BiConsumer;
 
 @ReturnsSelf
@@ -131,7 +130,7 @@ public class AqueductBlockBuilder extends BlockBuilder {
         public final ResourceLocation defaultParent;
 
         AqueductModelPart() {
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
             defaultParent = KubeJSTFC.tfc("block/aqueduct/" + str);
         }
 

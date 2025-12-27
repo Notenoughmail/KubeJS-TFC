@@ -15,7 +15,6 @@ import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Locale;
 import java.util.function.BiConsumer;
 
 @ReturnsSelf
@@ -84,7 +83,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         private final String str;
 
         SpikeModelType() {
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
             defaultParent = KubeJSTFC.tfc("block/rock/spike_" + str);
         }
 

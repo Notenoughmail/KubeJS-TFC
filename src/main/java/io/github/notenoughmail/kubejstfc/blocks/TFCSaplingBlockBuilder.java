@@ -1,7 +1,9 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
@@ -14,6 +16,7 @@ import net.dries007.tfc.common.blocks.wood.TFCSaplingBlock;
 import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -94,6 +97,16 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     public Block createObject() {
         return new TFCSaplingBlock(treeGrower, createExtendedProperties(), growth, sand);
+    }
+
+    @Override
+    protected ItemBuilder getOrCreateItemBuilder() {
+        return this.itemBuilder == null ? (this.itemBuilder = new BlockItemBuilder(this.id) {
+            @Override
+            public Item createObject() {
+                return new TFCSaplingBlock.TFCSaplingBlockItem(TFCSaplingBlockBuilder.this.get(), createItemProperties());
+            }
+        }) : this.itemBuilder;
     }
 
     @Override

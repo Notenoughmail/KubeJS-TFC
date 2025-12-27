@@ -2,11 +2,12 @@ package io.github.notenoughmail.kubejstfc.events.server;
 
 import dev.latvian.mods.kubejs.level.KubeLevelEvent;
 import dev.latvian.mods.kubejs.typings.Info;
-import io.github.notenoughmail.kubejstfc.builders.misc.KubeClimateModelBuilder;
+import io.github.notenoughmail.kubejstfc.builders.misc.ClimateModelTypeBuilder;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.events.SelectClimateModelEvent;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.settings.Settings;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,13 +46,13 @@ public class KubeSelectClimateModelEvent implements KubeLevelEvent {
     }
 
     @Info("Gets a climate model as defined by a model type registered through scripts")
-    public ClimateModel kubeModel(String id) {
+    public ClimateModel kubeModel(ResourceLocation id) {
         return kubeModel(id, 20000F, true);
     }
 
     @Info("Gets a climate model as defined by a model type registered through scripts")
-    public ClimateModel kubeModel(String id, float hemisphereScale, boolean supportsRain) {
-        return KubeClimateModelBuilder.modelFactories.get(id).apply(hemisphereScale, supportsRain);
+    public ClimateModel kubeModel(ResourceLocation id, float hemisphereScale, boolean supportsRain) {
+        return ClimateModelTypeBuilder.modelFactories.get(id).apply(hemisphereScale, supportsRain);
     }
 
     @Info(value = "Sets the event's climate model")

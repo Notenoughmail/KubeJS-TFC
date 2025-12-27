@@ -6,11 +6,19 @@ import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
+import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.*;
 import net.minecraft.Util;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class KubeTFCDataEvent extends KubeDataEvent {
@@ -19,20 +27,20 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         super(gen);
     }
 
-    public void entityDamageResistance(EntityDamageResistance resistance, @Nullable KubeResourceLocation id) {
-        add(resistance, EntityDamageResistance.CODEC, id, r -> r.entity().location().toString().replace(':', '/'), "tfc/entity_damage_resistance");
+    public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
+        add(new EntityDamageResistance(entity ,resistance), EntityDamageResistance.CODEC, id, r -> r.entity().location().toString().replace(':', '/'), "tfc/entity_damage_resistance");
     }
 
-    public void entityDamageResistance(EntityDamageResistance resistance) {
-        entityDamageResistance(resistance, null);
+    public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance) {
+        entityDamageResistance(entity, resistance, null);
     }
 
-    public void itemDamageResistance(ItemDamageResistance resistance, @Nullable KubeResourceLocation id) {
-        add(resistance, ItemDamageResistance.CODEC, id, "tfc/item_damage_resistance");
+    public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
+        add(new ItemDamageResistance(ingredient, resistance), ItemDamageResistance.CODEC, id, "tfc/item_damage_resistance");
     }
 
-    public void itemDamageResistance(ItemDamageResistance resistance) {
-        itemDamageResistance(resistance, null);
+    public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance) {
+        itemDamageResistance(ingredient, resistance, null);
     }
 
     public void drinkable(Drinkable drinkable, @Nullable KubeResourceLocation id) {
@@ -103,12 +111,12 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         lampFuel(lampFuel, null);
     }
 
-    public void deposit(Deposit deposit, @Nullable KubeResourceLocation id) {
-        add(deposit, Deposit.CODEC, id, "tfc/deposit");
+    public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages, @Nullable KubeResourceLocation id) {
+        add(new Deposit(ingredient, lootTable, modelStages), Deposit.CODEC, id, "tfc/deposit");
     }
 
-    public void deposit(Deposit deposit) {
-        deposit(deposit, null);
+    public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages) {
+        deposit(ingredient, lootTable, modelStages, null);
     }
 
     public void heat(HeatDefinition heat, @Nullable KubeResourceLocation id) {

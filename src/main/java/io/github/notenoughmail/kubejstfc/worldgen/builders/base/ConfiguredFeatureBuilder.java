@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@ReturnsSelf
 public abstract class ConfiguredFeatureBuilder<F extends Feature<FC>, FC extends FeatureConfiguration> extends BuilderBase<ConfiguredFeature<FC, F>> {
 
     protected static RegistryAccess.Frozen access() {

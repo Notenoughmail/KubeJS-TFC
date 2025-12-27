@@ -8,6 +8,13 @@
       ]
     }
   ],
+  "functions": {
+    "applyBonus": {
+      "type": "set",
+      "key": "apply_bonus",
+      "value": true
+    }
+  },
   "hidden": false,
   "keys": [
     {

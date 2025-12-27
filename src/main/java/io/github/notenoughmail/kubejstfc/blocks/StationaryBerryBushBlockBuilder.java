@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -13,6 +14,7 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.custom.item.PlantableItem;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
@@ -116,6 +118,16 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     @Override
     public Block createObject() {
         return new StationaryBerryBushBlock(createExtendedProperties(), productGetter(), lifecycles, climateRange);
+    }
+
+    @Override
+    protected ItemBuilder getOrCreateItemBuilder() {
+        return this.itemBuilder == null ? (this.itemBuilder = new BlockItemBuilder(this.id) {
+            @Override
+            public Item createObject() {
+                return PlantableItem.bush(StationaryBerryBushBlockBuilder.this.get(), createItemProperties(), climateRange, lifecycles);
+            }
+        }) : this.itemBuilder;
     }
 
     @Override

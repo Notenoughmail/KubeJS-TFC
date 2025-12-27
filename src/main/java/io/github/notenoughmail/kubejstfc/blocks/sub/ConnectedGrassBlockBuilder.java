@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 import java.util.function.BiConsumer;
 
 @ReturnsSelf
@@ -151,7 +150,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
         public final boolean snowy, side, top, bottom;
 
         GrassModelPart(boolean snowy, boolean side, boolean top, boolean bottom) {
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
             this.defaultParent = KubeJSTFC.tfc("block/grass_" + str);
             this.snowy = snowy;
             this.side = side;

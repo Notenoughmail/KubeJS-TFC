@@ -34,7 +34,7 @@ public class KubeChunkDataGenerator implements ChunkDataGenerator {
             EMPTY_LERP,
             EMPTY_LERP,
             EMPTY_LERP,
-            ForestType.CLEARING
+            ForestType.GRASSLAND
     );
     private static final BiConsumer<ChunkData, ChunkAccess> GEN_FULL = (chunkData, access) -> {
         final int[][][] data = new int[4][4][16];

@@ -7,6 +7,7 @@ import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
+import net.dries007.tfc.common.recipes.IRecipePredicate;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
@@ -209,6 +210,14 @@ public class DataTypes {
         newLine(m);
         append(m, "edible", f.edible(), true);
     };
+
+    public static <T extends IRecipePredicate<ItemStack>> DataType<T> cachedItemRegistry(
+            DataManager<T> manager,
+            Display<T> display,
+            IndirectHashCollection<Item, T> cache
+    ) {
+        return cachedItemRegistry(manager, display, (t, i) -> t.matches(i.getDefaultInstance()), cache);
+    }
 
     public static <T> DataType<T> cachedItemRegistry(
             DataManager<T> manager,

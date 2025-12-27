@@ -8,7 +8,6 @@ import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.ClimbingCropBlockBuilder;
-import io.github.notenoughmail.kubejstfc.blocks.DoubleCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.AbstractCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
@@ -39,7 +38,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
         itemBuilder = null;
         noCollision();
         models = (t, m) -> {
-            if (t instanceof DoubleCropBlockBuilder.DeadModels mo && !mo.mature() && mo.requiresStick() && mo.stick() && !mo.bottom()) {
+            if (t instanceof ClimbingCropBlockBuilder.DeadClimbingModels mo && !mo.mature() && mo.stick() && mo.bottom()) {
                 m.parent(ClimbingCropBlockBuilder.STICK);
             } else {
                 m.parent(ModelUtil.CROP);

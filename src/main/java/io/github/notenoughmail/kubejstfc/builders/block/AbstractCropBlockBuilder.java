@@ -1,7 +1,7 @@
 package io.github.notenoughmail.kubejstfc.builders.block;
 
+import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
-import dev.latvian.mods.kubejs.block.SeedItemBuilder;
 import dev.latvian.mods.kubejs.block.drop.BlockDrops;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -13,6 +13,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
+import io.github.notenoughmail.kubejstfc.implementation.custom.item.PlantableItem;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
@@ -22,6 +23,7 @@ import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
+import net.dries007.tfc.common.items.PlantableInfo;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.loot.CropYieldProvider;
 import net.minecraft.core.Holder;
@@ -35,9 +37,9 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ReturnsSelf
@@ -47,10 +49,9 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     public transient int ages;
     public transient final Supplier<ClimateRange> climateRange;
     public final transient DeadCropBlockBuilder dead;
-    public transient final SeedItemBuilder seeds;
+    public transient final BlockItemBuilder seeds;
     public transient float p, n, k;
     public transient final Type type;
-    public transient boolean requiresStick;
     public transient BiConsumer<Integer, ModelGenerator> models;
     public transient Supplier<Float> growthMod = () -> 1F, expiryMod = () -> 1F;
 
@@ -60,9 +61,13 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         ages = 8;
         climateRange = ClimateRange.MANAGER.getReference(id);
         dead = new DeadCropBlockBuilder(id.withSuffix("_dead"), this);
-        seeds = new SeedItemBuilder(id.withSuffix("_seeds"));
+        seeds = new BlockItemBuilder(id.withSuffix("_seeds")) {
+            @Override
+            public Item createObject() {
+                return PlantableItem.crop(AbstractCropBlockBuilder.this.get(), createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange);
+            }
+        };
         seeds.blockBuilder = this;
-        requiresStick = false;
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.CROP, this);
         itemBuilder = null;
@@ -80,15 +85,6 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         return TFCBlockStateProperties.getAgeProperty(ages);
     }
 
-    @Deprecated
-    protected void fill(Consumer<ModelGenerator>[] fill) {
-        Arrays.fill(fill, (Consumer<ModelGenerator>) (ModelGenerator m) -> {
-            m.parent(ModelUtil.CROP);
-            m.textures(textures);
-        });
-    }
-
-    // TODO: 2.0.0 | Is there a better way?
     @HideFromJS
     public DeadCropBlockBuilder.DeadModelVariant[] deadModels() {
         return DeadModels.VALUES;
@@ -115,7 +111,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     }
 
     @Info("Modifies the crop's seed item")
-    public AbstractCropBlockBuilder seedItem(Consumer<SeedItemBuilder> seedItem) {
+    public AbstractCropBlockBuilder seedItem(Consumer<BlockItemBuilder> seedItem) {
         seedItem.accept(seeds);
         return this;
     }
@@ -226,6 +222,15 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         public String str() {
             return mature() ? "mature" : "juvenile";
         }
+    }
+
+    public static Function<ResourceLocation, WithProduct> builder(Type type, Function<WithProduct, Block> builder) {
+        return id -> new WithProduct(id, type) {
+            @Override
+            public Block createObject() {
+                return builder.apply(this);
+            }
+        };
     }
 
     public abstract static class WithProduct extends AbstractCropBlockBuilder {

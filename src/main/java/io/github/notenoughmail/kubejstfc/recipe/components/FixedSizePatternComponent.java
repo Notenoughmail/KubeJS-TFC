@@ -11,7 +11,6 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 
 import java.util.List;
 
-// TODO: 2.0.0 | Verify this properly encodes in the way TFC expects
 public record FixedSizePatternComponent(Codec<List<String>> codec, int width, int height) implements RecipeComponent<List<String>> {
 
     private static Codec<List<String>> codec(int width, int height) {

@@ -6,6 +6,7 @@ import dev.latvian.mods.kubejs.event.EventTargetType;
 import dev.latvian.mods.kubejs.event.TargetedEventHandler;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.item.FluidCapacityItemBuilder;
 import io.github.notenoughmail.kubejstfc.events.client.KubePlacedItemModelEvent;
 import io.github.notenoughmail.kubejstfc.events.common.KubeCustomNutritionEvent;
@@ -22,7 +23,6 @@ import net.dries007.tfc.util.data.DataManager;
 import net.dries007.tfc.util.data.DataManagers;
 import net.dries007.tfc.util.events.*;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -41,7 +41,9 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -121,16 +123,12 @@ public class KubeJSTFCEventHandlers {
                     .<DataManager<?>>map(DataTypes.DataManagerType::manager)
                     .collect(Collectors.toSet());
 
-            final Collection<ResourceLocation> unhandled = new HashSet<>();
-
-            DataManagers.REGISTRY.stream().forEach(manager -> {
-                if (!managers.contains(manager)) {
-                    unhandled.add(DataManagers.REGISTRY.getKey(manager));
-                }
-            });
-
-            if (!unhandled.isEmpty()) {
-                throw new AssertionError("All DataManagers should be handled! Unhandled: %s".formatted(unhandled));
+            if (!DataManagers.REGISTRY.stream()
+                    .filter(Predicate.not(managers::contains))
+                    .peek(m -> KubeJSTFC.LOGGER.error("Unhandled DataManager: {}", m))
+                    .collect(Collectors.toSet())
+                    .isEmpty()) {
+                throw new AssertionError("All DataManagers should be handled! See above errors");
             }
         }
     }

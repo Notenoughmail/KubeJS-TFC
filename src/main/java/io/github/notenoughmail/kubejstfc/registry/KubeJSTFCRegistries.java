@@ -75,7 +75,10 @@ public class KubeJSTFCRegistries {
 
         DATA_TYPE.register(
                 "climate_range",
-                () -> DataTypes.unsearchableManager(ClimateRange.MANAGER, DataTypes.CLIMATE_RANGE)
+                () -> DataTypes.unsearchableManager(
+                        ClimateRange.MANAGER,
+                        DataTypes.CLIMATE_RANGE
+                )
         );
         DATA_TYPE.register(
                 "entity_damage_resistance",
@@ -98,7 +101,6 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         ItemDamageResistance.MANAGER,
                         DataTypes.ITEM_DAMAGE_RESISTANCE,
-                        (resistance, item) -> resistance.matches(item.getDefaultInstance()),
                         ItemDamageResistance.CACHE
                 )
         );
@@ -116,7 +118,6 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         Fuel.MANAGER,
                         DataTypes.FUEL,
-                        (fuel, item) -> fuel.matches(item.getDefaultInstance()),
                         Fuel.CACHE
                 )
         );
@@ -144,7 +145,6 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         HeatCapability.MANAGER,
                         DataTypes.HEAT,
-                        (heat, item) -> heat.matches(item.getDefaultInstance()),
                         HeatCapability.CACHE
                 )
         );
@@ -205,7 +205,6 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         Deposit.MANAGER,
                         DataTypes.DEPOSIT,
-                        (deposit, item) -> deposit.matches(item.getDefaultInstance()),
                         Deposit.CACHE
                 )
         );
@@ -214,7 +213,6 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         FoodCapability.MANAGER,
                         DataTypes.FOOD,
-                        (food, item) -> food.matches(item.getDefaultInstance()),
                         FoodCapability.CACHE
                 )
         );

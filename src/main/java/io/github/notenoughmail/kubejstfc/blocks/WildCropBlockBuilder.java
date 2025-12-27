@@ -18,7 +18,10 @@ import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
-import net.dries007.tfc.common.blocks.crop.*;
+import net.dries007.tfc.common.blocks.crop.DoubleCropBlock;
+import net.dries007.tfc.common.blocks.crop.WildCropBlock;
+import net.dries007.tfc.common.blocks.crop.WildDoubleCropBlock;
+import net.dries007.tfc.common.blocks.crop.WildSpreadingCropBlock;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -29,7 +32,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -130,12 +132,8 @@ public abstract class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilde
         });
     }
 
-    public static Normal normal(ResourceLocation id) {
-        return new Normal(id, WildCropBlock::new);
-    }
-
-    public static Normal flooded(ResourceLocation id) {
-        return new Normal(id, FloodedWildCropBlock::new);
+    public static Function<ResourceLocation, Normal> builder(Function<ExtendedProperties, ? extends WildCropBlock> builder) {
+        return id -> new Normal(id, builder);
     }
 
     public static class Normal extends WildCropBlockBuilder {
@@ -240,7 +238,7 @@ public abstract class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilde
 
         TallModelType(boolean mature, boolean top) {
             v = "mature=" + mature + ",top=" + top;
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
             this.mature = mature;
             this.top = top;
         }
@@ -339,7 +337,7 @@ public abstract class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilde
         public final boolean mature, side;
 
         SpreadingModelPart(boolean mature, boolean side) {
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
             this.mature = mature;
             this.side = side;
         }

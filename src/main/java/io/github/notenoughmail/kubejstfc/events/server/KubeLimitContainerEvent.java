@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.events.startup;
+package io.github.notenoughmail.kubejstfc.events.server;
 
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.typings.Info;

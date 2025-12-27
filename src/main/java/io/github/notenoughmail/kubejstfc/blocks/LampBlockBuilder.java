@@ -26,7 +26,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 import java.util.function.BiConsumer;
 
 @ReturnsSelf
@@ -128,7 +127,7 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
         LampModelType(boolean on, boolean hanging) {
             this.on = on;
             this.hanging = hanging;
-            str = name().toLowerCase(Locale.ROOT);
+            str = makeStr();
         }
 
         public static final LampModelType[] VALUES = values();

@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
@@ -40,6 +41,11 @@ public class ClimbingCropBlockBuilder extends DoubleCropBlockBuilder {
             m.parent(ModelUtil.CROP);
             m.textures(textures);
         };
+    }
+
+    @Override
+    public DeadCropBlockBuilder.DeadModelVariant[] deadModels() {
+        return DeadClimbingModels.VALUES;
     }
 
     @Info("Accepts a `BiConsumer` of a number, representing the age, and a model generator. The model generator is unique for each age")
@@ -121,5 +127,53 @@ public class ClimbingCropBlockBuilder extends DoubleCropBlockBuilder {
     @Override
     protected void generateItemModel(ModelGenerator m) {
         ModelUtil.itemModelGen(this, m, g -> g.parent(newID("block/", "_age_" + (ages + doubleAges - 1) + "_bottom")));
+    }
+
+    public enum DeadClimbingModels implements DeadCropBlockBuilder.DeadModelVariant {
+        YOUNG(false, false, false),
+        YOUNG_TOP(false, true, false),
+        YOUNG_BOTTOM(false, true,true),
+        MATURE_BOTTOM(true, false, true),
+        MATURE_TOP(true, false, false);
+
+        public static final DeadClimbingModels[] VALUES = values();
+
+        private final String str, variant;
+        private final boolean mature, stick, bottom;
+
+        DeadClimbingModels(boolean mature, boolean stick, boolean bottom) {
+            str = makeStr();
+            this.mature = mature;
+            this.stick = stick;
+            this.bottom = bottom;
+            variant = mature ?
+                    "mature=true,part=" + (bottom ? "bottom" : "top") :
+                    stick ?
+                            "mature=false,stick=true,part=" + (bottom ? "bottom" : "top") :
+                            "mature=false,stick=false";
+        }
+
+        @Override
+        public String variant() {
+            return variant;
+        }
+
+        @Override
+        public boolean mature() {
+            return mature;
+        }
+
+        public boolean bottom() {
+            return bottom;
+        }
+
+        public boolean stick() {
+            return stick;
+        }
+
+        @Override
+        public String str() {
+            return str;
+        }
     }
 }

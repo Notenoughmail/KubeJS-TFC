@@ -10,23 +10,23 @@ import net.minecraft.world.item.Item;
 
 public class KubePlacedItemModelEvent implements KubeEvent {
 
-    private void add(Item item, ResourceLocation texture, RenderType renderType) {
+    private void add(Item item, ResourceLocation model, RenderType renderType) {
         PlacedItemBlockEntityRenderer.MODELS.put(
                 item,
                 new PlacedItemBlockEntityRenderer.Provider(
-                        ModelResourceLocation.standalone(texture),
+                        ModelResourceLocation.standalone(model),
                         renderType
                 )
         );
     }
 
     @Info("Registers the model with the item when placed on the ground with 'v' using a cutout render type")
-    public void cutout(Item item, ResourceLocation texture) {
-        add(item, texture, RenderType.cutout());
+    public void cutout(Item item, ResourceLocation model) {
+        add(item, model, RenderType.cutout());
     }
 
-    @Info("Registers the model with the item when placed o nthe ground with 'v' using a translucent render type")
-    public void translucent(Item item, ResourceLocation texture) {
-        add(item, texture, RenderType.translucent());
+    @Info("Registers the model with the item when placed on the ground with 'v' using a translucent render type")
+    public void translucent(Item item, ResourceLocation model) {
+        add(item, model, RenderType.translucent());
     }
 }

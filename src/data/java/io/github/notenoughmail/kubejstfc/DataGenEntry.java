@@ -65,6 +65,7 @@ public class DataGenEntry {
                                     .optional(false)
                         )
                         .constructors(constructor("result", "ingredient", "rules"))
+                        .function("applyBonus", setTrue("apply_bonus"))
                 );
                 add(WELDING, b -> b.keys(
                                 ItemStackProviderComponent.ISP.outputKey("result"),
@@ -102,7 +103,7 @@ public class DataGenEntry {
                         )
                         .constructors(constructor("ingredient", "temperature"))
                         .function("outputs", MultiSetFunction.of("result_item", "result_fluid"))
-                        .function("useDurability", setBool("use_durability", true))
+                        .function("useDurability", setTrue("use_durability"))
                 );
                 add(QUERN,
                         ItemStackProviderComponent.ISP.outputKey("result"),
@@ -156,7 +157,7 @@ public class DataGenEntry {
                                     .optional(false)
                         )
                         .constructors(constructor("result", "knapping_type", "pattern"))
-                        .function("defaultOn", setBool("default_on", true))
+                        .function("defaultOn", setTrue("default_on"))
                 );
 
                 final ResourceLocation movingBlock = KubeJSTFC.id("moving_block");
@@ -197,7 +198,7 @@ public class DataGenEntry {
                         )
                         .parent(basicPot)
                         .constructors(constructor("ingredients", "fluid_ingredient", "duration", "temperature"))
-                        .function("usesAllFluid", setBool("uses_all_fluid", true))
+                        .function("usesAllFluid", setTrue("uses_all_fluid"))
                         .function("outputs", MultiSetFunction.of("item_output", "fluid_output"))
                         .mergeData(true, false, false, false)
                 );
@@ -311,7 +312,7 @@ public class DataGenEntry {
                                     .functionNames("maxTemp")
                         )
                         .constructors(constructor("result_fluid", "input_block"))
-                        .function("springOnly", setBool("spring_only", true))
+                        .function("springOnly", setTrue("spring_only"))
                         .function("tempRange", MultiSetFunction.of("minimum_temperature", "maximum_temperature"))
                 );
             }
@@ -367,6 +368,10 @@ public class DataGenEntry {
 
             RecipeSchemaData.ConstructorData constructor(String... args) {
                 return new RecipeSchemaData.ConstructorData(List.of(args), Map.of());
+            }
+
+            SetFunction setTrue(String key) {
+                return setBool(key, true);
             }
 
             SetFunction setBool(String key, boolean value) {
