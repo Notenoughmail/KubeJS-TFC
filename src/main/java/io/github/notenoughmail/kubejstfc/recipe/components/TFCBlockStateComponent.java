@@ -10,14 +10,11 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.world.Codecs;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.function.BiFunction;
-
 public enum TFCBlockStateComponent implements RecipeComponent<BlockState> {
     INSTANCE;
 
     public static final RecipeComponentType<?> TYPE = RecipeComponentType.unit(KubeJSTFC.id("block_state"), INSTANCE);
 
-    private static final BiFunction<RecipeScriptContext, Object, BlockState> WRAPPER = BlockStateComponent.BLOCK.instance()::wrap;
     private static final TypeInfo TYPE_INFO = TypeInfo.of(BlockState.class);
 
     @Override
@@ -37,7 +34,7 @@ public enum TFCBlockStateComponent implements RecipeComponent<BlockState> {
 
     @Override
     public BlockState wrap(RecipeScriptContext cx, Object from) {
-        return WRAPPER.apply(cx, from);
+        return BlockStateComponent.BLOCK.instance().wrap(cx, from);
     }
 
 

@@ -40,7 +40,7 @@ public enum SupportBindings {
         return Support.isSupported(level, pos);
     }
 
-    @Info("Gets an iterable view of all posiitons that could possibly be supported around the box defined by the min and max points")
+    @Info("Gets an iterable view of all positions that could possibly be supported around the box defined by the min and max points")
     public Iterable<BlockPos> getMaximumSupportedAreaAround(BlockPos minPoint, BlockPos maxPoint) {
         return Support.getMaximumSupportedAreaAround(minPoint, maxPoint);
     }
@@ -56,7 +56,7 @@ public enum SupportBindings {
         return Support.get(state);
     }
 
-    @Info("Gets the suport at the given position")
+    @Info("Gets the support at the given position")
     @Nullable
     public Support get(BlockGetter level, BlockPos pos) {
         return get(level.getBlockState(pos));

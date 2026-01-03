@@ -2,14 +2,18 @@
 - Update to 1.21.1, TFC 4.0.x, KubeJS 2101.7.2
 - All features, in some form, as of 1.3.3 should be available, except as noted below
 - Support for addons not yet ported is obviously not included
-- Glass operations, food traits, climate models, and ISMs are now a registry! They are no longer made through a custom event
+- Glass operations, food traits, climate models, and ISMs are now registries! They are no longer made through a custom event
 - Custom chisel modes can now be registered
 - Birthday modifications are no longer possible
 - There is no longer a jar item builder type
 - Wild crops have been split into 4 builder types, similar to non-wild crops
 - Crop model generation methods have been cut down to be much simpler and concise
 - The climbing crop builder has been split from the double crop builder
-- Configured & placed features are now made through builders in the `ServerEvents.registry` event instead of the `TFCEvents.worldgenData`event
+- Configured & placed features are now made through builders in the `ServerEvents.registry` event instead of the `TFCEvents.worldgenData` event
+  - This relies on an as-yet unmerged & unreleased PR to KubeJS to actually function 
+- TFC-specific recipe filters are currently not implemented
+- The sealable inventory attachment does not currently have the ability to function like vessels
+- The EntityJS compat is currently not included
 
 ### 1.3.3
 - The list ids command is now paginated

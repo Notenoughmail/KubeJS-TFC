@@ -28,8 +28,8 @@ import io.github.notenoughmail.kubejstfc.implementation.attachments.CalendarTrac
 import io.github.notenoughmail.kubejstfc.implementation.attachments.HeatConsumerAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.SealableInventoryAttachment;
 import io.github.notenoughmail.kubejstfc.implementation.attachments.TFCInventoryAttachment;
-import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.IngredientBindings;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.ItemStackProviderBindings;
 import io.github.notenoughmail.kubejstfc.implementation.bindings.TFCBindings;
 import io.github.notenoughmail.kubejstfc.items.*;
 import io.github.notenoughmail.kubejstfc.recipe.components.*;
@@ -105,7 +105,8 @@ import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
-// TODO: 2.0.0 | TFC recipe filters & component replacements
+// TODO: 2.0.x | Blowpipe item type
+// TODO: 2.0.x | TFC recipe filters & component replacements
 // Mild Javadoc abuse
 
 /**
@@ -268,7 +269,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     @Override
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
-        registry.register(ItemStackProvider.class, ISPBindings::wrap);
+        registry.register(ItemStackProvider.class, ItemStackProviderBindings::wrap);
         registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
         registry.register(Weighted.class, Weighted::wrap);
     }

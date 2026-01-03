@@ -9,7 +9,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-// TODO: 2.0.0 | It is to be seen if this actually works...
 public class BooleanTypeInfo<T, A extends ArgumentType<T>, I extends BooleanTypeInfo<T, A, I>> implements ArgumentTypeInfo<A, BooleanTypeInfo.Template<T, A, I>> {
 
     private final BiFunction<CommandBuildContext, Boolean, A> templateBuilder;

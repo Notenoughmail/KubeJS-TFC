@@ -33,10 +33,11 @@ public class TFCProperties extends BaseProperties {
         info.accept(toString());
         info.accept("- Debug mode enabled: %s".formatted(debug));
         info.accept("- Self tests console insertion enabled: %s".formatted(insertIntoConsole));
-        info.accept("- Self tests warnings deduplicated: %s".formatted(deduplicateConsoleErrors));
+        info.accept("- Self tests warnings deduplicated: %s".formatted(deduplicateSelfTestWarnings));
+        info.accept("- Data manager warnings deduplicated: %s".formatted(deduplicateDataManagerWarnings));
     }
 
-    public boolean debug, insertIntoConsole, deduplicateConsoleErrors;
+    public boolean debug, insertIntoConsole, deduplicateSelfTestWarnings, deduplicateDataManagerWarnings;
 
     public TFCProperties() {
         super(PATH, "KubeJS TFC Configuration");
@@ -46,6 +47,8 @@ public class TFCProperties extends BaseProperties {
     protected void load() {
         debug = get("debug", false);
         insertIntoConsole = get("insert_into_console", true);
-        deduplicateConsoleErrors = get("deduplicate_console_errors", true);
+        deduplicateSelfTestWarnings = get("deduplicate_self_test_warnings", true);
+        deduplicateDataManagerWarnings = get("deduplicate_data_manager_warnings", true);
+
     }
 }

@@ -13,6 +13,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
+import io.github.notenoughmail.kubejstfc.builders.item.BlockItemWithAssetsBuilder;
 import io.github.notenoughmail.kubejstfc.implementation.custom.item.PlantableItem;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -61,12 +62,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         ages = 8;
         climateRange = ClimateRange.MANAGER.getReference(id);
         dead = new DeadCropBlockBuilder(id.withSuffix("_dead"), this);
-        seeds = new BlockItemBuilder(id.withSuffix("_seeds")) {
-            @Override
-            public Item createObject() {
-                return PlantableItem.crop(AbstractCropBlockBuilder.this.get(), createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange);
-            }
-        };
+        seeds = new BlockItemWithAssetsBuilder(id.withSuffix("_seeds"), b -> PlantableItem.crop(get(), b.createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange));
         seeds.blockBuilder = this;
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.CROP, this);
@@ -176,6 +172,12 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Nullable
     public LootTable generateLootTable(KubeDataGenerator generator) {
         return LootUtil.basic(seeds.get());
+    }
+
+    @Override
+    public void generateAssets(KubeAssetGenerator generator) {
+        super.generateAssets(generator);
+        seeds.generateAssets(generator);
     }
 
     @Override

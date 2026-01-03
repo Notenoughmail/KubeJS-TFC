@@ -10,7 +10,7 @@ import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.type.RecordTypeInfo;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.implementation.bindings.ISPBindings;
+import io.github.notenoughmail.kubejstfc.implementation.bindings.ItemStackProviderBindings;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifier;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public record ItemStackProviderComponent(Codec<ItemStackProvider> codec, RecipeC
             ItemStack.CODEC
     ).xmap(
             e -> e.map(Function.identity(), ItemStackProvider::of),
-            p -> p.stack() != ItemStack.EMPTY && p.modifiers().isEmpty() ? Either.right(p.stack()) : Either.left(p) // The entire difference from the normal one
+            p -> !p.stack().isEmpty() && p.modifiers().isEmpty() ? Either.right(p.stack()) : Either.left(p) // The entire difference from the normal one
     );
 
     public static final RecipeComponentType<ItemStackProvider> ISP = RecipeComponentType.unit(KubeJSTFC.id("isp"), type -> new ItemStackProviderComponent(ItemStackProvider.CODEC, type));
@@ -42,6 +42,6 @@ public record ItemStackProviderComponent(Codec<ItemStackProvider> codec, RecipeC
 
     @Override
     public ItemStackProvider wrap(RecipeScriptContext cx, Object from) {
-        return ISPBindings.wrap(cx.cx(), from);
+        return ItemStackProviderBindings.wrap(cx.cx(), from);
     }
 }

@@ -60,6 +60,7 @@
       "alternative_names": [
         "default_on"
       ],
+      "always_write": true,
       "function_names": [
         "defaultOn"
       ],

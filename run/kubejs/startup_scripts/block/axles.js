@@ -2,7 +2,8 @@ StartupEvents.registry('block', e => {
     e.create('axle', 'tfc:axle')
         .axleTexture('tfc:block/metal/smooth/gold')
         .waterWheel(w => {
-            w.texture('tfc:kapok');
+            w.texture('tfc:block/wood/planks/kapok');
+            w.wheelTexture('tfc:kapok');
         })
         .gearBox(b => {
             b.texture('tfc:block/metal/smooth/wrought_iron');

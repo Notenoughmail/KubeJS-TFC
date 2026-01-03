@@ -10,7 +10,7 @@ StartupEvents.registry('block', e => {
             if (!lifecycle.active()) {
                 m.parent(`tfc:block/plant/stationary_bush_${stage}`);
                 m.texture('bush', 'tfc:block/berry_bush/dead_bush');
-                m.texture('particle', 'tfc:block/mud/silt');
+                m.texture('particle', 'minecraft:block/dirt');
             }
         });
     e.create('spreading_bush', 'tfc:spreading_berry_bush')
@@ -25,7 +25,7 @@ StartupEvents.registry('block', e => {
             if (!lifecycle.active()) {
                 m.parent(`tfc:block/plant/stationary_bush_${stage}`)
                 m.texture('bush', 'tfc:block/berry_bush/dead_bush')
-                m.texture('particle', 'tfc:block/mud/silt')
+                m.texture('particle', 'minecraft:block/dirt')
             }
         });
 })

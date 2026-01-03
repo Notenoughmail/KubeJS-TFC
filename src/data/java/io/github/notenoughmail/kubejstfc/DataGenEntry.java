@@ -94,15 +94,16 @@ public class DataGenEntry {
                             // Above should be the only constructor args, below should be methods only
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("result_item")
                                     .optional(ItemStackProvider.empty())
-                                    .functionNames("itemOutput"),
+                                    .functionNames("itemOutput", "resultItem"),
                             FluidStackComponent.OPTIONAL_FLUID_STACK.outputKey("result_fluid")
                                     .optional(FluidStack.EMPTY)
-                                    .functionNames("fluidOutput"),
+                                    .functionNames("fluidOutput", "resultFluid"),
                             BooleanComponent.BOOLEAN.otherKey("use_durability")
                                     .optional(false)
                         )
                         .constructors(constructor("ingredient", "temperature"))
                         .function("outputs", MultiSetFunction.of("result_item", "result_fluid"))
+                        .function("results", MultiSetFunction.of("result_item", "result_fluid"))
                         .function("useDurability", setTrue("use_durability"))
                 );
                 add(QUERN,
@@ -141,7 +142,7 @@ public class DataGenEntry {
                         IngredientComponent.INGREDIENT.inputKey("batch"),
                         registry(GlassOperation.KEY).asList().otherKey("operations")
                 );
-                add(SEWING, // TODO: 2.0.0 | TFC PR for proper squares functionality?
+                add(SEWING,
                         ItemStackComponent.ITEM_STACK.outputKey("result"),
                         FixedSizePatternComponent.of(9, 5).otherKey("stitches"),
                         FixedSizePatternComponent.of(8, 4).otherKey("squares")
@@ -154,6 +155,7 @@ public class DataGenEntry {
                             IngredientComponent.OPTIONAL_INGREDIENT.inputKey("ingredient")
                                     .defaultOptional(),
                             BooleanComponent.BOOLEAN.otherKey("default_on")
+                                    .alwaysWrite()
                                     .optional(false)
                         )
                         .constructors(constructor("result", "knapping_type", "pattern"))
@@ -175,9 +177,9 @@ public class DataGenEntry {
 
                 final ResourceLocation basicPot = KubeJSTFC.id("basic_pot");
                 add(basicPot, b -> b.keys(
-                            IngredientComponent.OPTIONAL_INGREDIENT.instance()
+                            IngredientComponent.INGREDIENT.instance()
                                     .asList()
-                                    .withBounds(IntBounds.of(1, 5))
+                                    .withBounds(IntBounds.of(0, 5))
                                     .inputKey("ingredients"),
                             SizedFluidIngredientComponent.FLAT.inputKey("fluid_ingredient"),
                             NumberComponent.NON_NEGATIVE_INT.otherKey("duration"),
@@ -198,7 +200,6 @@ public class DataGenEntry {
                         )
                         .parent(basicPot)
                         .constructors(constructor("ingredients", "fluid_ingredient", "duration", "temperature"))
-                        .function("usesAllFluid", setTrue("uses_all_fluid"))
                         .function("outputs", MultiSetFunction.of("item_output", "fluid_output"))
                         .mergeData(true, false, false, false)
                 );
@@ -286,15 +287,12 @@ public class DataGenEntry {
                                     .withBounds(IntBounds.of(1, Integer.MAX_VALUE))
                                     .withSpread(Optional.of(SizedIngredientComponent.SIZED_INGREDIENT.instance()))
                                     .inputKey("ingredients"),
-                            // Above should be the only constructor args, below should be methods only
+                            IngredientComponent.INGREDIENT.inputKey("primary_ingredient"),
                             ItemStackProviderComponent.OPTIONAL_ISP.outputKey("remainder")
-                                    .defaultOptional(),
-                            IngredientComponent.OPTIONAL_INGREDIENT.inputKey("primary_ingredient")
                                     .defaultOptional()
                         )
-                        .constructors(constructor("result", "ingredients"))
                 );
-                alias("shapeless", ADVANCED_SHAPELESS_CRAFTING); // TODO: 2.0.0 | This doesn't work?
+                alias("shapeless", ADVANCED_SHAPELESS_CRAFTING);
 
                 add(AFCRecipeSerializers.TREE_TAPPING.getId(), b -> b.keys(
                             FluidStackComponent.FLUID_STACK.outputKey("result_fluid"),

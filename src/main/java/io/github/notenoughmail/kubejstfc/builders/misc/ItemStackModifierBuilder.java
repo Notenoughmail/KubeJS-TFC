@@ -21,16 +21,22 @@ public class ItemStackModifierBuilder extends BuilderBase<ItemStackModifierType<
         super(id);
     }
 
-    @Info("Sets the applicator of this modifier")
-    public ItemStackModifierBuilder applicator(Applicator applicator) {
+    @Info("Sets the applicator of the modifier")
+    public ItemStackModifierBuilder applicator(SimpleApplicator applicator) {
         this.applicator = applicator;
         return this;
     }
 
-    @Info("Sets the applicator of this modifier, has access to the inventory")
-    public ItemStackModifierBuilder applicatorWithInventory(ApplicatorWithInventory applicator) {
+    @Info("Sets the applicator of the modifier, has access to the input item")
+    public ItemStackModifierBuilder applicatorWithInput(Applicator applicator) {
+        this.applicator = applicator;
         inputDependent = true;
-        return applicator(applicator);
+        return this;
+    }
+
+    @Info("Sets the applicator of the modifier, has access to the input item and inventory")
+    public ItemStackModifierBuilder applicatorWithInventory(ApplicatorWithInventory applicator) {
+        return applicatorWithInput(applicator);
     }
 
     @Override
@@ -57,14 +63,22 @@ public class ItemStackModifierBuilder extends BuilderBase<ItemStackModifierType<
     }
 
     @FunctionalInterface
-    public interface Applicator {
+    public interface SimpleApplicator extends Applicator {
+        ItemStack apply(ItemStack stack, Context ctx);
 
+        @Override
+        default ItemStack apply(ItemStack stack, ItemStack input, Context ctx) {
+            return apply(stack, ctx);
+        }
+    }
+
+    @FunctionalInterface
+    public interface Applicator {
         ItemStack apply(ItemStack stack, ItemStack input, Context ctx);
     }
 
     @FunctionalInterface
     public interface ApplicatorWithInventory extends Applicator {
-
         ItemStack apply(ItemStack stack, ItemStack input, Context ctx, Iterable<ItemStack> inventory);
 
         @Override

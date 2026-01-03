@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.util;
 
+import com.google.common.base.Suppliers;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.event.EventExit;
@@ -9,26 +10,35 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
+import dev.latvian.mods.kubejs.script.ConsoleJS;
+import dev.latvian.mods.kubejs.util.Cast;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface Assistant {
 
-    Direction[] CARDINAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+    Direction[] COMPASS_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
     static LevelTier levelTier(Tier tier, int level) {
         return new LevelTier() {
@@ -91,6 +101,31 @@ public interface Assistant {
         return t == null ? null : map.apply(t);
     }
 
+    static Supplier<@Nullable ParticleOptions> getParticleOptions(@Nullable Holder<ParticleType<?>> holder) {
+        return holder == null ? () -> null : Suppliers.memoize(() -> {
+            final ParticleType<?> type = holder.value();
+            if (type instanceof ParticleOptions options) {
+                return options;
+            }
+            return null;
+        });
+    }
+
+    static Supplier<@Nullable ParticleOptions> wrapParticleOptionsSafely(Supplier<ParticleOptions> particle) {
+        return Suppliers.memoize(() -> {
+            try {
+                return particle.get();
+            } catch (Exception e) {
+                ConsoleJS.SERVER.error("Could not parse particle options", e);
+                return null;
+            }
+        });
+    }
+
+    static <T extends Comparable<T>> boolean haveSamePropertyValue(BlockState s1, BlockState s2, Property<T> p) {
+        return s1.getValue(p).compareTo(s2.getValue(p)) == 0;
+    }
+
     static <T extends KubeEvent> IEventHandler handleKube(KubeHandler<T> handler) {
         return e -> {
             handler.handle((T) e);
@@ -126,8 +161,46 @@ public interface Assistant {
         return t;
     }
 
+    static <T> T getPrivateField(Object object, String fieldName, Class<T> fieldType) {
+        try {
+            return Cast.to(Hidden.PRIVATE_FIELDS
+                    .computeIfAbsent(object.getClass(), c -> new IdentityHashMap<>())
+                    .computeIfAbsent(fieldName, n -> {
+                        Field field = getField(object, fieldName, fieldType);
+                        if (field == null) {
+                            throw new IllegalArgumentException("Field (%s) of type (%s) could not be found in %s or any of its superclasses".formatted(fieldName, fieldType.getSimpleName(), object));
+                        }
+                        return field;
+                    }).get(object));
+        } catch (Exception e) {
+            throw new RuntimeException("Exception occurred while trying to get value of private field", e);
+        }
+    }
+
+    @Nullable
+    private static <T> Field getField(Object object, String fieldName, Class<T> fieldType) {
+        Class<?> clazz = object.getClass();
+        Field field = null;
+        while (field == null && clazz != Object.class) {
+            try {
+                final Field f = clazz.getDeclaredField(fieldName);
+                if (f.getType() == fieldType) {
+                    f.setAccessible(true);
+                    field = f;
+                }
+            } catch (Exception ignored) {
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return field;
+    }
+
     @FunctionalInterface
     interface KubeHandler<T extends KubeEvent> {
         void handle(T t) throws EventExit;
+    }
+
+    class Hidden {
+        static final Map<Class<?>, Map<String, Field>> PRIVATE_FIELDS = new IdentityHashMap<>();
     }
 }

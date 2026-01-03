@@ -2,6 +2,8 @@ package io.github.notenoughmail.kubejstfc;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
+import com.therighthon.afc.AFC;
+import com.therighthon.afc.common.blocks.AFCWood;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
@@ -14,6 +16,7 @@ import net.dries007.tfc.util.registry.RegistryRock;
 import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
@@ -44,6 +47,11 @@ public class KubeJSTFC {
         registerWoods(b -> {
             for (Wood w : Wood.VALUES) {
                 b.put(tfc(w.getSerializedName()), w);
+            }
+            if (ModList.get().isLoaded(AFC.MOD_ID)) {
+                for (AFCWood w : AFCWood.VALUES) {
+                    b.put(ResourceLocation.fromNamespaceAndPath(AFC.MOD_ID, w.getSerializedName()), w);
+                }
             }
         });
         registerMetals(b -> {

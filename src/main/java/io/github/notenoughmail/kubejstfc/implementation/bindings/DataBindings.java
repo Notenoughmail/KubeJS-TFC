@@ -116,7 +116,7 @@ public enum DataBindings {
     }
 
     @Info("Gets the hydration at the position at the given calendar tick")
-    public int getDarmlandHydration(Level level, BlockPos pos, long calendarTick) {
+    public int getFarmlandHydration(Level level, BlockPos pos, long calendarTick) {
         return FarmlandBlock.getHydration(level, pos, calendarTick);
     }
 

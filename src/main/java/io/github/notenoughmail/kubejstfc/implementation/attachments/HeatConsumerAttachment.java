@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -75,11 +75,12 @@ public class HeatConsumerAttachment implements BlockEntityAttachment {
 
     @Override
     public void serverTick() {
-        temperature = temperature - tempDecay;
+        temperature = Math.clamp(temperature - tempDecay, 0F, Float.POSITIVE_INFINITY);
+        be.save();
         final Level level = be.getLevel();
         final BlockPos pos = be.getBlockPos();
         assert level != null;
-        final IItemHandlerModifiable handler = Cast.to(level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null));
+        final IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
         if (handler != null) {
             for (int i = 0 ; i < handler.getSlots() ; i++) {
                 final ItemStack stack = handler.getStackInSlot(i);

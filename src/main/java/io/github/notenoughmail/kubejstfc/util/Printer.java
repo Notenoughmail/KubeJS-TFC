@@ -1,13 +1,19 @@
 package io.github.notenoughmail.kubejstfc.util;
 
 import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.builders.misc.ItemStackModifierBuilder;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.Nutrient;
+import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -16,8 +22,12 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -29,6 +39,7 @@ import java.lang.reflect.RecordComponent;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.COLORS;
 import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.RECORD_CONVERTERS;
@@ -98,6 +109,78 @@ public interface Printer {
                 newLine(txt);
                 txt.append(OBJECT_CLOSE);
             }
+            case ItemStack s -> {
+                descriptor(txt, descriptor);
+                appendItemStack(txt, s, 0);
+            }
+            case ItemStackProvider p -> {
+                if (p.modifiers().isEmpty()) {
+                    append(txt, descriptor, p.stack(), end);
+                    return;
+                }
+
+                descriptor(txt, descriptor);
+                txt.append(OBJECT_OPEN);
+
+                if (!p.stack().isEmpty()) {
+                    singleIndent(txt);
+                    descriptor(txt, "stack");
+                    appendItemStack(txt, p.stack(), 1);
+                    listItem(txt);
+                }
+
+                singleIndent(txt);
+                descriptor(txt, "modifiers");
+                appendCollection(txt, p.modifiers(), (msg, m) -> {
+                    final ResourceLocation type = ItemStackModifiers.REGISTRY.getKey(m.type());
+                    // Good indications of 'singleton' types
+                    if (m instanceof Enum<?> || m instanceof ItemStackModifierBuilder || m.type().codec().encoder().toString().equals("EmptyEncoder")) {
+                        msg.append(asComponent(type));
+                    } else if (m instanceof Record r) {
+                        final Map<String, Object> map = convertRecordToMap(r);
+                        map.put("type", type);
+                        appendMap(msg, map, 2, false);
+                    } else {
+                        assert type != null;
+                        final Map<String, Object> map = Map.of(
+                                "modifier", m,
+                                "type", type
+                        );
+                        appendMap(msg, map, 2, false);
+                    }
+                }, 1);
+                newLine(txt);
+
+                txt.append(OBJECT_CLOSE);
+            }
+            case FluidStack f -> {
+                descriptor(txt, descriptor);
+                appendFluidStack(txt, f, 0);
+            }
+            case BlockState s -> {
+                final BlockState base = s.getBlock().defaultBlockState();
+                // TODO: 2.0.0 | Verify block states can be identity compared
+                if (base == s) {
+                    append(txt, descriptor, s.getBlock(), true);
+                } else {
+                    descriptor(txt, descriptor);
+                    txt.append(OBJECT_OPEN);
+                    singleIndent(txt);
+                    append(txt, "block", s.getBlock());
+                    singleIndent(txt);
+                    descriptor(txt, "properties");
+                    final Map<String, Object> properties = new LinkedHashMap<>();
+                    for (Property<?> p : s.getProperties()) {
+                        if (!Assistant.haveSamePropertyValue(s, base, p)) {
+                            properties.put(p.getName(), s.getValue(p));
+                        }
+                    }
+                    appendMap(txt, properties, 1, false);
+                    newLine(txt);
+                    txt.append(OBJECT_CLOSE);
+                }
+                
+            }
             case null -> append(txt, descriptor, asComponent(null), true);
             case Collection<?> c -> {
                 descriptor(txt, descriptor);
@@ -114,6 +197,60 @@ public interface Printer {
             }
         }
         if (!end) newLine(txt);
+    }
+
+    static <T> void appendStack(MutableComponent txt, T value, String type, int quantity, String val, int indent, DataComponentPatch patch, boolean renderTooltips) {
+        final Component indentation = indent == 0 ? SINGLE_INDENT : Component.literal("  ".repeat(indent + 1));
+        txt.append(OBJECT_OPEN);
+
+        txt.append(indentation);
+        append(txt, type, value);
+        txt.append(indentation);
+        append(txt, val, quantity);
+
+        if (!patch.isEmpty()) {
+            final Item.TooltipContext ctx = renderTooltips ? Item.TooltipContext.of(RegistryAccessContainer.current.access()) : null;
+            txt.append(indentation);
+            descriptor(txt, "components");
+            appendMap(
+                    txt,
+                    patch.entrySet().stream()
+                            .collect(Collectors.toMap(
+                                    e -> BuiltInRegistries.DATA_COMPONENT_TYPE.getKeyOrNull(e.getKey()).toString(),
+                                    e -> e.getValue().map(v -> {
+                                        if (renderTooltips && v instanceof TooltipProvider p) {
+                                            final Component[] c = new Component[] { NONE };
+                                            p.addToTooltip(ctx, t -> c[0] = t, TooltipFlag.NORMAL);
+                                            return c[0];
+                                        } else {
+                                            return asComponent(v);
+                                        }
+                                    }).orElse(NONE)
+                            )),
+                    indent + 1,
+                    false
+            );
+        }
+
+        switch (indent) {
+            case 0 -> txt.append(OBJECT_CLOSE);
+            case 1 -> {
+                singleIndent(txt);
+                txt.append(OBJECT_CLOSE);
+            }
+            default -> {
+                txt.append(Component.literal("  ".repeat(indent)));
+                txt.append(OBJECT_CLOSE);
+            }
+        }
+    }
+
+    static void appendFluidStack(MutableComponent txt, FluidStack stack, int indent) {
+        appendStack(txt, stack.getFluid(), "fluid", stack.getAmount(), "amount", indent, stack.getComponentsPatch(), false);
+    }
+
+    static void appendItemStack(MutableComponent txt, ItemStack stack, int indent) {
+        appendStack(txt, stack.getItem(), "item", stack.getCount(), "count", indent, stack.getComponentsPatch(), true);
     }
 
     static void appendCollection(MutableComponent txt, Collection<?> c) {
@@ -256,6 +393,7 @@ public interface Printer {
             case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
             case Block b -> getId(BuiltInRegistries.BLOCK, b);
             case EntityType<?> e -> getId(BuiltInRegistries.ENTITY_TYPE, e);
+            case ChiselMode m -> getId(ChiselMode.REGISTRY, m);
             case Holder<?> h -> h.getRegisteredName();
             case null -> "null"; // IDEA gets angry with me if I leave this to be handled by the default case
             default -> String.valueOf(value);
@@ -326,6 +464,7 @@ public interface Printer {
     Component PAIR_DENOTATION = Component.literal(": ");
     Component SINGLE_INDENT = Component.literal("  ");
     Component LIST_ITEM = Component.literal(",\n").withStyle(ChatFormatting.WHITE);
+    Component NONE = Component.literal("-");
 
     class Hidden {
         static final TextColor[] COLORS = {

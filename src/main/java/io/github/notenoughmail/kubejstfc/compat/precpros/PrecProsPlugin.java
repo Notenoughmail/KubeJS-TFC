@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.addons.precpros;
+package io.github.notenoughmail.kubejstfc.compat.precpros;
 
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;

@@ -1,13 +1,15 @@
 package io.github.notenoughmail.kubejstfc.implementation;
 
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
-import net.dries007.tfc.common.recipes.IRecipePredicate;
+import net.dries007.tfc.common.recipes.*;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
@@ -19,12 +21,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -61,7 +65,7 @@ public class DataTypes {
         firstLevelFoodData(m, d.food());
         newLine(m);
         descriptor(m, "effects");
-        appendCollection(m, d.effects(), (t, e) -> appendMap(t, convertRecordToMap(e), 1, true), 0);
+        appendCollection(m, d.effects(), (t, e) -> appendMap(t, convertRecordToMap(e), 1, false), 0);
     };
 
     public static final Display<Fertilizer> FERTILIZER = (f, m) -> {
@@ -349,6 +353,133 @@ public class DataTypes {
             public Stream<String> searchSuggestions() {
                 return searchSuggest.get();
             }
+        }
+    }
+
+    public static final Display<? extends BlockRecipe> BLOCK_RECIPE = (b, m) -> {
+        append(m, "ingredient", b.getBlockIngredient());
+        append(m, "output", b.assembleBlock(null), true);
+    };
+
+    public static final Display<ChiselRecipe> CHISEL = (c, m) -> {
+        append(m, "ingredient", c.getIngredient());
+        append(m, "mode", c.getMode());
+        final ItemStackProvider out = Assistant.getPrivateField(c, "itemOutput", ItemStackProvider.class);
+        append(m, "item_output", out.kubejs_tfc$isEmpty() ? null : out);
+        append(m, "result", Assistant.getPrivateField(c, "output", BlockState.class), true);
+    };
+
+    public static final Display<ScrapingRecipe> SCRAPING = (s, m) -> {
+        append(m, "ingredient", s.getIngredient());
+        append(m, "result", s.getResult());
+        final ItemStackProvider extraDrop = s.getExtraDrop();
+        append(m, "extraDrop", extraDrop.kubejs_tfc$isEmpty() ? null : extraDrop);
+        append(m, "inputTexture", s.getInputTexture());
+        append(m, "outputTexture", s.getOutputTexture(), true);
+    };
+
+    public static final Display<CastingRecipe> CASTING = (c, m) -> {
+        append(m, "mold", c.getIngredient());
+        append(m, "fluid", c.getFluidIngredient());
+        append(m, "result", Assistant.getPrivateField(c, "result", ItemStackProvider.class));
+        append(m, "breakChance", c.getBreakChance(), true);
+    };
+
+    public static final Display<HeatingRecipe> HEATING = (h, m) -> {
+        append(m, "ingredient", h.getIngredient());
+        final ItemStackProvider resultItem = Assistant.getPrivateField(h, "outputItem", ItemStackProvider.class);
+        append(m, "resultItem", resultItem.kubejs_tfc$isEmpty() ? null : resultItem);
+        final FluidStack outputFluid = h.getDisplayOutputFluid();
+        append(m, "resultFluid", outputFluid.isEmpty() ? null : outputFluid);
+        append(m, "temperature", h.getTemperature());
+        append(m, "useDurability", Assistant.getPrivateField(h, "useDurability", boolean.class), true);
+    };
+
+    public static final Display<LoomRecipe> LOOM = (l, m) -> {
+        append(m, "ingredient", l.getItemStackIngredient());
+        append(m, "result", Assistant.getPrivateField(l, "result", ItemStackProvider.class));
+        append(m, "steps", l.getStepCount());
+        append(m, "inProgressTexture", l.getInProgressTexture(), true);
+    };
+
+    public static final Display<QuernRecipe> QUERN = (q, m) -> {
+        append(m, "ingredient", q.getIngredient());
+        append(m, "result", Assistant.getPrivateField(q, "result", ItemStackProvider.class), true);
+    };
+
+    public static <T extends Recipe<?>, R> DataType<T> forRecipe(
+            IndirectHashCollection<R, T> cache,
+            Registry<R> registry,
+            Display<T> display,
+            Supplier<RecipeType<T>> type
+    ) {
+        return new ForRecipe<>(cache, registry, display, type);
+    }
+
+    record ForRecipe<T extends Recipe<?>, R>(IndirectHashCollection<R, T> cache, Registry<R> registry, Display<T> display, Supplier<RecipeType<T>> type) implements DataType<T> {
+
+        @Nullable
+        @Override
+        public T find(String str) {
+            final ResourceLocation id = ResourceLocation.tryParse(str);
+            if (id == null) return null;
+
+            return holders()
+                    .filter(h -> h.id().equals(id))
+                    .findFirst()
+                    .map(RecipeHolder::value)
+                    .orElse(null);
+        }
+
+        @Override
+        public void display(T value, MutableComponent text) {
+            display.accept(value, text);
+        }
+
+        @Override
+        public boolean canBeSearched() {
+            return true;
+        }
+
+        @Override
+        public Set<String> search(String str) {
+            final ResourceLocation id = ResourceLocation.tryParse(str);
+            if (id == null) return Set.of();
+            final R r = registry.getOptional(id).orElse(null); // Do not get default value of defaulting registries
+            if (r == null) return Set.of();
+
+            final Collection<T> matching = cache.getAll(r);
+            if (matching.isEmpty()) return Set.of();
+
+            return holders()
+                    .filter(h -> matching.contains(h.value()))
+                    .map(RecipeHolder::id)
+                    .map(Object::toString)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        }
+
+        @Override
+        public Stream<String> searchSuggestions() {
+            return cache.indirectResultMap.keySet()
+                    .stream()
+                    .map(Printer::stringify);
+        }
+
+        @Override
+        public Stream<String> describeSuggestions() {
+            return holders()
+                    .map(RecipeHolder::id)
+                    .map(Object::toString);
+        }
+
+        @Override
+        public Set<String> names() {
+            return describeSuggestions()
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        }
+
+        private Stream<RecipeHolder<T>> holders() {
+            return RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeManager(), type).stream();
         }
     }
 }

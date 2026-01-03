@@ -114,8 +114,7 @@ ServerEvents.recipes(e => {
             ' X ',
             'X X'
         ]
-    ).defaultOn()
-        .id('kubejs:knapping');
+    ).id('kubejs:knapping');
 
     tfc.landslide(
         'minecraft:diamond_block'
@@ -245,17 +244,18 @@ ServerEvents.recipes(e => {
         [
             'minecraft:blue_concrete',
             TFC.ingredient.fluidContents(Fluid.lava(50))
-        ]
-    ).primaryIngredient(TFC.ingredient.fluidContents(Fluid.lava(50)))
-        .remainder(TFC.isp.copyInputStack().addHeat(500))
-        .id('kubejs:advanced_shapeless_crafting')
+        ],
+        TFC.ingredient.fluidContents(Fluid.lava(50)),
+        TFC.isp.copyInputStack().addHeat(500)
+    ).id('kubejs:advanced_shapeless_crafting')
     tfc.shapeless(
         'minecraft:dirt',
         [
             '#minecraft:flowers',
             'minecraft:water_bucket'
-        ]
-    ).id('kubejs:shapeless_alias'); // This does not work, the dirt does not display in EMI
+        ],
+        'minecraft:water_bucket'
+    ).id('kubejs:shapeless_alias');
 
     if (e.addedRecipes.stream().filter(r => r.getId().startsWith('kubejs:')).toList().isEmpty()) {
         console.error('No added recipes, somehow')

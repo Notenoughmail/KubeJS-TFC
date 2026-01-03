@@ -53,7 +53,7 @@ public enum CalendarBindings {
         return ICalendar.getDayTime(calendarTick);
     }
 
-    @Info("Gets a component describing the given calendar duration and number of days in a month")
+    @Info("Gets a component describing the given calendar duration")
     public MutableComponent getTimeDelta(long calendarTicks, int daysInMonth) {
         return ICalendar.getTimeDelta(calendarTicks, daysInMonth);
     }

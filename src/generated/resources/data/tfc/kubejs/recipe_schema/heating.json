@@ -15,6 +15,13 @@
         "result_fluid"
       ]
     },
+    "results": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "result_item",
+        "result_fluid"
+      ]
+    },
     "useDurability": {
       "type": "set",
       "key": "use_durability",
@@ -44,7 +51,8 @@
         "result_item"
       ],
       "function_names": [
-        "itemOutput"
+        "itemOutput",
+        "resultItem"
       ],
       "name": "result_item",
       "optional": {
@@ -58,7 +66,8 @@
         "result_fluid"
       ],
       "function_names": [
-        "fluidOutput"
+        "fluidOutput",
+        "resultFluid"
       ],
       "name": "result_fluid",
       "optional": {},

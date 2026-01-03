@@ -47,7 +47,11 @@ public interface ModelUtil {
     static void basicItemModelGen(BlockBuilder builder, ModelGenerator generator) {
         itemModelGen(builder, generator, m -> {
             m.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
-            m.textures(builder.itemBuilder.textures);
+            if (builder.itemBuilder.textures.isEmpty()) {
+                m.texture("layer0", builder.itemBuilder.baseTexture);
+            } else {
+                m.textures(builder.itemBuilder.textures);
+            }
         });
     }
 
@@ -61,5 +65,10 @@ public interface ModelUtil {
 
     static void inheritItemModelGen(BlockBuilder builder, ModelGenerator generator) {
         itemModelGen(builder, generator, m -> m.parent(builder.id.withPrefix("block/")));
+    }
+
+    static String itemTexture(ItemBuilder builder) {
+        final ResourceLocation id = builder.id;
+        return id.getNamespace() + ":item/" + id.getPath();
     }
 }

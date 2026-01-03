@@ -116,7 +116,10 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
         }
         if (generateThrownModel) {
             // TFC does it this way...
-            generator.itemModel(id.withSuffix("_throwing_base"), simple);
+            generator.itemModel(id.withSuffix("_throwing_base"), m -> {
+                m.parent(KubeJSTFC.mc("item/trident_throwing"));
+                tex(m);
+            });
             generator.itemModel(id.withSuffix("_throwing"), m -> m.custom(j -> {
                 transforms(j);
                 j.add("base", Assistant.json(b -> b.addProperty("parent", id.withPath(s -> "item/" + s + "_throwing_base").toString())));
@@ -127,7 +130,10 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
             generateHandModel = true;
         }
         if (generateHandModel) {
-            generator.itemModel(id.withSuffix("_in_hand"), simple);
+            generator.itemModel(id.withSuffix("_in_hand"), m -> {
+                m.parent(KubeJSTFC.mc("item/trident_in_hand"));
+                tex(m);
+            });
         }
         generator.itemModel(id.withSuffix("_gui"), m -> {
             m.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
@@ -139,18 +145,10 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
             } else {
                 tex(m);
                 m.override(throwingModel, o -> o.predicate(THROWING, 1F));
-                m.custom(j -> {
-                    transforms(j);
-                    j.add("base", Assistant.json(b -> b.addProperty("parent", parentModel.toString())));
-                });
+                m.custom(this::transforms);
             }
         });
     }
-
-    private final Consumer<ModelGenerator> simple = m -> {
-        m.parent(KubeJSTFC.mc("item/trident/throwing")); // TODO: 2.0.0 | What is this now?
-        tex(m);
-    };
 
     private void tex(ModelGenerator m) {
         if (textures.isEmpty()) {
@@ -167,5 +165,6 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
                 perspectives.forEach((ctx, m) ->
                         p.add(ctx.getSerializedName(), Util.make(new ModelGenerator(), m).toJson()))
         ));
+        model.add("base", Assistant.json(j -> j.addProperty("parent", parentModel.toString())));
     }
 }

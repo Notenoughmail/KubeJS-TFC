@@ -1,14 +1,13 @@
 package io.github.notenoughmail.kubejstfc.util.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
 import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import net.dries007.tfc.util.SelfTests;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 
@@ -19,8 +18,8 @@ import java.util.Collection;
 @Mixin(SelfTests.class)
 public abstract class SelfTestsMixin {
 
-    @Inject(method = "logErrors", at = @At("HEAD"), remap = false, cancellable = true)
-    private static <T> void kubejs_tfc$LogErrors(String error, Collection<T> errors, Logger logger, CallbackInfoReturnable<Boolean> cir) {
+    @WrapMethod(method = "logErrors", remap = false)
+    private static <T> boolean kubejs_tfc$LogErrors(String error, Collection<T> errors, Logger logger, Operation<Boolean> original) {
         if (TFCProperties.get().insertIntoConsole && !errors.isEmpty()) {
             final StringBuilder message = new StringBuilder();
             message.append(error.replace("{}", Integer.toString(errors.size())));
@@ -29,14 +28,13 @@ public abstract class SelfTestsMixin {
                 message.append(Printer.stringify(t));
             });
             ConsoleJS.SERVER.error(message.toString());
-            if (TFCProperties.get().deduplicateConsoleErrors) {
-                cir.setReturnValue(!errors.isEmpty());
-            }
+            if (TFCProperties.get().deduplicateSelfTestWarnings) return true;
         }
+        return original.call(error, errors, logger);
     }
 
-    @Inject(method = "logWarnings", at = @At("HEAD"), remap = false, cancellable = true)
-    private static <T> void kubejs_tfc$LogWarnings(String error, Collection<T> errors, Logger logger, CallbackInfoReturnable<Boolean> cir) {
+    @WrapMethod(method = "logWarnings", remap = false)
+    private static <T> boolean kubejs_tfc$LogWarnings(String error, Collection<T> errors, Logger logger, Operation<Boolean> original) {
         if (TFCProperties.get().insertIntoConsole && !errors.isEmpty()) {
             final StringBuilder message = new StringBuilder();
             message.append(error.replace("{}", Integer.toString(errors.size())));
@@ -44,10 +42,9 @@ public abstract class SelfTestsMixin {
                 message.append("\n    ");
                 message.append(Printer.stringify(t));
             });
-            ConsoleJS.SERVER.warn(message.toString());
-            if (TFCProperties.get().deduplicateConsoleErrors) {
-                cir.setReturnValue(!error.isEmpty());
-            }
+            ConsoleJS.SERVER.error(message.toString());
+            if (TFCProperties.get().deduplicateSelfTestWarnings) return true;
         }
+        return original.call(error, errors, logger);
     }
 }

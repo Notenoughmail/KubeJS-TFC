@@ -44,7 +44,12 @@ public interface ISPExtension extends WithCodec {
         return Cast.to(this);
     }
 
-    @Info("Copies this ItemStackModifier with a mutable modifier list")
+    @Info("If the provider has no modifiers and its stack is empty")
+    default boolean kubejs_tfc$isEmpty() {
+        return stack().isEmpty() && modifiers().isEmpty();
+    }
+
+    @Info("Copies this ItemStackProvider with a mutable modifier list")
     @ReturnsSelf(copy = true)
     default ItemStackProvider kubejs_tfc$copy() {
         return new ItemStackProvider(stack().copy(), new ArrayList<>(modifiers()));
@@ -72,7 +77,7 @@ public interface ISPExtension extends WithCodec {
         return kubejs_tfc$addJsonModifier(Assistant.json(j -> j.addProperty("type", type.toString())));
     }
 
-    @Info("Adds a 1tfc:copy_input` modifier")
+    @Info("Adds a `tfc:copy_input` modifier")
     default ItemStackProvider kubejs_tfc$copyInputStack() {
         return kubejs_tfc$addModifier(CopyInputModifier.INSTANCE);
     }
@@ -128,7 +133,7 @@ public interface ISPExtension extends WithCodec {
     }
 
     @Info("Adds a `tfc:damage_crafting_remainder` modifier")
-    default ItemStackProvider kubejs_tfc$damageCraftingRemainder() {
+    default ItemStackProvider kubejs_tfc$damageInput() {
         return kubejs_tfc$addModifier(DamageCraftingRemainderModifier.INSTANCE);
     }
 

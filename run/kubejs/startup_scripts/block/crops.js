@@ -35,6 +35,7 @@ StartupEvents.registry('block', e => {
             });
         });
     e.create('wild_crop', 'tfc:wild_crop')
+        .texture('minecraft:block/sand')
         .seeds('kubejs:crop_seeds')
         .food('minecraft:chorus_fruit');
 

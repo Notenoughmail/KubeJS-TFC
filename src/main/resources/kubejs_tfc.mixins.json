@@ -8,6 +8,8 @@
     "ChunkGeneratorMixin",
     "ChunkMapMixin",
     "CropHelpersMixin",
+    "DataManagerMixin",
+    "ICalendarMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
     "Noise2DMixin",

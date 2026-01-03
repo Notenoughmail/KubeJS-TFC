@@ -1,13 +1,12 @@
 TFCEvents.startFire(event => {
-    let { block } = event;
-    let { level, pos, id } = block;
+    let { level, pos } = event;
+    let { block } = level.getBlockState(pos);
+    let { id } = block
     let { x, y, z } = pos;
-    let { random } = level;
 
-    if ((id == 'tfc:dead_torch' || id == 'tfc:dead_wall_torch')) {
-        level.playSound(null, x, y, z, 'minecraft:item.flintandsteel.use', 'blocks', 1, 1);
+    if (id == 'kubejs:torch_dead' || id == 'kubejs:torch_dead_wall') {
         level.sendParticles(
-            Utils.getRegistry('minecraft:particle_type').getValue('minecraft:flame'),
+            'minecraft:flame',
             x + 0.5,
             y + 0.5,
             z + 0.5,
@@ -18,7 +17,7 @@ TFCEvents.startFire(event => {
             0.02
         );
         level.sendParticles(
-            Utils.getRegistry('minecraft:particle_type').getValue('minecraft:smoke'),
+            'minecraft:smoke',
             x + 0.5,
             y + 0.5,
             z + 0.5,

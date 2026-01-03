@@ -1,6 +1,8 @@
 package io.github.notenoughmail.kubejstfc.implementation.bindings;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import net.dries007.tfc.common.component.Bowl;
+import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.food.FoodTrait;
@@ -71,5 +73,10 @@ public enum FoodBindings {
         } else {
             return FoodCapability.setNonDecaying(stack);
         }
+    }
+
+    @Info("Sets the `tfc:bowl` component of the stack as the bowl stack")
+    public void setBowl(ItemStack stack, ItemStack bowlStack) {
+        stack.set(TFCComponents.BOWL.get(), Bowl.of(bowlStack));
     }
 }

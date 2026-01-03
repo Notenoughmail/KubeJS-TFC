@@ -6,6 +6,7 @@ import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
+import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.*;
@@ -79,12 +80,12 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(knappingType, KnappingType.CODEC, id, "tfc/knapping_type");
     }
 
-    public void support(Support support, @Nullable KubeResourceLocation id) {
-        add(support, Support.CODEC, id, "tfc/support");
+    public void support(BlockIngredient ingredient, Support.SupportRange range, @Nullable KubeResourceLocation id) {
+        add(new Support(ingredient, range.up(), range.down(), range.horizontal()), Support.CODEC, id, "tfc/support");
     }
 
-    public void support(Support support) {
-        support(support, null);
+    public void support(BlockIngredient ingredient, Support.SupportRange range) {
+        support(ingredient, range, null);
     }
 
     public void itemSize(ItemSizeDefinition itemSize, @Nullable KubeResourceLocation id) {

@@ -13,12 +13,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 @ReturnsSelf
 @SuppressWarnings("unused")
 public class SpringWaterBuilder extends FluidBuilder {
 
-    @Nullable
-    public transient ParticleOptions bubbleParticle, steamParticle;
+    public transient Supplier<@Nullable ParticleOptions> bubbleParticle, steamParticle;
     public transient float healingAmount;
 
     public SpringWaterBuilder(ResourceLocation i) {
@@ -31,13 +32,25 @@ public class SpringWaterBuilder extends FluidBuilder {
 
     @Info("Sets the liquid's bubble particle")
     public SpringWaterBuilder bubbleParticle(@Nullable Holder<ParticleType<?>> particle) {
-        this.bubbleParticle = Assistant.mapNull(particle, h -> h::value);
+        this.bubbleParticle = Assistant.getParticleOptions(particle);
+        return this;
+    }
+
+    @Info("Sets the liquid's bubble particle")
+    public SpringWaterBuilder fullBubbleParticle(Supplier<ParticleOptions> bubble) {
+        bubbleParticle = Assistant.wrapParticleOptionsSafely(bubble);
         return this;
     }
 
     @Info("Sets the liquid's steam particle")
     public SpringWaterBuilder steamParticle(@Nullable Holder<ParticleType<?>> particle) {
-        this.steamParticle = Assistant.mapNull(particle, h -> h::value);
+        this.steamParticle = Assistant.getParticleOptions(particle);
+        return this;
+    }
+
+    @Info("Sets the liquid's steam particle")
+    public SpringWaterBuilder fullSteamParticle(Supplier<ParticleOptions> steam) {
+        steamParticle = Assistant.wrapParticleOptionsSafely(steam);
         return this;
     }
 

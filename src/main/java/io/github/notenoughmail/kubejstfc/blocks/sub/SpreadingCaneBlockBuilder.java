@@ -83,7 +83,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
         for (Lifecycle lc : StationaryBerryBushBlockBuilder.LC_VALUES) {
             for (int i = 0 ; i < 3 ; i++) {
                 final int stage = i;
-                generator.blockModel(id.withSuffix(modelSuffix(stage, lc)), m -> models.apply(lc, stage, m));
+                generator.blockModel(bush.id.withSuffix(modelSuffix(stage, lc)), m -> models.apply(lc, stage, m));
             }
         }
     }
@@ -92,7 +92,7 @@ public class SpreadingCaneBlockBuilder extends BlockBuilder {
     protected void generateBlockState(VariantBlockStateGenerator bs) {
         for (Lifecycle lc : StationaryBerryBushBlockBuilder.LC_VALUES) {
             for (int dir = 0 ; dir < 4 ; dir++) {
-                final String d = Assistant.CARDINAL_DIRECTIONS[dir].getSerializedName();
+                final String d = Assistant.COMPASS_DIRECTIONS[dir].getSerializedName();
                 final int spin = dir;
                 for (int i = 0 ; i < 3 ; i++) {
                     final int stage = i;

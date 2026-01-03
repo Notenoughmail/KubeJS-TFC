@@ -79,7 +79,7 @@ public class SpreadingCropBlockBuilder extends AbstractCropBlockBuilder {
         }
         for (int i = 0 ; i < 4 ; i++) {
             final int dir = i;
-            bs.part(Assistant.CARDINAL_DIRECTIONS[dir].getSerializedName() + "=true", p -> p.model(side).y(dir * 90));
+            bs.part(Assistant.COMPASS_DIRECTIONS[dir].getSerializedName() + "=true", p -> p.model(side).y(dir * 90));
         }
     }
 }

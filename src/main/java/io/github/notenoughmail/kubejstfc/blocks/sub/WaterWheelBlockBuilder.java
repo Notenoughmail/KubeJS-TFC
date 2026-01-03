@@ -25,6 +25,7 @@ public class WaterWheelBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public WaterWheelBlockBuilder(ResourceLocation i, AxleBlockBuilder parent) {
         super(i);
         this.parent = parent;
+        itemBuilder = null;
         wheelTexture(parent.id);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.WATER_WHEEL, this);
     }

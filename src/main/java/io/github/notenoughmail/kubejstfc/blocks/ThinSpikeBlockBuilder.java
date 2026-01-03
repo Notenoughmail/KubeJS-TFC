@@ -38,14 +38,13 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     public transient float dripChance;
     public transient float dripTemp;
-    @Nullable
-    public transient Supplier<ParticleOptions> particle;
+    public transient Supplier<@Nullable ParticleOptions> particle;
     public transient ResourceLocation tipModel;
 
     public ThinSpikeBlockBuilder(ResourceLocation i) {
         super(i);
         dripChance = 0.15f;
-        particle = null;
+        particle = () -> null;
     }
 
     @Override
@@ -67,7 +66,13 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
     @Info("The registry name of a particle that will drip from the block")
     public ThinSpikeBlockBuilder dripParticle(@Nullable Holder<ParticleType<?>> particle) {
-        this.particle = Assistant.mapNull(particle, h -> () -> h::value);
+        this.particle = Assistant.getParticleOptions(particle);
+        return this;
+    }
+
+    @Info("A supplier for the particle that will drip from the block")
+    public ThinSpikeBlockBuilder fullDripParticle(Supplier<ParticleOptions> particle) {
+        this.particle = Assistant.wrapParticleOptionsSafely(particle);
         return this;
     }
 
@@ -83,7 +88,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
 
             @Override
             public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-                if (particle != null) {
+                if (particle.get() != null) {
                     if (
                             state.getValue(TIP) &&
                             state.getValue(FLUID).getFluid() == Fluids.EMPTY &&

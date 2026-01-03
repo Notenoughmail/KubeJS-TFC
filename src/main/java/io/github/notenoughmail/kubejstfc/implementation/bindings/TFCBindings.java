@@ -8,7 +8,7 @@ public interface TFCBindings {
     IngredientBindings ingredient = IngredientBindings.INSTANCE;
 
     @Info("ItemStackProvider helpers")
-    ISPBindings isp = ISPBindings.INSTANCE, itemStackProvider = ISPBindings.INSTANCE;
+    ItemStackProviderBindings isp = ItemStackProviderBindings.INSTANCE;
 
     @Info("Miscellaneous noise helpers")
     NoiseBindings noise = NoiseBindings.INSTANCE;

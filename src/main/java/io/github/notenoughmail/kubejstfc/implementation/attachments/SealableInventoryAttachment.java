@@ -27,14 +27,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+// TODO: 2.0.x | Reimplement canSeal & requiresSeal, the GUI seems to completely ignore adding the trait on insert. Oh! and it causes a dupe issue...
 public class SealableInventoryAttachment extends TFCInventoryAttachment {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("sealable_inventory"), Factory.class);
 
-    public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter, boolean canSeal, boolean requiresSeal, Holder<FoodTrait> trait) implements BlockEntityAttachmentFactory {
+    public record Factory(int width, int height, Optional<ItemPredicate> inputFilter, Optional<Predicate<Size>> sizeFilter, Optional<Predicate<Weight>> weightFilter, Holder<FoodTrait> trait) implements BlockEntityAttachmentFactory {
         @Override
         public SealableInventoryAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
-            return new SealableInventoryAttachment(entity, width, height, inputFilter.orElse(null), sizeFilter.orElse(null), weightFilter.orElse(null), canSeal, requiresSeal, trait);
+            return new SealableInventoryAttachment(entity, width, height, inputFilter.orElse(null), sizeFilter.orElse(null), weightFilter.orElse(null), trait);
         }
 
         @Override
@@ -44,14 +45,10 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
     }
 
     private boolean sealed;
-    private final boolean canSeal;
-    private final boolean requiresSeal;
     private final Holder<FoodTrait> trait;
 
-    public SealableInventoryAttachment(KubeBlockEntity blockEntity, int width, int height, @Nullable ItemPredicate inputFilter, @Nullable Predicate<Size> sizeFilter, @Nullable Predicate<Weight> weightFilter, boolean canSeal, boolean requiresSeal, Holder<FoodTrait> trait) {
+    public SealableInventoryAttachment(KubeBlockEntity blockEntity, int width, int height, @Nullable ItemPredicate inputFilter, @Nullable Predicate<Size> sizeFilter, @Nullable Predicate<Weight> weightFilter, Holder<FoodTrait> trait) {
         super(blockEntity, width, height, inputFilter, sizeFilter, weightFilter);
-        this.canSeal = canSeal;
-        this.requiresSeal = requiresSeal;
         this.trait = trait;
     }
 
@@ -73,11 +70,11 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
     }
 
     private ItemStack apply(ItemStack stack) {
-        return FoodCapability.applyTrait(stack, trait);
+        return FoodCapability.applyTrait(stack.copy(), trait);
     }
 
     private ItemStack remove(ItemStack stack) {
-        return FoodCapability.removeTrait(stack, trait);
+        return FoodCapability.removeTrait(stack.copy(), trait);
     }
 
     @Override
@@ -96,7 +93,7 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
             final CompoundTag sealTag = Cast.to(list.removeLast());
             sealed = sealTag.getBoolean("sealed");
             super.deserialize(registries, list);
-            if (sealed || !requiresSeal) {
+            if (sealed) {
                 preserveAll();
             }
         }
@@ -130,45 +127,37 @@ public class SealableInventoryAttachment extends TFCInventoryAttachment {
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (sealed) return ItemStack.EMPTY;
-            return remove(super.extractItem(slot, amount, true));
+            return super.extractItem(slot, amount, simulate);
         }
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             if (sealed) return stack;
-            return super.insertItem(slot, requiresSeal ? stack : apply(stack), simulate);
+            return super.insertItem(slot, stack, simulate);
         }
 
         @Info("Seals the inventory if not already")
         public void seal() {
-            if (canSeal) {
-                sealed = true;
-                preserveAll();
-            }
-            blockEntity.sync();
+            sealed = true;
+            preserveAll();
+            blockEntity.save();
         }
 
         @Info("Unseals the inventory, if not already")
         public void unseal() {
             sealed = false;
-            if (requiresSeal && canSeal) {
-                unPreserverAll();
-            }
-            blockEntity.sync();
+            unPreserverAll();
+            blockEntity.save();
         }
 
         @Info("Toggles the sealed state of the inventory. Returns the sealed state of the inventory after toggling")
         public boolean toggleSeal() {
-            if (canSeal) {
-                if (sealed) {
-                    unseal();
-                } else {
-                    seal();
-                }
+            if (sealed) {
+                unseal();
             } else {
-                sealed = false;
+                seal();
             }
-            blockEntity.sync();
+            blockEntity.save();
             return sealed;
         }
 

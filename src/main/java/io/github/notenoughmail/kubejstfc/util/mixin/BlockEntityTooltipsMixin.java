@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Supplier;
 
+// TODO: 2.0.x | Can this be done through a plugin?
 /**
  * <b>Purpose:</b><p>
  * Allows Jade to show the correct duration for custom torch blocks

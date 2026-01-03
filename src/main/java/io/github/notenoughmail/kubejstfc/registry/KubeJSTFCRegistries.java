@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
 import com.mojang.serialization.MapCodec;
+import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
@@ -13,6 +14,7 @@ import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.entities.Fauna;
+import net.dries007.tfc.common.recipes.*;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.*;
@@ -109,7 +111,7 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         Fertilizer.MANAGER,
                         DataTypes.FERTILIZER,
-                        (fertilizer, item) -> fertilizer.ingredient().test(item.getDefaultInstance()),
+                        (fertilizer, item) -> fertilizer.ingredient().kjs$testItem(item),
                         Fertilizer.CACHE
                 )
         );
@@ -136,7 +138,7 @@ public class KubeJSTFCRegistries {
                 () -> DataTypes.cachedItemRegistry(
                         ItemSizeManager.MANAGER,
                         DataTypes.ITEM_SIZE,
-                        (size, item) -> size.ingredient().test(item.getDefaultInstance()),
+                        (size, item) -> size.ingredient().kjs$testItem(item),
                         ItemSizeManager.CACHE
                 )
         );
@@ -214,6 +216,78 @@ public class KubeJSTFCRegistries {
                         FoodCapability.MANAGER,
                         DataTypes.FOOD,
                         FoodCapability.CACHE
+                )
+        );
+        DATA_TYPE.register(
+                "collapse_recipe",
+                () -> DataTypes.forRecipe(
+                        CollapseRecipe.CACHE,
+                        BuiltInRegistries.BLOCK,
+                        Cast.to(DataTypes.BLOCK_RECIPE),
+                        TFCRecipeTypes.COLLAPSE
+                )
+        );
+        DATA_TYPE.register(
+                "landslide_recipe",
+                () -> DataTypes.forRecipe(
+                        LandslideRecipe.CACHE,
+                        BuiltInRegistries.BLOCK,
+                        Cast.to(DataTypes.BLOCK_RECIPE),
+                        TFCRecipeTypes.LANDSLIDE
+                )
+        );
+        DATA_TYPE.register(
+                "chisel_recipe",
+                () -> DataTypes.forRecipe(
+                        ChiselRecipe.CACHE,
+                        BuiltInRegistries.BLOCK,
+                        DataTypes.CHISEL,
+                        TFCRecipeTypes.CHISEL
+                )
+        );
+        DATA_TYPE.register(
+                "scraping_recipe",
+                () -> DataTypes.forRecipe(
+                        ScrapingRecipe.CACHE,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.SCRAPING,
+                        TFCRecipeTypes.SCRAPING
+                )
+        );
+        DATA_TYPE.register(
+                "casting_recipe",
+                () -> DataTypes.forRecipe(
+                        CastingRecipe.CACHE,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.CASTING,
+                        TFCRecipeTypes.CASTING
+                )
+        );
+        DATA_TYPE.register(
+                "heating_recipe",
+                () -> DataTypes.forRecipe(
+                        HeatingRecipe.CACHE,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.HEATING,
+                        TFCRecipeTypes.HEATING
+                )
+        );
+        DATA_TYPE.register(
+                "loom_recipe",
+                () -> DataTypes.forRecipe(
+                        LoomRecipe.CACHE,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.LOOM,
+                        TFCRecipeTypes.LOOM
+                )
+        );
+        DATA_TYPE.register(
+                "quern_recipe",
+                () -> DataTypes.forRecipe(
+                        QuernRecipe.CACHE,
+                        BuiltInRegistries.ITEM,
+                        DataTypes.QUERN,
+                        TFCRecipeTypes.QUERN
                 )
         );
     }

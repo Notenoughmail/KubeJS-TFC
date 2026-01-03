@@ -2,7 +2,7 @@
 StartupEvents.registry('tfc:climate_model', e => {
     e.create('model')
         .averageTemperature((m, l, p) => 115)
-        .currentTemperature((m, l, p, c, d) => 115)
+        .instantaneousTemperature((m, l, p, c, d) => 115)
         .averageRainfall((m, l, p) => 0)
         .fog((m, l, p) => 1);
 })

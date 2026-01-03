@@ -4,19 +4,20 @@ StartupEvents.registry('block', e => {
             be.attach('inv', 'tfc:inventory', [], {
                 width: 9,
                 height: 1,
-                size: s => s.isSmallerThan('normal')
+                sizeFilter: s => s.isSmallerThan('normal')
             });
             be.rightClickOpensInventory('inv');
         })
-        .texture('tfc:block/mud/silt');
+        .texture('minecraft:block/white_wool');
     e.create('heat_consumer')
         .blockEntity(be => {
             be.attach('heat', 'tfc:heat_consumer', [], {
-                decayAmount: 6
+                decayAmount: 0.02
             });
             be.inventory('inv', [], 9, 1);
             be.rightClickOpensInventory('inv');
         })
+        .tag('tfc:charcoal_forge_invisible')
         .texture('tfc:block/metal/block/copper');
 
     e.create('calendar_example')
@@ -25,7 +26,7 @@ StartupEvents.registry('block', e => {
         })
         .texture('minecraft:block/gold_block')
         .rightClick(event => {
-            event.block.entity.attachments['inv'].set();
+            event.block.entity.attachments['cal'].set();
         });
 
     e.create('sealable_example')
@@ -46,18 +47,6 @@ StartupEvents.registry('block', e => {
             }
         })
         .texture('minecraft:block/iron_block');
-    e.create('preserve_example')
-        .blockEntity(be => {
-            be.attach('inv', 'tfc:sealable_inventory', [], {
-                width: 9,
-                height: 1,
-                requiresSeal: false,
-                canSeal: false,
-                trait: 'kubejs:trait'
-            });
-            be.rightClickOpensInventory('inv');
-        })
-        .texture('tfc:block/metal/block/wrought_iron');
 })
 
 

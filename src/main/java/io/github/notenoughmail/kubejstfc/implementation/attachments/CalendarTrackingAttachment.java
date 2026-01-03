@@ -20,7 +20,7 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
         }
     }
 
-    private long calendarTick;
+    private long playerTick;
     private final KubeBlockEntity entity;
     private final Watch watch;
 
@@ -29,17 +29,17 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
         watch = new Watch() {
             @Override
             public void set() {
-                set(CalendarBindings.INSTANCE.getCalendar(CalendarTrackingAttachment.this.entity).getCalendarTicks());
+                set(CalendarBindings.INSTANCE.getCalendar(CalendarTrackingAttachment.this.entity).getTicks());
             }
 
             @Override
             public void set(long tick) {
-                calendarTick = tick;
+                playerTick = tick;
             }
 
             @Override
             public long get() {
-                return calendarTick;
+                return playerTick;
             }
         };
         watch.reset();
@@ -53,13 +53,13 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
     @Override
     @Nullable
     public Tag serialize(HolderLookup.Provider registries) {
-        return LongTag.valueOf(calendarTick);
+        return LongTag.valueOf(playerTick);
     }
 
     @Override
     public void deserialize(HolderLookup.Provider registries, @Nullable Tag tag) {
         if (tag instanceof LongTag l) {
-            calendarTick = l.getAsLong();
+            playerTick = l.getAsLong();
         }
     }
 

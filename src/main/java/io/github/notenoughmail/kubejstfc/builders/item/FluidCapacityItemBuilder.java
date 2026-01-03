@@ -76,9 +76,10 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
                 modelGenerator.accept(m);
             } else {
                 m.parent(parentModel == null ? ModelUtil.DEFAULT_ITEM_PARENT : parentModel);
-                if (!textures.isEmpty()) {
-                    m.textures(textures);
+                if (textures.isEmpty()) {
+                    texture(ModelUtil.itemTexture(this));
                 }
+                m.textures(textures);
                 m.custom(j -> j.addProperty("loader", "tfc:fluid_container"));
             }
         });

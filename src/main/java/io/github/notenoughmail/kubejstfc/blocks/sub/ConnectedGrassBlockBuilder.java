@@ -129,7 +129,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
 
         for (int i = 0 ; i < 4 ; i++) {
             final int j = i;
-            final String dir = Assistant.CARDINAL_DIRECTIONS[j].getSerializedName();
+            final String dir = Assistant.COMPASS_DIRECTIONS[j].getSerializedName();
             bs.part(dir + "=true,snowy=false", p -> p.model(top).y(j * 90));
             bs.part(dir + "=true,snowy=true", p -> p.model(snowyTop).y(j * 90));
             bs.part(dir + "=false,snowy=false", p -> p.model(side).y(j * 90));

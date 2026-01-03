@@ -1,12 +1,4 @@
 {
-  "constructors": [
-    {
-      "keys": [
-        "result",
-        "ingredients"
-      ]
-    }
-  ],
   "hidden": false,
   "keys": [
     {
@@ -30,6 +22,14 @@
       "role": "input"
     },
     {
+      "type": "ingredient",
+      "alternative_names": [
+        "primary_ingredient"
+      ],
+      "name": "primary_ingredient",
+      "role": "input"
+    },
+    {
       "type": "kubejs_tfc:optional_isp",
       "alternative_names": [
         "remainder"
@@ -40,18 +40,6 @@
       ],
       "name": "remainder",
       "role": "output"
-    },
-    {
-      "type": "optional_ingredient",
-      "alternative_names": [
-        "primary_ingredient"
-      ],
-      "default_optional": true,
-      "function_names": [
-        "primaryIngredient"
-      ],
-      "name": "primary_ingredient",
-      "role": "input"
     }
   ]
 }

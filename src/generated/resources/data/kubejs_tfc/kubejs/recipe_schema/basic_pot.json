@@ -4,8 +4,9 @@
     {
       "type": {
         "type": "list",
-        "component": "optional_ingredient",
-        "max": 5
+        "component": "ingredient",
+        "max": 5,
+        "min": 0
       },
       "alternative_names": [
         "ingredients"
