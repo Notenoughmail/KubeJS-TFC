@@ -159,7 +159,6 @@ public interface Printer {
             }
             case BlockState s -> {
                 final BlockState base = s.getBlock().defaultBlockState();
-                // TODO: 2.0.0 | Verify block states can be identity compared
                 if (base == s) {
                     append(txt, descriptor, s.getBlock(), true);
                 } else {

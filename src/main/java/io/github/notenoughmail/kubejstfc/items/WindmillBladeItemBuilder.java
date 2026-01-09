@@ -28,7 +28,7 @@ public class WindmillBladeItemBuilder extends ItemBuilder {
         BuilderRefs.windmillBlades.add(this);
     }
 
-    @Info("Sets the color to use")
+    @Info("Sets the color of the blade")
     public WindmillBladeItemBuilder bladeColor(@Nullable KubeColor color) {
         this.color = color;
         return this;

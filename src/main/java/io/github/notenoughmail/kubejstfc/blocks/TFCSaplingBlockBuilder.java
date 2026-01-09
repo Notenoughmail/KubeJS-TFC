@@ -67,7 +67,6 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Info("Sets the tree feature of the sapling")
     public TFCSaplingBlockBuilder trees(
-            String name,
             float secondaryChance,
             @Nullable ResourceKey<ConfiguredFeature<?, ?>> tree,
             @Nullable ResourceKey<ConfiguredFeature<?, ?>> secondaryTree,
@@ -77,7 +76,7 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
             @Nullable ResourceKey<ConfiguredFeature<?, ?>> secondaryFlowers
     ) {
         treeGrower = new TreeGrower(
-                name,
+                id.toString(),
                 secondaryChance,
                 Optional.ofNullable(megaTree),
                 Optional.ofNullable(secondaryMegaTree),
@@ -90,8 +89,8 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("Sets the singular tree feature of the sapling")
-    public TFCSaplingBlockBuilder tree(String name, ResourceKey<ConfiguredFeature<?, ?>> tree) {
-        return trees(name, 0.0F, tree, null, null, null, null, null);
+    public TFCSaplingBlockBuilder tree(ResourceKey<ConfiguredFeature<?, ?>> tree) {
+        return trees(0.0F, tree, null, null, null, null, null);
     }
 
     @Override

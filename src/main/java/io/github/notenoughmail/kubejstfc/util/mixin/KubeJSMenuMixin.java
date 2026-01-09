@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(KubeJSMenu.class)
 public abstract class KubeJSMenuMixin {
 
-    @Shadow(remap = false)
+    @Shadow
     @Final
     public KubeJSGUI guiData;
 

@@ -1,7 +1,7 @@
 StartupEvents.registry('block', e => {
     e.create('loose_rock', 'tfc:loose_rock')
         .texture('tfc:block/rock/smooth/marble');
-    e.create('ground_cover', 'tfc:ground_cover')
+    e.create('groundcover', 'tfc:groundcover')
         .texture('tfc:block/alabaster/raw/green');
     e.create('rock_spike', 'tfc:rock_spike')
         .texture('tfc:block/alabaster/raw/pink');
@@ -12,7 +12,7 @@ StartupEvents.registry('block', e => {
         .texture('tfc:block/rock/cracked_bricks/dacite');
     e.create('hardened', 'tfc:raw_rock')
         .texture('tfc:block/rock/cracked_bricks/gabbro');
-    e.create('ore', 'tfc:ground_cover')
+    e.create('ore', 'tfc:groundcover')
         .texture('minecraft:block/gold_block')
         .collision()
         .ore()

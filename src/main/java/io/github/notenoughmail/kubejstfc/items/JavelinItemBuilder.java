@@ -32,40 +32,48 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     public transient ResourceLocation throwingModel;
     private boolean generateThrownModel = false, generateHandModel = false;
     public transient ResourceLocation thrownTexture;
+    public transient boolean registerExtension = true;
 
     public JavelinItemBuilder(ResourceLocation i) {
         super(i, 0.7F, -2.6F);
         thrownDamage = -1F;
-        thrownTexture(id);
+        thrownTexture = newID("textures/entity/javelin", ".png");
         guiModel(newID("item/", "_gui"));
         BuilderRefs.javelins.add(this);
+        parentModel = null;
     }
 
-    @Info("Sets the texture used by the javelin when thrown as an entity")
+    @Info("Prevent an extension, which renders the thrown javelin entity in the hand in first and third person, from being registered")
+    public JavelinItemBuilder customHandHeldModel() {
+        registerExtension = false;
+        return this;
+    }
+
+    @Info("Set the texture used by the javelin when thrown as an entity")
     public JavelinItemBuilder thrownTexture(ResourceLocation texture) {
         thrownTexture = texture.withPath(s -> "textures/" + s + ".png");
         return this;
     }
 
-    @Info("Sets the model used when throwing")
+    @Info("Set the model used when throwing")
     public JavelinItemBuilder throwingModel(ResourceLocation model) {
         throwingModel = model;
         return this;
     }
 
-    @Info("Sets the javelin's thrown damage")
+    @Info("Set the javelin's thrown damage")
     public JavelinItemBuilder thrownDamage(float damage) {
         thrownDamage = damage;
         return this;
     }
 
-    @Info("Adds this to the 'tfc:skeleton_weapons' tag")
+    @Info("Add the javelin to the 'tfc:skeleton_weapons' tag")
     public JavelinItemBuilder skeletonWeapon() {
         Assistant.singleTag(this, TFCTags.Items.SKELETON_WEAPONS);
         return this;
     }
 
-    @Info(value = "Sets the model to use at the specified display context", params = {
+    @Info(value = "Set the model to use at the specified display context", params = {
             @Param(name = "perspective", value = "The display context which the specified model should be shown"),
             @Param(name = "model", value = "The model to use with the given perspective")
     })
@@ -110,21 +118,6 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
 
     @Override
     protected void generateItemModels(KubeAssetGenerator generator) {
-        if (throwingModel == null) {
-            throwingModel = id.withPath(s -> "item/" + s +"_throwing");
-            generateThrownModel = true;
-        }
-        if (generateThrownModel) {
-            // TFC does it this way...
-            generator.itemModel(id.withSuffix("_throwing_base"), m -> {
-                m.parent(KubeJSTFC.mc("item/trident_throwing"));
-                tex(m);
-            });
-            generator.itemModel(id.withSuffix("_throwing"), m -> m.custom(j -> {
-                transforms(j);
-                j.add("base", Assistant.json(b -> b.addProperty("parent", id.withPath(s -> "item/" + s + "_throwing_base").toString())));
-            }));
-        }
         if (parentModel == null) {
             parentModel = id.withPath(s -> "item/" + s + "_in_hand");
             generateHandModel = true;
@@ -134,6 +127,19 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
                 m.parent(KubeJSTFC.mc("item/trident_in_hand"));
                 tex(m);
             });
+        }
+        if (throwingModel == null) {
+            throwingModel = id.withPath(s -> "item/" + s +"_throwing");
+            generateThrownModel = true;
+        }
+        if (generateThrownModel) {
+            generator.itemModel(id.withSuffix("_throwing"), m -> m.custom(j -> {
+                transforms(j);
+                j.add("base", Util.make(new ModelGenerator(), g -> {
+                    g.parent(KubeJSTFC.mc("item/trident_throwing"));
+                    tex(g);
+                }).toJson());
+            }));
         }
         generator.itemModel(id.withSuffix("_gui"), m -> {
             m.parent(KubeAssetGenerator.GENERATED_ITEM_MODEL);
@@ -151,14 +157,14 @@ public class JavelinItemBuilder extends HandheldItemBuilder {
     }
 
     private void tex(ModelGenerator m) {
-        if (textures.isEmpty()) {
-            m.texture("particle", baseTexture);
-        } else {
-            m.textures(textures);
+        if (!textures.containsKey("particle") && textures.containsKey("layer0")) {
+            textures.put("particle", textures.get("layer0"));
         }
+        m.textures(textures);
     }
 
     private void transforms(JsonObject model) {
+        model.remove("parent");
         model.addProperty("loader", "neoforge:separate_transforms");
         model.addProperty("gui_light", "front");
         model.add("perspectives", Assistant.json(p ->

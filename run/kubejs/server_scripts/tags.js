@@ -5,6 +5,7 @@ ServerEvents.tags('block', e => {
 })
 
 ServerEvents.tags('item', e => {
+    e.add('tfc:glass_batches', 'minecraft:sand')
 })
 
 ServerEvents.tags('fluid', e => {

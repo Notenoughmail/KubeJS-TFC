@@ -22,9 +22,9 @@ public class HammerItemBuilder extends HandheldItemBuilder {
     }
 
     @Info("Sets the texture to use when this hammer is in a trip hammer, also marks it as being allowed in a trip hammer")
-    public HammerItemBuilder tripHammerTexture(ResourceLocation location) {
+    public HammerItemBuilder tripHammerTexture(ResourceLocation texture) {
         Assistant.singleTag(this, TFCTags.Items.TRIP_HAMMERS);
-        tripHammerTexture = location;
+        tripHammerTexture = texture;
         BuilderRefs.hammers.add(this);
         return this;
     }

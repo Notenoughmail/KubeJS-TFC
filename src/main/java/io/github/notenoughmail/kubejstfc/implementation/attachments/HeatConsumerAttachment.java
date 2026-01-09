@@ -19,16 +19,17 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class HeatConsumerAttachment implements BlockEntityAttachment {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("heat_consumer"), Factory.class);
 
-    public record Factory(float decayAmount) implements BlockEntityAttachmentFactory {
+    public record Factory(float decayAmount, Optional<Boolean> onlyHeatIfHigher) implements BlockEntityAttachmentFactory {
 
         @Override
         public HeatConsumerAttachment create(BlockEntityAttachmentInfo info, KubeBlockEntity entity) {
-            return new HeatConsumerAttachment(decayAmount, entity);
+            return new HeatConsumerAttachment(decayAmount, onlyHeatIfHigher.orElse(true), entity);
         }
 
         @Override
@@ -48,7 +49,7 @@ public class HeatConsumerAttachment implements BlockEntityAttachment {
     private float temperature;
 
 
-    public HeatConsumerAttachment(float tempDecay, KubeBlockEntity be) {
+    public HeatConsumerAttachment(float tempDecay, boolean onlyHeatIfHigher, KubeBlockEntity be) {
         this.tempDecay = tempDecay;
         this.be = be;
         heat = new IHeatConsumer() {
@@ -59,6 +60,7 @@ public class HeatConsumerAttachment implements BlockEntityAttachment {
 
             @Override
             public void setTemperature(float t) {
+                if (onlyHeatIfHigher && t <= temperature) return;
                 temperature = t;
             }
         };

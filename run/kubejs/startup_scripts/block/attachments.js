@@ -39,11 +39,11 @@ StartupEvents.registry('block', e => {
         })
         .rightClick(event => {
             let { player } = event;
-            let be = event.block.entity;
+            let { inv } = event.block.entity.attachments;
             if (!player.shiftKeyDown) {
-                player.openInventoryGUI(be.attachments['inv'], event.block.blockState.block.name);
+                player.openInventoryGUI(inv, event.block.blockState.block.name);
             } else {
-                be.attachments['inv'].toggleSeal();
+                inv.toggleSeal();
             }
         })
         .texture('minecraft:block/iron_block');

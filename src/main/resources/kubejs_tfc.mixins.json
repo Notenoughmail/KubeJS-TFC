@@ -25,6 +25,5 @@
   ],
   "client": [
   ],
-  "refmap": "kubejstfc.refmap.json",
   "plugin": "io.github.notenoughmail.kubejstfc.util.mixin.KubeJSTFCMixinPlugin"
 }

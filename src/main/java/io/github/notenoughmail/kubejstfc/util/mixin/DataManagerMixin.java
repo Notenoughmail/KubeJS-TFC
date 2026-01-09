@@ -9,7 +9,11 @@ import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = DataManager.class, remap = false)
+/**
+ * <b>Purpose:</b><p>
+ * Insert & deduplicate console errors into the Kube console
+ */
+@Mixin(DataManager.class)
 public abstract class DataManagerMixin {
 
     @WrapOperation(method = "updateReferences", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;[Ljava/lang/Object;)V"))

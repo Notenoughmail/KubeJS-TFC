@@ -18,7 +18,7 @@ import java.util.Collection;
 @Mixin(SelfTests.class)
 public abstract class SelfTestsMixin {
 
-    @WrapMethod(method = "logErrors", remap = false)
+    @WrapMethod(method = "logErrors")
     private static <T> boolean kubejs_tfc$LogErrors(String error, Collection<T> errors, Logger logger, Operation<Boolean> original) {
         if (TFCProperties.get().insertIntoConsole && !errors.isEmpty()) {
             final StringBuilder message = new StringBuilder();
@@ -33,7 +33,7 @@ public abstract class SelfTestsMixin {
         return original.call(error, errors, logger);
     }
 
-    @WrapMethod(method = "logWarnings", remap = false)
+    @WrapMethod(method = "logWarnings")
     private static <T> boolean kubejs_tfc$LogWarnings(String error, Collection<T> errors, Logger logger, Operation<Boolean> original) {
         if (TFCProperties.get().insertIntoConsole && !errors.isEmpty()) {
             final StringBuilder message = new StringBuilder();

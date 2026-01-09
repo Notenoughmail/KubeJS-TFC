@@ -139,7 +139,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
             add(c, tfc("axle"), AxleBlockBuilder.class, AxleBlockBuilder::new);
             add(c, tfc("log"), LogBlockBuilder.UnStripped.class, LogBlockBuilder.UnStripped::new);
             add(c, tfc("encased_axle"), EncasedAxleBlockBuilder.class, EncasedAxleBlockBuilder::new);
-            add(c, tfc("ground_cover"), GroundCoverBlockBuilder.class, GroundCoverBlockBuilder::new);
+            add(c, tfc("groundcover"), GroundcoverBlockBuilder.class, GroundcoverBlockBuilder::new);
             add(c, tfc("sapling"), TFCSaplingBlockBuilder.class, TFCSaplingBlockBuilder::new);
             add(c, tfc("rock_spike"), RockSpikeBlockBuilder.class, RockSpikeBlockBuilder::new);
             add(c, tfc("dirt"), TFCDirtBlockBuilder.class, TFCDirtBlockBuilder::new);

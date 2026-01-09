@@ -112,7 +112,7 @@ public class ClutchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
         @HideFromJS
         public ResourceLocation model(BlockBuilder builder) {
-            return powered() ? builder.newID("", "_powered") : builder.id;
+            return powered() ? builder.id.withSuffix("_powered") : builder.id;
         }
     }
 }

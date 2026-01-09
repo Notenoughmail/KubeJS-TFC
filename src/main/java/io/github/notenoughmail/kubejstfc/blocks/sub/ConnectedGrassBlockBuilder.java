@@ -44,6 +44,9 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
         models = (p, m) -> {
             m.parent(p.defaultParent);
             m.textures(textures);
+            if (p.bottom) {
+                m.texture("texture", parent.baseTexture);
+            }
         };
         BuilderRefs.grassBlockColor.add(this);
     }

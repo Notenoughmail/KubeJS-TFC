@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(TFCChunkGenerator.class)
 public abstract class TFCChunkGeneratorMixin {
 
-    @WrapOperation(method = "lambda$static$3", at = @At(value = "FIELD", target = "Lnet/dries007/tfc/world/settings/Settings;CODEC:Lcom/mojang/serialization/MapCodec;", opcode = Opcodes.GETSTATIC), remap = false)
+    @WrapOperation(method = "lambda$static$3", at = @At(value = "FIELD", target = "Lnet/dries007/tfc/world/settings/Settings;CODEC:Lcom/mojang/serialization/MapCodec;", opcode = Opcodes.GETSTATIC))
     private static MapCodec<Settings> kubejs_tfc$Modify(Operation<MapCodec<Settings>> getField) {
         return getField.call().mapResult(KubeDefaultWorldSettingsEvent.SETTINGS_TRANSFORMER);
     }

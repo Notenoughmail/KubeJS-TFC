@@ -45,15 +45,15 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return texture(TEXTURE_KEYS, tex);
     }
 
-    @Override
-    public Block createObject() {
-        return new LogBlock(createExtendedProperties(), stripped);
-    }
-
     @Info("If the item model should default to the block model, like vanilla logs")
     public LogBlockBuilder useFullBlockForItemModel() {
         blockItemModel = true;
         return this;
+    }
+
+    @Override
+    public Block createObject() {
+        return new LogBlock(createExtendedProperties(), stripped);
     }
 
     @Override

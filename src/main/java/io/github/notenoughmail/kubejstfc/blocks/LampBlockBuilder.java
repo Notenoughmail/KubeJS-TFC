@@ -22,6 +22,7 @@ import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
@@ -81,12 +82,16 @@ public class LampBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return new LampBlock(createExtendedProperties());
     }
 
+    @Override
+    public BlockBehaviour.Properties createProperties() {
+        return super.createProperties().lightLevel(state -> state.getValue(LampBlock.LIT) ? lightLevel : 0);
+    }
+
     public ExtendedProperties createExtendedProperties() {
         return super.createExtendedProperties()
                 .noOcclusion()
                 .randomTicks()
                 .pushReaction(PushReaction.DESTROY)
-                .lightLevel(state -> state.getValue(LampBlock.LIT) ? lightLevel : 0)
                 .blockEntity(TFCBlockEntities.LAMP);
     }
 

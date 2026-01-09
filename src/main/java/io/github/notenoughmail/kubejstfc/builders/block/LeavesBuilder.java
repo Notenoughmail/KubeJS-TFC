@@ -22,15 +22,15 @@ public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
         seasonalColors = false;
     }
 
-    @Info("Sets the vertical coordinate, in the range [0, 255], on TFC's `foliage_fall` colormap for the leaves")
+    @Info("Sets the vertical coordinate, in the range [0, 255], on TFC's `foliage_fall` colormap for dynamic tinting of the leaves the leaves")
     public LeavesBuilder autumnIndex(int index) {
         autumnIndex = index;
         return this;
     }
 
-    @Info("Determines if the tint of the leaves should change seasonally")
-    public LeavesBuilder seasonalColors(boolean seasonalColors) {
-        this.seasonalColors = seasonalColors;
+    @Info("Make the dynamic tinting of the leaves change with the seasons")
+    public LeavesBuilder seasonalColors() {
+        this.seasonalColors = true;
         return this;
     }
 
@@ -41,7 +41,7 @@ public abstract class LeavesBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @HideFromJS
-    public boolean seasonalColors() { return seasonalColors; }
+    public boolean hasSeasonalColors() { return seasonalColors; }
 
     @HideFromJS
     public int autumnIndex() { return autumnIndex; }

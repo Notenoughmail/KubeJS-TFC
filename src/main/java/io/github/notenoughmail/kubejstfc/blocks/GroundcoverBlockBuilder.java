@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 @ReturnsSelf
 @SuppressWarnings("unused")
-public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
+public class GroundcoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     private transient Type type;
     public transient String parent;
@@ -36,7 +36,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Nullable
     public transient Holder<Item> preexistingItem;
 
-    public GroundCoverBlockBuilder(ResourceLocation i) {
+    public GroundcoverBlockBuilder(ResourceLocation i) {
         super(i);
         type = Type.NONE;
         parent = "loose/igneous_intrusive_2";
@@ -58,13 +58,13 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Info("Sets the block to have the same bounding box as TFC's ore pieces")
-    public GroundCoverBlockBuilder ore() {
+    public GroundcoverBlockBuilder ore() {
         type = Type.ORE;
         return this;
     }
 
     @Info("Sets the block to have the same bounding box as TFC's twigs")
-    public GroundCoverBlockBuilder twig() {
+    public GroundcoverBlockBuilder twig() {
         type = Type.TWIG;
         props = props.andThen(p -> p.flammable(60, 30));
         return this;
@@ -75,19 +75,19 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
             
             Sets the parent model to 'kubejs_tfc:block/ground_cover/' + the given string
             """)
-    public GroundCoverBlockBuilder groundCoverModelShape(String s) {
+    public GroundcoverBlockBuilder groundcoverModelShape(String s) {
         parent = s;
         return this;
     }
 
     @Info("Makes the block collide with entities")
-    public GroundCoverBlockBuilder collision() {
+    public GroundcoverBlockBuilder collision() {
         noCollision = false;
         return this;
     }
 
     @Info("Sets the 'block item' of this block to an existing item")
-    public GroundCoverBlockBuilder withPreexistingItem(Holder<Item> item) {
+    public GroundcoverBlockBuilder withPreexistingItem(Holder<Item> item) {
         itemBuilder = null;
         preexistingItem = item;
         KubeRegisterInteractionsEvent.addBlockItemPlacement(item::value, this);
@@ -136,7 +136,7 @@ public class GroundCoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
         ModelUtil.ifNotDefined(generator, this, m -> {
-            m.parent(KubeJSTFC.id("block/ground_cover/" + parent));
+            m.parent(KubeJSTFC.id("block/groundcover/" + parent));
             m.textures(textures);
         });
     }

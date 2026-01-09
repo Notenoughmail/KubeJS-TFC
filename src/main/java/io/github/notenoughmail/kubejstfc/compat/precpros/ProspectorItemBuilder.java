@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.compat.precpros;
 
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.precisionprospecting.items.ProspectorItem;
@@ -33,49 +34,53 @@ public class ProspectorItemBuilder extends HandheldItemBuilder {
         prospectTag = TFCTags.Blocks.PROSPECTABLE;
     }
 
+    @Info("Set the radii, displacement, and prospect tag of the prospector based on a preset")
     public ProspectorItemBuilder builtinType(ProspectorType type) {
         defaultType = type;
         return this;
     }
 
+    @Info("set the tool level of the prospector, determines the false negative chance")
     public ProspectorItemBuilder level(int i) {
         level = i;
         return this;
     }
 
+    @Info("Set the block tag the prospector will scan for")
     public ProspectorItemBuilder prospectTag(TagKey<Block> tag) {
         prospectTag = tag;
         return this;
     }
 
+    @Info("Set the cool down of the prospector")
     public ProspectorItemBuilder coolDown(int c) {
         coolDown = c;
         return this;
     }
 
     public ProspectorItemBuilder primaryRadius(int i) {
-        return primaryRadius(() -> i);
+        return primaryRadiusSupplier(() -> i);
     }
 
-    public ProspectorItemBuilder primaryRadius(IntSupplier v) {
+    public ProspectorItemBuilder primaryRadiusSupplier(IntSupplier v) {
         primaryRadius = v;
         return this;
     }
 
     public ProspectorItemBuilder secondaryRadius(int i) {
-        return secondaryRadius(() -> i);
+        return secondaryRadiusSupplier(() -> i);
     }
 
-    public ProspectorItemBuilder secondaryRadius(IntSupplier v) {
+    public ProspectorItemBuilder secondaryRadiusSupplier(IntSupplier v) {
         secondaryRadius = v;
         return this;
     }
 
     public ProspectorItemBuilder displacement(int i) {
-        return displacement(() -> i);
+        return displacementSupplier(() -> i);
     }
 
-    public ProspectorItemBuilder displacement(IntSupplier v) {
+    public ProspectorItemBuilder displacementSupplier(IntSupplier v) {
         displacement = v;
         return this;
     }

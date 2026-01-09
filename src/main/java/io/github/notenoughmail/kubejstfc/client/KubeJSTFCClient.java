@@ -16,9 +16,11 @@ import io.github.notenoughmail.kubejstfc.items.WindmillBladeItemBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.TFCColors;
+import net.dries007.tfc.client.extensions.ItemRendererExtension;
 import net.dries007.tfc.client.model.ContainedFluidModel;
 import net.dries007.tfc.client.model.entity.WindmillBladeModel;
 import net.dries007.tfc.client.render.blockentity.BowlBlockEntityRenderer;
+import net.dries007.tfc.client.render.blockentity.JavelinItemRenderer;
 import net.dries007.tfc.client.render.blockentity.TripHammerBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.WindmillBlockEntityRenderer;
 import net.dries007.tfc.client.render.entity.ThrownJavelinRenderer;
@@ -45,6 +47,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
@@ -62,6 +65,7 @@ public class KubeJSTFCClient {
         modBus.addListener(EventPriority.LOWEST, this::setup);
         modBus.addListener(this::itemColorHandlers);
         modBus.addListener(this::blockColorHandlers);
+        modBus.addListener(this::registerExtensions);
     }
 
     private void setup(FMLClientSetupEvent event) {
@@ -173,7 +177,7 @@ public class KubeJSTFCClient {
         }
         final BlockColor foliageColor = (state, level, pos, index) -> TFCColors.getFoliageColor(pos, index);
         BuilderRefs.leafColor.forEach(b -> event.register(
-                b.seasonalColors() ?
+                b.hasSeasonalColors() ?
                         (state, level, pos, index) -> TFCColors.getSeasonalFoliageColor(pos, index, b.autumnIndex()) :
                         b.isFallen() ?
                                 (state, level, pos, index) -> 0xCF7D13 :
@@ -186,5 +190,13 @@ public class KubeJSTFCClient {
         return builders.stream()
                 .map(Supplier::get)
                 .toArray(Block[]::new);
+    }
+
+    private void registerExtensions(RegisterClientExtensionsEvent event) {
+        BuilderRefs.javelins.forEach(j -> {
+            if (j.registerExtension) {
+                event.registerItem(ItemRendererExtension.cached(() -> new JavelinItemRenderer(Cast.to(j.get()))), j.get());
+            }
+        });
     }
 }

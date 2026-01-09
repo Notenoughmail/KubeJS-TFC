@@ -51,14 +51,14 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
 
     @Info("Creates and sets the properties of the dirt's path block")
     public TFCDirtBlockBuilder path(Consumer<TFCPathBlockBuilder> path) {
-        this.path = new TFCPathBlockBuilder(newID("", "_path"), this);
+        this.path = new TFCPathBlockBuilder(id.withSuffix("_path"), this);
         path.accept(this.path);
         return this;
     }
 
     @Info("Creates and sets the properties of the dirt's farmland block")
     public TFCDirtBlockBuilder farmland(Consumer<TFCFarmlandBlockBuilder> farmland) {
-        this.farmland = new TFCFarmlandBlockBuilder(newID("", "_farmland"), this);
+        this.farmland = new TFCFarmlandBlockBuilder(id.withSuffix("_farmland"), this);
         farmland.accept(this.farmland);
         return this;
     }

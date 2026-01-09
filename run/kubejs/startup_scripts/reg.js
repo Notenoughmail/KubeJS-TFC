@@ -25,5 +25,6 @@ StartupEvents.registry('tfc:item_stack_modifiers', e => {
 
 StartupEvents.registry('tfc:glass_operation', e => {
     e.create('operation')
+        .workingTemperature(-1)
         .items('kubejs:glassworking', 'kubejs:glassworking_tool');
 })

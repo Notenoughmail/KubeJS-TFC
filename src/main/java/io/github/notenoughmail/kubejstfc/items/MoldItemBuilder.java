@@ -30,13 +30,13 @@ public class MoldItemBuilder extends FluidCapacityItemBuilder {
         return true;
     }
 
-    @Info("Alles the mold to be placed in mold tables and sets the model it uses")
-    public MoldItemBuilder allowedInMoldTable(String[] pattern) {
-        return allowedInMoldTable(pattern, null);
+    @Info("Allows the mold to be placed in mold tables and sets the model it uses")
+    public MoldItemBuilder moldTable(String[] pattern) {
+        return moldTable(pattern, null);
     }
 
     @Info("Allows the mold to be placed in mold tables and sets the model it uses")
-    public MoldItemBuilder allowedInMoldTable(String[] pattern, @Nullable Map<String, String> textures) {
+    public MoldItemBuilder moldTable(String[] pattern, @Nullable Map<String, String> textures) {
         Assistant.singleTag(this, TFCTags.Items.USABLE_IN_MOLD_TABLE);
         if (pattern.length != 14) {
             throw new IllegalArgumentException("Pattern must be 14 high by 14 wide! Was not in %s mold".formatted(id));

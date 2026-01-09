@@ -7,7 +7,6 @@ import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -25,14 +24,13 @@ public class ToolItemBuilder extends HandheldItemBuilder {
 
     @Info("Adds this item to the `tfc:knives` tag and sets its mineable blocks tag to `tfc:mineable_with_knife`")
     public ToolItemBuilder knife() {
-        mineableBlocks = TFCTags.Blocks.MINEABLE_WITH_KNIFE;
         Assistant.singleTag(this, TFCTags.Items.TOOLS_KNIFE);
-        return this;
+        return mineableBlocksTag(TFCTags.Blocks.MINEABLE_WITH_KNIFE);
     }
 
     @Info("sets the block tag that the tool can properly dig at full speed")
-    public ToolItemBuilder mineableBlocksTag(ResourceLocation blockTag) {
-        this.mineableBlocks = BlockTags.create(blockTag);
+    public ToolItemBuilder mineableBlocksTag(TagKey<Block> blockTag) {
+        this.mineableBlocks = blockTag;
         return this;
     }
 

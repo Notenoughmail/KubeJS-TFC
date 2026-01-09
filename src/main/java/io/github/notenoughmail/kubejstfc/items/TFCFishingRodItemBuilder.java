@@ -30,7 +30,7 @@ public class TFCFishingRodItemBuilder extends ItemBuilder {
         BuilderRefs.rodCast.add(this);
     }
 
-    @Info("Sets the rod's fishing strength, defaults the a value based on the speed of the rod's tier")
+    @Info("Sets the rod's fishing strength")
     public TFCFishingRodItemBuilder fishingStrength(float f) {
         fishingStrength = f;
         return this;

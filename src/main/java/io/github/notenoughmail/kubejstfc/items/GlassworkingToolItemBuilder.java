@@ -7,11 +7,16 @@ import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.component.glass.IGlassworkingTool;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
+
+import java.util.List;
 
 @ReturnsSelf
 @SuppressWarnings("unused")
@@ -48,6 +53,12 @@ public class GlassworkingToolItemBuilder extends ToolItemBuilder {
         @Override
         public GlassOperation getOperation() {
             return operation.value();
+        }
+
+        @Override
+        public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+            super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+            addToolTooltip(tooltipComponents);
         }
     }
 }

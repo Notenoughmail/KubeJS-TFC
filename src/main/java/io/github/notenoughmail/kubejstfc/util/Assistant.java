@@ -54,7 +54,7 @@ public interface Assistant {
 
             @Override
             public float getSpeed() {
-                return tier.getUses();
+                return tier.getSpeed();
             }
 
             @Override
@@ -107,6 +107,7 @@ public interface Assistant {
             if (type instanceof ParticleOptions options) {
                 return options;
             }
+            ConsoleJS.SERVER.error("'%s' is not a ParticleOptions".formatted(holder));
             return null;
         });
     }

@@ -25,13 +25,11 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unused")
 public class LooseRockBlockBuilder extends BlockBuilder {
 
-    public transient int rotate;
     public transient String rockCategory;
     public transient BiConsumer<PebbleCount, ModelGenerator> models;
 
     public LooseRockBlockBuilder(ResourceLocation i) {
         super(i);
-        rotate = 0;
         noCollision = true;
         rockCategory = "metamorphic";
         models = (c, m) -> {
@@ -45,11 +43,6 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         return texture(ModelUtil.PARTICLE_ALL_TEXTURE_KEYS, tex);
     }
 
-    @Info("Rotates the models by the given amount")
-    public LooseRockBlockBuilder rotateModel(int i) {
-        rotate = i;
-        return this;
-    }
 
     @Info("Makes the block collide with entities")
     public LooseRockBlockBuilder collision() {
@@ -97,10 +90,10 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         for (PebbleCount c : PebbleCount.VALUES) {
             final ResourceLocation m = c.modelEx(this);
             bs.variant("count=" + c.str(), v -> {
-                v.model(m).y(rotate);
-                v.model(m).y(90 + rotate);
-                v.model(m).y(180 + rotate);
-                v.model(m).y(270 + rotate);
+                v.model(m);
+                v.model(m).y(90);
+                v.model(m).y(180);
+                v.model(m).y(270);
             });
         }
     }
@@ -138,7 +131,7 @@ public class LooseRockBlockBuilder extends BlockBuilder {
         }
 
         public ResourceLocation parentModel(String rockCategory) {
-            return KubeJSTFC.id("block/ground_cover/loose/" + rockCategory + "_" + str);
+            return KubeJSTFC.id("block/groundcover/loose/" + rockCategory + "_" + str);
         }
     }
 }

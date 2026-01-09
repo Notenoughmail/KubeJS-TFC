@@ -38,13 +38,13 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
 
     @Override
     public FluidCapacityItemBuilder texture(String tex) {
-        return textures(tex, tex + "_overlay");
+        return textures(tex, tex + "_fluid");
     }
 
     @Info("Sets the base and overlay textures")
-    public FluidCapacityItemBuilder textures(String base, String overlay) {
+    public FluidCapacityItemBuilder textures(String base, String fluid) {
         textures.put("base", base);
-        textures.put("overlay", overlay);
+        textures.put("fluid", fluid);
         return this;
     }
 
@@ -89,15 +89,15 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
     public static abstract class WithLang extends FluidCapacityItemBuilder {
 
         public transient String filledKey;
-        public transient Component filledName;
+        public transient String filledText;
 
         public WithLang(ResourceLocation id) {
             super(id);
         }
 
         @Info("Sets the display name of the fluid container when filled")
-        public WithLang filledDisplayName(Component text) {
-            filledName = text;
+        public WithLang filledDisplayName(String text) {
+            filledText = text;
             return this;
         }
 
@@ -112,8 +112,8 @@ public abstract class FluidCapacityItemBuilder extends ItemBuilder {
         @Override
         public void generateLang(LangKubeEvent lang) {
             super.generateLang(lang);
-            if (filledName != null) {
-                lang.add(id.getNamespace(), getFilledKey(), filledName.getString());
+            if (filledText != null) {
+                lang.add(id.getNamespace(), getFilledKey(), filledText);
             } else {
                 lang.add(id.getNamespace(), getFilledKey(), "%s " + StringUtilsWrapper.snakeCaseToTitleCase(id.getPath()));
             }

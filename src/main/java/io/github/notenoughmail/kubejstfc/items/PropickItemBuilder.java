@@ -19,7 +19,7 @@ public class PropickItemBuilder extends HandheldItemBuilder {
         Assistant.singleTag(this, TFCTags.Items.TOOLS_PROPICK);
     }
 
-    @Info("Sets the tool level of this propick, determines the chance of having a false negative")
+    @Info("Set the tool level of this propick, determines the false negative chance")
     public PropickItemBuilder level(int level) {
         this.level = level;
         return this;

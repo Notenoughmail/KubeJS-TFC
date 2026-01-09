@@ -24,7 +24,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
 
     public transient final TFCLeavesBlockBuilder parent;
 
-    public transient BiConsumer<FallenLeafModelType, ModelGenerator> models;
+    public transient BiConsumer<FallenLeavesModelType, ModelGenerator> models;
 
     public FallenLeavesBlockBuilder(ResourceLocation i, TFCLeavesBlockBuilder parent) {
         super(i);
@@ -51,7 +51,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
             
             There are eight types and all have two properties named `.layer` and `.parentModel`, the value of the `layer` state property and the default parent model, respectively.
             """)
-    public FallenLeavesBlockBuilder models(BiConsumer<FallenLeafModelType, ModelGenerator> models) {
+    public FallenLeavesBlockBuilder models(BiConsumer<FallenLeavesModelType, ModelGenerator> models) {
         this.models = this.models.andThen(models);
         return this;
     }
@@ -63,7 +63,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        for (FallenLeafModelType t : FallenLeafModelType.VALUES) {
+        for (FallenLeavesModelType t : FallenLeavesModelType.VALUES) {
             generator.blockModel(t.model(this), m -> models.accept(t, m));
         }
     }
@@ -75,7 +75,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     protected void generateBlockState(VariantBlockStateGenerator bs) {
-        for (FallenLeafModelType type : FallenLeafModelType.VALUES) {
+        for (FallenLeavesModelType type : FallenLeavesModelType.VALUES) {
             bs.simpleVariant("layers=" + type.layers, type.modelEx(this));
         }
     }
@@ -85,7 +85,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
         return true;
     }
 
-    public enum FallenLeafModelType implements ISupplyModels {
+    public enum FallenLeavesModelType implements ISupplyModels {
         TWO,
         FOUR,
         SIX,
@@ -95,13 +95,13 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
         FOURTEEN,
         SIXTEEN;
 
-        public static final FallenLeafModelType[] VALUES = values();
+        public static final FallenLeavesModelType[] VALUES = values();
 
         public final int layers;
         private final String str;
         public final ResourceLocation parentModel;
 
-        FallenLeafModelType() {
+        FallenLeavesModelType() {
             layers = ordinal() + 1;
             str = Integer.toString(layers * 2);
             parentModel = layers == 8 ? KubeJSTFC.tfc("block/groundcover/fallen_leaves_height" + str) : LeavesBuilder.LEAVES;

@@ -30,7 +30,7 @@ public class RawRockBlockBuilder extends BlockBuilder {
         return texture(TEXTURE_KEYS, tex);
     }
 
-    @Info("Makes the default model generator use the 'side' and 'end' textures instead of just the 'end'")
+    @Info("Makes the default model generator use the 'side' and 'end' textures instead of just 'end'")
     public RawRockBlockBuilder uniqueSideTextures() {
         uniqueSideTextures = true;
         return this;

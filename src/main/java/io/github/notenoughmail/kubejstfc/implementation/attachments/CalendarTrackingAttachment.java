@@ -67,7 +67,7 @@ public class CalendarTrackingAttachment implements BlockEntityAttachment {
 
         void set();
 
-        void set(long calendarTick);
+        void set(long playerTick);
 
         long get();
 

@@ -5,6 +5,7 @@
 - Glass operations, food traits, climate models, and ISMs are now registries! They are no longer made through a custom event
 - Custom chisel modes can now be registered
 - Birthday modifications are no longer possible
+- Container limiting now applies upon opening and closing menus
 - There is no longer a jar item builder type
 - Wild crops have been split into 4 builder types, similar to non-wild crops
 - Crop model generation methods have been cut down to be much simpler and concise
