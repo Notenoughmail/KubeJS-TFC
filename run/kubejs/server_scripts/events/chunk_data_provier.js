@@ -23,7 +23,7 @@ TFCEvents.createChunkDataProvider('nether', event => {
         .spread(0.8)
         .terraces(9)
         .affine(6, 12)
-        .scaled(6, 18, 0, 1);
+        .scaled(6, 18, 0, 28);
     const rockLayerHeightNoise = TFC.noise.openSimplex2D(event.worldSeed + 30121796313692)
         .octaves(6)
         .scaled(12, 34)
@@ -53,7 +53,7 @@ TFCEvents.createChunkDataProvider('nether', event => {
             rain,
             rain,
             temp,
-            forestLayer.noise(x, z) * 28 // Kube accepts ordinal numbers for enum constants
+            forestLayer.noise(x, z) // Kube accepts ordinal numbers for enum constants
         );
     });
 

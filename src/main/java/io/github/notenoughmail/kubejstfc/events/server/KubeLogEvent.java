@@ -6,6 +6,7 @@ import net.dries007.tfc.util.events.LoggingEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Info("""
         Fires when a tree is about to be felled by an axe. Cancelling causes the block itself to drop with no side effects
@@ -32,5 +33,9 @@ public class KubeLogEvent implements KubeLevelEvent {
 
     public BlockPos getPos() {
         return event.getPos();
+    }
+
+    public BlockState getState() {
+        return event.getState();
     }
 }

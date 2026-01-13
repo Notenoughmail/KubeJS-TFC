@@ -146,6 +146,12 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
         return spawnCenterZ;
     }
 
+    @Info("Sets the spawn center to the given coordinates")
+    public void setSpawnCenter(int x, int z) {
+        spawnCenterX = x;
+        spawnCenterZ = z;
+    }
+
     @Info("Sets the temperature scale of the world, the distance from pole to pole, defaults to 20000")
     public void setTemperatureScale(int scale) {
         tempScale = scale;
@@ -207,13 +213,13 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     }
 
     @Info("Sets if the world should spawn only a finite number of continents")
-    public void setFiniteContinents(boolean finite) {
+    public void finiteContinents(boolean finite) {
         finiteContinents = finite;
     }
 
     @Info("Sets finite continents to true")
     public void finiteContinents() {
-        setFiniteContinents(true);
+        finiteContinents(true);
     }
 
     @Info("Gets the current finite continents value")

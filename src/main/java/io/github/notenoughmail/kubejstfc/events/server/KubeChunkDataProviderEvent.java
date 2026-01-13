@@ -46,8 +46,8 @@ public class KubeChunkDataProviderEvent implements KubeEvent {
     }
 
     @Info("Returns the NormalNoise defined by the noise parameters with the given id")
-    public NormalNoise getNormalNoise(ResourceLocation id) {
-        return rs.getOrCreateNoise(ResourceKey.create(Registries.NOISE, id));
+    public NormalNoise getNormalNoise(ResourceKey<NormalNoise.NoiseParameters> id) {
+        return rs.getOrCreateNoise(id);
     }
 
     @Info("Returns a RandomSource seeded by the world seed")

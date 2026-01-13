@@ -192,7 +192,7 @@ public class ClimateModelTypeBuilder extends BuilderBase<ClimateModelType<Climat
         }
 
         @Override
-        public float getTemperature(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
+        public float getInstantTemperature(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
             return instTemp.get(this, level, pos, calendarTicks, daysInMonth);
         }
 
@@ -202,7 +202,7 @@ public class ClimateModelTypeBuilder extends BuilderBase<ClimateModelType<Climat
         }
 
         @Override
-        public float getRainfall(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
+        public float getInstantRainfall(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
             return instRain.clamp(this, level, pos, calendarTicks, daysInMonth, 0F, Float.MAX_VALUE);
         }
 
@@ -219,8 +219,8 @@ public class ClimateModelTypeBuilder extends BuilderBase<ClimateModelType<Climat
 
         // The name of this method fills me with rage
         @Override
-        public float getGroundwater(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
-            return getBaseGroundwater(level, pos) + getRainfall(level, pos, calendarTicks, daysInMonth);
+        public float getInstantGroundwater(LevelReader level, BlockPos pos, long calendarTicks, int daysInMonth) {
+            return getBaseGroundwater(level, pos) + getInstantRainfall(level, pos, calendarTicks, daysInMonth);
         }
 
         @Override

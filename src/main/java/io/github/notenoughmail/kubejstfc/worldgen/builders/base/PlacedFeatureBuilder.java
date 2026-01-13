@@ -50,19 +50,14 @@ public class PlacedFeatureBuilder extends BuilderBase<PlacedFeature> {
         return add(PlacementModifier.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst());
     }
 
-    @Info("Add a `tfc:biome` modifier")
-    public PlacedFeatureBuilder tfcBiome() {
-        return add(new BiomePlacement());
-    }
-
     @Info("Add a `tfc:underground` modifier")
     public PlacedFeatureBuilder underground() {
         return add(new UndergroundPlacement());
     }
 
     @Info("Add a `tfc:volcano` modifier")
-    public PlacedFeatureBuilder volcano(boolean center, float distance) {
-        return add(new VolcanoPlacement(center, distance));
+    public PlacedFeatureBuilder cinderCone(boolean center, float distance) {
+        return add(new CinderConePlacement(center, distance));
     }
 
     @Info("Add a `tfc:shallow_water` modifier")

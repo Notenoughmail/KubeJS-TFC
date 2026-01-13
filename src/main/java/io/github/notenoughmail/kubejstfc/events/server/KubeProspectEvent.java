@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 
 @Info("""
-        Fired when a prospecting event is fired and is purely informational
+        Fired when a prospecting event is fired. Purely informational, cannot change the outcome
         """)
 @SuppressWarnings("unused")
 public class KubeProspectEvent implements KubePlayerEvent {

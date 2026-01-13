@@ -34,7 +34,7 @@ public class KubeFaunaSpawnsEvent implements KubeStartupEvent {
         return new Predicate<>(Fauna.MANAGER.getReference(id));
     }
 
-    private static <E extends Entity>SpawnPlacements.SpawnPredicate<E> make(EntityType<E> type, @Nullable String suffix) {
+    private static <E extends Entity> SpawnPlacements.SpawnPredicate<E> make(EntityType<E> type, @Nullable String suffix) {
         ResourceLocation loc = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         if (suffix != null) loc = loc.withSuffix(suffix);
         return make(loc);

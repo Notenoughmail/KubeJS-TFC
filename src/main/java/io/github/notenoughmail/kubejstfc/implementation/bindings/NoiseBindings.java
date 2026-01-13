@@ -71,13 +71,13 @@ public enum NoiseBindings {
 
     @Info("Adds a 2D noise to a list for command inspection")
     public void inspect2D(String name, Noise2D noise) {
-        KubeJSTFC.LOGGER.info("Added 2D noise '{}' to inspection list", name);
+        KubeJSTFC.debugInfo("Added 2D noise '{}' to inspection list", name);
         INSPECT_2D.get().put(name, noise);
     }
 
     @Info("Adds a 3D noise to a list for command inspection")
     public void inspect3D(String name, Noise3D noise) {
-        KubeJSTFC.LOGGER.info("Added 3D noise '{}' to inspection list", name);
+        KubeJSTFC.debugInfo("Added 3D noise '{}' to inspection list", name);
         INSPECT_3D.get().put(name, noise);
     }
 

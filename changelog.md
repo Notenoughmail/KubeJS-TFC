@@ -1,4 +1,4 @@
-### 2.0.0 (W.I.P.)
+### 2.0.0
 - Update to 1.21.1, TFC 4.0.x, KubeJS 2101.7.2
 - All features, in some form, as of 1.3.3 should be available, except as noted below
 - Support for addons not yet ported is obviously not included
@@ -11,10 +11,12 @@
 - Crop model generation methods have been cut down to be much simpler and concise
 - The climbing crop builder has been split from the double crop builder
 - Configured & placed features are now made through builders in the `ServerEvents.registry` event instead of the `TFCEvents.worldgenData` event
-  - This relies on an as-yet unmerged & unreleased PR to KubeJS to actually function 
-- TFC-specific recipe filters are currently not implemented
+  - This relies on an as-yet unmerged & unreleased PR to KubeJS to actually function
+- TFC-specific recipe filters & component replacements are currently not implemented
 - The sealable inventory attachment does not currently have the ability to function like vessels
-- The EntityJS compat is currently not included
+- EntityJS, Firmalife compat is currently not included
+
+**Note**: The Crop, bush, moss, and torch block builders have not been documented or tested. I will document them as I have the time to verify they function and/or release updates fixing issues with them. As such, until documented these builder types should be considered extra-beta: methods/functionality may change in a hotfix version without a deprecation cycle
 
 ### 1.3.3
 - The list ids command is now paginated

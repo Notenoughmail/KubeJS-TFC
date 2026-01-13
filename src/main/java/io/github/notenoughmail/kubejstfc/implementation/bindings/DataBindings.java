@@ -112,12 +112,12 @@ public enum DataBindings {
 
     @Info("Gets the current hydration at the position")
     public int getFarmlandHydration(Level level, BlockPos pos) {
-        return FarmlandBlock.getHydration(level, pos);
+        return FarmlandBlock.getInstantHydration(level, pos);
     }
 
     @Info("Gets the hydration at the position at the given calendar tick")
     public int getFarmlandHydration(Level level, BlockPos pos, long calendarTick) {
-        return FarmlandBlock.getHydration(level, pos, calendarTick);
+        return FarmlandBlock.getInstantHydration(level, pos, calendarTick);
     }
 
     @Info("Gets the fluid heat of the fluid")

@@ -20,7 +20,7 @@ public enum ClimateBindings {
     @Info("Gets the current temperature at the level and position")
     public float getCurrentTemperature(Level level, BlockPos pos) {
         final ICalendar calendar = Calendars.get(level);
-        return getModel(level).getTemperature(level, pos, calendar.getCalendarTicks(), calendar.getCalendarDaysInMonth());
+        return getModel(level).getInstantTemperature(level, pos, calendar.getCalendarTicks(), calendar.getCalendarDaysInMonth());
     }
 
     @Info("Gets the yearly average temperature at the given level and position")
@@ -30,7 +30,7 @@ public enum ClimateBindings {
 
     @Info("Gets the current rainfall at the given level and position")
     public float getCurrentRainfall(Level level, BlockPos pos) {
-        return getModel(level).getRainfall(level, pos);
+        return getModel(level).getInstantRainfall(level, pos);
     }
 
     @Info("Gets the yearly average rainfall at the given level and position")
@@ -45,7 +45,7 @@ public enum ClimateBindings {
 
     @Info("Gets the current rainfall-equivalent groundwater at the given level and position")
     public float getCurrentGroundwater(Level level, BlockPos pos) {
-        return getModel(level).getGroundwater(level, pos);
+        return getModel(level).getInstantGroundwater(level, pos);
     }
 
     @Info("Gets the yearly average rainfall-equivalent groundwater at the given level and position")

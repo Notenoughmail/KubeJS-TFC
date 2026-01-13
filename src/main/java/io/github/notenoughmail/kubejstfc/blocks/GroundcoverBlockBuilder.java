@@ -12,7 +12,7 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
-import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
+import io.github.notenoughmail.kubejstfc.events.startup.KubeInteractionsEvent;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
@@ -90,7 +90,7 @@ public class GroundcoverBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public GroundcoverBlockBuilder withPreexistingItem(Holder<Item> item) {
         itemBuilder = null;
         preexistingItem = item;
-        KubeRegisterInteractionsEvent.addBlockItemPlacement(item::value, this);
+        KubeInteractionsEvent.addBlockItemPlacement(item::value, this);
         return this;
     }
 

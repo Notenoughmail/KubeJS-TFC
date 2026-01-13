@@ -1,4 +1,4 @@
-TFCEvents.registerInteractions(e => {
+TFCEvents.interactions(e => {
     e.registerBlockPlacement('tfc:powder/diamond', 'minecraft:diamond_block');
     e.register('tfc:metal/sheet/steel', 'air', (stack, ctx) => {
         let { player, clickedPos } = ctx;

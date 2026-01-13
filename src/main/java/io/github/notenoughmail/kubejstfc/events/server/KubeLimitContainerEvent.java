@@ -16,7 +16,7 @@ import java.util.List;
 
 // I really wanted this to not be a raw port of the old event, but alas MC (& to an extent Neo) is simply not built so kindly
 @Info("""
-        This event is fired whenever a player closes a menu that is not the player's own inventory
+        This event is fired whenever a player closes or opens a menu that is not the player's own inventory
         
         A full list of valid menus can be obtained by running the command `/kubejs dump_registry minecraft:menu`
         
@@ -125,14 +125,11 @@ public record KubeLimitContainerEvent(
     }
 
     private void spitOutItem(Slot slot, ItemStack stack) {
-        float randX = level.random.nextFloat() * 0.8F;
-        float randY = level.random.nextFloat() * 0.8F + 0.3F;
-        float randZ = level.random.nextFloat() * 0.8F;
         final ItemEntity itemEntity = new ItemEntity(
                 level,
-                spawnPos.getX() + randX,
-                spawnPos.getY() + randY,
-                spawnPos.getZ() + randZ,
+                spawnPos.getX(),
+                spawnPos.getY() + 0.3F,
+                spawnPos.getZ(),
                 stack
         );
         itemEntity.setPickUpDelay(30);

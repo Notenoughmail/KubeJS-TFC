@@ -13,5 +13,5 @@ TFCEvents.defaultWorldSettings(e => {
         sand: 'minecraft:sand',
         sandstone: 'minecraft:sandstone',
         mafic: true
-    }, false);
+    }, true);
 })

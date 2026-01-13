@@ -22,7 +22,7 @@ import java.util.function.Supplier;
         Used to register custom item-block interactions that go through TFC's interaction pipeline
         """)
 @SuppressWarnings("unused")
-public class KubeRegisterInteractionsEvent implements KubeStartupEvent {
+public class KubeInteractionsEvent implements KubeStartupEvent {
 
     private static final Map<Supplier<Item>, Supplier<Block>> customBlockItemPlacements = new HashMap<>();
     public static void addBlockItemPlacement(Supplier<Item> item, Supplier<Block> block) {
@@ -32,13 +32,9 @@ public class KubeRegisterInteractionsEvent implements KubeStartupEvent {
     public static void registerPlacements() {
         customBlockItemPlacements.forEach((i, b) -> InteractionManager.registerBlock(new BlockItemPlacement(i.get(), b)));
         customBlockItemPlacements.clear();
-        if (KubeJSTFCEventHandlers.registerInteractions.hasListeners()) {
-            KubeJSTFCEventHandlers.registerInteractions.post(new KubeRegisterInteractionsEvent());
+        if (KubeJSTFCEventHandlers.interactions.hasListeners()) {
+            KubeJSTFCEventHandlers.interactions.post(new KubeInteractionsEvent());
         }
-    }
-
-    public KeyedIngredient keyedIngredient(Predicate<ItemStack> tester, Supplier<Collection<Item>> items) {
-        return KeyedIngredient.of(tester, items);
     }
 
     public void registerBlockPlacement(Item item, Block block) {
@@ -49,8 +45,8 @@ public class KubeRegisterInteractionsEvent implements KubeStartupEvent {
         InteractionManager.register(ingredient, target, action);
     }
 
-    public void registerKeyed(KeyedIngredient ingredient, InteractionManager.Target target, InteractionManager.OnItemUseAction action) {
-        InteractionManager.register(ingredient, target, action);
+    public void registerKeyed(Predicate<ItemStack> filter, Supplier<Collection<Item>> items, InteractionManager.Target target, InteractionManager.OnItemUseAction action) {
+        InteractionManager.register(KeyedIngredient.of(filter, items), target, action);
     }
 
     public void registerAbility(ItemAbility ability, InteractionManager.Target target, InteractionManager.OnItemUseAction action) {

@@ -92,7 +92,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
                     if (
                             state.getValue(TIP) &&
                             state.getValue(FLUID).getFluid() == Fluids.EMPTY &&
-                            Climate.getTemperature(level, pos) > dripTemp &&
+                            Climate.getInstantTemperature(level, pos) > dripTemp &&
                             random.nextFloat() < dripChance
                     ) {
                         if (random.nextFloat() < dripChance) {

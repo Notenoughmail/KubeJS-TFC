@@ -202,10 +202,10 @@ ServerEvents.recipes(e => {
             'XX XXX XX'
         ],
         [
-            '## ## ##',
-            '## ## ##',
-            '## ## ##',
-            '## ## ##'
+            'WW WW WW',
+            'BB BB BB',
+            'WW BB WW',
+            'WW BB WW'
         ]
     ).id('kubejs:sewing')
 

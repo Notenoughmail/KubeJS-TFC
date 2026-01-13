@@ -41,6 +41,12 @@ public class KubeJSTFC {
         }
     }
 
+    public static void debugInfo(String message, Object arg) {
+        if (TFCProperties.debug()) {
+            LOGGER.info(message, arg);
+        }
+    }
+
     public KubeJSTFC(IEventBus modBus) {
         KubeJSTFCRegistries.init(modBus);
         KubeJSTFCEventHandlers.init(modBus);

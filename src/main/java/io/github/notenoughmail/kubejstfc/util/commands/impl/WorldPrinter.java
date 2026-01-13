@@ -57,10 +57,14 @@ public interface WorldPrinter {
             append(out, "land", rockData.land());
             append(out, "volcanic", rockData.volcanic());
             append(out, "uplift", rockData.uplift());
+
             final Map<String, Map<String, String>> expanded = new HashMap<>();
             rockData.layers().forEach(ld -> expanded.putIfAbsent(ld.id(), ld.layers()));
             descriptor(out, "layers");
             appendMap(out, expanded, (map, indent) -> appendMap(out, map, indent, false), 0, false);
+
+            descriptor(out, "rocks");
+            appendMap(out, rockData.rocks(), (settings, indent) -> appendMap(out, convertRecordToMap(settings), indent, false), 0, false);
 
             KubeJSTFCCommands.sysMsg(out, ctx);
             return 1;

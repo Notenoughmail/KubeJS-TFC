@@ -14,7 +14,7 @@ import io.github.notenoughmail.kubejstfc.events.server.*;
 import io.github.notenoughmail.kubejstfc.events.startup.KubeDefaultWorldSettingsEvent;
 import io.github.notenoughmail.kubejstfc.events.startup.KubeFaunaSpawnsEvent;
 import io.github.notenoughmail.kubejstfc.events.startup.KubeProspectRepresentativeEvent;
-import io.github.notenoughmail.kubejstfc.events.startup.KubeRegisterInteractionsEvent;
+import io.github.notenoughmail.kubejstfc.events.startup.KubeInteractionsEvent;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
@@ -68,12 +68,10 @@ public class KubeJSTFCEventHandlers {
 
     // STARTUP
     public static final EventHandler defaultWorldSettings = TFCEvents.startup("defaultWorldSettings", () -> KubeDefaultWorldSettingsEvent.class);
-    public static final EventHandler registerInteractions = TFCEvents.startup("registerInteractions", () -> KubeRegisterInteractionsEvent.class);
+    public static final EventHandler interactions = TFCEvents.startup("interactions", () -> KubeInteractionsEvent.class);
     public static final EventHandler prospectRepresentatives = TFCEvents.startup("prospectRepresentatives", () -> KubeProspectRepresentativeEvent.class);
     public static final EventHandler faunaSpawns = TFCEvents.startup("faunaSpawns", () -> KubeFaunaSpawnsEvent.class);
-
-    // COMMON
-    public static final EventHandler customNutrition = TFCEvents.common("customNutrition", () -> KubeCustomNutritionEvent.class);
+    public static final EventHandler customNutrition = TFCEvents.startup("customNutrition", () -> KubeCustomNutritionEvent.class);
 
     // CLIENT
     public static final EventHandler placedItemModels = TFCEvents.client("placedItemModels", () -> KubePlacedItemModelEvent.class);
@@ -106,7 +104,7 @@ public class KubeJSTFCEventHandlers {
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {
-        KubeRegisterInteractionsEvent.registerPlacements();
+        KubeInteractionsEvent.registerPlacements();
         if (prospectRepresentatives.hasListeners()) {
             prospectRepresentatives.post(new KubeProspectRepresentativeEvent());
         }

@@ -31,6 +31,11 @@ public class KubeSelectClimateModelEvent implements KubeLevelEvent {
         return event.level();
     }
 
+    @Info("The dimension id of the level")
+    public ResourceLocation dimensionId() {
+        return getLevel().kjs$getDimension();
+    }
+
     @Info("Gets the level's TFC settings if the chunk generator is TFC-like, otherwise null")
     @Nullable
     public Settings getWorldSettings() {
