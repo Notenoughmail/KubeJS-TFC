@@ -11,14 +11,22 @@ import io.github.notenoughmail.kubejstfc.implementation.bindings.NoiseBindings;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import io.github.notenoughmail.kubejstfc.util.commands.impl.*;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
+import net.dries007.tfc.world.ChunkGeneratorExtension;
+import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.commands.arguments.blocks.BlockPredicateArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
@@ -28,6 +36,7 @@ import static net.minecraft.commands.Commands.literal;
 public class KubeJSTFCCommands {
 
     public static void register(RegisterCommandsEvent event) {
+        final CommandBuildContext buildCtx = event.getBuildContext();
         event.getDispatcher().register(
                 literal(KubeJSTFC.ID).requires(s -> s.hasPermission(2))
                         .then(literal("list_ids")
@@ -127,6 +136,33 @@ public class KubeJSTFCCommands {
                                     TFCProperties.reload().print(s -> sysMsg(s, ctx));
                                     return 1;
                                 })
+                        )
+                        .then(literal("search_for_rock")
+                                .then(argument("rock", ResourceArgument.resource(buildCtx, Registries.BLOCK))
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggestResource(
+                                                ((ChunkGeneratorExtension) ctx.getSource().getLevel().getChunkSource().getGenerator())
+                                                        .rockLayerSettings()
+                                                        .getRocks()
+                                                        .stream()
+                                                        .map(RockSettings::raw),
+                                                builder,
+                                                BuiltInRegistries.BLOCK::getKey,
+                                                Block::getName
+                                        ))
+                                        .then(argument("radius", IntegerArgumentType.integer(16, 5000))
+                                                .then(argument("sample_spacing", IntegerArgumentType.integer(16))
+                                                        .then(argument("elevation", IntegerArgumentType.integer())
+                                                                .executes(ctx -> SearchForRock.search(
+                                                                        ResourceArgument.getResource(ctx, "rock", Registries.BLOCK).value(),
+                                                                        IntegerArgumentType.getInteger(ctx, "radius"),
+                                                                        IntegerArgumentType.getInteger(ctx, "sample_spacing"),
+                                                                        IntegerArgumentType.getInteger(ctx, "elevation"),
+                                                                        ctx
+                                                                ))
+                                                        )
+                                                )
+                                        )
+                                )
                         )
         );
     }

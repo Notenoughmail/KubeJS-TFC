@@ -162,21 +162,25 @@ public interface Printer {
                 if (base == s) {
                     append(txt, descriptor, s.getBlock(), true);
                 } else {
-                    descriptor(txt, descriptor);
-                    txt.append(OBJECT_OPEN);
-                    singleIndent(txt);
-                    append(txt, "block", s.getBlock());
-                    singleIndent(txt);
-                    descriptor(txt, "properties");
                     final Map<String, Object> properties = new LinkedHashMap<>();
                     for (Property<?> p : s.getProperties()) {
                         if (!Assistant.haveSamePropertyValue(s, base, p)) {
                             properties.put(p.getName(), s.getValue(p));
                         }
                     }
-                    appendMap(txt, properties, 1, false);
-                    newLine(txt);
-                    txt.append(OBJECT_CLOSE);
+                    if (properties.isEmpty()) {
+                        append(txt, descriptor, s.getBlock(), true);
+                    } else {
+                        descriptor(txt, descriptor);
+                        txt.append(OBJECT_OPEN);
+                        singleIndent(txt);
+                        append(txt, "block", s.getBlock());
+                        singleIndent(txt);
+                        descriptor(txt, "properties");
+                        appendMap(txt, properties, 1, false);
+                        newLine(txt);
+                        txt.append(OBJECT_CLOSE);
+                    }
                 }
                 
             }
