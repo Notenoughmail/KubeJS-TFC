@@ -46,7 +46,7 @@ legacyForge {
 
             jvmArguments = ["-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition"]
 
-            systemProperty('forge.logging.console.level', 'debug')
+            // systemProperty('forge.logging.console.level', 'debug')
             systemProperty('terminal.jline', 'true')
 
             programArgument('-mixin.config=kubejs_tfc.mixins.json')

@@ -5,6 +5,7 @@ import com.notenoughmail.kubejs_tfc.recipe.js.TFCProviderRecipeJS;
 import com.notenoughmail.kubejs_tfc.util.implementation.ItemStackProviderJS;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
+import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
 import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
@@ -15,6 +16,7 @@ public interface WeldingSchema {
     RecipeKey<InputItem> SECOND_INPUT = ItemComponents.INPUT.key("second_input").preferred("secondInput");
     RecipeKey<Integer> TIER = NumberComponent.INT.key("tier").optional(-1);
     RecipeKey<ItemStackProviderJS> RESULT = ItemProviderComponent.PROVIDER.key("result");
+    RecipeKey<Boolean> COMBINE_FORGING_BONUS = BooleanComponent.BOOLEAN.key("combine_forging_bonus").optional(false).alt("combineForgingBonus").exclude();
 
-    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, FIRST_INPUT, SECOND_INPUT, TIER);
+    RecipeSchema SCHEMA = new RecipeSchema(TFCProviderRecipeJS.class, TFCProviderRecipeJS::new, RESULT, FIRST_INPUT, SECOND_INPUT, TIER, COMBINE_FORGING_BONUS);
 }

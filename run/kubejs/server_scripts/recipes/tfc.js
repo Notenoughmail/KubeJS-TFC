@@ -10,8 +10,17 @@ ServerEvents.recipes(e => {
     tfc.welding(
         'minecraft:brick',
         'tfc:rock/cobble/dacite',
-        'minecraft:clay'
+        'minecraft:clay',
+        2
     ).id('kubejs:welding');
+
+    tfc.welding(
+        'minecraft:cobblestone',
+        'tfc:metal/axe/wrought_iron',
+        'minecraft:clay_ball'
+    ).tier(3)
+        .combineForgingBonus(true)
+        .id('kubejs:welding_func');
 
     tfc.anvil(
         'minecraft:iron_block',

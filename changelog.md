@@ -1,3 +1,6 @@
+### 1.3.4 (W.I.P.)
+- Add forgotten ability to set `combine_forging_bonus` in welding recipes
+
 ### 1.3.3
 - The list ids command is now paginated
 - Add several bindings for noises
