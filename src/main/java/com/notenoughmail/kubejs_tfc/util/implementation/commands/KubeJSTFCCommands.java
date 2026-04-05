@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
@@ -13,21 +14,28 @@ import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.chunkdata.ChunkData;
+import net.dries007.tfc.world.chunkdata.ChunkDataGenerator;
 import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.settings.RockLayerSettings;
+import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.StringRepresentableArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
@@ -35,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -42,6 +51,7 @@ import static net.minecraft.commands.Commands.literal;
 public class KubeJSTFCCommands {
 
     public static void reg(RegisterCommandsEvent event) {
+        final CommandBuildContext buildCtx = event.getBuildContext();
         event.getDispatcher().register(
                 literal(KubeJSTFC.MODID).requires(s -> s.hasPermission(2))
                         .then(literal("list_ids")
@@ -134,6 +144,28 @@ public class KubeJSTFCCommands {
                                                                                 .executes(NoiseInspection::inspectNoise3DAtHeight)
                                                                         )
                                                                 )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                        .then(literal("search_for_rock")
+                                .then(argument("rock", ResourceArgument.resource(buildCtx, Registries.BLOCK))
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggestResource(
+                                                ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext ?
+                                                        ext.rockLayerSettings()
+                                                                .getRocks()
+                                                                .stream()
+                                                                .map(RockSettings::raw) :
+                                                        Stream.empty(),
+                                                builder,
+                                                BuiltInRegistries.BLOCK::getKey,
+                                                Block::getName
+                                        ))
+                                        .then(argument("radius", IntegerArgumentType.integer(16, 5000))
+                                                .then(argument("sample_spacing", IntegerArgumentType.integer(16))
+                                                        .then(argument("elevation", IntegerArgumentType.integer())
+                                                                .executes(KubeJSTFCCommands::searchForRock)
                                                         )
                                                 )
                                         )
@@ -345,6 +377,55 @@ public class KubeJSTFCCommands {
         }
         sysMsg(msg, ctx);
         return 1;
+    }
+
+    private static int searchForRock(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
+            final ChunkDataGenerator dataGenerator = ext.chunkDataProvider().generator();
+            final Block rockBlock = ResourceArgument.getResource(ctx, "rock", Registries.BLOCK).value();
+            final int radius = IntegerArgumentType.getInteger(ctx, "radius");
+            final int sampleSpacing = IntegerArgumentType.getInteger(ctx, "sample_spacing");
+            final int elevation = IntegerArgumentType.getInteger(ctx, "elevation");
+
+            final BlockPos origin = BlockPos.containing(ctx.getSource().getPosition());
+
+            final BlockPos found = new RockSearcher(
+                    radius,
+                    sampleSpacing,
+                    elevation,
+                    dataGenerator,
+                    rockBlock,
+                    origin
+            ).find();
+
+            if (found != null) {
+                sysMsg(
+                        Component.literal(
+                                "Found %s at [%d %d %d] (%d blocks away)".formatted(
+                                        BuiltInRegistries.BLOCK.getKey(rockBlock),
+                                        found.getX(),
+                                        found.getY(),
+                                        found.getZ(),
+                                        Math.round(Math.sqrt(
+                                                Math.pow((found.getX() - origin.getX()), 2) +
+                                                Math.pow((found.getZ() - origin.getZ()), 2)
+                                        ))
+                                )
+                        ).withStyle(s -> s.withClickEvent(new ClickEvent(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                "/tp @s %d %d %d".formatted(found.getX(), found.getY(), found.getZ())
+                        )).withHoverEvent(new HoverEvent(
+                                HoverEvent.Action.SHOW_TEXT,
+                                Component.translatable("chat.coordinates.tooltip")
+                        ))),
+                        ctx
+                );
+                return 1;
+            }
+            return failMsg("Could not find rock in range!", ctx);
+        } else {
+            return failMsg("World is TFC-like!", ctx);
+        }
     }
 
     static int failMsg(String msg, CommandContext<CommandSourceStack> ctx) {

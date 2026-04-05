@@ -182,7 +182,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
                 p.survivesExplosion();
                 p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
-                            j.addProperty("age", Integer.toString(stages + doubleStages - 1));
+                            j.addProperty("age", Integer.toString(stages + doubleStages));
                             j.addProperty("part", "bottom");
                         }))
                         .count(new CropYieldProvider(

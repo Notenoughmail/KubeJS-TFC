@@ -1,5 +1,7 @@
 ### 1.3.4 (W.I.P.)
 - Add forgotten ability to set `combine_forging_bonus` in welding recipes
+- Add `search_for_rock` command
+- Fix double tall crops not dropping product items while mature
 
 ### 1.3.3
 - The list ids command is now paginated
