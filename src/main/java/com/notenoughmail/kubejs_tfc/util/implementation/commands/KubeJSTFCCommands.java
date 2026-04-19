@@ -164,8 +164,9 @@ public class KubeJSTFCCommands {
                                         ))
                                         .then(argument("radius", IntegerArgumentType.integer(16, 5000))
                                                 .then(argument("sample_spacing", IntegerArgumentType.integer(16))
+                                                        .executes(ctx -> searchForRock(ctx, false))
                                                         .then(argument("elevation", IntegerArgumentType.integer())
-                                                                .executes(KubeJSTFCCommands::searchForRock)
+                                                                .executes(ctx -> searchForRock(ctx, true))
                                                         )
                                                 )
                                         )
@@ -379,13 +380,13 @@ public class KubeJSTFCCommands {
         return 1;
     }
 
-    private static int searchForRock(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int searchForRock(CommandContext<CommandSourceStack> ctx, boolean useElevation) throws CommandSyntaxException {
         if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
             final ChunkDataGenerator dataGenerator = ext.chunkDataProvider().generator();
             final Block rockBlock = ResourceArgument.getResource(ctx, "rock", Registries.BLOCK).value();
             final int radius = IntegerArgumentType.getInteger(ctx, "radius");
             final int sampleSpacing = IntegerArgumentType.getInteger(ctx, "sample_spacing");
-            final int elevation = IntegerArgumentType.getInteger(ctx, "elevation");
+            final int elevation = useElevation ? IntegerArgumentType.getInteger(ctx, "elevation") : 72;
 
             final BlockPos origin = BlockPos.containing(ctx.getSource().getPosition());
 
