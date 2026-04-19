@@ -2,7 +2,7 @@ StartupEvents.registry('block', e => {
     e.create('axle', 'tfc:axle')
         .textureAll('tfc:block/metal/smooth/gold')
         .axleTexture('tfc:block/metal/smooth/gold')
-        .waterWheel(w => {
+        .waterWheel('kubejs:water_wheel', w => {
             w.texture('tfc:kapok');
         })
         .gearBox(b => {

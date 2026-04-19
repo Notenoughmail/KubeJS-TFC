@@ -104,7 +104,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     private LootTableEntry matureEntry(boolean tall) {
-        return (LootTableEntry) ResourceUtils.createEntry(alive.seeds.id.toString())
+        return (LootTableEntry) ResourceUtils.createEntry(alive.seeds.get().id.toString())
                 .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "true");
                     if (tall) {
@@ -115,7 +115,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     private LootTableEntry notMatureEntry(boolean tall) {
-        return ResourceUtils.createEntry(alive.seeds.id.toString())
+        return ResourceUtils.createEntry(alive.seeds.get().id.toString())
                 .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                     j.addProperty("mature", "false");
                     if (tall) {

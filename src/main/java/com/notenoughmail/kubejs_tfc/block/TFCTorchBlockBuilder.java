@@ -8,6 +8,7 @@ import com.notenoughmail.kubejs_tfc.block.sub.TFCWallTorchBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import com.notenoughmail.kubejs_tfc.util.implementation.custom.block.ICustomTorchBlock;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -16,14 +17,15 @@ import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.loot.LootTableEntry;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.TFCTorchBlock;
 import net.dries007.tfc.common.items.TorchItem;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.events.DouseFireEvent;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -53,41 +55,45 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
         }
     }
 
+    private static <T extends BlockBuilder> T noCollision(T t) {
+        t.noCollision();
+        return t;
+    }
+
     public transient Supplier<Integer> decayLength;
     public transient Supplier<Optional<ParticleOptions>> flameParticle, smokeParticle;
-    @HideFromJS
-    public final DeadTorchBuilder dead;
-    @HideFromJS
-    public final TFCWallTorchBuilder wall;
-    @HideFromJS
-    public final DeadWallTorchBuilder deadWall;
-    public transient ItemBuilder deadTorchItem;
+    public transient final DelayedBuilder<DeadTorchBuilder> dead;
+    public transient final DelayedBuilder<TFCWallTorchBuilder> wall;
+    public transient final DelayedBuilder<DeadWallTorchBuilder> deadWall;
+    public transient DelayedBuilder.NullCapable<ItemBuilder> deadTorchItem;
 
     public TFCTorchBlockBuilder(ResourceLocation i) {
         super(i);
         decayLength = TFCConfig.SERVER.torchTicks;
         flameParticle = Lazy.of(() -> Optional.of(ParticleTypes.FLAME));
         smokeParticle = Lazy.of(() -> Optional.of(ParticleTypes.SMOKE));
-        dead = new DeadTorchBuilder(newID("", "_dead"), this);
-        wall = new TFCWallTorchBuilder(newID("", "_wall"), this);
-        deadWall = new DeadWallTorchBuilder(newID("", "_dead_wall"), this);
+        dead = new DelayedBuilder<>(r -> noCollision(new DeadTorchBuilder(r, this)), () -> newID("", "_dead"));
+        wall = new DelayedBuilder<>(r -> noCollision(new TFCWallTorchBuilder(r, this)), () -> newID("", "_wall"));
+        deadWall = new DelayedBuilder<>(r -> noCollision(new DeadWallTorchBuilder(r, this)), () -> newID("", "_dead_wall"));
         itemBuilder = new StandingAndWallBlockItemBuilder(i, this, wall) {
             @Override
             public Item createObject() {
-                return new TorchItem(TFCTorchBlockBuilder.this.get(), wall.get(), createItemProperties());
+                return new TorchItem(TFCTorchBlockBuilder.this.get(), wall.get().get(), createItemProperties());
             }
         };
-        deadTorchItem = new StandingAndWallBlockItemBuilder(newID("", "_dead"), dead, deadWall);
+        deadTorchItem = new DelayedBuilder.NullCapable<>(
+                r -> Util.make(
+                        new StandingAndWallBlockItemBuilder(r, dead.get(), deadWall),
+                        s -> s.texture("layer0", "tfc:block/torch_off")
+                ),
+                dead::fallbackId
+        );
         RegistryUtils.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
         itemBuilder.texture("layer0", "minecraft:block/torch");
-        deadTorchItem.texture("layer0", "tfc:block/torch_off");
         textureAll("minecraft:block/torch");
         lightLevel(14F / 15F); // WTF Kube
         renderType("cutout");
         noCollision();
-        dead.noCollision();
-        wall.noCollision();
-        deadWall.noCollision();
     }
 
     @Override
@@ -98,20 +104,23 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Info("Sets the properties for the dead item, may be null to remove")
     public TFCTorchBlockBuilder deadItem(@Nullable Consumer<ItemBuilder> item) {
-        if (item == null || deadTorchItem == null) {
-            deadTorchItem = null;
+        return deadItem(deadTorchItem.fallbackId(), item);
+    }
+
+    @Info("Sets the properties for the dead item, may be null to remove")
+    public TFCTorchBlockBuilder deadItem(ResourceLocation id, @Nullable Consumer<ItemBuilder> item) {
+        if (item == null) {
+            deadTorchItem.markNull();
         } else {
-            item.accept(deadTorchItem);
+            item.accept(deadTorchItem.get(id));
         }
         return this;
     }
 
     @Info("Sets the model for the dead block")
     public TFCTorchBlockBuilder deadModel(String model) {
-        if (deadTorchItem != null) {
-            deadTorchItem.parentModel(model);
-        }
-        dead.model(model);
+        deadTorchItem.ifNotMarkedNull(i -> i.parentModel(model));
+        dead.onConstruct(d -> d.model(model));
         return this;
     }
 
@@ -140,20 +149,41 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     }
 
     @Info("Sets the properties for the dead block")
+    @Generics(DeadTorchBuilder.class)
     public TFCTorchBlockBuilder dead(Consumer<DeadTorchBuilder> dead) {
-        dead.accept(this.dead);
+        return dead(this.dead.fallbackId(), dead);
+    }
+
+    @Info("Sets the properties for the dead block")
+    @Generics(DeadTorchBuilder.class)
+    public TFCTorchBlockBuilder dead(ResourceLocation id, Consumer<DeadTorchBuilder> dead) {
+        dead.accept(this.dead.get(id));
         return this;
     }
 
     @Info("Sets the properties for the wall block")
+    @Generics(TFCWallTorchBuilder.class)
     public TFCTorchBlockBuilder wall(Consumer<TFCWallTorchBuilder> wall) {
-        wall.accept(this.wall);
+        return wall(this.wall.fallbackId(), wall);
+    }
+
+    @Info("Sets the properties for the wall block")
+    @Generics(TFCWallTorchBuilder.class)
+    public TFCTorchBlockBuilder wall(ResourceLocation id, Consumer<TFCWallTorchBuilder> wall) {
+        wall.accept(this.wall.get(id));
         return this;
     }
 
     @Info("Sets the properties for the dead wall block")
+    @Generics(DeadWallTorchBuilder.class)
     public TFCTorchBlockBuilder deadWall(Consumer<DeadWallTorchBuilder> deadWall) {
-        deadWall.accept(this.deadWall);
+        return deadWall(this.deadWall.fallbackId(), deadWall);
+    }
+
+    @Info("Sets the properties for the dead wall block")
+    @Generics(DeadWallTorchBuilder.class)
+    public TFCTorchBlockBuilder deadWall(ResourceLocation id, Consumer<DeadWallTorchBuilder> deadWall) {
+        deadWall.accept(this.deadWall.get(id));
         return this;
     }
 
@@ -172,11 +202,12 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
         super.generateAssetJsons(generator);
-        if (deadTorchItem != null) {
-            if (deadTorchItem.modelJson != null) {
-                generator.json(deadTorchItem.newID("models/item/", ""), deadTorchItem.modelJson);
+        final ItemBuilder b = deadTorchItem.get();
+        if (b != null) {
+            if (b.modelJson != null) {
+                generator.json(b.newID("models/item/", ""), b.modelJson);
             } else {
-                generator.itemModel(deadTorchItem.id, this::deadItemModel);
+                generator.itemModel(b.id, this::deadItemModel);
             }
         }
     }
@@ -188,8 +219,10 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     }
 
     private void deadItemModel(ModelGenerator m) {
-        m.parent(deadTorchItem.parentModel.isEmpty() ? "item/generated" : deadTorchItem.parentModel);
-        m.textures(deadTorchItem.textureJson);
+        final ItemBuilder b = deadTorchItem.get();
+        assert b != null;
+        m.parent(b.parentModel.isEmpty() ? "item/generated" : b.parentModel);
+        m.textures(b.textureJson);
     }
 
     @Override
@@ -231,12 +264,10 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        if (deadTorchItem != null) {
-            RegistryInfo.ITEM.addBuilder(deadTorchItem);
-        }
-        RegistryInfo.BLOCK.addBuilder(dead);
-        RegistryInfo.BLOCK.addBuilder(wall);
-        RegistryInfo.BLOCK.addBuilder(deadWall);
+        deadTorchItem.ifNotMarkedNull(RegistryInfo.ITEM::addBuilder);
+        RegistryInfo.BLOCK.addBuilder(dead.get());
+        RegistryInfo.BLOCK.addBuilder(wall.get());
+        RegistryInfo.BLOCK.addBuilder(deadWall.get());
     }
 
     private class Impl extends TFCTorchBlock implements ICustomTorchBlock {
@@ -247,7 +278,7 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
         @Override
         public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
-            TFCTorchBlockBuilder.randomTick(level, pos, dead.get().defaultBlockState(), decayLength);
+            TFCTorchBlockBuilder.randomTick(level, pos, dead.get().get().defaultBlockState(), decayLength);
         }
 
         @Override
@@ -266,7 +297,7 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
             final BlockPos pos = event.getPos();
             final BlockState state = event.getState();
 
-            level.setBlockAndUpdate(pos, dead.get().withPropertiesOf(state));
+            level.setBlockAndUpdate(pos, dead.get().get().withPropertiesOf(state));
             event.setCanceled(true);
         }
 

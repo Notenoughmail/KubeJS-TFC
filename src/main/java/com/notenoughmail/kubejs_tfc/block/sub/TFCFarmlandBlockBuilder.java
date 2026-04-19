@@ -2,6 +2,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 
 import com.notenoughmail.kubejs_tfc.block.TFCDirtBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
+import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -28,6 +29,7 @@ public class TFCFarmlandBlockBuilder extends ExtendedPropertiesBlockBuilder {
         super(i);
         this.parent = parent;
         tag(TFCTags.Blocks.FARMLAND.location());
+        RegistryUtils.hackBlockEntity(TFCBlockEntities.FARMLAND, this);
         texture("dirt", parent.textures.get("particle").getAsString()); // Parent does not yet exist when #textureAll is called in super constructor
     }
 

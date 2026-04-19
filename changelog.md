@@ -2,6 +2,7 @@
 - Add forgotten ability to set `combine_forging_bonus` in welding recipes
 - Add `search_for_rock` command
 - Fix double tall crops not dropping product items while mature
+- Add ability to define the id of all derived blocks
 
 ### 1.3.3
 - The list ids command is now paginated

@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilde
 import com.notenoughmail.kubejs_tfc.block.sub.*;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 
 public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
-    public transient final WindmillBlockBuilder windmill;
+    public transient final DelayedBuilder<WindmillBlockBuilder> windmill;
     public transient ResourceLocation texture;
     public transient WaterWheelBlockBuilder waterWheel;
     public transient GearBoxBlockBuilder gearBox;
@@ -31,7 +32,7 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public AxleBlockBuilder(ResourceLocation i) {
         super(i);
-        windmill = new WindmillBlockBuilder(newID("", "_windmill"), this);
+        windmill = new DelayedBuilder<>(r -> new WindmillBlockBuilder(r, this), () -> newID("", "_windmill"));
         texture = newID("block/", "");
         RegistryUtils.hackBlockEntity(TFCBlockEntities.AXLE, this);
     }
@@ -46,35 +47,63 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info("Sets the properties of the axle's windmill block")
     @Generics(WindmillBlockBuilder.class)
     public AxleBlockBuilder windmill(Consumer<WindmillBlockBuilder> windmill) {
-        windmill.accept(this.windmill);
+        return windmill(this.windmill.fallbackId(), windmill);
+    }
+
+    @Info("Sets the properties of the axle's windmill block")
+    @Generics(WindmillBlockBuilder.class)
+    public AxleBlockBuilder windmill(ResourceLocation id, Consumer<WindmillBlockBuilder> windmill) {
+        windmill.accept(this.windmill.get(id));
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's water wheel block")
     @Generics(WaterWheelBlockBuilder.class)
     public AxleBlockBuilder waterWheel(Consumer<WaterWheelBlockBuilder> waterWheel) {
-        this.waterWheel = Util.make(new WaterWheelBlockBuilder(newID("", "_waterwheel"), this), waterWheel);
+        return waterWheel(newID("", "_waterwheel"), waterWheel);
+    }
+
+    @Info("Creates and sets the properties of the axle's water wheel block")
+    @Generics(WaterWheelBlockBuilder.class)
+    public AxleBlockBuilder waterWheel(ResourceLocation id, Consumer<WaterWheelBlockBuilder> waterWheel) {
+        this.waterWheel = Util.make(new WaterWheelBlockBuilder(id, this), waterWheel);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's gear box block")
     @Generics(GearBoxBlockBuilder.class)
     public AxleBlockBuilder gearBox(Consumer<GearBoxBlockBuilder> gearBox) {
-        this.gearBox = Util.make(new GearBoxBlockBuilder(newID("", "_gearbox"), this), gearBox);
+        return gearBox(newID("", "_gearbox"), gearBox);
+    }
+
+    public AxleBlockBuilder gearBox(ResourceLocation id, Consumer<GearBoxBlockBuilder> gearBox) {
+        this.gearBox = Util.make(new GearBoxBlockBuilder(id, this), gearBox);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's clutch block")
     @Generics(ClutchBlockBuilder.class)
     public AxleBlockBuilder clutch(Consumer<ClutchBlockBuilder> clutch) {
-        this.clutch = Util.make(new ClutchBlockBuilder(newID("", "_clutch"), this), clutch);
+        return clutch(newID("", "_clutch"), clutch);
+    }
+
+    @Info("Creates and sets the properties of the axle's clutch block")
+    @Generics(ClutchBlockBuilder.class)
+    public AxleBlockBuilder clutch(ResourceLocation id, Consumer<ClutchBlockBuilder> clutch) {
+        this.clutch = Util.make(new ClutchBlockBuilder(id, this), clutch);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's bladed axle block")
     @Generics(BladedAxleBlockBuilder.class)
     public AxleBlockBuilder bladedAxle(Consumer<BladedAxleBlockBuilder> bladed) {
-        bladedAxle = Util.make(new BladedAxleBlockBuilder(newID("", "_bladed"), this), bladed);
+        return bladedAxle(newID("", "_bladed"), bladed);
+    }
+
+    @Info("Creates and sets the properties of the axle's bladed axle block")
+    @Generics(BladedAxleBlockBuilder.class)
+    public AxleBlockBuilder bladedAxle(ResourceLocation id, Consumer<BladedAxleBlockBuilder> bladed) {
+        bladedAxle = Util.make(new BladedAxleBlockBuilder(id, this), bladed);
         return this;
     }
 
@@ -99,7 +128,7 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(windmill);
+        RegistryInfo.BLOCK.addBuilder(windmill.get());
         if (waterWheel != null) {
             RegistryInfo.BLOCK.addBuilder(waterWheel);
             waterWheel.createAdditionalObjects();

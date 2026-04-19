@@ -5,6 +5,7 @@ import com.eerussianguy.firmalife.common.blocks.CheeseWheelBlock;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
-    public final transient ItemBuilder sliceItem;
+    public transient final DelayedBuilder<ItemBuilder> sliceItem;
     private static final String[] ages = new String[] {"fresh", "aged", "vintage"};
     public transient final String[] insideTextures = new String[3];
     public transient String rackModel;
@@ -38,7 +39,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBl
         super(i);
         soundType(SoundType.WART_BLOCK);
         hardness(2f);
-        sliceItem = new BasicItemJS.Builder(newID("", "_slice"));
+        sliceItem = new DelayedBuilder<>(BasicItemJS.Builder::new, () -> newID("", "_slice"));
         renderType("cutout");
         RegistryUtils.hackBlockEntity(FLBlockEntities.TICK_COUNTER, this);
         rackModel = "tfc:block/barrel_rack";
@@ -79,7 +80,13 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBl
     @Info("Modifies the block's slice item")
     @Generics(ItemBuilder.class)
     public CheeseWheelBlockBuilder sliceItem(Consumer<ItemBuilder> slice) {
-        slice.accept(sliceItem);
+        return sliceItem(sliceItem.fallbackId(), slice);
+    }
+
+    @Info("Modifies the block's slice item")
+    @Generics(ItemBuilder.class)
+    public CheeseWheelBlockBuilder sliceItem(ResourceLocation id, Consumer<ItemBuilder> slice) {
+        slice.accept(sliceItem.get(id));
         return this;
     }
 
@@ -97,13 +104,13 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBl
 
     @Override
     public Block createObject() {
-        return new CheeseWheelBlock(createExtendedProperties(), sliceItem);
+        return new CheeseWheelBlock(createExtendedProperties(), sliceItem.get());
     }
 
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryInfo.ITEM.addBuilder(sliceItem);
+        RegistryInfo.ITEM.addBuilder(sliceItem.get());
     }
 
     @Override
@@ -155,7 +162,7 @@ public class CheeseWheelBlockBuilder extends ExtendedPropertiesMultipartShapedBl
         } else {
             lootBuilder.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(sliceItem.get(), 4));
+                p.addItem(new ItemStack(sliceItem.get().get(), 4));
             });
         }
 

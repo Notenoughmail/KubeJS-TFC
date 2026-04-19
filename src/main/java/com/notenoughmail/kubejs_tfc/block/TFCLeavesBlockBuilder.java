@@ -5,10 +5,12 @@ import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
 import com.notenoughmail.kubejs_tfc.block.sub.FallenLeavesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -24,15 +26,13 @@ public class TFCLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder implem
     public transient int autumnIndex;
     @Nullable
     public transient Supplier<Block> twig;
-    @Nullable
-    public transient FallenLeavesBlockBuilder fallenLeaves;
+    public transient DelayedBuilder.NullCapable<FallenLeavesBlockBuilder> fallenLeaves;
     public transient boolean seasonalColors;
 
     public TFCLeavesBlockBuilder(ResourceLocation i) {
         super(i);
-        fallenLeaves = new FallenLeavesBlockBuilder(newID("", "_fallen"), this);
+        fallenLeaves = new DelayedBuilder.NullCapable<>(r -> new FallenLeavesBlockBuilder(r, this), () -> newID("", "_fallen"));
         BuilderRefs.leafColors.add(this);
-        BuilderRefs.leafColors.add(fallenLeaves);
         seasonalColors = true;
     }
 
@@ -49,12 +49,18 @@ public class TFCLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder implem
     }
 
     @Info("Sets the properties of the fallen leaves block. May be null to not have fallen leaves")
+    @Generics(FallenLeavesBlockBuilder.class)
     public TFCLeavesBlockBuilder fallenLeaves(@Nullable Consumer<FallenLeavesBlockBuilder> fallenLeaves) {
+        return fallenLeaves(this.fallenLeaves.fallbackId(), fallenLeaves);
+    }
+
+    @Info("Sets the properties of the fallen leaves block. May be null to not have fallen leaves")
+    @Generics(FallenLeavesBlockBuilder.class)
+    public TFCLeavesBlockBuilder fallenLeaves(ResourceLocation id, @Nullable Consumer<FallenLeavesBlockBuilder> fallenLeaves) {
         if (fallenLeaves == null) {
-            BuilderRefs.leafColors.remove(this.fallenLeaves);
-            this.fallenLeaves = null;
+            this.fallenLeaves.markNull();
         } else {
-            fallenLeaves.accept(this.fallenLeaves);
+            fallenLeaves.accept(this.fallenLeaves.get(id));
         }
         return this;
     }
@@ -73,7 +79,7 @@ public class TFCLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder implem
 
     @Override
     public Block createObject() {
-        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), autumnIndex, fallenLeaves, twig);
+        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), autumnIndex, fallenLeaves.get(), twig);
     }
 
     @Override
@@ -92,10 +98,10 @@ public class TFCLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder implem
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        if (fallenLeaves != null) {
-            RegistryInfo.BLOCK.addBuilder(fallenLeaves);
-            fallenLeaves.createAdditionalObjects();
-        }
+        fallenLeaves.ifNotMarkedNull(b -> {
+            RegistryInfo.BLOCK.addBuilder(b);
+            b.createAdditionalObjects();
+        });
     }
 
     @Override

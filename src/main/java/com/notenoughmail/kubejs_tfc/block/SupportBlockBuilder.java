@@ -4,6 +4,7 @@ import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesMultipartSh
 import com.notenoughmail.kubejs_tfc.block.sub.HorizontalSupportBlockBuilder;
 import com.notenoughmail.kubejs_tfc.item.internal.StandingAndWallBlockItemBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -20,18 +21,17 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockBuilder {
 
-    public transient final HorizontalSupportBlockBuilder horizontal;
+    public transient final DelayedBuilder<HorizontalSupportBlockBuilder> horizontal;
     public transient String connection;
     public transient boolean defaultConnection;
 
     public SupportBlockBuilder(ResourceLocation i) {
         super(i);
-        horizontal = new HorizontalSupportBlockBuilder(newID("", "_horizontal"), this);
+        horizontal = new DelayedBuilder<>(r -> new HorizontalSupportBlockBuilder(r, this), () -> newID("", "_horizontal"));
         itemBuilder = new StandingAndWallBlockItemBuilder(id, this, horizontal);
         connection = newID("block/", "_connection").toString();
         defaultConnection = true;
         tag(TFCTags.Blocks.SUPPORT_BEAM.location());
-        horizontal.textureAll(id.getNamespace() + ":block/" + id.getPath());
     }
 
     @Info("Sets the model used by this and the horizontal block for sideways connections")
@@ -44,7 +44,13 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     @Info("Sets the properties of the horizontal support block")
     @Generics(HorizontalSupportBlockBuilder.class)
     public SupportBlockBuilder horizontal(Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
-        horizontalSupport.accept(horizontal);
+        return horizontal(horizontal.fallbackId(), horizontalSupport);
+    }
+
+    @Info("Sets the properties of the horizontal support block")
+    @Generics(HorizontalSupportBlockBuilder.class)
+    public SupportBlockBuilder horizontal(ResourceLocation id, Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
+        horizontalSupport.accept(horizontal.get(id));
         return this;
     }
 
@@ -56,7 +62,7 @@ public class SupportBlockBuilder extends ExtendedPropertiesMultipartShapedBlockB
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(horizontal);
+        RegistryInfo.BLOCK.addBuilder(horizontal.get());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
@@ -36,7 +37,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     public static final Lifecycle[] LC_VALUES = Lifecycle.values();
 
     public transient final Lifecycle[] lifecycles;
-    public transient final ItemBuilder productItem;
+    public transient final DelayedBuilder<ItemBuilder> productItem;
     @Nullable
     public transient ResourceLocation product;
     public transient ModelFunc models;
@@ -44,7 +45,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     public StationaryBerryBushBlockBuilder(ResourceLocation i) {
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
-        productItem = new BasicItemJS.Builder(newID("", "_product"));
+        productItem = new DelayedBuilder<>(BasicItemJS.Builder::new, () -> newID("", "_product"));
         product = null;
         models = initModels();
         renderType("cutout_mipped");
@@ -65,7 +66,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @HideFromJS
     public Supplier<Item> productGetter()  {
-        return product == null ? productItem : Lazy.of(() -> RegistryInfo.ITEM.getValue(product));
+        return product == null ? productItem.get() : Lazy.of(() -> RegistryInfo.ITEM.getValue(product));
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -80,7 +81,13 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     @Info("Modifies the bush's product item")
     @Generics(ItemBuilder.class)
     public StationaryBerryBushBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
-        productItem.accept(this.productItem);
+        return productItem(this.productItem.fallbackId(), productItem);
+    }
+
+    @Info("Modifies the bush's product item")
+    @Generics(ItemBuilder.class)
+    public StationaryBerryBushBlockBuilder productItem(ResourceLocation id, Consumer<ItemBuilder> productItem) {
+        productItem.accept(this.productItem.get(id));
         return this;
     }
 
@@ -131,7 +138,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
         if (product == null) {
-            RegistryInfo.ITEM.addBuilder(productItem);
+            RegistryInfo.ITEM.addBuilder(productItem.get());
         }
     }
 

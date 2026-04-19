@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.notenoughmail.kubejs_tfc.block.sub.DeadCropBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.SeedItemBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
@@ -22,12 +23,15 @@ import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.loot.CropYieldProvider;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -36,10 +40,9 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     public transient int stages;
     public transient final Supplier<ClimateRange> climateRange;
-    public final transient DeadCropBlockBuilder dead;
-    public transient final SeedItemBuilder seeds;
-    @Nullable
-    public transient final ItemBuilder product;
+    public final transient DelayedBuilder<DeadCropBlockBuilder> dead;
+    public transient final DelayedBuilder<SeedItemBuilder> seeds;
+    public transient final DelayedBuilder.NullCapable<ItemBuilder> product;
     public transient FarmlandBlockEntity.NutrientType nutrient;
     public transient final Type type;
     public transient boolean requiresStick;
@@ -53,14 +56,16 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         this.type = type;
         stages = 8;
         climateRange = ClimateRange.MANAGER.register(id);
-        dead = new DeadCropBlockBuilder(newID("", "_dead"), this);
-        seeds = new SeedItemBuilder(newID("", "_seeds"));
-        seeds.blockBuilder = this;
-        if (hasProduct()) {
-            product = new BasicItemJS.Builder(newID("", "_product"));
-        } else {
-            product = null;
-        }
+        dead = new DelayedBuilder<>(r -> new DeadCropBlockBuilder(r, this), () -> newID("", "_dead"));
+        seeds = new DelayedBuilder<>(
+                r -> Util.make(
+                        new SeedItemBuilder(r),
+                        s -> s.blockBuilder = this
+                ),
+                () -> newID("", "_seeds")
+        );
+        product = new DelayedBuilder.NullCapable<>(BasicItemJS.Builder::new, () -> newID("", "_product"));
+        if (!hasProduct()) product.markNull();
         nutrient = FarmlandBlockEntity.NutrientType.NITROGEN;
         requiresStick = false;
         renderType("cutout");
@@ -69,6 +74,11 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         itemBuilder = null;
         noCollision();
         fill(models);
+    }
+
+    protected Item getProductItem() {
+        if (!hasProduct()) throw new IllegalStateException("There cannot be a product item if a builder has no products");
+        return productItem == null ? Objects.requireNonNull(product.get()).get() : RegistryInfo.ITEM.getValue(productItem);
     }
 
     protected void fill(Consumer<ModelGenerator>[] fill) {
@@ -98,22 +108,40 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Info("Modifies the crop's dead block")
     @Generics(DeadCropBlockBuilder.class)
     public AbstractCropBlockBuilder deadBlock(Consumer<DeadCropBlockBuilder> deadCrop) {
-        deadCrop.accept(dead);
+        return deadBlock(dead.fallbackId(), deadCrop);
+    }
+
+    @Info("Modifies the crop's dead block")
+    @Generics(DeadCropBlockBuilder.class)
+    public AbstractCropBlockBuilder deadBlock(ResourceLocation id, Consumer<DeadCropBlockBuilder> deadCrop) {
+        deadCrop.accept(dead.get(id));
         return this;
     }
 
     @Info("Modifies the crop's seed item")
     @Generics(ItemBuilder.class)
     public AbstractCropBlockBuilder seedItem(Consumer<SeedItemBuilder> seedItem) {
-        seedItem.accept(seeds);
+        return seedItem(seeds.fallbackId(), seedItem);
+    }
+
+    @Info("Modifies the crop's seed item")
+    @Generics(ItemBuilder.class)
+    public AbstractCropBlockBuilder seedItem(ResourceLocation id, Consumer<SeedItemBuilder> seedItem) {
+        seedItem.accept(seeds.get(id));
         return this;
     }
 
     @Info("Modifies the crop's 'product' item")
     @Generics(ItemBuilder.class)
     public AbstractCropBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
+        return productItem(product.fallbackId(), productItem);
+    }
+
+    @Info("Modifies the crop's 'product' item")
+    @Generics(ItemBuilder.class)
+    public AbstractCropBlockBuilder productItem(ResourceLocation id, Consumer<ItemBuilder> productItem) {
         if (hasProduct()) {
-            productItem.accept(product);
+            productItem.accept(product.get(id));
         }
         return this;
     }
@@ -122,6 +150,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     public AbstractCropBlockBuilder existingProductItem(ResourceLocation productItem) {
         if (hasProduct()) {
             this.productItem = productItem;
+            product.markNull();
         }
         return this;
     }
@@ -240,14 +269,13 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        RegistryInfo.BLOCK.addBuilder(dead);
-        dead.createAdditionalObjects();
-        RegistryInfo.ITEM.addBuilder(seeds);
-        if (hasProduct() && productItem == null) {
-            assert product != null;
-            RegistryInfo.ITEM.addBuilder(product);
-            product.createAdditionalObjects();
-        }
+        RegistryInfo.BLOCK.addBuilder(dead.get());
+        dead.get().createAdditionalObjects();
+        RegistryInfo.ITEM.addBuilder(seeds.get());
+        product.ifNotMarkedNull(i -> {
+            RegistryInfo.ITEM.addBuilder(i);
+            i.createAdditionalObjects();
+        });
     }
 
     @Override
@@ -255,13 +283,12 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         ResourceUtils.lootTable(b -> {
             b.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(seeds.get().getDefaultInstance());
+                p.addItem(seeds.get().get().getDefaultInstance());
             });
             if (hasProduct()) {
-                assert product != null;
                 b.addPool(p -> {
                     p.survivesExplosion();
-                    p.addItem((productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()).getDefaultInstance())
+                    p.addItem(getProductItem().getDefaultInstance())
                             .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("age", String.valueOf(stages))))
                             .count(new CropYieldProvider(
                                     ConstantValue.exactly(0.0F),

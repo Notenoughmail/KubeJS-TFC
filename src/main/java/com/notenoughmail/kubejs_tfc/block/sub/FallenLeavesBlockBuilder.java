@@ -3,6 +3,7 @@ package com.notenoughmail.kubejs_tfc.block.sub;
 import com.notenoughmail.kubejs_tfc.block.TFCLeavesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesBlockBuilder;
 import com.notenoughmail.kubejs_tfc.block.internal.ILeafBuilder;
+import com.notenoughmail.kubejs_tfc.util.BuilderRefs;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
@@ -36,6 +37,7 @@ public class FallenLeavesBlockBuilder extends ExtendedPropertiesBlockBuilder imp
             }
         };
         tag(Helpers.identifier("fallen_leaves"));
+        BuilderRefs.leafColors.add(this);
     }
 
     @Info("""

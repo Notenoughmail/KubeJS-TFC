@@ -10,7 +10,6 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.generator.DataJsonGenerator;
-import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
@@ -166,7 +165,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
 
     @Override
     public Block createObject() {
-        return CropUtils.doubleCrop(createExtendedProperties(), stages, doubleStages, dead, seeds, nutrient, climateRange, requiresStick, growthMod, expiryMod);
+        return CropUtils.doubleCrop(createExtendedProperties(), stages, doubleStages, dead.get(), seeds.get(), nutrient, climateRange, requiresStick, growthMod, expiryMod);
     }
 
     @Override
@@ -175,12 +174,12 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder {
         ResourceUtils.lootTable(b -> {
             b.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(seeds.get()))
+                p.addItem(new ItemStack(seeds.get().get()))
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
             });
             b.addPool(p -> {
                 p.survivesExplosion();
-                p.addItem(new ItemStack(productItem != null ? RegistryInfo.ITEM.getValue(productItem) : product.get()))
+                p.addItem(getProductItem().getDefaultInstance())
                         .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
                             j.addProperty("age", Integer.toString(stages + doubleStages));
                             j.addProperty("part", "bottom");

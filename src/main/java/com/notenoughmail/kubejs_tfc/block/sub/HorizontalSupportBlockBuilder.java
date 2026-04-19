@@ -21,6 +21,7 @@ public class HorizontalSupportBlockBuilder extends ExtendedPropertiesMultipartSh
         this.parent = parent;
         itemBuilder = null;
         tagBlock(TFCTags.Blocks.SUPPORT_BEAM.location());
+        textureAll(parent.id.getNamespace() + ":block/" + parent.id.getPath());
     }
 
     @Override

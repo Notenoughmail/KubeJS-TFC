@@ -2,14 +2,18 @@ package com.notenoughmail.kubejs_tfc.block;
 
 import com.notenoughmail.kubejs_tfc.block.internal.ExtendedPropertiesShapedBlockBuilder;
 import com.notenoughmail.kubejs_tfc.util.ResourceUtils;
+import com.notenoughmail.kubejs_tfc.util.implementation.DelayedBuilder;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.typings.Generics;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
+import net.dries007.tfc.common.capabilities.egg.EggCapability;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
@@ -19,11 +23,15 @@ import java.util.function.Consumer;
 
 public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
-    @Nullable
-    public transient LogBlockBuilder stripped;
+    protected static final DelayedBuilder.NullCapable<LogBlockBuilder> NULL_INSTANCE = Util.make(new DelayedBuilder.NullCapable<>(
+            r -> null,
+            () -> EggCapability.KEY
+    ), DelayedBuilder.NullCapable::markNull);
+
+    public transient DelayedBuilder.NullCapable<LogBlockBuilder> stripped;
     public transient boolean blockItemModel;
 
-    public LogBlockBuilder(ResourceLocation i, @Nullable LogBlockBuilder stripped) {
+    public LogBlockBuilder(ResourceLocation i, DelayedBuilder.NullCapable<LogBlockBuilder> stripped) {
         super(i);
         this.stripped = stripped;
         blockItemModel = false;
@@ -34,7 +42,10 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new LogBlock(createExtendedProperties(), stripped);
+        return new LogBlock(
+                createExtendedProperties(),
+                stripped.get()
+        );
     }
 
     @Info("If the item model should default to the block model, like vanilla logs")
@@ -46,10 +57,10 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     @Override
     public void createAdditionalObjects() {
         super.createAdditionalObjects();
-        if (stripped != null) {
-            RegistryInfo.BLOCK.addBuilder(stripped);
-            stripped.createAdditionalObjects();
-        }
+        stripped.ifNotMarkedNull(b -> {
+            RegistryInfo.BLOCK.addBuilder(b);
+            b.createAdditionalObjects();
+        });
     }
 
     @Override
@@ -88,15 +99,22 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
     public static class UnStripped extends LogBlockBuilder {
 
         public UnStripped(ResourceLocation i) {
-            super(i, new LogBlockBuilder(i.withSuffix("_stripped"), null));
+            super(i, new DelayedBuilder.NullCapable<>(r -> new LogBlockBuilder(r, NULL_INSTANCE), () -> i.withSuffix("_stripped")));
         }
 
         @Info("Sets the properties of the log's stripped variant")
+        @Generics(LogBlockBuilder.class)
         public UnStripped stripped(@Nullable Consumer<LogBlockBuilder> builder) {
-            if (builder == null || stripped == null) {
-                stripped = null;
+            return stripped(stripped.fallbackId(), builder);
+        }
+
+        @Info("Sets the properties of the log's stripped variant")
+        @Generics(LogBlockBuilder.class)
+        public UnStripped stripped(ResourceLocation id, @Nullable Consumer<LogBlockBuilder> builder) {
+            if (builder == null) {
+                stripped.markNull();
             } else {
-                builder.accept(stripped);
+                builder.accept(stripped.get(id));
             }
             return this;
         }
