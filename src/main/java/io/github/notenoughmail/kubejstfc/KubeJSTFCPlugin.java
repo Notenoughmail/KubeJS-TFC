@@ -38,19 +38,6 @@ import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
 import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.*;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.base.PlacedFeatureBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.block.SpreadingBushBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.block.SpreadingCropBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.block.TallWildCropBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.forest.*;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.vanilla.RandomPatchBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.vanilla.SimpleBlockBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.ClusterVeinBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.DiscVeinBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.builders.vein.PipeVeinBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.support.TreeRootBuilder;
-import io.github.notenoughmail.kubejstfc.worldgen.support.Weighted;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.TFCTiers;
@@ -88,8 +75,6 @@ import net.dries007.tfc.util.climate.ClimateModels;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.Drinkable;
 import net.dries007.tfc.util.data.Fuel;
-import net.dries007.tfc.world.feature.TFCFeatures;
-import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -99,7 +84,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -192,36 +176,6 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         });
 
         registry.of(Registries.FLUID, c -> add(c, tfc("spring"), SpringWaterBuilder.class, SpringWaterBuilder::new));
-
-        registry.of(Registries.CONFIGURED_FEATURE, c -> {
-            add(c, tfc("geode"), GeodeBuilder.class, GeodeBuilder::new);
-            add(c, tfc("boulder"), BoulderBuilder.class, i -> new BoulderBuilder<>(i, TFCFeatures.BOULDER));
-            add(c, tfc("baby_boulder"), BoulderBuilder.class, i -> new BoulderBuilder<>(i, TFCFeatures.BABY_BOULDER));
-            add(c, tfc("thin_spike"), ThinSpikeBuilder.class, ThinSpikeBuilder::new);
-            add(c, tfc("cluster_vein"), ClusterVeinBuilder.class, ClusterVeinBuilder::new);
-            add(c, tfc("pipe_vein"), PipeVeinBuilder.class, PipeVeinBuilder::new);
-            add(c, tfc("disc_vein"), DiscVeinBuilder.class, DiscVeinBuilder::new);
-            add(c, tfc("if_then"), IfThenBuilder.class, IfThenBuilder::new);
-            add(c, tfc("soil_disc"), SoilDiscBuilder.class, SoilDiscBuilder::new);
-            add(c, tfc("hot_spring"), HotSpringBuilder.class, HotSpringBuilder::new);
-            add(c, tfc("spreading_crop"), SpreadingCropBuilder.class, SpreadingCropBuilder::new);
-            add(c, tfc("spreading_bush"), SpreadingBushBuilder.class, SpreadingBushBuilder::new);
-            add(c, tfc("tall_wild_crop"), TallWildCropBuilder.class, TallWildCropBuilder::new);
-            add(c, tfc("fissure"), FissureBuilder.class, FissureBuilder::new);
-            add(c, tfc("forest"), ForestBuilder.class, ForestBuilder::new);
-            add(c, tfc("forest_entry"), ForestEntryBuilder.class, ForestEntryBuilder::new);
-            add(c, tfc("overlay_tree"), OverlayTreeBuilder.class, OverlayTreeBuilder::new);
-            add(c, tfc("random_tree"), RandomTreeBuilder.class, RandomTreeBuilder::new);
-            add(c, tfc("stacked_tree"), StackedTreeBuilder.class, StackedTreeBuilder::new);
-            add(c, tfc("krummholz"), KrummholzBuilder.class, KrummholzBuilder::new);
-            add(c, KubeJSTFC.id("random_patch"), RandomPatchBuilder.class, RandomPatchBuilder::new);
-            add(c, KubeJSTFC.id("simple_block"), SimpleBlockBuilder.class, SimpleBlockBuilder::new);
-            add(c, KubeJSTFC.id("generic"), GenericFeatureBuilder.class, GenericFeatureBuilder::new);
-            add(c, tfc("cave_vegetation"), CaveVegetationBuilder.class, CaveVegetationBuilder::new);
-            add(c, tfc("flood_fill_lake"), FloodFillLakeBuilder.class, FloodFillLakeBuilder::new);
-        });
-
-        registry.of(Registries.PLACED_FEATURE, c -> add(c, KubeJSTFC.id("placed_feature"), PlacedFeatureBuilder.class, PlacedFeatureBuilder::new));
     }
     
     private static <T, B extends BuilderBase<? extends T>> void add(BuilderTypeRegistry.Callback<T> c, ResourceLocation type, Class<B> builder, Function<ResourceLocation, B> factory) {
@@ -271,7 +225,6 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
         registry.register(ItemStackProvider.class, ItemStackProviderBindings::wrap);
         registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
-        registry.register(Weighted.class, Weighted::wrap);
     }
 
     @Override
@@ -281,9 +234,6 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(FoodDefinition.DEFAULT);
         registry.register(new Drinkable(FluidIngredient.empty(), 1F, false, FoodData.of(1F), List.of()));
         registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
-        registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
-        registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
-        registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
         registry.register(new ClimateRange(0, 100, 0, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 0));
         registry.register(new Fuel(Ingredient.EMPTY, 0, 0, 1F));
         registry.register(new ItemSizeDefinition(Ingredient.EMPTY, Size.SMALL, Weight.LIGHT));
