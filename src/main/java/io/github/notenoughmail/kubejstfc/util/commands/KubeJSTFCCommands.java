@@ -151,6 +151,13 @@ public class KubeJSTFCCommands {
                                         ))
                                         .then(argument("radius", IntegerArgumentType.integer(16, 5000))
                                                 .then(argument("sample_spacing", IntegerArgumentType.integer(16))
+                                                        .executes(ctx -> SearchForRock.search(
+                                                                ResourceArgument.getResource(ctx, "rock", Registries.BLOCK).value(),
+                                                                IntegerArgumentType.getInteger(ctx, "radius"),
+                                                                IntegerArgumentType.getInteger(ctx, "sample_spacing"),
+                                                                72,
+                                                                ctx
+                                                        ))
                                                         .then(argument("elevation", IntegerArgumentType.integer())
                                                                 .executes(ctx -> SearchForRock.search(
                                                                         ResourceArgument.getResource(ctx, "rock", Registries.BLOCK).value(),

@@ -12,8 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.world.level.block.Block;
 
-import java.util.function.BiPredicate;
-
 public interface SearchForRock {
 
     static int search(
@@ -23,63 +21,89 @@ public interface SearchForRock {
             int elevation,
             CommandContext<CommandSourceStack> ctx
     ) {
-        final ChunkDataGenerator generator = ((ChunkGeneratorExtension) ctx.getSource().getLevel().getChunkSource().getGenerator()).chunkDataGenerator();
-        BlockPos found = null;
-        final BlockPos c = BlockPos.containing(ctx.getSource().getPosition());
-        final BiPredicate<Integer, Integer> yesPos = (x, z) -> generator.generateRock(x, elevation, z, 72, null).raw() == rockBlock;
-        // Horrible, ugly, terrible, works
-        escape:
-        for (int r = sampleSpacing; r < radius; r += sampleSpacing) {
-            for (int x = c.getX() - r; x < c.getX() + r; x += sampleSpacing) {
-                int z = c.getZ() - r;
-                if (yesPos.test(x, z)){
-                    found = new BlockPos(x, elevation, z);
-                    break escape;
+        if (ctx.getSource().getLevel().getChunkSource().getGenerator() instanceof ChunkGeneratorExtension ext) {
+
+            final BlockPos origin = BlockPos.containing(ctx.getSource().getPosition());
+            BlockPos found = new Searcher(
+                    radius,
+                    sampleSpacing,
+                    elevation,
+                    ext.chunkDataGenerator(),
+                    rockBlock,
+                    origin
+            ).find();
+
+            if (found != null) {
+                final BlockPos f = found;
+                KubeJSTFCCommands.sysMsg(
+                        Component.literal(
+                                "Found %s at [%d %d %d] (%d blocks away)".formatted(
+                                        BuiltInRegistries.BLOCK.getKey(rockBlock),
+                                        f.getX(),
+                                        f.getY(),
+                                        f.getZ(),
+                                        Math.round(Math.sqrt(
+                                                Math.pow((f.getX() - origin.getX()), 2) +
+                                                        Math.pow((f.getZ() - origin.getZ()), 2)
+                                        ))
+                                )
+                        ).withStyle(s -> s.withClickEvent(new ClickEvent(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                "/tp @s %d %d %d".formatted(f.getX(), f.getY(), f.getZ())
+                        )).withHoverEvent(new HoverEvent(
+                                HoverEvent.Action.SHOW_TEXT,
+                                Component.translatable("chat.coordinates.tooltip")
+                        ))),
+                        ctx
+                );
+                return 1;
+            }
+            return KubeJSTFCCommands.failMsg("Could not find rock in range!", ctx);
+        }
+        return KubeJSTFCCommands.failMsg("Not a TFC-like world", ctx);
+    }
+
+    record Searcher(
+            int radius,
+            int sampleSpacing,
+            int elevation,
+            ChunkDataGenerator generator,
+            Block raw,
+            BlockPos origin
+    ) {
+
+        private boolean test(int x, int z) {
+            return generator.generateRock(x, elevation, z, 72, null).raw() == raw;
+        }
+
+        private BlockPos pos(int x, int z) {
+            return new BlockPos(x, elevation, z);
+        }
+
+        public BlockPos find() {
+            for (int r = sampleSpacing ; r < radius ; r += sampleSpacing) {
+                for (int x = origin.getX() - r ; x < origin.getX() + r ; x += sampleSpacing) {
+                    int z = origin.getZ() - r;
+                    if (test(x, z)) {
+                        return pos(x, z);
+                    }
+                    z = origin.getZ() + r;
+                    if (test(x, z)) {
+                        return pos(x, z);
+                    }
                 }
-                z = c.getZ() + r;
-                if (yesPos.test(x, z)) {
-                    found = new BlockPos(x, elevation, z);
-                    break escape;
+                for (int z = origin.getZ() - r ; z < origin.getZ() + r ; z += sampleSpacing) {
+                    int x = origin.getX() - r;
+                    if (test(x, z)) {
+                        return pos(x, z);
+                    }
+                    x = origin.getX() + r;
+                    if (test(x, z)) {
+                        return pos(x, z);
+                    }
                 }
             }
-            for (int z = c.getZ() - r; z < c.getZ() + r ; r += sampleSpacing) {
-                int x = c.getX() - r;
-                if (yesPos.test(x, z)) {
-                    found = new BlockPos(x, elevation, z);
-                    break escape;
-                }
-                x = c.getX() + r;
-                if (yesPos.test(x, z)) {
-                    found = new BlockPos(x, elevation, z);
-                    break escape;
-                }
-            }
+            return null;
         }
-        if (found != null) {
-            final BlockPos f = found;
-            KubeJSTFCCommands.sysMsg(
-                    Component.literal(
-                            "Found %s at [%d %d %d] (%d blocks away)".formatted(
-                                    BuiltInRegistries.BLOCK.getKey(rockBlock),
-                                    f.getX(),
-                                    f.getY(),
-                                    f.getZ(),
-                                    Math.round(Math.sqrt(
-                                            Math.pow((f.getX() - c.getX()), 2) +
-                                            Math.pow((f.getZ() - c.getZ()), 2)
-                                    ))
-                            )
-                    ).withStyle(s -> s.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.SUGGEST_COMMAND,
-                            "/tp @s %d %d %d".formatted(f.getX(), f.getY(), f.getZ())
-                    )).withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            Component.translatable("chat.coordinates.tooltip")
-                    ))),
-                    ctx
-            );
-            return 1;
-        }
-        return KubeJSTFCCommands.failMsg("Could not find rock in range!", ctx);
     }
 }
