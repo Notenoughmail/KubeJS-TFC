@@ -26,6 +26,20 @@ import java.util.List;
 @RemapPrefixForJS(KubeJSTFC.MIXIN_PREFIX)
 public interface ISPExtension extends WithCodec {
 
+    @Info("Similar to #toString(), but prints the class name of enum-based modifiers")
+    default String kubejs_tfc$prettyPrint() {
+        return "ItemStackProvider[stack="
+                + stack()
+                + ", modifiers=["
+                + String.join(
+                        ", ",
+                        modifiers().stream()
+                                .map(m -> m instanceof Enum<?> e ? m.getClass().getSimpleName() + "#" + e.name() : m.toString())
+                                .toList()
+                )
+                 + "]";
+    }
+
     @Override
     default Codec<?> getCodec(Context cx) {
         return ItemStackProvider.CODEC;

@@ -3,14 +3,11 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
-import net.dries007.tfc.common.blocks.plant.fruit.SpreadingBushBlock;
 import net.dries007.tfc.world.feature.BlockConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ReturnsSelf

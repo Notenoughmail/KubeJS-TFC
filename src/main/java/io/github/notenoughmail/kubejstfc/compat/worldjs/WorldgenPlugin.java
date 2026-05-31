@@ -8,30 +8,18 @@ import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.RecordDefaultsRegistry;
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.type.TypeInfo;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.BoulderBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.GeodeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.ThinSpikeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.IfThenBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.SoilDiscBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.HotSpringBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.FloodFillLakeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.CaveVegetationBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.FissureBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.BlockConfigBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.*;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.*;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.ClusterVeinBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.PipeVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.DiscVeinBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.ForestBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.ForestEntryBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.OverlayTreeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.RandomTreeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.StackedTreeBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.KrummholzBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.PipeVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.ClimatePlacementBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
-import io.github.notenoughmail.worldjs.PlacedFeatureModifierEvent;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
+import io.github.notenoughmail.worldjs.util.event.PlacedFeatureModifierEvent;
+import io.github.notenoughmail.worldjs.util.synmethod.Args;
+import io.github.notenoughmail.worldjs.util.synmethod.Method;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.blocks.crop.WildDoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.WildSpreadingCropBlock;
@@ -47,10 +35,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.LinkedHashMap;
@@ -60,6 +48,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
+import static io.github.notenoughmail.worldjs.util.Types.*;
 
 public class WorldgenPlugin implements KubeJSPlugin {
 
@@ -127,15 +116,14 @@ public class WorldgenPlugin implements KubeJSPlugin {
         registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
         registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
         registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
+        registry.register(ClimatePlacementBuilder.DEFAULT);
     }
 
     private void addPlacementModifiers(PlacedFeatureModifierEvent event) {
 
-        final PlacedFeatureModifierEvent.Args.Arg codd, nfr, iie, iae, cmi, cma, cms;
+        final Args.Arg codd, nfr, iie, iae, cmi, cma, cms;
 
-        final TypeInfo verticalAnchor = TypeInfo.of(VerticalAnchor.class);
-
-        event.namespace(TerraFirmaCraft.MOD_ID)
+        var tfc = event.namespace(TerraFirmaCraft.MOD_ID)
                 .unit(
                         "underground",
                         new UndergroundPlacement(),
@@ -181,8 +169,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 )
                 .register(
                         "shallowWater",
-                        event.arg("minDepth", int.class, "The minimum depth of water required")
-                                .arg("maxDepth", int.class, "The maximum depth of water permitted"),
+                        event.arg("minDepth", INT, "The minimum depth of water required")
+                                .arg("maxDepth", INT, "The maximum depth of water permitted"),
                         a -> {
                             final int min = i(a[0]), max = i(a[1]);
                             if (min < 1 || max < 1)
@@ -193,7 +181,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 )
                 .register(
                         "nearFluid",
-                        event.arg(nfr = event.singleArg("radius", int.class, "The radius to check for fluid"))
+                        event.arg(nfr = event.singleArg("radius", INT, "The radius to check for fluid"))
                                 .arg("fluids", TypeInfo.RAW_LIST.withParams(TypeInfo.of(Fluid.class)), "The fluids to consider"),
                         a -> {
                             final int r = i(a[0]);
@@ -215,8 +203,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 )
                 .register(
                         "intertidal",
-                        event.arg(iie = event.singleArg("minElevation", int.class, "The minimum valid tide elevation"))
-                                .arg(iae = event.singleArg("maxElevation", int.class, "The maximum valid tide elevation")),
+                        event.arg(iie = event.singleArg("minElevation", INT, "The minimum valid tide elevation"))
+                                .arg(iae = event.singleArg("maxElevation", INT, "The maximum valid tide elevation")),
                         a -> new IntertidalPlacement(i(a[0]), i(a[1])),
                         "Add a 'tfc:intertidal' modifier"
                 )
@@ -235,8 +223,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 .register(
                         "flatEnough",
                         event.arg("flatness", float.class, "The minimum flatness of the checked area")
-                                .arg("radius", int.class, "The horizontal distance to check")
-                                .arg("maxDepth", int.class, "The depth below the initial position to check"),
+                                .arg("radius", INT, "The horizontal distance to check")
+                                .arg("maxDepth", INT, "The depth below the initial position to check"),
                         a -> {
                             final float f = f(a[0]);
                             final int r = i(a[1]), d = i(a[2]);
@@ -251,15 +239,18 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 .registerSingleArg(
                         "climate",
                         "climate",
-                        TypeInfo.RAW_CONSUMER.withParams(TypeInfo.of(ClimatePlacementBuilder.class)),
+                        ClimatePlacementBuilder.class,
                         "The climate restrictions",
-                        ClimatePlacementBuilder::make,
+                        builder -> {
+                            builder.verify(null, IllegalArgumentException::new);
+                            return builder.build();
+                        },
                         "Add a 'tfc:climate' modifier"
                 )
                 .register(
                         "carvingMask",
-                        event.arg(cmi = event.singleArg("minY", verticalAnchor, "The minimum valid vertical bounds"))
-                                .arg(cma = event.singleArg("maxY", verticalAnchor, "The maximum valid vertical bounds"))
+                        event.arg(cmi = event.singleArg("minY", VERTICAL_ANCHOR, "The minimum valid vertical bounds"))
+                                .arg(cma = event.singleArg("maxY", VERTICAL_ANCHOR, "The maximum valid vertical bounds"))
                                 .arg(cms = event.singleArg("step", GenerationStep.Carving.class, "The carving step volume to check")),
                         a -> new BoundedCarvingMaskPlacement(c(a[0]), c(a[1]), c(a[2])),
                         "Add a 'tfc:carving_mask' modifier"
@@ -279,12 +270,15 @@ public class WorldgenPlugin implements KubeJSPlugin {
                 .registerSingleArg(
                         "onTop",
                         "predicate",
-                        BlockPredicate.class,
+                        BLOCK_PREDICATE,
                         "The block required below for a position to be valid",
                         OnTopPlacement::new,
                         "Add a 'tfc:on_top' modifier"
                 )
         ;
+        if (!FMLEnvironment.production) {
+            tfc.printAll();
+        }
     }
 
     private static int i(Object o) {
@@ -299,7 +293,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
         return Cast.to(o);
     }
 
-    private static <M extends CenterOrDistanceToPlacement<?>> PlacedFeatureModifierEvent.Method<Float> centerOrDistDist(BiFunction<Boolean, Float, M> constructor) {
+    private static <M extends CenterOrDistanceToPlacement<?>> Method<Float, ? extends M> centerOrDistDist(BiFunction<Boolean, Float, M> constructor) {
         return f -> {
             if (f > 1 || f < 0)
                 throw new IllegalArgumentException("'distance' must be in the range [0, 1]");

@@ -151,12 +151,14 @@ dependencies {
 
     implementation "curse.maven:jade-324717:${jade_file}"
 
-    // implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
-    implementation fileTree(dir: 'libs', include: "*.jar")
+    implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    // implementation fileTree(dir: 'libs', include: "*.jar")
     implementation "dev.latvian.mods:rhino:${rhino_version}"
 
     implementation "curse.maven:entityjs-967617:${entityjs_file}"
     implementation "curse.maven:geckolib-388172:${geckolib_file}"
+
+    implementation "curse.maven:worldjs-997691:${worldjs_file}"
 
     interfaceInjectionData(
             "dev.latvian.mods:kubejs-neoforge:${kubejs_version}",

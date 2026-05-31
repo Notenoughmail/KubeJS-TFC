@@ -18,4 +18,6 @@ StartupEvents.registry('block', e => {
         .ore()
         .withPreexistingItem('minecraft:gold_nugget')
         .hardness(0.1);
+    e.create('gc_model_test', 'tfc:groundcover')
+        .parentModel('minecraft:block/cobblestone')
 })

@@ -23,11 +23,11 @@ public interface ModelUtil {
 
     static void ifNotDefined(KubeAssetGenerator g, BlockBuilder b, Consumer<ModelGenerator> m) {
         g.blockModel(b.id, c -> {
-            if (b.parentModel != null) {
+            if (b.modelGenerator != null) {
+                b.modelGenerator.accept(c);
+            } else if (b.parentModel != null) {
                 c.parent(b.parentModel);
                 c.textures(b.textures);
-            } else if (b.modelGenerator != null) {
-                b.modelGenerator.accept(c);
             } else {
                 m.accept(c);
             }

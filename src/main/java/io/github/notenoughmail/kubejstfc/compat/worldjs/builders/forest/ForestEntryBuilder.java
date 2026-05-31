@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
-import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
@@ -27,7 +26,7 @@ import java.util.function.Consumer;
 @ReturnsSelf
 public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<ForestConfig.Entry> {
 
-    public transient Consumer<ClimatePlacementBuilder> climate;
+    public transient ClimatePlacementBuilder climate;
     @Nullable
     public transient BlockState bushLog, bushLeaves, fallenLog, fallenLeaves;
     @Nullable
@@ -40,7 +39,7 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     public ForestEntryBuilder(ResourceLocation id) {
         super(id, TFCFeatures.FOREST_ENTRY);
-        climate = c -> {};
+        climate = ClimatePlacementBuilder.DEFAULT;
         oldGrowthChance = 6;
         spoilerOldGrowthChance = 200;
         fallenChance = 14;
@@ -48,8 +47,9 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
     }
 
     @Info("The climate conditions this tree entry can spawn in")
-    public ForestEntryBuilder climate(Consumer<ClimatePlacementBuilder> c) {
-        climate = c;
+    public ForestEntryBuilder climate(ClimatePlacementBuilder placement) {
+        placement.verify("climate", this::exception);
+        climate = placement;
         return  this;
     }
 
@@ -137,16 +137,15 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
         return this;
     }
 
-    @Info("DO NOT USE! Forest entries cannot be placed!")
     @Override
-    public ConfiguredFeatureBuilder<ForestConfig.Entry> withPlacement(Context ctx, KubeResourceLocation id, Consumer<PlacedFeatureBuilder> builder) {
+    protected ConfiguredFeatureBuilder<ForestConfig.Entry> placement(Context ctx, ResourceLocation id, Consumer<PlacedFeatureBuilder> builder) {
         throw exception("Forest entries cannot have placements!");
     }
 
     @Override
     public ForestConfig.Entry createFeatureConfiguration() {
         return new ForestConfig.Entry(
-                ClimatePlacementBuilder.make(climate),
+                climate.build(),
                 Optional.ofNullable(bushLog),
                 Optional.ofNullable(bushLeaves),
                 Optional.ofNullable(fallenLog),

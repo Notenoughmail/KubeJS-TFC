@@ -10,8 +10,6 @@ import net.dries007.tfc.world.feature.cave.ThinSpikeConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
-import static software.bernie.geckolib.GeckoLibConstants.exception;
-
 @ReturnsSelf
 public class ThinSpikeBuilder extends ConfiguredFeatureBuilder.WithFeature<ThinSpikeConfig> {
 

@@ -75,12 +75,10 @@ import net.dries007.tfc.util.climate.ClimateModels;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.Drinkable;
 import net.dries007.tfc.util.data.Fuel;
-import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 import java.util.List;
