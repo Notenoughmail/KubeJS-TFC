@@ -103,7 +103,7 @@ public class KubeJSTFCCommands {
                                                                                         BlockPosArgument.getLoadedBlockPos(ctx, "to")
                                                                                 ),
                                                                                 TreeSolver.get("log_block", ctx),
-                                                                                (TFCLeavesBlock) TreeSolver.get("leaves_block", ctx),
+                                                                                TreeSolver.get("leaves_block", ctx),
                                                                                 IntegerArgumentType.getInteger(ctx, "trunk_size")
                                                                         ))
                                                                 )

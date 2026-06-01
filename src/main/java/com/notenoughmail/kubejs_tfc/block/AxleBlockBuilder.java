@@ -115,7 +115,7 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new AxleBlock(createExtendedProperties(), UtilsJS.cast(windmill), texture);
+        return new AxleBlock(createExtendedProperties(), UtilsJS.cast(windmill.get()), texture);
     }
 
     @Override

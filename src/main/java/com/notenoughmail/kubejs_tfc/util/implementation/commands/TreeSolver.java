@@ -78,13 +78,13 @@ public class TreeSolver {
             }
     };
 
-    public static int solve(CommandSourceStack source, BoundingBox area, Block log, TFCLeavesBlock leaves, int trunkSize) throws CommandSyntaxException {
+    public static int solve(CommandSourceStack source, BoundingBox area, BlockState log, BlockState leaves, int trunkSize) throws CommandSyntaxException {
         final ServerLevel level = source.getLevel();
         area = area.inflatedBy(1); // Allow boxes with equal corners to scan the single block it envelops
 
         final Map<BlockPos, BranchDirection> logDir = new HashMap<>();
         @Nullable
-        final Map<BlockPos, Direction.Axis> logAxis = log.getStateDefinition().getProperties().contains(BlockStateProperties.AXIS) ?
+        final Map<BlockPos, Direction.Axis> logAxis = log.getProperties().contains(BlockStateProperties.AXIS) ?
                 new HashMap<>() :
                 null;
 
@@ -96,14 +96,14 @@ public class TreeSolver {
 
         // Do the replacement in bulk after the scan so as not to need to check for both glass & the log block and to not affect the world if there is a malformed log placement
         logDir.forEach((pos, dir) -> {
-            BlockState state = log.defaultBlockState().setValue(TFCBlockStateProperties.BRANCH_DIRECTION, dir);
+            BlockState state = log.setValue(TFCBlockStateProperties.BRANCH_DIRECTION, dir);
             if (logAxis != null) {
                 state = state.setValue(BlockStateProperties.AXIS, logAxis.get(pos));
             }
             level.setBlockAndUpdate(pos, state);
         });
 
-        final TFCLeavesBlockAccessor leafAccessor = (TFCLeavesBlockAccessor) leaves;
+        final TFCLeavesBlockAccessor leafAccessor = (TFCLeavesBlockAccessor) leaves.getBlock();
         final IntegerProperty distProp = leafAccessor.kubejs_tfc$AccessDistProp();
         final int maxDist = leafAccessor.kubejs_tfc$MaxDist();
 
@@ -117,7 +117,8 @@ public class TreeSolver {
             if (dist <= maxDist) {
                 level.setBlockAndUpdate(
                         pos,
-                        leaves.defaultBlockState().setValue(distProp, dist)
+                        leaves.setValue(distProp, dist)
+                                .setValue(TFCLeavesBlock.PERSISTENT, false)
                 );
                 offerLeaves(pos, leavesQueue, level);
                 blocks++;
@@ -428,8 +429,8 @@ public class TreeSolver {
         return new ArgType(ctx, log);
     }
 
-    public static Block get(String name, CommandContext<CommandSourceStack> ctx) {
-        return ctx.getArgument(name, BlockInput.class).getState().getBlock();
+    public static BlockState get(String name, CommandContext<CommandSourceStack> ctx) {
+        return ctx.getArgument(name, BlockInput.class).getState();
     }
 
     public static final class ArgType extends BlockStateArgument {

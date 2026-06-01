@@ -74,14 +74,13 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
             case 0 -> {}
             case 1 -> appendMap(cmp, "", convertRecordToMap(d.getEffects().iterator().next()), 0, false);
             default -> {
-                var list = (List<Drinkable.Effect>) d.getEffects();
-                int i = 0;
-                while (i < list.size() - 1) {
-                    appendMap(cmp, "", convertRecordToMap(list.get(i)), 0, false);
-                    cmp.append(",\n");
-                    i++;
+                final Iterator<Drinkable.Effect> iterator = d.getEffects().iterator();
+                while (iterator.hasNext()) {
+                    appendMap(cmp, "", convertRecordToMap(iterator.next()), 0, false);
+                    if (iterator.hasNext()) {
+                        cmp.append(",\n");
+                    }
                 }
-                appendMap(cmp, "", convertRecordToMap(list.get(list.size() -1)), 0, false);
             }
         }
         cmp.append("]");
@@ -267,7 +266,7 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         final var regEntry = registry.get(regId);
         if (regEntry == null) return Set.of();
 
-        final Set<String> names = new HashSet<>();
+        final Set<String> names = new LinkedHashSet<>();
         ((DataManagerAccessor<?>) manager).kubejs_tfc$Types().forEach((name, type) -> {
             if (lookup.test(UtilsJS.cast(type), UtilsJS.cast(regEntry))) {
                 names.add(name.toString());
@@ -480,29 +479,22 @@ public enum DataType implements IExtensibleEnum, StringRepresentable {
         } else {
             out.append(mov + "{");
         }
-        int i = 0;
-        final Set<Map.Entry<String, T>> entries = map.entrySet();
-        if (entries.size() > 1) {
+
+        if (map.isEmpty()) {
+            out.append("  }");
+        } else {
             out.append(CommonComponents.NEW_LINE);
-            for (Map.Entry<String, T> entry : entries) {
-                i++;
+            final Iterator<Map.Entry<String, T>> iterator = map.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, T> entry = iterator.next();
                 simpleDescriptor(out, mov + "  " + entry.getKey());
                 forEach.accept(entry.getValue(), indent + 1);
-                if (i != map.size()) {
+                if (iterator.hasNext()) {
                     out.append(",");
                 }
                 out.append(CommonComponents.NEW_LINE);
             }
             out.append(mov + "}");
-        } else {
-            out.append("  ");
-            if (!entries.isEmpty()) {
-                final Map.Entry<String, T> entry = UtilsJS.cast(entries.toArray()[0]); // Ugly, but eh
-                simpleDescriptor(out, entry.getKey());
-                forEach.accept(entry.getValue(), indent + 1);
-                out.append("  ");
-            }
-            out.append("}");
         }
         if (needDescriptor) {
             out.append(CommonComponents.NEW_LINE);

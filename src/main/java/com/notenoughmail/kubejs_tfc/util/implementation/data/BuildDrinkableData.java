@@ -23,7 +23,8 @@ public class BuildDrinkableData {
     private final JsonArray effects = new JsonArray();
     @Nullable
     private JsonObject food;
-
+    @Nullable
+    private Boolean mayDrinkWhenFull;
 
     public BuildDrinkableData(FluidIngredient fluidIngredient) {
         this.fluidIngredient = fluidIngredient;
@@ -74,6 +75,12 @@ public class BuildDrinkableData {
         return this;
     }
 
+    @Info("If the drinkable may be drunken when the player has full thirst")
+    public BuildDrinkableData mayDrinkWhenFull(boolean b) {
+        mayDrinkWhenFull = b;
+        return this;
+    }
+
     public JsonObject toJson() {
         final JsonObject json = new JsonObject();
         json.add("ingredient", fluidIngredient.toJson());
@@ -91,6 +98,9 @@ public class BuildDrinkableData {
         }
         if (food != null) {
             json.add("food", food);
+        }
+        if (mayDrinkWhenFull != null) {
+            json.addProperty("may_drink_when_full", mayDrinkWhenFull);
         }
         return json;
     }

@@ -16,6 +16,7 @@ StartupEvents.registry('block', e => {
         .twig('kubejs:ore')
         .autumnIndex(23)
         .textureAll('minecraft:block/oak_leaves')
+        .tagBoth('minecraft:leaves')
         .fallenLeaves(fallen => {
             fallen.textureAll('minecraft:block/spruce_leaves');
             fallen.noDynamicTinting();

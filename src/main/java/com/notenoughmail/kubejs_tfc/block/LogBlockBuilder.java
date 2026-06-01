@@ -28,7 +28,7 @@ public class LogBlockBuilder extends ExtendedPropertiesShapedBlockBuilder {
             () -> EggCapability.KEY
     ), DelayedBuilder.NullCapable::markNull);
 
-    public transient DelayedBuilder.NullCapable<LogBlockBuilder> stripped;
+    public transient final DelayedBuilder.NullCapable<LogBlockBuilder> stripped;
     public transient boolean blockItemModel;
 
     public LogBlockBuilder(ResourceLocation i, DelayedBuilder.NullCapable<LogBlockBuilder> stripped) {

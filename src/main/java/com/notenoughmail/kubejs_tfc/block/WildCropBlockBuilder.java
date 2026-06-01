@@ -155,7 +155,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                 b.addPool(p -> {
                     p.survivesExplosion();
                     final LootTableEntry item = p.addItem(RegistryInfo.ITEM.getValue(seedItem).getDefaultInstance());
-                    if (type == Type.DOUBLE || type == Type.SPREADING) {
+                    if (type == Type.DOUBLE) {
                         item.addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> j.addProperty("part", "bottom")));
                     }
                 });
@@ -165,7 +165,7 @@ public class WildCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                     p.survivesExplosion();
                     p.addItem(RegistryInfo.ITEM.getValue(foodItem).getDefaultInstance())
                             .addCondition(ResourceUtils.blockStatePropertyCondition(id.toString(), j -> {
-                                if (type == Type.DOUBLE || type == Type.SPREADING) {
+                                if (type == Type.DOUBLE) {
                                     j.addProperty("part", "bottom");
                                 }
                                 j.addProperty("mature", "true");

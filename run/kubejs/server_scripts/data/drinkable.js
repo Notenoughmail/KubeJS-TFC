@@ -9,10 +9,12 @@ TFCEvents.data(e => {
             effect.amplifier(4);
             effect.chance(0.5);
         });
+        d.mayDrinkWhenFull(true);
     });
     e.drinkable('tfc:metal/copper', d => {
         d.food(f => {
             f.protein(3);
         });
+        d.mayDrinkWhenFull(false);
     }, 'kubejs:drinkable')
 })

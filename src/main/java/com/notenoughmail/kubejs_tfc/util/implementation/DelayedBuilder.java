@@ -17,6 +17,7 @@ public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
     private T builder;
     private final Function<ResourceLocation, T> constructor;
     private final Supplier<ResourceLocation> fallbackId;
+    @Nullable
     private Consumer<T> onConstruct;
 
     public DelayedBuilder(Function<ResourceLocation, T> constructor, Supplier<ResourceLocation> fallbackId) {
@@ -27,7 +28,6 @@ public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
     public T get(ResourceLocation id) {
         if (builder == null) {
             builder = constructor.apply(id);
-            if (onConstruct != null) onConstruct.accept(builder);
         }
         if (onConstruct != null) {
             onConstruct.accept(builder);
