@@ -1,8 +1,10 @@
-### 1.3.5 (W.I.P.)
+### 1.3.5
 - Allow drinkables to allow drinking while a player is at full thirst
 - Fix crash (introduced in 1.3.4) that occurred when turning custom axles into windmills
 - The tree solver command will now respect the full block state given to the `log` and `leaves` args, only overriding the necessary properties
 - The tree solver command now explicitly sets the `persistent` property to false
+- *Actually* fix default double crop block loot tables, both with and without the stick requirement
+- Fix error message of the `search_for_rock` command when not in TFC-like worlds
 
 ### 1.3.4
 - Add forgotten ability to set `combine_forging_bonus` in welding recipes
