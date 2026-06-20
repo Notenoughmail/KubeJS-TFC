@@ -21,7 +21,6 @@ public enum CalendarBindings {
             MONTHS_IN_YEAR = ICalendar.MONTHS_IN_YEAR;
     public final float TICKS_IN_MINUTE = ICalendar.TICKS_IN_MINUTE;
 
-    // TODO: 1.21 | Add context param so guessing is not needed?
     @Info("Returns the best guess on the appropriate calendar")
     public ICalendar getCalendar() {
         return Calendars.get();

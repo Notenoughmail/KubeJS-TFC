@@ -268,7 +268,6 @@ public class KubeJSTFCPlugin extends KubeJSPlugin {
         filter.deny(ClientForgeEventHandler.class);
     }
 
-    // TODO: 1.21.1 | This actually kinda sucks
     @Override
     public void attachPlayerData(AttachedData<Player> event) {
         if (event.getParent() != null) {

@@ -16,11 +16,16 @@ TFCEvents.data(e => {
         c.hydrationWiggle(50);
     }, 'kubejs:spreading_crop');
     e.climateRange(c => {
-        c.maxHydration(50);
+        c.maxHydration(10000);
+        c.minHydration(0);
+        c.maxTemperature(10000);
+        c.minTemperature(-10000);
     }, 'kubejs:double_crop');
     e.climateRange(c => {
-        c.maxHydration(200);
-        c.maxTemperature(12);
+        c.maxHydration(10000);
+        c.minHydration(0);
+        c.maxTemperature(10000);
+        c.minTemperature(-10000);
     }, 'kubejs:double_crop_stick');
     e.climateRange(c => {
         c.minTemperature(5);

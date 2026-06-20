@@ -27,6 +27,8 @@ StartupEvents.registry('block', e => {
     e.create('double_crop', 'tfc:double_crop')
         .textureAt(5, 'minecraft:block/cobblestone')
         .topTexture(0, 'minecraft:block/sand')
+        .stages(2)
+        .doubleStages(2)
         .deadBlock(d => {
             d.models((stage, m) => {
                 if (!stage.mature()) {

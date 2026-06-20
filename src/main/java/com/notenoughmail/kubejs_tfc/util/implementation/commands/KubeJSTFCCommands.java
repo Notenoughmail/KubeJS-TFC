@@ -9,7 +9,6 @@ import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.implementation.bindings.MiscBindings;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.DataManagerAccessor;
 import com.notenoughmail.kubejs_tfc.util.implementation.mixin.accessor.RockLayerSettingsAccessor;
-import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.dries007.tfc.network.ChunkWatchPacket;
 import net.dries007.tfc.util.DataManager;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -425,7 +424,7 @@ public class KubeJSTFCCommands {
             }
             return failMsg("Could not find rock in range!", ctx);
         } else {
-            return failMsg("World is TFC-like!", ctx);
+            return failMsg("World is not TFC-like!", ctx);
         }
     }
 
