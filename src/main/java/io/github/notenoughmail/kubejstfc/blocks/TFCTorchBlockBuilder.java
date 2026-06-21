@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.blocks;
 
+import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
@@ -8,6 +9,7 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
@@ -19,6 +21,7 @@ import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemB
 import io.github.notenoughmail.kubejstfc.implementation.custom.block.ICustomTorchBlock;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
@@ -68,36 +71,33 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public transient Supplier<Integer> decayLength;
     @Nullable
     public transient Supplier<ParticleOptions> flameParticle, smokeParticle;
-    @HideFromJS
-    public final DeadTorchBuilder dead;
-    @HideFromJS
-    public final TFCWallTorchBuilder wall;
-    @HideFromJS
-    public final DeadWallTorchBuilder deadWall;
-    public transient ItemBuilder deadTorchItem;
+    public transient final DelayedBuilder<DeadTorchBuilder> dead;
+    public transient final DelayedBuilder<TFCWallTorchBuilder> wall;
+    public transient final DelayedBuilder<DeadWallTorchBuilder> deadWall;
+    public transient DelayedBuilder.NullCapable<ItemBuilder> deadTorchItem;
 
     public TFCTorchBlockBuilder(ResourceLocation i) {
         super(i);
         decayLength = TFCConfig.SERVER.torchTicks;
         flameParticle = () -> ParticleTypes.FLAME;
         smokeParticle = () -> ParticleTypes.SMOKE;
-        dead = new DeadTorchBuilder(id.withSuffix("_dead"), this);
-        wall = new TFCWallTorchBuilder(id.withSuffix("_wall"), this);
-        deadWall = new DeadWallTorchBuilder(id.withSuffix("_dead_wall"), this);
+        dead = new DelayedBuilder<>(r -> new DeadTorchBuilder(r, this), () -> id.withSuffix("_dead"));
+        wall = new DelayedBuilder<>(r -> new TFCWallTorchBuilder(r, this), () -> id.withSuffix("_wall"));
+        deadWall = new DelayedBuilder<>(r -> new DeadWallTorchBuilder(r, this), () -> id.withSuffix("_dead_wall"));
         itemBuilder = new StandingAndWallBlockItemBuilder(i, this, wall) {
             @Override
             public Item createObject() {
-                return new TorchItem(TFCTorchBlockBuilder.this.get(), wall.get(), createItemProperties());
+                return new TorchItem(TFCTorchBlockBuilder.this.get(), wall.get().get(), createItemProperties());
             }
         };
-        deadTorchItem = new StandingAndWallBlockItemBuilder(dead.id, dead, deadWall);
+        deadTorchItem = new DelayedBuilder.NullCapable<>(r -> new StandingAndWallBlockItemBuilder(r, dead.get(), deadWall), () -> dead.get().id);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.TICK_COUNTER, this);
         lightLevel(14F / 15F); // WTF Kube
         renderType(BlockRenderType.CUTOUT);
         noCollision();
-        dead.noCollision();
-        wall.noCollision();
-        deadWall.noCollision();
+        dead.onConstruct(BlockBuilder::noCollision);
+        wall.onConstruct(BlockBuilder::noCollision);
+        deadWall.onConstruct(BlockBuilder::noCollision);
     }
 
     @Override
@@ -105,13 +105,14 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return texture(TEXTURE_KEYS, tex);
     }
 
-    @Info("Sets the properties for the dead item, may be null to remove")
+    @Info("Sets the properties of the dead item, may be null to remove")
     public TFCTorchBlockBuilder deadItem(@Nullable Consumer<ItemBuilder> item) {
-        if (item == null || deadTorchItem == null) {
-            deadTorchItem = null;
-        } else {
-            item.accept(deadTorchItem);
-        }
+        return deadItem(null, item);
+    }
+
+    @Info("Sets the properties of the dead item, may be null to remove")
+    public TFCTorchBlockBuilder deadItem(@Nullable KubeResourceLocation id, @Nullable Consumer<ItemBuilder> item) {
+        deadTorchItem.accept(id, item);
         return this;
     }
 
@@ -139,21 +140,36 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         return this;
     }
 
-    @Info("Sets the properties for the dead block")
+    @Info("Sets the properties of the dead block")
     public TFCTorchBlockBuilder dead(Consumer<DeadTorchBuilder> dead) {
-        dead.accept(this.dead);
+        return dead(null, dead);
+    }
+
+    @Info("Sets the properties of the dead block")
+    public TFCTorchBlockBuilder dead(@Nullable KubeResourceLocation id, Consumer<DeadTorchBuilder> dead) {
+        this.dead.accept(id, dead);
         return this;
     }
 
-    @Info("Sets the properties for the wall block")
+    @Info("Sets the properties of the wall block")
     public TFCTorchBlockBuilder wall(Consumer<TFCWallTorchBuilder> wall) {
-        wall.accept(this.wall);
+        return wall(null, wall);
+    }
+
+    @Info("Sets the properties of the wall block")
+    public TFCTorchBlockBuilder wall(@Nullable KubeResourceLocation id, Consumer<TFCWallTorchBuilder> wall) {
+        this.wall.accept(id, wall);
         return this;
     }
 
-    @Info("Sets the properties for the dead wall block")
+    @Info("Sets the properties of the dead wall block")
     public TFCTorchBlockBuilder deadWall(Consumer<DeadWallTorchBuilder> deadWall) {
-        deadWall.accept(this.deadWall);
+        return deadWall(null, deadWall);
+    }
+
+    @Info("Sets the properties of the dead wall block")
+    public TFCTorchBlockBuilder deadWall(@Nullable KubeResourceLocation id, Consumer<DeadWallTorchBuilder> deadWall) {
+        this.deadWall.accept(id, deadWall);
         return this;
     }
 
@@ -175,13 +191,13 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         Assistant.addBlock(registry, dead);
         Assistant.addBlock(registry, wall);
         Assistant.addBlock(registry, deadWall);
-        Assistant.addItem(registry, deadTorchItem);
+        Assistant.addItem(registry, deadTorchItem.get());
     }
 
     @Override
     public void generateAssets(KubeAssetGenerator generator) {
         super.generateAssets(generator);
-        ModelUtil.basicItemModelGen(deadTorchItem, generator);
+        ModelUtil.basicItemModelGen(deadTorchItem.get(), generator);
     }
 
     @Override
@@ -223,7 +239,7 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
         @Override
         public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
-            TFCTorchBlockBuilder.randomTick(level, pos, dead.get().defaultBlockState(), decayLength);
+            TFCTorchBlockBuilder.randomTick(level, pos, dead.get().get().defaultBlockState(), decayLength);
         }
 
         @Override
@@ -246,7 +262,7 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
             final BlockPos pos = event.getPos();
             final BlockState state = event.getState();
 
-            level.setBlockAndUpdate(pos, dead.get().withPropertiesOf(state));
+            level.setBlockAndUpdate(pos, dead.get().get().withPropertiesOf(state));
             event.setCanceled(true);
         }
 

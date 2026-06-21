@@ -75,7 +75,7 @@ public class ConnectedGrassBlockBuilder extends BlockBuilder {
 
     @Override
     public Block createObject() {
-        return new ConnectedGrassBlock(createProperties().randomTicks(), parent, parent.path, parent.farmland);
+        return new ConnectedGrassBlock(createProperties().randomTicks(), parent, parent.path.get(), parent.farmland.get());
     }
 
     @Override

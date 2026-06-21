@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
@@ -17,6 +18,7 @@ import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockB
 import io.github.notenoughmail.kubejstfc.implementation.custom.item.PlantableItem;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
@@ -44,8 +46,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     public transient final Lifecycle[] lifecycles;
     public transient final DataManager.Reference<ClimateRange> climateRange;
-    @Nullable
-    public transient ItemBuilder productItem;
+    public transient final DelayedBuilder.NullCapable<ItemBuilder> productItem;
     @Nullable
     public transient Supplier<Item> product;
     public transient ModelFunc models;
@@ -54,7 +55,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
         super(i);
         lifecycles = new Lifecycle[]{Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT, Lifecycle.DORMANT};
         climateRange = ClimateRange.MANAGER.getReference(id);
-        productItem = new ItemBuilder(id.withSuffix("_product"));
+        productItem = new DelayedBuilder.NullCapable<>(ItemBuilder::new, () -> id.withSuffix("_product"));
         product = null;
         models = initModels();
         renderType(BlockRenderType.CUTOUT_MIPPED);
@@ -69,8 +70,8 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     }
 
     @HideFromJS
-    public Supplier<Item> productGetter()  {
-        return product == null ? productItem : product;
+    public Supplier<Item> productGetter() {
+        return productItem.isNull() ? product : productItem.get();
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {
@@ -84,14 +85,19 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @Info("Modifies the bush's product item")
     public StationaryBerryBushBlockBuilder productItem(Consumer<ItemBuilder> productItem) {
-        productItem.accept(this.productItem);
+        return productItem(null, productItem);
+    }
+
+    @Info("Modifies the bush's product item")
+    public StationaryBerryBushBlockBuilder productItem(@Nullable KubeResourceLocation id, Consumer<ItemBuilder> productItem) {
+        this.productItem.accept(id, productItem);
         return this;
     }
 
     @Info("Sets the bush's product item to be an existing item, will prevent the customizable product item from being created")
     public StationaryBerryBushBlockBuilder withProduct(Holder<Item> product) {
         this.product = Assistant.holderAsSupplier(product);
-        productItem = null;
+        productItem.markNull();
         return this;
     }
 
@@ -133,7 +139,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     @Override
     public void createAdditionalObjects(AdditionalObjectRegistry registry) {
         super.createAdditionalObjects(registry);
-        Assistant.addItem(registry, productItem);
+        Assistant.addItem(registry, productItem.get());
     }
 
     private static String modelSuffix(int stage, Lifecycle lc) {
@@ -167,7 +173,7 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
     @Override
     public void generateAssets(KubeAssetGenerator generator) {
         super.generateAssets(generator);
-        ModelUtil.basicItemModelGen(productItem, generator);
+        ModelUtil.basicItemModelGen(productItem.get(), generator);
     }
 
     @Override

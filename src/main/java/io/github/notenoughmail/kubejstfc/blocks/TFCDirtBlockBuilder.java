@@ -6,12 +6,14 @@ import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.ConnectedGrassBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.TFCFarmlandBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.TFCPathBlockBuilder;
 import io.github.notenoughmail.kubejstfc.blocks.sub.TFCRootedDirtBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.DirtBlock;
@@ -25,59 +27,84 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class TFCDirtBlockBuilder extends BlockBuilder {
 
-    public transient final ConnectedGrassBlockBuilder grass;
-    @Nullable
-    public transient TFCPathBlockBuilder path;
-    @Nullable
-    public transient TFCFarmlandBlockBuilder farmland;
-    public transient final TFCRootedDirtBlockBuilder rooted;
-    public transient final BlockBuilder mud;
+    public transient final DelayedBuilder<ConnectedGrassBlockBuilder> grass;
+    public transient final DelayedBuilder.NullCapable<TFCPathBlockBuilder> path;
+    public transient final DelayedBuilder.NullCapable<TFCFarmlandBlockBuilder> farmland;
+    public transient final DelayedBuilder<TFCRootedDirtBlockBuilder> rooted;
+    public transient final DelayedBuilder<BlockBuilder> mud;
 
     public TFCDirtBlockBuilder(ResourceLocation i) {
         super(i);
         Assistant.singleTag(this, TFCTags.Blocks.DIRT);
-        grass = new ConnectedGrassBlockBuilder(id.withSuffix("_grass"), this);
-        path = null;
-        farmland = null;
-        rooted = new TFCRootedDirtBlockBuilder(id.withSuffix("_rooted"), this);
-        mud = new BasicKubeBlock.Builder(id.withSuffix("_mud"));
+        grass = new DelayedBuilder<>(r -> new ConnectedGrassBlockBuilder(r, this), () -> id.withSuffix("_grass"));
+        path = new DelayedBuilder.NullCapable<>(r -> new TFCPathBlockBuilder(r, this), () -> id.withSuffix("_path"));
+        path.markNull();
+        farmland = new DelayedBuilder.NullCapable<>(r -> new TFCFarmlandBlockBuilder(r, this), () -> id.withSuffix("_farmland"));
+        farmland.markNull();
+        rooted = new DelayedBuilder<>(r -> new TFCRootedDirtBlockBuilder(r, this), () -> id.withSuffix("_rooted"));
+        mud = new DelayedBuilder<>(BasicKubeBlock.Builder::new, () -> id.withSuffix("_mud"));
     }
 
     @Info("Sets the properties of the dirt's grass block")
     public TFCDirtBlockBuilder grass(Consumer<ConnectedGrassBlockBuilder> grass) {
-        grass.accept(this.grass);
+        return grass(null, grass);
+    }
+
+    @Info("Sets the properties of the dirt's grass block")
+    public TFCDirtBlockBuilder grass(@Nullable KubeResourceLocation id, Consumer<ConnectedGrassBlockBuilder> grass) {
+        this.grass.accept(id, grass);
         return this;
     }
 
     @Info("Creates and sets the properties of the dirt's path block")
     public TFCDirtBlockBuilder path(Consumer<TFCPathBlockBuilder> path) {
-        this.path = new TFCPathBlockBuilder(id.withSuffix("_path"), this);
-        path.accept(this.path);
+        return path(null, path);
+    }
+
+    @Info("Creates and sets the properties of the dirt's path block")
+    public TFCDirtBlockBuilder path(@Nullable KubeResourceLocation id, Consumer<TFCPathBlockBuilder> path) {
+        this.path.unmarkNull();
+        this.path.accept(id, path);
         return this;
     }
 
     @Info("Creates and sets the properties of the dirt's farmland block")
     public TFCDirtBlockBuilder farmland(Consumer<TFCFarmlandBlockBuilder> farmland) {
-        this.farmland = new TFCFarmlandBlockBuilder(id.withSuffix("_farmland"), this);
-        farmland.accept(this.farmland);
+        return farmland(null, farmland);
+    }
+
+    @Info("Creates and sets the properties of the dirt's farmland block")
+    public TFCDirtBlockBuilder farmland(@Nullable KubeResourceLocation id, Consumer<TFCFarmlandBlockBuilder> farmland) {
+        this.farmland.unmarkNull();
+        this.farmland.accept(id, farmland);
         return this;
     }
 
     @Info("Creates and sets the properties of the dirt's rooted dirt block")
     public TFCDirtBlockBuilder rooted(Consumer<TFCRootedDirtBlockBuilder> rooted) {
-        rooted.accept(this.rooted);
+        return rooted(null, rooted);
+    }
+
+    @Info("Creates and sets the properties of the dirt's rooted dirt block")
+    public TFCDirtBlockBuilder rooted(@Nullable KubeResourceLocation id, Consumer<TFCRootedDirtBlockBuilder> rooted) {
+        this.rooted.accept(id, rooted);
         return this;
     }
 
     @Info("Creates and sets the properties of the dirt's mud block")
     public TFCDirtBlockBuilder mud(Consumer<BlockBuilder> mud) {
-        mud.accept(this.mud);
+        return mud(null, mud);
+    }
+
+    @Info("Creates and sets the properties of the dirt's mud block")
+    public TFCDirtBlockBuilder mud(@Nullable KubeResourceLocation id, Consumer<BlockBuilder> mud) {
+        this.mud.accept(id, mud);
         return this;
     }
 
     @Override
     public Block createObject() {
-        return new DirtBlock(createProperties(), grass, path, farmland, rooted, mud);
+        return new DirtBlock(createProperties(), grass.get(), path.get(), farmland.get(), rooted.get(), mud.get());
     }
 
     @Override

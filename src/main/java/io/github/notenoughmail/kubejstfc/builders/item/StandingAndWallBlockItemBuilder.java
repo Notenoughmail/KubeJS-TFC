@@ -8,11 +8,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 
+import java.util.function.Supplier;
+
 public class StandingAndWallBlockItemBuilder extends BlockItemBuilder {
 
-    public transient final BlockBuilder wallBlock;
+    public transient final Supplier<? extends BlockBuilder> wallBlock;
 
-    public StandingAndWallBlockItemBuilder(ResourceLocation i, BlockBuilder block, BlockBuilder wallBlock) {
+    public StandingAndWallBlockItemBuilder(ResourceLocation i, BlockBuilder block, Supplier<? extends BlockBuilder> wallBlock) {
         super(i);
         this.blockBuilder = block;
         this.wallBlock = wallBlock;
@@ -20,7 +22,7 @@ public class StandingAndWallBlockItemBuilder extends BlockItemBuilder {
 
     @Override
     public Item createObject() {
-        return new StandingAndWallBlockItem(blockBuilder.get(), wallBlock.get(), createItemProperties(), Direction.DOWN);
+        return new StandingAndWallBlockItem(blockBuilder.get(), wallBlock.get().get(), createItemProperties(), Direction.DOWN);
     }
 
     @Override

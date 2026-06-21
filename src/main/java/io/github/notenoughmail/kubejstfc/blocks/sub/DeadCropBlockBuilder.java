@@ -87,7 +87,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                 final boolean tall = alive.type == AbstractCropBlockBuilder.Type.DOUBLE || alive.type == AbstractCropBlockBuilder.Type.CLIMBING;
                 LootUtil.survivesExplosion(p);
                 p.add(LootUtil.alternatives(
-                        LootItem.lootTableItem(alive.seeds.get())
+                        LootItem.lootTableItem(alive.seeds.get().get())
                                 .when(LootUtil.withState(get(), s -> {
                                     s.hasProperty(DeadCropBlock.MATURE, true);
                                     if (tall) {
@@ -95,7 +95,7 @@ public class DeadCropBlockBuilder extends ExtendedPropertiesBlockBuilder {
                                     }
                                 }))
                                 .apply(LootUtil.count(UniformGenerator.between(1F, 3F))),
-                        LootItem.lootTableItem(alive.seeds.get())
+                        LootItem.lootTableItem(alive.seeds.get().get())
                                 .when(LootUtil.withState(get(), s -> {
                                     s.hasProperty(DeadCropBlock.MATURE, false);
                                     if (tall) {

@@ -38,7 +38,7 @@ public class DeadWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new Impl(createExtendedProperties().dropsLike(parent.dead));
+        return new Impl(createExtendedProperties().dropsLike(parent.dead.get()));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DeadWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
         @Override
         public void handleFireStart(StartFireEvent event) {
-            event.getLevel().setBlockAndUpdate(event.getPos(), parent.wall.get().withPropertiesOf(event.getState()));
+            event.getLevel().setBlockAndUpdate(event.getPos(), parent.wall.get().get().withPropertiesOf(event.getState()));
             ICustomTorchBlock.super.handleFireStart(event);
         }
     }

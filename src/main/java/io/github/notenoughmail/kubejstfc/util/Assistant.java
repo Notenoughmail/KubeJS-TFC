@@ -138,6 +138,10 @@ public interface Assistant {
         return Util.make(new JsonObject(), builder);
     }
 
+    static <B extends BlockBuilder> void addBlock(AdditionalObjectRegistry registry, Supplier<@Nullable B> builder) {
+        addBlock(registry, builder.get());
+    }
+
     static void addBlock(AdditionalObjectRegistry registry, @Nullable BlockBuilder builder) {
         addBlock(registry, builder, true);
     }

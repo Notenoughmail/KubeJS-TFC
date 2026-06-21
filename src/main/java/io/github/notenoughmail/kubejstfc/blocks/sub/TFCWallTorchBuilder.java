@@ -111,7 +111,7 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
         @Override
         public void handleFireDouse(DouseFireEvent event) {
-            event.getLevel().setBlockAndUpdate(event.getPos(), parent.deadWall.get().withPropertiesOf(event.getState()));
+            event.getLevel().setBlockAndUpdate(event.getPos(), parent.deadWall.get().get().withPropertiesOf(event.getState()));
             event.setCanceled(true);
         }
 
@@ -127,7 +127,7 @@ public class TFCWallTorchBuilder extends ExtendedPropertiesBlockBuilder {
 
         @Override
         public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
-            TFCTorchBlockBuilder.randomTick(level, pos, parent.deadWall.get().withPropertiesOf(state), parent.decayLength);
+            TFCTorchBlockBuilder.randomTick(level, pos, parent.deadWall.get().get().withPropertiesOf(state), parent.decayLength);
         }
 
         @Override

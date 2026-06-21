@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -293,7 +294,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
         return Cast.to(o);
     }
 
-    private static <M extends CenterOrDistanceToPlacement<?>> Method<Float, ? extends M> centerOrDistDist(BiFunction<Boolean, Float, M> constructor) {
+    private static <M extends CenterOrDistanceToPlacement<?>> Method<Float, PlacementModifier> centerOrDistDist(BiFunction<Boolean, Float, M> constructor) {
         return f -> {
             if (f > 1 || f < 0)
                 throw new IllegalArgumentException("'distance' must be in the range [0, 1]");

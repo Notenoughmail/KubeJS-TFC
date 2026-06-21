@@ -101,7 +101,7 @@ public class DoubleCropBlockBuilder extends AbstractCropBlockBuilder.WithProduct
         return LootUtil.fullTable(null, t -> {
             LootUtil.pool(t, p -> {
                 LootUtil.survivesExplosion(p);
-                p.add(LootItem.lootTableItem(seeds.get())
+                p.add(LootItem.lootTableItem(seeds.get().get())
                         .when(LootUtil.withState(get(), s -> s.hasProperty(DoubleCropBlock.PART, DoubleCropBlock.Part.BOTTOM)))
                 );
             });

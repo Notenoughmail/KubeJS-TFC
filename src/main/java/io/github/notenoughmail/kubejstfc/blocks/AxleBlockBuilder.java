@@ -6,19 +6,21 @@ import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.*;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.AxleBlock;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -27,17 +29,25 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     public static final String[] TEXTURE_KEYS = { "particle", "wood" };
 
-    public transient final WindmillBlockBuilder windmill;
+    public transient final DelayedBuilder<WindmillBlockBuilder> windmill;
     public transient ResourceLocation texture;
-    public transient WaterWheelBlockBuilder waterWheel;
-    public transient GearBoxBlockBuilder gearBox;
-    public transient ClutchBlockBuilder clutch;
-    public transient BladedAxleBlockBuilder bladedAxle;
+    public transient final DelayedBuilder.NullCapable<WaterWheelBlockBuilder> waterwheel;
+    public transient final DelayedBuilder.NullCapable<GearBoxBlockBuilder> gearbox;
+    public transient final DelayedBuilder.NullCapable<ClutchBlockBuilder> clutch;
+    public transient final DelayedBuilder.NullCapable<BladedAxleBlockBuilder> bladedAxle;
 
     public AxleBlockBuilder(ResourceLocation i) {
         super(i);
         parentModel(KubeJSTFC.tfc("block/axle"));
-        windmill = new WindmillBlockBuilder(id.withSuffix("_windmill"), this);
+        windmill = new DelayedBuilder<>(r ->  new WindmillBlockBuilder(r, this), () -> id.withSuffix("_windmill"));
+        waterwheel = new DelayedBuilder.NullCapable<>(r -> new WaterWheelBlockBuilder(r, this), () -> id.withSuffix("_waterwheel"));
+        waterwheel.markNull();
+        gearbox = new DelayedBuilder.NullCapable<>(r -> new GearBoxBlockBuilder(r, this), () -> id.withSuffix("_gearbox"));
+        gearbox.markNull();
+        clutch = new DelayedBuilder.NullCapable<>(r -> new ClutchBlockBuilder(r, this), () -> id.withSuffix("_clutch"));
+        clutch.markNull();
+        bladedAxle = new DelayedBuilder.NullCapable<>(r -> new BladedAxleBlockBuilder(r, this), () -> id.withSuffix("_bladed"));
+        bladedAxle.markNull();
         texture = id.withPrefix("block/");
         BuilderRefs.hackBlockEntity(TFCBlockEntities.AXLE, this);
     }
@@ -56,37 +66,66 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Info("Sets the properties of the axle's windmill block")
     public AxleBlockBuilder windmill(Consumer<WindmillBlockBuilder> windmill) {
-        windmill.accept(this.windmill);
+        return windmill(null, windmill);
+    }
+
+    @Info("Sets the properties of the axle's windmill block")
+    public AxleBlockBuilder windmill(@Nullable KubeResourceLocation id, Consumer<WindmillBlockBuilder> windmill) {
+        this.windmill.accept(id, windmill);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's water wheel block")
     public AxleBlockBuilder waterWheel(Consumer<WaterWheelBlockBuilder> waterWheel) {
-        this.waterWheel = Util.make(new WaterWheelBlockBuilder(id.withSuffix("_waterwheel"), this), waterWheel);
+        return waterWheel(null, waterWheel);
+    }
+
+    @Info("Creates and sets the properties of the axle's water wheel block")
+    public AxleBlockBuilder waterWheel(@Nullable KubeResourceLocation id, Consumer<WaterWheelBlockBuilder> waterWheel) {
+        waterwheel.unmarkNull();
+        waterwheel.accept(id, waterWheel);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's gear box block")
     public AxleBlockBuilder gearBox(Consumer<GearBoxBlockBuilder> gearBox) {
-        this.gearBox = Util.make(new GearBoxBlockBuilder(id.withSuffix("_gearbox"), this), gearBox);
+        return gearBox(null, gearBox);
+    }
+
+    @Info("Creates and sets the properties of the axle's gear box block")
+    public AxleBlockBuilder gearBox(@Nullable KubeResourceLocation id, Consumer<GearBoxBlockBuilder> gearBox) {
+        gearbox.unmarkNull();
+        gearbox.accept(id, gearBox);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's clutch block")
     public AxleBlockBuilder clutch(Consumer<ClutchBlockBuilder> clutch) {
-        this.clutch = Util.make(new ClutchBlockBuilder(id.withSuffix("_clutch"), this), clutch);
+        return clutch(null, clutch);
+    }
+
+    @Info("Creates and sets the properties of the axle's clutch block")
+    public AxleBlockBuilder clutch(@Nullable KubeResourceLocation id, Consumer<ClutchBlockBuilder> clutch) {
+        this.clutch.unmarkNull();
+        this.clutch.accept(id, clutch);
         return this;
     }
 
     @Info("Creates and sets the properties of the axle's bladed axle block")
     public AxleBlockBuilder bladedAxle(Consumer<BladedAxleBlockBuilder> bladed) {
-        bladedAxle = Util.make(new BladedAxleBlockBuilder(id.withSuffix("_bladed"), this), bladed);
+        return bladedAxle(null, bladed);
+    }
+
+    @Info("Creates and sets the properties of the axle's bladed axle block")
+    public AxleBlockBuilder bladedAxle(@Nullable KubeResourceLocation id, Consumer<BladedAxleBlockBuilder> bladed) {
+        bladedAxle.unmarkNull();
+        bladedAxle.accept(id, bladed);
         return this;
     }
 
     @Override
     public Block createObject() {
-        return new AxleBlock(createExtendedProperties(), Cast.to(windmill), texture);
+        return new AxleBlock(createExtendedProperties(), Cast.to(windmill.get()), texture);
     }
 
     @Override
@@ -100,8 +139,8 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public void createAdditionalObjects(AdditionalObjectRegistry registry) {
         super.createAdditionalObjects(registry);
         Assistant.addBlock(registry, windmill);
-        Assistant.addBlock(registry, waterWheel);
-        Assistant.addBlock(registry, gearBox);
+        Assistant.addBlock(registry, waterwheel);
+        Assistant.addBlock(registry, gearbox);
         Assistant.addBlock(registry, clutch);
         Assistant.addBlock(registry, bladedAxle);
     }

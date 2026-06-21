@@ -5,10 +5,12 @@ import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.SpreadingCaneBlockBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.LootUtil;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
@@ -26,12 +28,12 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
-    public transient final SpreadingCaneBlockBuilder cane;
+    public transient final DelayedBuilder<SpreadingCaneBlockBuilder> cane;
     public transient int maxHeight;
 
     public SpreadingBushBlockBuilder(ResourceLocation i) {
         super(i);
-        cane = new SpreadingCaneBlockBuilder(id.withSuffix("_cane"), this);
+        cane = new DelayedBuilder<>(r -> new SpreadingCaneBlockBuilder(r, this), () -> id.withSuffix("_cane"));
         maxHeight = 3;
         renderType(BlockRenderType.CUTOUT_MIPPED);
         Assistant.singleTag(this, TFCTags.Blocks.SPREADING_BUSHES);
@@ -47,7 +49,12 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
     @Info("Sets the properties of the cane block")
     public SpreadingBushBlockBuilder cane(Consumer<SpreadingCaneBlockBuilder> cane) {
-        cane.accept(this.cane);
+        return cane(null, cane);
+    }
+
+    @Info("Set the properties of the cane block")
+    public SpreadingBushBlockBuilder cane(@Nullable KubeResourceLocation id, Consumer<SpreadingCaneBlockBuilder> cane) {
+        this.cane.accept(id, cane);
         return this;
     }
 
@@ -59,7 +66,7 @@ public class SpreadingBushBlockBuilder extends StationaryBerryBushBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new SpreadingBushBlock(createExtendedProperties(), productGetter(), lifecycles, cane, maxHeight, climateRange);
+        return new SpreadingBushBlock(createExtendedProperties(), productGetter(), lifecycles, cane.get(), maxHeight, climateRange);
     }
 
     @Override

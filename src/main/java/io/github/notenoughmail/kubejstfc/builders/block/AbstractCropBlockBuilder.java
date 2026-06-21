@@ -10,16 +10,14 @@ import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.DeadCropBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.BlockItemWithAssetsBuilder;
 import io.github.notenoughmail.kubejstfc.implementation.custom.item.PlantableItem;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
-import io.github.notenoughmail.kubejstfc.util.Assistant;
-import io.github.notenoughmail.kubejstfc.util.CropUtil;
-import io.github.notenoughmail.kubejstfc.util.LootUtil;
-import io.github.notenoughmail.kubejstfc.util.ModelUtil;
+import io.github.notenoughmail.kubejstfc.util.*;
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -49,8 +47,8 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     public transient int ages;
     public transient final Supplier<ClimateRange> climateRange;
-    public final transient DeadCropBlockBuilder dead;
-    public transient final BlockItemBuilder seeds;
+    public transient final DelayedBuilder<DeadCropBlockBuilder> dead;
+    public transient final DelayedBuilder<BlockItemBuilder> seeds;
     public transient float p, n, k;
     public transient final Type type;
     public transient BiConsumer<Integer, ModelGenerator> models;
@@ -61,14 +59,17 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
         this.type = type;
         ages = 8;
         climateRange = ClimateRange.MANAGER.getReference(id);
-        dead = new DeadCropBlockBuilder(id.withSuffix("_dead"), this);
-        seeds = new BlockItemWithAssetsBuilder(id.withSuffix("_seeds"), b -> PlantableItem.crop(get(), b.createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange));
-        seeds.blockBuilder = this;
+        dead = new DelayedBuilder<>(r -> new DeadCropBlockBuilder(r, this), () -> id.withSuffix("_dead"));
+        seeds = new DelayedBuilder<>(
+                r -> new BlockItemWithAssetsBuilder(r, b -> PlantableItem.crop(get(), b.createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange)),
+                () -> id.withSuffix("_seeds")
+        );
+        seeds.onConstruct(s -> s.blockBuilder = this);
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.CROP, this);
         itemBuilder = null;
         noCollision();
-        drops = () -> BlockDrops.createDefault(seeds.get().getDefaultInstance());
+        drops = () -> BlockDrops.createDefault(seeds.get().get().getDefaultInstance());
         models = (stage, m) -> {
             m.parent(ModelUtil.CROP);
             m.textures(textures);
@@ -102,13 +103,23 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
 
     @Info("Modifies the crop's dead block")
     public AbstractCropBlockBuilder deadBlock(Consumer<DeadCropBlockBuilder> deadCrop) {
-        deadCrop.accept(dead);
+        return deadBlock(null, deadCrop);
+    }
+
+    @Info("Modifies the crop's dead block")
+    public AbstractCropBlockBuilder deadBlock(@Nullable KubeResourceLocation id, Consumer<DeadCropBlockBuilder> deadCrop) {
+        this.dead.accept(id, deadCrop);
         return this;
     }
 
     @Info("Modifies the crop's seed item")
     public AbstractCropBlockBuilder seedItem(Consumer<BlockItemBuilder> seedItem) {
-        seedItem.accept(seeds);
+        return seedItem(null, seedItem);
+    }
+
+    @Info("Modifies the crop's seed item")
+    public AbstractCropBlockBuilder seedItem(@Nullable KubeResourceLocation id, Consumer<BlockItemBuilder> seedItem) {
+        seeds.accept(id, seedItem);
         return this;
     }
 
@@ -165,19 +176,19 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
     public void createAdditionalObjects(AdditionalObjectRegistry registry) {
         super.createAdditionalObjects(registry);
         Assistant.addBlock(registry, dead);
-        Assistant.addItem(registry, seeds);
+        Assistant.addItem(registry, seeds.get());
     }
 
     @Override
     @Nullable
     public LootTable generateLootTable(KubeDataGenerator generator) {
-        return LootUtil.basic(seeds.get());
+        return LootUtil.basic(seeds.get().get());
     }
 
     @Override
     public void generateAssets(KubeAssetGenerator generator) {
         super.generateAssets(generator);
-        seeds.generateAssets(generator);
+        seeds.get().generateAssets(generator);
     }
 
     @Override
@@ -283,7 +294,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
             return LootUtil.fullTable(null, t -> {
                 LootUtil.pool(t, p -> {
                     LootUtil.survivesExplosion(p);
-                    p.add(LootItem.lootTableItem(seeds.get()));
+                    p.add(LootItem.lootTableItem(seeds.get().get()));
                 });
                 final Item prod = getProduct();
                 if (prod != null) {

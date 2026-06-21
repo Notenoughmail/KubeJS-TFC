@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Supplier;
 
-// TODO: 2.0.x | Can this be done through a plugin?
 /**
  * <b>Purpose:</b><p>
  * Allows Jade to show the correct duration for custom torch blocks
@@ -20,7 +19,7 @@ import java.util.function.Supplier;
 @Mixin(BlockEntityTooltips.class)
 public abstract class BlockEntityTooltipsMixin {
 
-    @WrapOperation(method = "lambda$tickCounter$35", at = @At(value = "INVOKE", target = "Ljava/util/function/Supplier;get()Ljava/lang/Object;"))
+    @WrapOperation(method = "/lambda\\$tickCounter\\$\\d+/", at = @At(value = "INVOKE", target = "Ljava/util/function/Supplier;get()Ljava/lang/Object;"))
     private static <T> T kubejs_tfc$CustomTorchDuration(Supplier<T> instance, Operation<T> original, @Local(argsOnly = true) BlockState state) {
         if (state.getBlock() instanceof ICustomTorchBlock c) {
             return Cast.to(c.getTotalTicks());
