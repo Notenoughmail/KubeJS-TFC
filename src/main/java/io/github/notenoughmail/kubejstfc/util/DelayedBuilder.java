@@ -32,10 +32,6 @@ public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
         return fallbackId.get();
     }
 
-    public T get(KubeResourceLocation id) {
-        return get(id.wrapped());
-    }
-
     public T get(ResourceLocation id) {
         if (builder == null) {
             builder = constructor.apply(id);

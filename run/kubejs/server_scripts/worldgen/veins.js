@@ -55,31 +55,4 @@ ServerEvents.registry('worldgen/configured_feature', e => {
         .size(10)
         .height(5)
         .withPlacement(p => p.tag('tfc:in_biome/veins'));
-
-    e.create('geode', 'tfc:geode')
-        .outer('minecraft:oak_log[axis=z]')
-        .middle('tfc:rock/hardened/basalt')
-        .inner([
-            'minecraft:cut_copper',
-            {
-                value: 'tfc:rock/hardened/quartzite',
-                weight: 6
-            }
-        ])
-        .withPlacement(p => p.tfcBiome()
-                            .rarityFilter(3)
-                            .inSquare()
-                            .jsonPlacement({
-                                type: 'minecraft:height_range',
-                                height: {
-                                    type: 'uniform',
-                                    min_inclusive: {
-                                        absolute: -40
-                                    },
-                                    max_inclusive: {
-                                        absolute: 32
-                                    }
-                                }
-                            })
-                            .tag('tfc:in_biome/veins'));
 })

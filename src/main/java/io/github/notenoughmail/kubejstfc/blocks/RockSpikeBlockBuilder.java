@@ -5,17 +5,24 @@ import dev.latvian.mods.kubejs.block.BlockRenderType;
 import dev.latvian.mods.kubejs.client.ModelGenerator;
 import dev.latvian.mods.kubejs.client.VariantBlockStateGenerator;
 import dev.latvian.mods.kubejs.generator.KubeAssetGenerator;
+import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.blocks.sub.RockRopeAnchorBlockBuilder;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @ReturnsSelf
 public class RockSpikeBlockBuilder extends BlockBuilder {
@@ -23,6 +30,7 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
     private static final String[] TEXTURE_KEYS = { "texture", "particle" };
 
     public transient BiConsumer<SpikeModelType, ModelGenerator> models;
+    public transient final DelayedBuilder<RockRopeAnchorBlockBuilder> anchor;
 
     public RockSpikeBlockBuilder(ResourceLocation i) {
         super(i);
@@ -31,6 +39,10 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
             m.parent(t.defaultParent);
             m.textures(textures);
         };
+        anchor = new DelayedBuilder<>(
+                r -> new RockRopeAnchorBlockBuilder(r, this),
+                () -> id.withSuffix("_anchor")
+        );
     }
 
     @Override
@@ -50,9 +62,20 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         return this;
     }
 
+    @Info("Creates and sets the properties of the spike's rope anchor block")
+    public RockSpikeBlockBuilder anchor(Consumer<RockRopeAnchorBlockBuilder> anchor) {
+        return anchor(null, anchor);
+    }
+
+    @Info("Creates and sets the properties of the spike's rope anchor block")
+    public RockSpikeBlockBuilder anchor(@Nullable KubeResourceLocation id, Consumer<RockRopeAnchorBlockBuilder> anchor) {
+        this.anchor.accept(id, anchor);
+        return this;
+    }
+
     @Override
     public RockSpikeBlock createObject() {
-        return new RockSpikeBlock(createProperties());
+        return new RockSpikeBlock(createProperties(), anchor.get());
     }
 
     @Override
@@ -72,6 +95,12 @@ public class RockSpikeBlockBuilder extends BlockBuilder {
         for (SpikeModelType t : SpikeModelType.VALUES) {
             bs.simpleVariant("part=" + t.str(), t.modelEx(this));
         }
+    }
+
+    @Override
+    public void createAdditionalObjects(AdditionalObjectRegistry registry) {
+        super.createAdditionalObjects(registry);
+        Assistant.addBlock(registry, anchor);
     }
 
     public enum SpikeModelType implements ISupplyModels {

@@ -81,7 +81,6 @@ public class WorldgenPlugin implements KubeJSPlugin {
         registry.of(Registries.CONFIGURED_FEATURE, c -> {
             cf(c, tfc("boulder"), BoulderBuilder.class, r -> new BoulderBuilder(r, TFCFeatures.BOULDER));
             cf(c, tfc("baby_boulder"), BoulderBuilder.class, r -> new BoulderBuilder(r, TFCFeatures.BABY_BOULDER));
-            cf(c, tfc("geode"), GeodeBuilder.class, GeodeBuilder::new);
             cf(c, tfc("thin_spike"), ThinSpikeBuilder.class, ThinSpikeBuilder::new);
             cf(c, tfc("if_then"), IfThenBuilder.class, IfThenBuilder::new);
             cf(c, tfc("soil_disc"), SoilDiscBuilder.class, SoilDiscBuilder::new);

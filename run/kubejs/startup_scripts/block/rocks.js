@@ -4,7 +4,10 @@ StartupEvents.registry('block', e => {
     e.create('groundcover', 'tfc:groundcover')
         .texture('tfc:block/alabaster/raw/green');
     e.create('rock_spike', 'tfc:rock_spike')
-        .texture('tfc:block/alabaster/raw/pink');
+        .texture('tfc:block/alabaster/raw/pink')
+        .anchor(a => {
+            a.texture('tfc:block/alabaster/raw/pink');
+        });
     e.create('thin_spike', 'tfc:thin_spike')
         .texture('tfc:block/alabaster/polished/red');
     e.create('raw', 'tfc:raw_rock')

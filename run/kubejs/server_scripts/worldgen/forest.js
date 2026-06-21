@@ -36,8 +36,8 @@ ServerEvents.registry('worldgen/configured_feature', e => {
         })
         .roots({
             blocks: {
-                'tfc:grass/oxisoil': [
-                    'tfc:rooted_dirt/oxisoil'
+                'tfc:grass/oxisol': [
+                    'tfc:rooted_dirt/oxisol'
                 ]
             },
             width: 5,

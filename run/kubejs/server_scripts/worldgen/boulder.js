@@ -9,22 +9,27 @@ ServerEvents.registry('worldgen/configured_feature', e => {
                 'minecraft:iron_block'
             ]
         })
-        .withPlacement(p => p.rarityFilter(12)
-                            .inSquare()
-                            .heightmap('world_surface_wg')
-                            .flatEnough(0.4, 4, 2)
-                            .tag('tfc:feature/boulders'));
+        .withPlacement(p => p.tag('tfc:feature/boulders').modifiers(m => {
+            let { minecraft, tfc } = m;
+            minecraft
+                .rarityFilter(12)
+                .inSquare()
+                .heightmap('world_surface_wg');
+            tfc.flatEnough(0.4, 4, 2);
+        }));
     e.create('baby_boulder', 'tfc:baby_boulder')
         .states({
             'tfc:rock/raw/dacite': [
                 'minecraft:obsidian'
             ]
         })
-        .withPlacement(p => p.rarityFilter(5)
-                            .inSquare()
-                            .heightmap('world_surface_wg')
-                            .flatEnough(0.2, 3, 1)
-                            .tag('tfc:feature/boulders'));
+        .withPlacement(p => p.tag('tfc:feature/boulders').modifiers(m => {
+            let { minecraft, tfc } = m;
+            minecraft
+                .inSquare()
+                .heightmap('world_surface_wg');
+            tfc.flatEnough(0.2, 3, 1);
+        }));
 
     e.create('nether_boulder', 'tfc:boulder')
         .states({
@@ -32,11 +37,11 @@ ServerEvents.registry('worldgen/configured_feature', e => {
                 'minecraft:iron_block'
             ]
         })
-        .withPlacement(p => p.rarityFilter(12)
-                            .inSquare()
-                            .jsonPlacement({
-                                type: 'count_on_every_layer',
-                                count: 1
-                            })
-                            .mcBiome());
+        .withPlacement(p => p.modifiers(m => {
+            let { minecraft } = m;
+            minecraft
+                .inSquare()
+                .countOnEveryLayer(1)
+                .biome();
+        }));
 })
