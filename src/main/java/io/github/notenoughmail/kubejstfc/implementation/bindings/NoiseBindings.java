@@ -27,6 +27,11 @@ public enum NoiseBindings {
         return new OpenSimplex3D(seed);
     }
 
+    @Info("Creates a new Cellular1D noise")
+    public Cellular1D cellular1D(long seed) {
+        return new Cellular1D(seed);
+    }
+
     @Info("Creates a new Cellular2D noise")
     public Cellular2D cellular2D(long seed) {
         return new Cellular2D(seed);

@@ -1,3 +1,14 @@
+### 2.0.1 (W.I.P.)
+- Update to TFC 4.2.0, which is the new minimum version
+- Add rock anchor sub-builder as a derived builder of rock spikes
+- Add ability to set ids of derived builders
+- Configured features types now require [WorldJS]() to work
+  - They are still undocumented, I will work on this in the coming days
+- Add `#cellular1D` method to noise sub-binding
+- Add `search_for_rock` command
+- Add `#prettyPrint()` to item stack providers
+  - Produces a string similar to `#toString()` but enum modifiers include their class name
+
 ### 2.0.0
 - Update to 1.21.1, TFC 4.0.x, KubeJS 2101.7.2
 - All features, in some form, as of 1.3.3 should be available, except as noted below

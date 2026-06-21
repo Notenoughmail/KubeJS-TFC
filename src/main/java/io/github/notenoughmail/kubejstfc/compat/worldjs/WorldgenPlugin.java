@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.compat.worldjs;
 
+import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Pair;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
@@ -14,6 +15,7 @@ import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.ClusterVei
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.DiscVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.PipeVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.ClimatePlacementBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.support.StratovolcanoBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
@@ -45,7 +47,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
@@ -117,11 +118,13 @@ public class WorldgenPlugin implements KubeJSPlugin {
         registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
         registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
         registry.register(ClimatePlacementBuilder.DEFAULT);
+        registry.register(StratovolcanoBuilder.DEFAULT);
     }
 
     private void addPlacementModifiers(PlacedFeatureModifierEvent event) {
 
-        final Args.Arg codd, nfr, iie, iae, cmi, cma, cms;
+        final Args.Arg nfr, iie, iae, cmi, cma, cms;
+        final Args codmm;
 
         var tfc = event.namespace(TerraFirmaCraft.MOD_ID)
                 .unit(
@@ -134,38 +137,51 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         new NoSolidNeighborsPlacement(),
                         "Add a 'tfc:no_solid_neighbors' modifier"
                 )
-                .registerSingleArg(
+                .register(
                         "volcano",
-                        codd = event.singleArg("distance", float.class, "The normalized distance from a noise center the position must be in order to generate"),
-                        centerOrDistDist(CinderConePlacement::new),
+                        codmm = event
+                                .arg("minEasing", float.class, "The minimum easing value")
+                                .arg("maxEasing", float.class, "The maximum easing value"),
+                        centerOrDistMinMax(CinderConePlacement::new),
                         "Add a 'tfc:volcano' modifier"
                 )
                 .unit(
                         "volcanoCenter",
-                        new CinderConePlacement(true, 0f),
+                        new CinderConePlacement(true, 0F, 1F),
                         "Add a 'tfc:volcano' modifier which only accepts positions at the center"
                 )
-                .registerSingleArg(
+                .register(
                         "tuffCone",
-                        codd,
-                        centerOrDistDist(TuffRingPlacement::new),
+                        codmm,
+                        centerOrDistMinMax(TuffRingPlacement::new),
                         "Add a 'tfc:tuff_cone' modifier"
                 )
                 .unit(
                         "tuffConeCenter",
-                        new TuffRingPlacement(true, 0f),
+                        new TuffRingPlacement(true, 0F, 1F),
                         "Add a 'tfc:tuff_cone' modifier which only accepts positions at the center"
                 )
-                .registerSingleArg(
+                .register(
                         "tuya",
-                        codd,
-                        centerOrDistDist(TuffRingPlacement::new),
+                        codmm,
+                        centerOrDistMinMax(TuyaPlacement::new),
                         "Add a 'tfc:tuya' modifier"
                 )
                 .unit(
                         "tuyaCenter",
-                        new TuyaPlacement(true, 0f),
+                        new TuyaPlacement(true, 0F, 1F),
                         "Add a 'tfc:tuya' modifier which only accepts positions at the center"
+                )
+                .register(
+                        "atoll",
+                        codmm,
+                        centerOrDistMinMax(AtollPlacement::new),
+                        "Add a 'tfc:atoll' modifier"
+                )
+                .unit(
+                        "atollCenter",
+                        new AtollPlacement(true, 0F, 1F),
+                        "Add a 'tfc:atoll' modifier which only accepts positions at the center"
                 )
                 .register(
                         "shallowWater",
@@ -275,6 +291,14 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         OnTopPlacement::new,
                         "Add a 'tfc:on_top' modifier"
                 )
+                .registerSingleArg(
+                        "stratovolcano",
+                        "stratovolcano",
+                        StratovolcanoBuilder.class,
+                        "The stratovolcano properties",
+                        StratovolcanoBuilder::build,
+                        "Adds a 'tfc:stratovolcano' modifier"
+                )
         ;
         if (!FMLEnvironment.production) {
             tfc.printAll();
@@ -293,11 +317,14 @@ public class WorldgenPlugin implements KubeJSPlugin {
         return Cast.to(o);
     }
 
-    private static <M extends CenterOrDistanceToPlacement<?>> Method<Float, PlacementModifier> centerOrDistDist(BiFunction<Boolean, Float, M> constructor) {
-        return f -> {
-            if (f > 1 || f < 0)
-                throw new IllegalArgumentException("'distance' must be in the range [0, 1]");
-            return constructor.apply(false, f);
+    private static <M extends CenterOrDistanceToPlacement<?>> Method<Object[], PlacementModifier> centerOrDistMinMax(Function3<Boolean, Float, Float, M> constructor) {
+        return o -> {
+            final float min = f(o[0]), max = f(o[1]);
+            if (min < 0 || max < 0 || min > 1 || max > 1)
+                throw new IllegalArgumentException("'minEasing' and 'maxEasing' must be in the range [0, 1]");
+            if (min > max)
+                throw new IllegalArgumentException("'maxEasing' must be greater than 'minEasing'");
+            return constructor.apply(false, min, max);
         };
     }
 }

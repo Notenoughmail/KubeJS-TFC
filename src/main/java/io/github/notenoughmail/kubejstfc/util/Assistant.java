@@ -12,6 +12,7 @@ import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
@@ -30,11 +31,14 @@ import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public interface Assistant {
 
@@ -198,6 +202,22 @@ public interface Assistant {
             clazz = clazz.getSuperclass();
         }
         return field;
+    }
+
+    static <P, R> Stream<R> forAllMethods(Class<?> clazz, P parameter, Class<R> returnType) {
+        final Class<P> parameterType = Cast.to(parameter.getClass());
+        final Stream.Builder<R> builder = Stream.builder();
+        for (Method m : clazz.getDeclaredMethods()) {
+            if (Modifier.isStatic(m.getModifiers()) && m.getReturnType() == returnType && m.getParameterCount() == 1 && m.getParameterTypes()[0] == parameterType) {
+                try {
+                    m.setAccessible(true);
+                    builder.accept(Cast.to(m.invoke(null, parameter)));
+                } catch (Throwable t) {
+                    KubeJSTFC.LOGGER.warn("Error while trying to invoke %s, skipping".formatted(m), t);
+                }
+            }
+        }
+        return builder.build();
     }
 
     @FunctionalInterface
