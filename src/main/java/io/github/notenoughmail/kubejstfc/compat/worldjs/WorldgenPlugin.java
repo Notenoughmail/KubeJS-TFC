@@ -300,9 +300,9 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         "Adds a 'tfc:stratovolcano' modifier"
                 )
         ;
-        if (!FMLEnvironment.production) {
-            tfc.printAll();
-        }
+        // if (!FMLEnvironment.production) {
+        //     tfc.printAll();
+        // }
     }
 
     private static int i(Object o) {

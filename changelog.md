@@ -1,8 +1,8 @@
-### 2.0.1 (W.I.P.)
+### 2.0.1
 - Update to TFC 4.2.0, which is the new minimum version
 - Add rock anchor sub-builder as a derived builder of rock spikes
 - Add ability to set ids of derived builders
-- Configured features types now require [WorldJS]() to work
+- Configured feature types now require [WorldJS](https://notenoughmail.github.io/worldjs/) to work
   - They are still undocumented, I will work on this in the coming days
 - Add `#cellular1D` method to noise sub-binding
 - Add `search_for_rock` command
