@@ -14,9 +14,15 @@ import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.grower.TreeGrower;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -62,7 +68,72 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     public Block createObject() {
-        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), autumnIndex, fallenLeaves.get(), twig);
+        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), wood(), fallenLeaves.get(), twig);
+    }
+
+    /**
+     * TFC 4.2.4 changed the {@link TFCLeavesBlock} constructor to take a {@link RegistryWood}
+     * instead of a raw autumn index. The block only ever queries {@code autumnIndex()},
+     * {@code isConifer()} and {@code getFlowerOffset()} from it, so a minimal wrapper around
+     * the builder's autumn index is provided; the remaining methods are never called by the block
+     */
+    private RegistryWood wood() {
+        return new RegistryWood() {
+            @Override
+            public String getSerializedName() {
+                return id.getPath();
+            }
+
+            @Override
+            public int autumnIndex() {
+                return autumnIndex;
+            }
+
+            @Override
+            public boolean isConifer() {
+                return false;
+            }
+
+            @Override
+            public float getFlowerOffset() {
+                return 0F;
+            }
+
+            @Override
+            public MapColor woodColor() {
+                return MapColor.WOOD;
+            }
+
+            @Override
+            public MapColor barkColor() {
+                return MapColor.PODZOL;
+            }
+
+            @Override
+            public TreeGrower tree() {
+                throw new UnsupportedOperationException("KubeJS-TFC's leaves do not have an associated tree grower");
+            }
+
+            @Override
+            public Supplier<Integer> ticksToGrow() {
+                throw new UnsupportedOperationException("KubeJS-TFC's leaves do not have an associated sapling");
+            }
+
+            @Override
+            public Supplier<Block> getBlock(Wood.BlockType type) {
+                throw new UnsupportedOperationException("KubeJS-TFC's leaves do not have associated wood blocks");
+            }
+
+            @Override
+            public BlockSetType getBlockSet() {
+                throw new UnsupportedOperationException("KubeJS-TFC's leaves do not have an associated block set");
+            }
+
+            @Override
+            public WoodType getVanillaWoodType() {
+                throw new UnsupportedOperationException("KubeJS-TFC's leaves do not have an associated wood type");
+            }
+        };
     }
 
     @Override
