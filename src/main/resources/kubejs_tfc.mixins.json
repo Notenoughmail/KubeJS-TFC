@@ -9,6 +9,9 @@
     "ChunkMapMixin",
     "CropHelpersMixin",
     "DataManagerMixin",
+    "FoodComponentMixin",
+    "FoodComponentMixin$FoodCapabilityMixin",
+    "FoodComponentMixin$IFoodMixin",
     "ICalendarMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
@@ -25,5 +28,8 @@
   ],
   "client": [
   ],
-  "plugin": "io.github.notenoughmail.kubejstfc.util.mixin.KubeJSTFCMixinPlugin"
+  "plugin": "io.github.notenoughmail.kubejstfc.util.mixin.KubeJSTFCMixinPlugin",
+  "mixinextras": {
+    "minVersion": "0.5.3"
+  }
 }

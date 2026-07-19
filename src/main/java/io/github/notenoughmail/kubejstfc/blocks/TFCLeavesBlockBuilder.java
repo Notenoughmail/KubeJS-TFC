@@ -12,6 +12,7 @@ import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
+import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.minecraft.core.Holder;
@@ -19,9 +20,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+// TODO: 2.1.0 | RegistryWood builder that can be applied to ICanUseRegistryWood builders
 @ReturnsSelf
 public class TFCLeavesBlockBuilder extends LeavesBuilder {
 
@@ -30,6 +33,10 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     public transient Supplier<Block> twig;
     public transient final DelayedBuilder.NullCapable<FallenLeavesBlockBuilder> fallenLeaves;
     public transient boolean seasonalColors;
+    public transient float flowerOffset;
+    public transient boolean conifer;
+    @Nullable
+    public transient BiConsumer<DynamicLeavesModel, ModelGenerator> dynamicModel;
 
     public TFCLeavesBlockBuilder(ResourceLocation i) {
         super(i);
@@ -60,9 +67,43 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
         return this;
     }
 
+    @Info("Mark the leaves block as being conifer-like")
+    public TFCLeavesBlockBuilder confier() {
+        conifer = true;
+        return this;
+    }
+
+    @Info("The fractional offset through the warm season where the block will bloom if using the dynamic leaves model")
+    public TFCLeavesBlockBuilder flowerOffset(float offset) {
+        flowerOffset = offset;
+        return this;
+    }
+
+    @Info("Use the `tfc:leaves` model loader to dynamically use different models based on the season")
+    public TFCLeavesBlockBuilder dynamicLeavesModel(BiConsumer<DynamicLeavesModel, ModelGenerator> models) {
+        this.dynamicModel = models;
+        return this;
+    }
+
     @Override
     public Block createObject() {
-        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), autumnIndex, fallenLeaves.get(), twig);
+        // Reg wood is never used outside overridden methods
+        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), null, fallenLeaves.get(), twig) {
+            @Override
+            public int getAutumnIndex() {
+                return autumnIndex;
+            }
+
+            @Override
+            public float getFlowerOffset() {
+                return flowerOffset;
+            }
+
+            @Override
+            public boolean isConifer() {
+                return conifer;
+            }
+        };
     }
 
     @Override
@@ -73,14 +114,57 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
 
     @Override
     protected void generateBlockModels(KubeAssetGenerator generator) {
-        ModelUtil.ifNotDefined(generator, this, m -> {
-            m.parent(LEAVES);
-            m.textures(textures);
-        });
+        if (dynamicModel == null) {
+            ModelUtil.ifNotDefined(generator, this, m -> {
+                m.parent(LEAVES);
+                m.textures(textures);
+            });
+        } else {
+            generator.blockModel(id, m -> {
+                m.parent(null);
+                m.custom(j -> {
+                    j.addProperty("loader", "tfc:leaves");
+                    for (DynamicLeavesModel e : DynamicLeavesModel.VALUES) {
+                        j.add(e.type, Assistant.json(i -> i.addProperty(
+                                "parent",
+                                e.modelEx(this).toString()
+                        )));
+                    }
+                });
+            });
+            for (DynamicLeavesModel e : DynamicLeavesModel.VALUES) {
+                generator.blockModel(e.model(this), m -> {
+                    m.parent(LEAVES);
+                    m.textures(textures);
+                    dynamicModel.accept(e, m);
+                });
+            }
+        }
     }
 
     @Override
     protected void generateItemModel(ModelGenerator m) {
         ModelUtil.inheritItemModelGen(this, m);
+    }
+
+    public enum DynamicLeavesModel implements ISupplyModels {
+        DENSE_LEAVES,
+        SPARSE_LEAVES,
+        BARE,
+        BLOOMING
+        ;
+
+        public static final DynamicLeavesModel[] VALUES = values();
+
+        public final String type;
+
+        DynamicLeavesModel() {
+            this.type = makeStr();
+        }
+
+        @Override
+        public String str() {
+            return type;
+        }
     }
 }

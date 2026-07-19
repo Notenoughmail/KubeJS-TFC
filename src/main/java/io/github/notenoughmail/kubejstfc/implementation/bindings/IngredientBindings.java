@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -64,48 +65,74 @@ public enum IngredientBindings {
         return BlockIngredient.of(tag);
     }
 
-    @Info("Creates a tfc:not_rotten ingredient")
+    @Info("Creates a 'tfc:not_rotten' ingredient")
     public Ingredient notRotten() {
         return NotRottenIngredient.INSTANCE.toVanilla();
     }
 
-    @Info("Creates a tfc:rotten ingredient")
+    @Info("Creates a 'tfc:rotten' ingredient")
     public Ingredient rotten() {
         return RottenIngredient.INSTANCE.toVanilla();
     }
 
-    @Info("Creates a tfc:has_trait ingredient")
+    @Info("Creates a 'tfc:has_trait' ingredient")
     public Ingredient hasTrait(Holder<FoodTrait> trait) {
         return new HasTraitIngredient(trait).toVanilla();
     }
 
-    @Info("Creates a tfc:lacks_trait ingredient")
+    @Info("Creates a 'tfc:lacks_trait' ingredient")
     public Ingredient lacksTrait(Holder<FoodTrait> trait) {
         return new LacksTraitIngredient(trait).toVanilla();
     }
 
-    @Info("Creates a tfc:heat ingredient")
+    @Info("Creates a 'tfc:heat' ingredient")
     public Ingredient heat(float min, float max) {
         return new HeatIngredient(min, max).toVanilla();
     }
 
-    @Info("Creates a tfc:heat ingredient")
+    @Info("Creates a 'tfc:heat' ingredient")
     public Ingredient heat(float min) {
         return HeatIngredient.min(min);
     }
 
-    @Info("Creates a tfc:fluid_content ingredient")
+    @Info("Creates a 'tfc:fluid_content' ingredient")
     public Ingredient fluidContents(SizedFluidIngredient ingredient) {
         return new FluidContentIngredient(ingredient).toVanilla();
     }
 
-    @Info("Creates a tfc:fluid_content ingredient")
+    @Info("Creates a 'tfc:fluid_content' ingredient")
     public Ingredient fluidContents(Fluid fluid, int amount) {
         return FluidContentIngredient.of(fluid, amount);
     }
 
-    @Info("Creates a tfc:and ingredient, a variation of NeoForge's intersection ingredient which properly displays TFC ingredient limitations in recipe viewers")
+    @Info("Creates a 'tfc:and' ingredient, a variation of NeoForge's intersection ingredient which properly displays TFC ingredient limitations in recipe viewers")
     public Ingredient and(Ingredient... ingredients) {
-        return new AndIngredient(List.of(ingredients)).toVanilla();
+        return switch (ingredients.length) {
+            case 0, 1 -> throw new IllegalArgumentException("Must have at least two ingredients to AND together!");
+            case 2 -> {
+                final boolean b1 = ingredients[0].getCustomIngredient() instanceof PreciseIngredient, b2 = ingredients[1].getCustomIngredient() instanceof PreciseIngredient;
+                if (b1 == b2 || b2) {
+                    yield new AndIngredient(List.of(ingredients)).toVanilla();
+                } else {
+                    // Swap order when first is the precise ingredient
+                    yield new AndIngredient(List.of(ingredients[1], ingredients[0])).toVanilla();
+                }
+            }
+            default -> new AndIngredient(
+                    Arrays.stream(ingredients)
+                            .sorted((o1, o2) -> {
+                                if (o1 == o2) return 0;
+                                final boolean b1 = o1.getCustomIngredient() instanceof PreciseIngredient, b2 = o2.getCustomIngredient() instanceof PreciseIngredient;
+                                if (b1 == b2) {
+                                    return 0;
+                                } else if (b1) {
+                                    return 1;
+                                } else {
+                                    return -1;
+                                }
+                            })
+                            .toList()
+            ).toVanilla();
+        };
     }
 }

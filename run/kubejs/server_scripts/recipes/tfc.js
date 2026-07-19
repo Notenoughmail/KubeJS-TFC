@@ -260,4 +260,15 @@ ServerEvents.recipes(e => {
     if (e.addedRecipes.stream().filter(r => r.getId().startsWith('kubejs:')).toList().isEmpty()) {
         console.error('No added recipes, somehow')
     }
+
+    let test = TFC.data.food.setRecipeTransientNonDecaying('tfc:food/soybean')
+    console.warn(test.getComponentString())
+    console.warn(test.copy().getComponentString())
+    console.warn(test.copy().copy().getComponentString())
+    console.warn(test.copy().copy().copy().getComponentString())
+    console.warn(test.toJson())
+    console.warn(TFC.isp.of(test).addTrait('kubejs:trait').toJson())
+    console.warn(TFC.isp.of(test).addTrait('kubejs:trait').getEmptyStack().getComponentString())
+    console.warn(TFC.data.food.setRecipeTransientNonDecaying(TFC.data.food.applyTrait(test, 'kubejs:trait')).toJson())
+    console.warn(TFC.data.food.setRecipeTransientNonDecaying(TFC.data.food.applyTrait(test, 'kubejs:trait')).getComponentString())
 })

@@ -27,7 +27,6 @@ import net.dries007.tfc.common.blocks.plant.fruit.SpreadingBushBlock;
 import net.dries007.tfc.util.collections.IWeighted;
 import net.dries007.tfc.util.collections.Weighted;
 import net.dries007.tfc.world.feature.TFCFeatures;
-import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.dries007.tfc.world.placement.*;
 import net.minecraft.core.registries.Registries;

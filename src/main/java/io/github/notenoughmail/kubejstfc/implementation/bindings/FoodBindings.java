@@ -14,6 +14,16 @@ import org.jetbrains.annotations.Nullable;
 public enum FoodBindings {
     INSTANCE;
 
+    /**
+     * This flag indicates the food is intended to be transiently non-decaying in a recipe context.
+     * It is 'preserved' in the first creation of an item stack (deserialization from data) where
+     * it gets demoted to {@link IFood#TRANSIENT_NEVER_DECAY_FLAG} which will clear on copy.
+     * <p>
+     * Intended for usage with recipes which do not support ISPs and have weird stack copying pathways
+     * to have creation dates that are similar to the actual calendar time.
+     */
+    public static final int RECIPE_TRANSIENT_NON_DECAY_FLAG = -10;
+
     @Info("Gets the food capability of the stack if present")
     @Nullable
     public IFood get(ItemStack stack) {
@@ -64,6 +74,11 @@ public enum FoodBindings {
     @Info("Sets the stack as non-decaying transiently, will not be preserved on stack copy")
     public ItemStack setTransientNonDecaying(ItemStack stack) {
         return FoodCapability.setTransientNonDecaying(stack);
+    }
+
+    @Info("Sets the stack as non-decaying transiently for use with non-TFC recipes, will only be preserved over one stack copy")
+    public ItemStack setRecipeTransientNonDecaying(ItemStack stack) {
+        return setCreationDate(stack, RECIPE_TRANSIENT_NON_DECAY_FLAG);
     }
 
     @Info("Sets the stack as non-decaying, optionally non-visible in tooltips")
