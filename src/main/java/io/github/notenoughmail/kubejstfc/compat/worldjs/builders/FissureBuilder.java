@@ -30,6 +30,10 @@ public class FissureBuilder extends ConfiguredFeatureBuilder.WithFeature<Fissure
         fluid = Blocks.AIR.defaultBlockState();
         anchor = VerticalAnchor.aboveBottom(16);
         count = 5;
+        radius = 12;
+        minPieces = 10;
+        maxPieces = 24;
+        maxPieceLength = 6;
     }
 
     @Info("The wall state of the fissure")
@@ -58,8 +62,11 @@ public class FissureBuilder extends ConfiguredFeatureBuilder.WithFeature<Fissure
 
     @Info("The number of pieces which make up each fissure")
     public FissureBuilder pieces(int minCount, int maxCount) {
-        minPieces = assertPositive(minCount, "minCount");
-        maxPieces = assertPositive(maxCount, "maxCount");
+        minPieces = assertPositive(minCount, "pieces.minCount");
+        maxPieces = assertPositive(maxCount, "pieces.maxCount");
+        if (minPieces > maxPieces) {
+            throw exception("'pieces.maxCount' must be greater than or equal to 'pieces.minCount'");
+        }
         return this;
     }
 

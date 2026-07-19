@@ -14,9 +14,7 @@ import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.*;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.ClusterVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.DiscVeinBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.PipeVeinBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.support.ClimatePlacementBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.support.StratovolcanoBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.support.*;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
 import io.github.notenoughmail.worldjs.util.event.PlacedFeatureModifierEvent;
@@ -41,7 +39,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.LinkedHashMap;
@@ -91,7 +88,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
             cf(c, tfc("fissure"), FissureBuilder.class, FissureBuilder::new);
             cf(c, tfc("cluster_vein"), ClusterVeinBuilder.class, ClusterVeinBuilder::new);
             cf(c, tfc("pipe_vein"), PipeVeinBuilder.class, PipeVeinBuilder::new);
-            cf(c, tfc("disc_vein"), DiscVeinBuilder.class, DiscVeinBuilder::new);
+            cf(c, tfc("disc_vein"), DiscVeinBuilder.class, r -> new DiscVeinBuilder(r, TFCFeatures.DISC_VEIN));
+            cf(c, tfc("kaolin_disc_vein"), DiscVeinBuilder.class, r -> new DiscVeinBuilder(r, TFCFeatures.KAOLIN_DISC_VEIN));
             cf(c, tfc("spreading_crop"), BlockConfigBuilder.class, r -> new BlockConfigBuilder<>(r, WildSpreadingCropBlock.class, TFCFeatures.SPREADING_CROP));
             cf(c, tfc("spreading_bush"), BlockConfigBuilder.class, r -> new BlockConfigBuilder<>(r, SpreadingBushBlock.class, TFCFeatures.SPREADING_BUSH));
             cf(c, tfc("tall_wild_crop"), BlockConfigBuilder.class, r -> new BlockConfigBuilder<>(r, WildDoubleCropBlock.class, TFCFeatures.TALL_WILD_CROP));
@@ -101,6 +99,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
             cf(c, tfc("random_tree"), RandomTreeBuilder.class, RandomTreeBuilder::new);
             cf(c, tfc("stacked_tree"), StackedTreeBuilder.class, StackedTreeBuilder::new);
             cf(c, tfc("krummholz"), KrummholzBuilder.class, KrummholzBuilder::new);
+            // TODO: 2.1.0 | The rest of TFC's types
         });
     }
 
@@ -115,10 +114,12 @@ public class WorldgenPlugin implements KubeJSPlugin {
     @Override
     public void registerRecordDefaults(RecordDefaultsRegistry registry) {
         registry.register(new TrunkConfig(Blocks.AIR.defaultBlockState(), 0, 2, false));
-        registry.register(new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL));
-        registry.register(new TreeRootBuilder(Map.of(), 6, 3, 5, null, false));
+        registry.register(TreeBuilder.DEFAULT_PLACEMENT);
+        registry.register(new TreeRootBuilder(null, 4, 3, 5, null, false));
         registry.register(ClimatePlacementBuilder.DEFAULT);
         registry.register(StratovolcanoBuilder.DEFAULT);
+        registry.register(new FissureDecorationBuilder(1, 1, 1, null));
+        registry.register(new IndicatorBuilder(1, 1, 1, 1, List.of()));
     }
 
     private void addPlacementModifiers(PlacedFeatureModifierEvent event) {

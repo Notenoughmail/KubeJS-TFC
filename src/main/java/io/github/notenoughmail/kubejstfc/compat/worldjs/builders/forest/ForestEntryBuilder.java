@@ -46,7 +46,7 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
         deadChance = 75;
     }
 
-    @Info("The climate conditions this tree entry can spawn in")
+    @Info("The climate conditions this forest entry can spawn in")
     public ForestEntryBuilder climate(ClimatePlacementBuilder placement) {
         placement.verify("climate", this::exception);
         climate = placement;
@@ -77,8 +77,8 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
     }
 
     @Info("The groundcover blocks")
-    public ForestEntryBuilder groundcover(List<WeightedValue<BlockState>> g) {
-        groundcover = g;
+    public ForestEntryBuilder groundcover(List<WeightedValue<BlockState>> cover) {
+        groundcover = cover;
         return this;
     }
 

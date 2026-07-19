@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.ServerRegistryHolderSet;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.ForestConfig;
 import net.minecraft.core.HolderSet;
@@ -20,8 +21,10 @@ public class ForestBuilder extends ConfiguredFeatureBuilder.WithFeature<ForestCo
     }
 
     @Info("The forest entries to place")
-    public ForestBuilder entries(HolderSet<ConfiguredFeature<?, ?>> entries) {
-        this.entries = entries;
+    public ForestBuilder entries(ServerRegistryHolderSet<ConfiguredFeature<?, ?>> entries) {
+        this.entries = entries.verify(() -> {
+            throw exception("'entries' should not be empty");
+        });
         return this;
     }
 

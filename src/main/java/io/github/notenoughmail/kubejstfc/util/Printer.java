@@ -6,6 +6,7 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.misc.ItemStackModifierBuilder;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.Nutrient;
+import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
@@ -44,10 +45,22 @@ import java.util.stream.Collectors;
 import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.COLORS;
 import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.RECORD_CONVERTERS;
 
+// TODO: 2.1.0 | Rework to be a wrapper around mutable components with a native indent field and other utilities
 public interface Printer {
+
+    ResourceLocation UNIFORM_FONT = ResourceLocation.withDefaultNamespace("uniform");
 
     static void simpleAdd(MutableComponent txt, Object value) {
         txt.append(asComponent(value));
+    }
+
+    static void complexAdd(MutableComponent txt, Object value) {
+        if (value instanceof Record r) {
+            final Map<String, ?> fields = convertRecordToMap(r);
+            appendMap(txt, fields, 0, false);
+        } else {
+            simpleAdd(txt, value);
+        }
     }
 
     static void newLine(MutableComponent txt) {
@@ -187,7 +200,7 @@ public interface Printer {
             case null -> append(txt, descriptor, asComponent(null), true);
             case Collection<?> c -> {
                 descriptor(txt, descriptor);
-                appendCollection(txt, c);
+                appendCollection(txt, c, Printer::complexAdd, 1);
             }
             default -> {
                 if (value.getClass().isArray()) {
@@ -195,7 +208,7 @@ public interface Printer {
                     append(txt, descriptor, List.of(arr), true);
                 } else {
                     descriptor(txt, descriptor);
-                    simpleAdd(txt, value);
+                    complexAdd(txt, value);
                 }
             }
         }
@@ -385,7 +398,7 @@ public interface Printer {
             case CharSequence c -> COLORS[3];
             case ResourceLocation r -> COLORS[3];
             case Enum<?> e -> COLORS[4];
-            case MutableComponent mut -> mut.getStyle().getColor();
+            case Component mut -> mut.getStyle().getColor();
             case Holder<?> h -> getColor(h.value());
             default -> COLORS[5];
         };
@@ -395,8 +408,11 @@ public interface Printer {
         return switch (value) {
             case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
             case Block b -> getId(BuiltInRegistries.BLOCK, b);
+            case Item i -> getId(BuiltInRegistries.ITEM, i);
+            case Fluid f -> getId(BuiltInRegistries.FLUID, f);
             case EntityType<?> e -> getId(BuiltInRegistries.ENTITY_TYPE, e);
             case ChiselMode m -> getId(ChiselMode.REGISTRY, m);
+            case GlassOperation g -> getId(GlassOperation.REGISTRY, g);
             case Holder<?> h -> h.getRegisteredName();
             case null -> "null"; // IDEA gets angry with me if I leave this to be handled by the default case
             default -> String.valueOf(value);

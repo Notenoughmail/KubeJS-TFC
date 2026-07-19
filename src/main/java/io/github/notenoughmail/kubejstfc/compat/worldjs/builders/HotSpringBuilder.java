@@ -67,7 +67,7 @@ public class HotSpringBuilder extends ConfiguredFeatureBuilder.WithFeature<HotSp
         return this;
     }
 
-    @Info("Block to replace, and what to replace them with, when contacting fluid")
+    @Info("Blocks to replace, and what to replace them with, when contacting fluid")
     public HotSpringBuilder replaceOnFluidContact(Map<Block, List<WeightedValue<BlockState>>> r) {
         replaceOnFluidContact = r;
         return this;

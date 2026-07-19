@@ -37,20 +37,21 @@ public class ThinSpikeBuilder extends ConfiguredFeatureBuilder.WithFeature<ThinS
 
     @Info("Set the radius of spike placement")
     public ThinSpikeBuilder radius(int r) {
-        radius = r;
+        radius = assertRange(r, 1, 16, "radius");
         return this;
     }
 
     @Info("How many times to attempt to place spikes")
     public ThinSpikeBuilder tries(int t) {
-        tries = t;
+        tries = assertPositive(t, "tries");
         return this;
     }
 
     @Info("The minimum and maximum heights of individual spikes")
     public ThinSpikeBuilder height(int min, int max) {
-        minHeight = min;
-        maxHeight = max;
+        minHeight = assertPositive(min, "height.min");
+        maxHeight = assertPositive(max, "height.max");
+        validate(maxHeight >= minHeight, b -> b ? null : "'height.max' must be greater than or equal to 'height.min'");
         return this;
     }
 

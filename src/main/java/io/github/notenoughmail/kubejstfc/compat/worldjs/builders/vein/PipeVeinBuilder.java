@@ -19,6 +19,11 @@ public class PipeVeinBuilder extends VeinBuilder<PipeVeinConfig> {
         minSkew = minSlant = -1;
     }
 
+    @Info("The radius of the pipe")
+    public PipeVeinBuilder size(int r) {
+        return radius(r);
+    }
+
     @Info("The height of the pipe")
     public PipeVeinBuilder height(int h) {
         height = h;

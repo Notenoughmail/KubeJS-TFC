@@ -42,8 +42,6 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
         density = 1F;
         minY = -64;
         maxY = 320;
-        projectToSurface = true;
-        projectOffset = true;
         seed = OptionalLong.empty();
     }
 
@@ -53,9 +51,9 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
         return this;
     }
 
-    @Info("How often the vein, will be approximately 1/R chunks")
+    @Info("How often the vein will place, will be approximately 1/r chunks")
     public VeinBuilder<V> rarity(int r) {
-        rarity = r;
+        rarity = assertPositive(r, "rarity");
         return this;
     }
 
@@ -97,7 +95,15 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
 
     @Info("The properties for this vein's indicators")
     public VeinBuilder<V> indicator(IndicatorBuilder indicator) {
-        this.indicator = indicator;
+        this.indicator = validate(indicator, i -> {
+            if (i.depth() < 1)
+                return "'indicator.depth' must be > 0";
+            if (i.undergroundRarity() < 1)
+                return "'indicator.undergroundRarity' must be > 0";
+            if (i.states().isEmpty())
+                return "'indicator.states' cannot be empty";
+            return null;
+        });
         return this;
     }
 

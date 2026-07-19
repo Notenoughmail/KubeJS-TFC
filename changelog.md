@@ -1,3 +1,8 @@
+### 2.0.2 (W.I.P.)
+- The data type commands (`/kubejs_tfc <search|describe|list_ids>`) can now handle *all* TFC recipe types
+- Configured feature types have been given a full, proper look over to address assorted issues
+  - Additionally, the extant types are now fully documented on the docs site
+
 ### 2.0.1
 - Update to TFC 4.2.0, which is the new minimum version
 - Add rock anchor sub-builder as a derived builder of rock spikes

@@ -1,5 +1,6 @@
 package io.github.notenoughmail.kubejstfc.implementation;
 
+import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.Printer;
@@ -9,30 +10,33 @@ import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
 import net.dries007.tfc.common.entities.Fauna;
 import net.dries007.tfc.common.recipes.*;
+import net.dries007.tfc.common.recipes.ingredients.TFCIngredients;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
 import net.dries007.tfc.util.data.*;
 import net.dries007.tfc.world.placement.ClimatePlacement;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -268,7 +272,19 @@ public class DataTypes {
     }
 
     @FunctionalInterface
-    public interface Display<T> extends BiConsumer<T, MutableComponent> {}
+    public interface Display<T> extends BiConsumer<T, MutableComponent> {
+
+        default <O extends T> Display<O> withBefore(Display<O> other) {
+            return (o, m) -> {
+                other.accept(o, m);
+                accept(o, m);
+            };
+        }
+
+        default <O extends T> Display<O> cast() {
+            return this::accept;
+        }
+    }
 
     public interface DataManagerType<T> extends DataType<T> {
 
@@ -356,7 +372,7 @@ public class DataTypes {
         }
     }
 
-    public static final Display<? extends BlockRecipe> BLOCK_RECIPE = (b, m) -> {
+    public static final Display<BlockRecipe> BLOCK_RECIPE = (b, m) -> {
         append(m, "ingredient", b.getBlockIngredient());
         append(m, "output", b.assembleBlock(null), true);
     };
@@ -407,20 +423,29 @@ public class DataTypes {
         append(m, "result", Assistant.getPrivateField(q, "result", ItemStackProvider.class), true);
     };
 
-    public static <T extends Recipe<?>, R> DataType<T> forRecipe(
+    public static <T extends Recipe<?>, R> DataType<T> forCachedRecipe(
             IndirectHashCollection<R, T> cache,
             Registry<R> registry,
             Display<T> display,
             Supplier<RecipeType<T>> type
     ) {
-        return new ForRecipe<>(cache, registry, display, type);
+        return new ForCachedRecipe<>(cache, registry, display, type);
     }
 
-    record ForRecipe<T extends Recipe<?>, R>(IndirectHashCollection<R, T> cache, Registry<R> registry, Display<T> display, Supplier<RecipeType<T>> type) implements DataType<T> {
+    private interface UsingRecipeHolders<T extends Recipe<?>> extends DataType<T> {
+
+        Display<T> display();
+
+        Supplier<RecipeType<T>> type();
+
+        @Override
+        default void display(T value, MutableComponent text) {
+            display().accept(value, text);
+        }
 
         @Nullable
         @Override
-        public T find(String str) {
+        default T find(String str) {
             final ResourceLocation id = ResourceLocation.tryParse(str);
             if (id == null) return null;
 
@@ -431,10 +456,30 @@ public class DataTypes {
                     .orElse(null);
         }
 
-        @Override
-        public void display(T value, MutableComponent text) {
-            display.accept(value, text);
+        default Stream<RecipeHolder<T>> holders() {
+            return RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeManager(), type()).stream();
         }
+
+        @Override
+        default Stream<String> describeSuggestions() {
+            return holders()
+                    .map(RecipeHolder::id)
+                    .map(Object::toString);
+        }
+
+        @Override
+        default Set<String> names() {
+            return describeSuggestions()
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        }
+    }
+
+    record ForCachedRecipe<T extends Recipe<?>, R>(
+            IndirectHashCollection<R, T> cache,
+            Registry<R> registry,
+            Display<T> display,
+            Supplier<RecipeType<T>> type
+    ) implements UsingRecipeHolders<T> {
 
         @Override
         public boolean canBeSearched() {
@@ -464,22 +509,368 @@ public class DataTypes {
                     .stream()
                     .map(Printer::stringify);
         }
+    }
+
+    public static final Display<WeldingRecipe> WELDING = (w, m) -> {
+        append(m, "firstInput", w.getFirstInput());
+        append(m, "secondInput", w.getSecondInput());
+        append(m, "tier", w.getTier());
+        append(m, "result", Assistant.getPrivateField(w, "output", ItemStackProvider.class));
+        append(m, "bonus", Assistant.getPrivateField(w, "bonus", WeldingRecipe.Behavior.class), true);
+    };
+
+    public static final Display<AnvilRecipe> ANVIL = (a, m) -> {
+        append(m, "ingredient", a.getInput());
+        append(m, "tier", a.getMinTier());
+        append(m, "rules", a.getRules());
+        append(m, "applyBonus", a.shouldApplyForgingBonus());
+        append(m, "result", Assistant.getPrivateField(a, "output", ItemStackProvider.class), true);
+    };
+
+    public static final Display<SewingRecipe> SEWING = (s, m) -> {
+        final String[] stitches = new String[]{ "'", "'", "'", "'", "'" };
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0 ; j < 9 ; j++) {
+                stitches[i] = stitches[i] + (s.getStitch(i * 9 + j) ? '#' : ' ');
+            }
+            stitches[i] = stitches[i] + "'";
+        }
+        append(m, "stitches", Arrays.stream(stitches)
+                .map(Printer::asComponent)
+                .map(c -> c.withStyle(e -> e.withFont(UNIFORM_FONT)))
+                .toList());
+        final String[] squares = new String[4];
+        final String str = Assistant.getPrivateField(s, "squares", String.class);
+        for (int i = 0 ; i < 4 ; i++) {
+            squares[i] = "'" + str.substring(i * 8, i * 8 + 8) + "'";
+        }
+        append(m, "squares", Arrays.stream(squares)
+                .map(Printer::asComponent)
+                .map(c -> c.withStyle(e -> e.withFont(UNIFORM_FONT)))
+                .toList());
+        append(m, "result", s.getResultItem(null), true);
+    };
+
+    public static final Display<AlloyRecipe> ALLOY = (a, m) -> {
+        append(m, "contents", a.contents());
+        append(m, "result", a.result(), true);
+    };
+
+    public static final Display<InstantFluidBarrelRecipe> INSTANT_FLUID_BARREL = (i, m) -> {
+        append(m, "primaryFluid", i.getInputFluid());
+        append(m, "addedFluid", i.getAddedFluid());
+        append(m, "outputFluid", i.getOutputFluid());
+        append(
+                m,
+                "sound",
+                Assistant.<Holder<SoundEvent>>getPrivateField(i, "sound", Cast.to(Holder.class))
+                        .unwrap()
+                        .map(
+                                ResourceKey::location,
+                                BuiltInRegistries.SOUND_EVENT::getKey
+                        ),
+                true
+        );
+    };
+
+    public static <T extends Recipe<?>> DataType<T> forUncachedRecipe(Display<T> display, Supplier<RecipeType<T>> type) {
+        return new ForRawRecipe<>(display, type);
+    }
+
+    record ForRawRecipe<T extends Recipe<?>>(
+            Display<T> display,
+            Supplier<RecipeType<T>> type
+    ) implements UsingRecipeHolders<T> {
 
         @Override
-        public Stream<String> describeSuggestions() {
-            return holders()
-                    .map(RecipeHolder::id)
-                    .map(Object::toString);
+        public boolean canBeSearched() {
+            return false;
         }
 
         @Override
-        public Set<String> names() {
-            return describeSuggestions()
+        public Set<String> search(String str) {
+            return Set.of();
+        }
+
+        @Override
+        public Stream<String> searchSuggestions() {
+            return Stream.empty();
+        }
+    }
+
+    public static <T extends Recipe<?>, R> DataType<T> forUncachedRecipe(
+            Display<T> display,
+            Supplier<RecipeType<T>> type,
+            Registry<R> registry,
+            BiPredicate<T, R> matcher,
+            Function<T, Stream<R>> suggestions,
+            @Nullable Function<R, String> stringifier
+    ) {
+        return new ForRawSearchableRecipe<>(
+                display,
+                type,
+                registry,
+                matcher,
+                suggestions,
+                stringifier == null ?
+                        Printer::stringify :
+                        stringifier
+        );
+    }
+
+    record ForRawSearchableRecipe<T extends Recipe<?>, R>(
+            Display<T> display,
+            Supplier<RecipeType<T>> type,
+            Registry<R> registry,
+            BiPredicate<T, R> matcher,
+            Function<T, Stream<R>> suggestions,
+            Function<R, String> stringifier
+    ) implements UsingRecipeHolders<T> {
+
+        @Override
+        public boolean canBeSearched() {
+            return true;
+        }
+
+        @Override
+        public Set<String> search(String str) {
+            final ResourceLocation id = ResourceLocation.tryParse(str);
+            if (id == null) return Set.of();
+            final R r = registry.getOptional(id).orElse(null); // Do not get default value of defaulting registries
+            if (r == null) return Set.of();
+
+            return holders()
+                    .filter(h -> matcher.test(h.value(), r))
+                    .map(RecipeHolder::id)
+                    .map(Object::toString)
                     .collect(Collectors.toCollection(LinkedHashSet::new));
         }
 
-        private Stream<RecipeHolder<T>> holders() {
-            return RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeManager(), type).stream();
+        @Override
+        public Stream<String> searchSuggestions() {
+            return holders()
+                    .map(RecipeHolder::value)
+                    .flatMap(suggestions)
+                    .map(stringifier);
+        }
+    }
+
+    public static final Display<BarrelRecipe> BASE_BARREL = (b, m) -> {
+        if (b.getInputItem() != TFCIngredients.EMPTY_ITEM) {
+            append(m, "inputItem", b.getInputItem());
+        }
+        append(m, "inputFluid", b.getInputFluid());
+        append(m, "outputItem", b.getOutputItem());
+        append(m, "outputFluid", b.getOutputFluid());
+        append(
+                m,
+                "sound",
+                Assistant.<Holder<SoundEvent>>getPrivateField(b, "sound", Cast.to(Holder.class))
+                        .unwrap()
+                        .map(
+                                ResourceKey::location,
+                                BuiltInRegistries.SOUND_EVENT::getKey
+                        ),
+                true
+        );
+    };
+
+    public static final Display<SealedBarrelRecipe> SEALED_BARREL = BASE_BARREL.withBefore((s, m) -> {
+        final ItemStackProvider seal = s.onSeal(), unseal = s.onUnseal();
+        if (seal != null) {
+            append(m, "onSeal", seal);
+        }
+        if (unseal != null) {
+            append(m, "onUnseal", unseal);
+        }
+        append(m, "duration", s.getDuration(), true);
+    });
+
+    public static final Display<BloomeryRecipe> BLOOMERY = (b, m) -> {
+        append(m, "fluid", b.getInputFluid());
+        append(m, "catalyst", b.getCatalyst());
+        append(m, "result", Assistant.getPrivateField(b, "result", ItemStackProvider.class));
+        append(m, "duration", b.getDuration(), true);
+    };
+
+    public static final Display<BlastFurnaceRecipe> BLAST_FURNACE = (b, m) -> {
+        append(m, "fluid", b.inputFluid());
+        append(m, "catalyst", b.catalyst());
+        append(m, "result", b.outputFluid(), true);
+    };
+
+    public static final Display<GlassworkingRecipe> GLASSWORKING = (g, m) -> {
+        append(m, "operations", g.operations());
+        append(m, "batch", g.batchItem());
+        append(m, "result", g.resultItem(), true);
+    };
+
+    public static final Display<PotRecipe> POT = (p, m) -> {
+        append(m, "ingredients", p.getItemIngredients()); // This likely isn't pretty
+        append(m, "fluidIngredient", p.getFluidIngredient());
+        append(m, "duration", p.getDuration());
+        append(m, "temperature", Assistant.getPrivateField(p, "temperature", float.class), true);
+    };
+
+    public static final Display<JamPotRecipe> JAM_POT = POT.withBefore((j, m) -> {
+        append(m, "unsealedResult", Assistant.getPrivateField(j, "jarredStack", ItemStack.class));
+        append(m, "sealedResult", Assistant.getPrivateField(j, "jarredStackWithLid", ItemStack.class));
+        append(m, "texture", j.getTexture());
+    });
+
+    public static final Display<SimplePotRecipe> SIMPLE_POT = POT.withBefore((s, m) -> {
+        append(m, "fluidOutput", s.getDisplayFluid());
+        append(m, "itemOutput", s.getOutputItems());
+        append(m, "usesAllFluid", Assistant.getPrivateField(s, "usesAllFluid", boolean.class));
+    });
+
+    @SafeVarargs
+    public static <T extends Recipe<?>> DataType<T> forUncachedMultiLookupRecipe(
+            Display<T> display,
+            Supplier<RecipeType<T>> type,
+            @Nullable Predicate<RecipeHolder<T>> filter,
+            Search<?, ? extends T>... searches
+    ) {
+        if (searches.length < 2) throw new IllegalArgumentException("Must have at least 2 search lookups!");
+        return new ForRawMultiSearchableRecipe<>(display, type, Cast.to(searches), filter);
+    }
+
+    // There are cases *cough* pots *cough* where multiple recipe types have the same RecipeType
+    @SafeVarargs
+    public static <T extends Recipe<?>, R extends T> DataType<T> forUncachedMultiLookupRecipe(
+            Display<R> display,
+            Supplier<RecipeSerializer<R>> recipeSerializer,
+            Supplier<RecipeType<T>> type,
+            Search<?, R>... searches
+    ) {
+        return forUncachedMultiLookupRecipe(Cast.to(display), type, (RecipeHolder<T> h) -> h.value().getSerializer() == recipeSerializer, searches);
+    }
+
+    @SafeVarargs
+    public static <T extends Recipe<?>> DataType<T> forUncachedMultiLookupRecipe(
+            Display<T> display,
+            Supplier<RecipeType<T>> type,
+            Search<?, T>... searches
+    ) {
+        return forUncachedMultiLookupRecipe(display, type, null, searches);
+    }
+
+    record ForRawMultiSearchableRecipe<T extends Recipe<?>>(
+            Display<T> display,
+            Supplier<RecipeType<T>> type,
+            Search<?, T>[] searches,
+            @Nullable Predicate<RecipeHolder<T>> filter
+    ) implements UsingRecipeHolders<T> {
+
+        @Override
+        public boolean canBeSearched() {
+            return true;
+        }
+
+        @Override
+        public Set<String> search(String str) {
+            final String[] split = str.split("\\|", 2);
+            return switch (split.length) {
+                case 0 -> Set.of();
+                case 1 -> search(searches[0], split[0]).collect(Collectors.toCollection(LinkedHashSet::new));
+                default -> {
+                    final Set<String> ret = new LinkedHashSet<>();
+                    for (Search<?, T> s : searches) {
+                        if (s.isFor(split[0])) {
+                            search(s, split[1]).forEach(ret::add);
+                        }
+                    }
+                    yield ret;
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> searchSuggestions() {
+            return Arrays.stream(searches)
+                    .flatMap(s -> s.suggestions(holders().map(RecipeHolder::value)));
+        }
+
+        private <R> Stream<String> search(Search<R, T> search, String objId) {
+            return search.search(objId, this::holders, RecipeHolder::value, RecipeHolder::id);
+        }
+
+        @Override
+        public Stream<RecipeHolder<T>> holders() {
+            final Stream<RecipeHolder<T>> s = UsingRecipeHolders.super.holders();
+            if (filter == null) return s;
+            return s.filter(filter);
+        }
+    }
+
+    public record Search<R, T>(
+            Registry<R> registry,
+            BiPredicate<T, R> matcher,
+            Function<T, Stream<R>> suggestions,
+            Function<R, String> stringifier
+    ) {
+
+        public static <T> Search<Item, T> sizedItem(Function<T, SizedIngredient> mapper) {
+            return item(mapper.andThen(SizedIngredient::ingredient));
+        }
+
+        public static <T> Search<Item, T> item(Function<T, Ingredient> mapper) {
+            return new Search<>(
+                    BuiltInRegistries.ITEM,
+                    (t, i) -> mapper.apply(t).test(i.getDefaultInstance()),
+                    t -> mapper.apply(t).kjs$getItemStream().distinct()
+            );
+        }
+
+        public static <T> Search<Item, T> multiItem(Function<T, Stream<Ingredient>> mapper) {
+            return new Search<>(
+                    BuiltInRegistries.ITEM,
+                    (t, i) -> mapper.apply(t).anyMatch(ing -> ing.kjs$testItem(i)),
+                    t -> mapper.apply(t).flatMap(Ingredient::kjs$getItemStream).distinct()
+            );
+        }
+
+        public static <T> Search<Fluid, T> sizedFluid(Function<T, SizedFluidIngredient> mapper) {
+            return fluid(mapper.andThen(SizedFluidIngredient::ingredient));
+        }
+
+        public static <T> Search<Fluid, T> fluid(Function<T, FluidIngredient> mapper) {
+            return new Search<>(
+                    BuiltInRegistries.FLUID,
+                    (t, f) -> mapper.apply(t).test(new FluidStack(f, 1000)),
+                    t -> Arrays.stream(mapper.apply(t).getStacks()).map(FluidStack::getFluid).distinct()
+            );
+        }
+
+        public Search(Registry<R> registry, BiPredicate<T, R> matcher, Function<T, Stream<R>> suggestions) {
+            this(registry, matcher, suggestions, Printer::stringify);
+        }
+
+        public String stringify(R r) {
+            return registry.key().location() + "|" + stringifier.apply(r);
+        }
+
+        public boolean isFor(String regId) {
+            return registry.key().location().equals(ResourceLocation.tryParse(regId));
+        }
+
+        public Stream<String> suggestions(Stream<T> source) {
+            return source
+                    .flatMap(suggestions)
+                    .distinct()
+                    .map(this::stringify);
+        }
+
+        public <A> Stream<String> search(String objId, Supplier<Stream<A>> source, Function<A, T> mapper, Function<A, ResourceLocation> idMapper) {
+            final ResourceLocation id = ResourceLocation.tryParse(objId);
+            if (id == null) return Stream.empty();
+            final R r = registry.getOptional(id).orElse(null); // DO not get default value of defaulting registries
+            if (r == null) return Stream.empty();
+
+            return source.get()
+                    .filter(a -> matcher.test(mapper.apply(a), r))
+                    .map(idMapper)
+                    .map(Object::toString);
         }
     }
 }

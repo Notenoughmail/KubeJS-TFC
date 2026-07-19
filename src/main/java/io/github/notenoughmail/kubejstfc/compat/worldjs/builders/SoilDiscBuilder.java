@@ -8,19 +8,20 @@ import net.dries007.tfc.world.feature.TFCFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 @ReturnsSelf
 public class SoilDiscBuilder extends ConfiguredFeatureBuilder.WithFeature<SoilDiscConfig> {
 
+    @Nullable
     public transient Map<Block, BlockState> states;
     public transient int minRadius, maxRadius, height;
     public transient float integrity;
 
     public SoilDiscBuilder(ResourceLocation id) {
         super(id, TFCFeatures.SOIL_DISC);
-        states = Map.of();
         minRadius = 3;
         maxRadius = 5;
         height = 2;
@@ -35,14 +36,14 @@ public class SoilDiscBuilder extends ConfiguredFeatureBuilder.WithFeature<SoilDi
 
     @Info("The radius of the disc")
     public SoilDiscBuilder radius(int min, int max) {
-        minRadius = min;
-        maxRadius = max;
+        minRadius = assertPositive(min, "radius.min");
+        maxRadius = assertPositive(max, "radius.max");
         return this;
     }
 
     @Info("The height of the disc")
     public SoilDiscBuilder height(int h) {
-        height = assertPositive(h, "height");
+        height = assertRange(h, 0, 256, "height");
         return this;
     }
 
@@ -55,7 +56,7 @@ public class SoilDiscBuilder extends ConfiguredFeatureBuilder.WithFeature<SoilDi
     @Override
     public SoilDiscConfig createFeatureConfiguration() {
         return new SoilDiscConfig(
-                states,
+                notNull(states, "replacementStates"),
                 minRadius,
                 maxRadius,
                 height,

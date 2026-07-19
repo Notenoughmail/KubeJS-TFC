@@ -27,7 +27,7 @@ ServerEvents.recipes(e => {
     ).tier(2).id('kubejs:anvil');
 
     tfc.barrel_instant(
-        Fluid.of('minecraft:water', 50)
+        Fluid.of('minecraft:milk', 50)
     ).outputs('minecraft:cobblestone', Fluid.of('minecraft:milk', 20))
         .id('kubejs:barrel_instant');
     tfc.instant_barrel(

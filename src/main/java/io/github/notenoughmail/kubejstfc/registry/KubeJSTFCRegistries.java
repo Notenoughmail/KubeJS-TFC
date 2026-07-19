@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.registry;
 
 import com.mojang.serialization.MapCodec;
-import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
@@ -11,10 +10,12 @@ import io.github.notenoughmail.kubejstfc.worldgen.generator.RockSurfaceRuleSourc
 import io.github.notenoughmail.kubejstfc.worldgen.generator.WrappedChunkGenerator;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.component.food.FoodCapability;
+import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.entities.Fauna;
 import net.dries007.tfc.common.recipes.*;
+import net.dries007.tfc.util.AlloyRange;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.*;
@@ -39,6 +40,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class KubeJSTFCRegistries {
 
@@ -220,25 +222,25 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "collapse_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         CollapseRecipe.CACHE,
                         BuiltInRegistries.BLOCK,
-                        Cast.to(DataTypes.BLOCK_RECIPE),
+                        DataTypes.BLOCK_RECIPE.cast(),
                         TFCRecipeTypes.COLLAPSE
                 )
         );
         DATA_TYPE.register(
                 "landslide_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         LandslideRecipe.CACHE,
                         BuiltInRegistries.BLOCK,
-                        Cast.to(DataTypes.BLOCK_RECIPE),
+                        DataTypes.BLOCK_RECIPE.cast(),
                         TFCRecipeTypes.LANDSLIDE
                 )
         );
         DATA_TYPE.register(
                 "chisel_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         ChiselRecipe.CACHE,
                         BuiltInRegistries.BLOCK,
                         DataTypes.CHISEL,
@@ -247,7 +249,7 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "scraping_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         ScrapingRecipe.CACHE,
                         BuiltInRegistries.ITEM,
                         DataTypes.SCRAPING,
@@ -256,7 +258,7 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "casting_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         CastingRecipe.CACHE,
                         BuiltInRegistries.ITEM,
                         DataTypes.CASTING,
@@ -265,7 +267,7 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "heating_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         HeatingRecipe.CACHE,
                         BuiltInRegistries.ITEM,
                         DataTypes.HEATING,
@@ -274,7 +276,7 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "loom_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         LoomRecipe.CACHE,
                         BuiltInRegistries.ITEM,
                         DataTypes.LOOM,
@@ -283,11 +285,153 @@ public class KubeJSTFCRegistries {
         );
         DATA_TYPE.register(
                 "quern_recipe",
-                () -> DataTypes.forRecipe(
+                () -> DataTypes.forCachedRecipe(
                         QuernRecipe.CACHE,
                         BuiltInRegistries.ITEM,
                         DataTypes.QUERN,
                         TFCRecipeTypes.QUERN
+                )
+        );
+        DATA_TYPE.register(
+                "welding_recipe",
+                () -> DataTypes.forUncachedRecipe(
+                        DataTypes.WELDING,
+                        TFCRecipeTypes.WELDING,
+                        BuiltInRegistries.ITEM,
+                        (w, i) -> {
+                            final ItemStack s = i.getDefaultInstance();
+                            return w.getFirstInput().test(s) || w.getSecondInput().test(s);
+                        },
+                        w -> Stream.concat(
+                                w.getFirstInput().kjs$getItemStream(),
+                                w.getSecondInput().kjs$getItemStream()
+                        ).distinct(),
+                        null
+                )
+        );
+        DATA_TYPE.register(
+                "anvil_recipe",
+                () -> DataTypes.forUncachedRecipe(
+                        DataTypes.ANVIL,
+                        TFCRecipeTypes.ANVIL,
+                        BuiltInRegistries.ITEM,
+                        (a, i) -> a.getInput().test(i.getDefaultInstance()),
+                        a -> a.getInput().kjs$getItemStream().distinct(),
+                        null
+                )
+        );
+        DATA_TYPE.register(
+                "sewing_recipe",
+                () -> DataTypes.forUncachedRecipe(
+                        DataTypes.SEWING,
+                        TFCRecipeTypes.SEWING
+                )
+        );
+        DATA_TYPE.register(
+                "alloy_recipe",
+                () -> DataTypes.forUncachedRecipe(
+                        DataTypes.ALLOY,
+                        TFCRecipeTypes.ALLOY,
+                        BuiltInRegistries.FLUID,
+                        (a, f) -> a.contents().stream().anyMatch(r -> r.fluid() == f),
+                        a -> a.contents().stream().map(AlloyRange::fluid),
+                        null
+                )
+        );
+        DATA_TYPE.register(
+                "instant_fluid_barrel_recipe",
+                () -> DataTypes.forUncachedRecipe(
+                        DataTypes.INSTANT_FLUID_BARREL,
+                        TFCRecipeTypes.BARREL_INSTANT_FLUID,
+                        BuiltInRegistries.FLUID,
+                        (i, f) -> {
+                            final FluidStack s = new FluidStack(f, 1000);
+                            return i.getInputFluid().ingredient().test(s) || i.getAddedFluid().ingredient().test(s);
+                        },
+                        i -> Stream.concat(
+                                Arrays.stream(i.getInputFluid().ingredient().getStacks()),
+                                Arrays.stream(i.getAddedFluid().ingredient().getStacks())
+                        ).map(FluidStack::getFluid).distinct(),
+                        null
+                )
+        );
+        DATA_TYPE.register(
+                "instant_barrel_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.BASE_BARREL.withBefore((o, t) -> {}),
+                        TFCRecipeTypes.BARREL_INSTANT,
+                        DataTypes.Search.sizedItem(BarrelRecipe::getInputItem),
+                        DataTypes.Search.sizedFluid(BarrelRecipe::getInputFluid)
+                )
+        );
+        DATA_TYPE.register(
+                "sealed_barrel_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.SEALED_BARREL,
+                        TFCRecipeTypes.BARREL_SEALED,
+                        DataTypes.Search.sizedItem(BarrelRecipe::getInputItem),
+                        DataTypes.Search.sizedFluid(BarrelRecipe::getInputFluid)
+                )
+        );
+        DATA_TYPE.register(
+                "bloomery_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.BLOOMERY,
+                        TFCRecipeTypes.BLOOMERY,
+                        DataTypes.Search.sizedItem(BloomeryRecipe::getCatalyst),
+                        DataTypes.Search.sizedFluid(BloomeryRecipe::getInputFluid)
+                )
+        );
+        DATA_TYPE.register(
+                "blast_furnace_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.BLAST_FURNACE,
+                        TFCRecipeTypes.BLAST_FURNACE,
+                        DataTypes.Search.item(BlastFurnaceRecipe::catalyst),
+                        DataTypes.Search.sizedFluid(BlastFurnaceRecipe::inputFluid)
+                )
+        );
+        DATA_TYPE.register(
+                "glassworking_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.GLASSWORKING,
+                        TFCRecipeTypes.GLASSWORKING,
+                        DataTypes.Search.item(GlassworkingRecipe::batchItem),
+                        new DataTypes.Search<>(
+                                GlassOperation.REGISTRY,
+                                (g, o) -> g.operations().contains(o),
+                                g -> g.operations().stream()
+                        )
+                )
+        );
+        DATA_TYPE.register(
+                "jam_pot_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.JAM_POT,
+                        TFCRecipeSerializers.POT_JAM,
+                        TFCRecipeTypes.POT,
+                        DataTypes.Search.multiItem(j -> j.getItemIngredients().stream()),
+                        DataTypes.Search.sizedFluid(JamPotRecipe::getFluidIngredient)
+                )
+        );
+        DATA_TYPE.register(
+                "pot_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.SIMPLE_POT,
+                        TFCRecipeSerializers.POT_SIMPLE,
+                        TFCRecipeTypes.POT,
+                        DataTypes.Search.multiItem(j -> j.getItemIngredients().stream()),
+                        DataTypes.Search.sizedFluid(SimplePotRecipe::getFluidIngredient)
+                )
+        );
+        DATA_TYPE.register(
+                "soup_pot_recipe",
+                () -> DataTypes.forUncachedMultiLookupRecipe(
+                        DataTypes.POT.cast(),
+                        TFCRecipeSerializers.POT_SOUP,
+                        TFCRecipeTypes.POT,
+                        DataTypes.Search.multiItem(j -> j.getItemIngredients().stream()),
+                        DataTypes.Search.sizedFluid(SoupPotRecipe::getFluidIngredient)
                 )
         );
     }

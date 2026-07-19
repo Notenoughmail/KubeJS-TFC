@@ -16,6 +16,8 @@ import java.util.function.Supplier;
 @ReturnsSelf
 public abstract class TreeBuilder<FC extends FeatureConfiguration> extends ConfiguredFeatureBuilder.WithFeature<FC> {
 
+    public static final TreePlacementConfig DEFAULT_PLACEMENT = new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL);
+
     @Nullable
     public transient TrunkConfig trunk;
     @Nullable
@@ -24,7 +26,7 @@ public abstract class TreeBuilder<FC extends FeatureConfiguration> extends Confi
 
     public TreeBuilder(ResourceLocation id, Supplier<? extends Feature<FC>> feature) {
         super(id, feature);
-        treePlacement = new TreePlacementConfig(5, 3, TreePlacementConfig.GroundType.NORMAL);
+        treePlacement = DEFAULT_PLACEMENT;
     }
 
     @Info("The trunk properties")
@@ -35,6 +37,12 @@ public abstract class TreeBuilder<FC extends FeatureConfiguration> extends Confi
 
     @Info("The root system properties")
     public TreeBuilder<FC> roots(TreeRootBuilder roots) {
+        validate(roots.blocks(), b -> b.isEmpty() ? "'roots.blocks' must not be empty!" : null);
+        assertPositive(roots.width(), "roots.width");
+        assertPositive(roots.height(), "roots.height");
+        assertPositive(roots.tries(), "roots.tries");
+        if (roots.skewChance() != null)
+            assertUnit(roots.skewChance(), "roots.skewChance");
         this.roots = roots;
         return this;
     }

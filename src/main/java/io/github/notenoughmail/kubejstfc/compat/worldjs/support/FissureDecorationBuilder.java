@@ -19,6 +19,12 @@ public record FissureDecorationBuilder(
 
     @HideFromJS
     public FissureConfig.Decoration build() {
+        if (rarity < 1)
+            throw new IllegalArgumentException("Decoration rarity must not be < 1");
+        if (radius < 1)
+            throw new IllegalArgumentException("Decoration radius must not be < 1");
+        if (count < 1)
+            throw new IllegalArgumentException("Decoration count must not be <1");
         return new FissureConfig.Decoration(
                 WorldgenPlugin.weightedTFC(states),
                 rarity,
