@@ -1,7 +1,7 @@
-### 2.0.2 (W.I.P.)
+### 2.0.2
 - The data type commands (`/kubejs_tfc <search|describe|list_ids>`) can now handle *all* TFC recipe types
 - Configured feature types have been given a full, proper look over to address assorted issues
-  - Additionally, the extant types are now fully documented on the docs site
+  - Additionally, the extant types are now fully documented on the docs site, though without examples
 - Fix issue with the `tfc:leaves` block builder in TFC 4.2.5+ caused by change in constructor signature. TFC 4.2.5 is now the minimum version
 - Add ability to generate models using TFC's leaves model loader with `tfc:leaves` block builders
 - The order of child ingredients given to `TFC.ingredient.and(...)` no longer impacts which items the ingredient will be displayed as in recipe viewers when using TFC's precise ingredient types

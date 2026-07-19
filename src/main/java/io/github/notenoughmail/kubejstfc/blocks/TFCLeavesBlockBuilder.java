@@ -36,7 +36,7 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     public transient float flowerOffset;
     public transient boolean conifer;
     @Nullable
-    public transient BiConsumer<DynamicLeavesModel, ModelGenerator> dynamicModel;
+    public transient BiConsumer<DynamicLeafType, ModelGenerator> dynamicModel;
 
     public TFCLeavesBlockBuilder(ResourceLocation i) {
         super(i);
@@ -80,7 +80,7 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     }
 
     @Info("Use the `tfc:leaves` model loader to dynamically use different models based on the season")
-    public TFCLeavesBlockBuilder dynamicLeavesModel(BiConsumer<DynamicLeavesModel, ModelGenerator> models) {
+    public TFCLeavesBlockBuilder dynamicModel(BiConsumer<DynamicLeafType, ModelGenerator> models) {
         this.dynamicModel = models;
         return this;
     }
@@ -124,7 +124,7 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
                 m.parent(null);
                 m.custom(j -> {
                     j.addProperty("loader", "tfc:leaves");
-                    for (DynamicLeavesModel e : DynamicLeavesModel.VALUES) {
+                    for (DynamicLeafType e : DynamicLeafType.VALUES) {
                         j.add(e.type, Assistant.json(i -> i.addProperty(
                                 "parent",
                                 e.modelEx(this).toString()
@@ -132,7 +132,7 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
                     }
                 });
             });
-            for (DynamicLeavesModel e : DynamicLeavesModel.VALUES) {
+            for (DynamicLeafType e : DynamicLeafType.VALUES) {
                 generator.blockModel(e.model(this), m -> {
                     m.parent(LEAVES);
                     m.textures(textures);
@@ -147,18 +147,18 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
         ModelUtil.inheritItemModelGen(this, m);
     }
 
-    public enum DynamicLeavesModel implements ISupplyModels {
+    public enum DynamicLeafType implements ISupplyModels {
         DENSE_LEAVES,
         SPARSE_LEAVES,
         BARE,
         BLOOMING
         ;
 
-        public static final DynamicLeavesModel[] VALUES = values();
+        public static final DynamicLeafType[] VALUES = values();
 
         public final String type;
 
-        DynamicLeavesModel() {
+        DynamicLeafType() {
             this.type = makeStr();
         }
 

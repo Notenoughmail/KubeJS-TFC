@@ -3,8 +3,10 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.ClimatePlacementBuilder;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.builders.base.PlacedFeatureBuilder;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
@@ -25,6 +27,8 @@ import java.util.function.Consumer;
 
 @ReturnsSelf
 public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<ForestConfig.Entry> {
+
+    private static final ResourceLocation TFC_FOREST_TREES = KubeJSTFC.tfc("forest_trees");
 
     public transient ClimatePlacementBuilder climate;
     @Nullable
@@ -134,6 +138,12 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
     @Info("If trees are allowed to float when placing")
     public ForestEntryBuilder floating(boolean f) {
         floating = f;
+        return this;
+    }
+
+    @Info("Adds this to the 'tfc:forest_trees' tag, which is used by the TFC's forest feature for its entries")
+    public ForestEntryBuilder addToDefaultForest() {
+        Assistant.singleTag(this, TFC_FOREST_TREES);
         return this;
     }
 
