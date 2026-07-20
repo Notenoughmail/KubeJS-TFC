@@ -4,19 +4,21 @@ import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.misc.ItemStackModifierBuilder;
-import net.dries007.tfc.common.component.food.FoodData;
-import net.dries007.tfc.common.component.food.Nutrient;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
+import net.dries007.tfc.common.recipes.outputs.ItemStackModifierType;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
+import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -41,340 +43,227 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.COLORS;
-import static io.github.notenoughmail.kubejstfc.util.Printer.Hidden.RECORD_CONVERTERS;
+public final class Printer {
 
-// TODO: 2.1.0 | Rework to be a wrapper around mutable components with a native indent field and other utilities
-public interface Printer {
-
-    ResourceLocation UNIFORM_FONT = ResourceLocation.withDefaultNamespace("uniform");
-
-    static void simpleAdd(MutableComponent txt, Object value) {
-        txt.append(asComponent(value));
+    public static Printer create(MutableComponent text) {
+        return new Printer(text);
     }
 
-    static void complexAdd(MutableComponent txt, Object value) {
-        if (value instanceof Record r) {
-            final Map<String, ?> fields = convertRecordToMap(r);
-            appendMap(txt, fields, 0, false);
-        } else {
-            simpleAdd(txt, value);
-        }
+    public static Printer create() {
+        return create(Component.empty());
     }
 
-    static void newLine(MutableComponent txt) {
-        txt.append(CommonComponents.NEW_LINE);
+    public static String stringify(@Nullable Object o) {
+        return switch (o) {
+            case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
+            case Block b -> getId(BuiltInRegistries.BLOCK, b);
+            case Item i -> getId(BuiltInRegistries.ITEM, i);
+            case Fluid f -> getId(BuiltInRegistries.FLUID, f);
+            case EntityType<?> e -> getId(BuiltInRegistries.ENTITY_TYPE, e);
+            case ChiselMode m -> getId(ChiselMode.REGISTRY, m);
+            case GlassOperation g -> getId(GlassOperation.REGISTRY, g);
+            case DataComponentType<?> d -> getId(BuiltInRegistries.DATA_COMPONENT_TYPE, d);
+            case ItemStackModifierType<?> i -> getId(ItemStackModifiers.REGISTRY, i);
+            case Holder<?> h -> h.getRegisteredName();
+            case null -> "null";
+            default -> String.valueOf(o);
+        };
     }
 
-    static void listItem(MutableComponent txt) {
-        txt.append(LIST_ITEM);
+    private static <T> String getId(Registry<T> registry, T value) {
+        return Objects.requireNonNull(registry.getKey(value), "Value not present in registry").toString();
     }
 
-    static void singleIndent(MutableComponent txt) {
-        txt.append(SINGLE_INDENT);
+    public static TextColor color(@Nullable Object o) {
+        return switch (o) {
+            case null -> COLORS[0];
+            case Number $ -> COLORS[1];
+            case Boolean $ -> COLORS[2];
+            case CharSequence $ -> COLORS[3];
+            case ResourceLocation $ -> COLORS[3];
+            case Enum<?> $ -> COLORS[4];
+            case Component c -> c.getStyle().getColor();
+            case Holder<?> h -> color(h.value());
+            default -> COLORS[5];
+        };
     }
 
-    static void descriptor(MutableComponent txt, String descriptor) {
-        txt.append(Component.literal(descriptor).withStyle(ChatFormatting.RED))
-                .append(PAIR_DENOTATION);
+    private static final ResourceLocation UNIFORM_FONT = ResourceLocation.withDefaultNamespace("uniform");
+    private static final Component[] INDENTATION_CACHE = {
+            Component.literal("  "),
+            Component.literal("    "),
+            Component.literal("      "),
+            Component.literal("        ")
+    };
+    public static final Component
+            LIST_OPEN = Component.literal("[\n"),
+            LIST_CLOSE = Component.literal("]"),
+            OBJECT_OPEN = Component.literal("{\n"),
+            OBJECT_CLOSE = Component.literal("}"),
+            PAIR_NOTATION = Component.literal(": "),
+            LIST_ITEM = Component.literal(",\n").withStyle(ChatFormatting.WHITE),
+            MATRIX_ITEM = Component.literal(", ").withStyle(ChatFormatting.WHITE),
+            NONE = Component.literal("-"),
+            MARK_OPTIONAL = Component.literal("?:").withStyle(ChatFormatting.YELLOW);
+
+    private final MutableComponent text;
+    private int indent;
+    @Nullable
+    private ResourceLocation font;
+
+    Printer(MutableComponent text) {
+        this.text = text;
     }
 
-    static void append(MutableComponent txt, String descriptor, Object value) {
-        append(txt, descriptor, value, false);
+    public Component getFormattedText() {
+        return text;
     }
 
-    static void append(MutableComponent txt, String descriptor, Object value, boolean end) {
-        switch (value) {
-            case BlockIngredient b -> b.either()
-                    .ifLeft(blocks -> append(txt, descriptor, blocks, true))
-                    .ifRight(tag -> append(txt, descriptor, clickableTag(tag), true));
-            case FluidIngredient f -> {
-                descriptor(txt, descriptor);
-                appendCollection(
-                        txt,
-                        getDistinctFluids(f)
-                );
-            }
-            case SizedFluidIngredient f -> {
-                descriptor(txt, descriptor);
-                txt.append(OBJECT_OPEN);
-                singleIndent(txt);
-                append(txt, "amount", f.amount());
-                singleIndent(txt);
-                descriptor(txt, "fluids");
-                appendCollection(txt, getDistinctFluids(f.ingredient()), 1);
-                newLine(txt);
-                txt.append(OBJECT_CLOSE);
-            }
-            case Ingredient i -> {
-                descriptor(txt, descriptor);
-                appendIngredientValues(txt, i, 0);
-            }
-            case SizedIngredient i -> {
-                descriptor(txt, descriptor);
-                txt.append(OBJECT_OPEN);
-                singleIndent(txt);
-                append(txt, "count", i.count());
-                singleIndent(txt);
-                descriptor(txt, "items");
-                appendIngredientValues(txt, i.ingredient(), 1);
-                newLine(txt);
-                txt.append(OBJECT_CLOSE);
-            }
-            case ItemStack s -> {
-                descriptor(txt, descriptor);
-                appendItemStack(txt, s, 0);
-            }
-            case ItemStackProvider p -> {
-                if (p.modifiers().isEmpty()) {
-                    append(txt, descriptor, p.stack(), end);
-                    return;
-                }
-
-                descriptor(txt, descriptor);
-                txt.append(OBJECT_OPEN);
-
-                if (!p.stack().isEmpty()) {
-                    singleIndent(txt);
-                    descriptor(txt, "stack");
-                    appendItemStack(txt, p.stack(), 1);
-                    listItem(txt);
-                }
-
-                singleIndent(txt);
-                descriptor(txt, "modifiers");
-                appendCollection(txt, p.modifiers(), (msg, m) -> {
-                    final ResourceLocation type = ItemStackModifiers.REGISTRY.getKey(m.type());
-                    // Good indications of 'singleton' types
-                    if (m instanceof Enum<?> || m instanceof ItemStackModifierBuilder || m.type().codec().encoder().toString().equals("EmptyEncoder")) {
-                        msg.append(asComponent(type));
-                    } else if (m instanceof Record r) {
-                        final Map<String, Object> map = convertRecordToMap(r);
-                        map.put("type", type);
-                        appendMap(msg, map, 2, false);
-                    } else {
-                        assert type != null;
-                        final Map<String, Object> map = Map.of(
-                                "modifier", m,
-                                "type", type
-                        );
-                        appendMap(msg, map, 2, false);
-                    }
-                }, 1);
-                newLine(txt);
-
-                txt.append(OBJECT_CLOSE);
-            }
-            case FluidStack f -> {
-                descriptor(txt, descriptor);
-                appendFluidStack(txt, f, 0);
-            }
-            case BlockState s -> {
-                final BlockState base = s.getBlock().defaultBlockState();
-                if (base == s) {
-                    append(txt, descriptor, s.getBlock(), true);
-                } else {
-                    final Map<String, Object> properties = new LinkedHashMap<>();
-                    for (Property<?> p : s.getProperties()) {
-                        if (!Assistant.haveSamePropertyValue(s, base, p)) {
-                            properties.put(p.getName(), s.getValue(p));
-                        }
-                    }
-                    if (properties.isEmpty()) {
-                        append(txt, descriptor, s.getBlock(), true);
-                    } else {
-                        descriptor(txt, descriptor);
-                        txt.append(OBJECT_OPEN);
-                        singleIndent(txt);
-                        append(txt, "block", s.getBlock());
-                        singleIndent(txt);
-                        descriptor(txt, "properties");
-                        appendMap(txt, properties, 1, false);
-                        newLine(txt);
-                        txt.append(OBJECT_CLOSE);
-                    }
-                }
-                
-            }
-            case null -> append(txt, descriptor, asComponent(null), true);
-            case Collection<?> c -> {
-                descriptor(txt, descriptor);
-                appendCollection(txt, c, Printer::complexAdd, 1);
-            }
-            default -> {
-                if (value.getClass().isArray()) {
-                    final Object[] arr = (Object[]) value;
-                    append(txt, descriptor, List.of(arr), true);
-                } else {
-                    descriptor(txt, descriptor);
-                    complexAdd(txt, value);
-                }
-            }
-        }
-        if (!end) newLine(txt);
+    public Printer withFont(ResourceLocation font) {
+        this.font = font;
+        return this;
     }
 
-    static <T> void appendStack(MutableComponent txt, T value, String type, int quantity, String val, int indent, DataComponentPatch patch, boolean renderTooltips) {
-        final Component indentation = indent == 0 ? SINGLE_INDENT : Component.literal("  ".repeat(indent + 1));
-        txt.append(OBJECT_OPEN);
+    @Nullable
+    public ResourceLocation font() {
+        return font;
+    }
 
-        txt.append(indentation);
-        append(txt, type, value);
-        txt.append(indentation);
-        append(txt, val, quantity);
+    public Printer uniformFont() {
+        return withFont(UNIFORM_FONT);
+    }
 
-        if (!patch.isEmpty()) {
-            final Item.TooltipContext ctx = renderTooltips ? Item.TooltipContext.of(RegistryAccessContainer.current.access()) : null;
-            txt.append(indentation);
-            descriptor(txt, "components");
-            appendMap(
-                    txt,
-                    patch.entrySet().stream()
-                            .collect(Collectors.toMap(
-                                    e -> BuiltInRegistries.DATA_COMPONENT_TYPE.getKeyOrNull(e.getKey()).toString(),
-                                    e -> e.getValue().map(v -> {
-                                        if (renderTooltips && v instanceof TooltipProvider p) {
-                                            final Component[] c = new Component[] { NONE };
-                                            p.addToTooltip(ctx, t -> c[0] = t, TooltipFlag.NORMAL);
-                                            return c[0];
-                                        } else {
-                                            return asComponent(v);
-                                        }
-                                    }).orElse(NONE)
-                            )),
-                    indent + 1,
-                    false
-            );
-        }
+    public Printer clearFont() {
+        font = null;
+        return this;
+    }
 
+    public Printer incIndent() {
+        indent += 1;
+        return this;
+    }
+
+    public Printer decIndent() {
+        indent -= 1;
+        return this;
+    }
+
+    public Printer appendIndent() {
         switch (indent) {
-            case 0 -> txt.append(OBJECT_CLOSE);
-            case 1 -> {
-                singleIndent(txt);
-                txt.append(OBJECT_CLOSE);
-            }
-            default -> {
-                txt.append(Component.literal("  ".repeat(indent)));
-                txt.append(OBJECT_CLOSE);
-            }
+            case 0 -> {}
+            case 1, 2, 3, 4 -> text.append(INDENTATION_CACHE[indent - 1]);
+            default -> text.append("  ".repeat(indent));
         }
+        return this;
     }
 
-    static void appendFluidStack(MutableComponent txt, FluidStack stack, int indent) {
-        appendStack(txt, stack.getFluid(), "fluid", stack.getAmount(), "amount", indent, stack.getComponentsPatch(), false);
+    public Printer appendPlain(String txt) {
+        text.append(txt);
+        return this;
     }
 
-    static void appendItemStack(MutableComponent txt, ItemStack stack, int indent) {
-        appendStack(txt, stack.getItem(), "item", stack.getCount(), "count", indent, stack.getComponentsPatch(), true);
+    public Printer appendRaw(@Nullable Object object) {
+        return append(asComponent(object));
     }
 
-    static void appendCollection(MutableComponent txt, Collection<?> c) {
-        appendCollection(txt, c, 0);
+    public Printer append(Component formattedText) {
+        text.append(formattedText);
+        return this;
     }
 
-    static <T> void appendCollection(MutableComponent txt, Collection<T> c, int indent) {
-        appendCollection(txt, c, Printer::simpleAdd, indent);
+    public Printer indentedAppend(Component formattedText) {
+        return appendIndent()
+                .append(formattedText);
     }
 
-    // This assumes the pre-opener, whatever that may be, is already present
-    static <T> void appendCollection(MutableComponent txt, Collection<T> c, BiConsumer<MutableComponent, T> forEach, int indent) {
-        final Component indentation = indent == 0 ? SINGLE_INDENT : Component.literal("  ".repeat(indent + 1));
-        txt.append(LIST_OPEN);
-        if (c.size() > 1) newLine(txt);
-
-        final Iterator<T> iterator = c.iterator();
-        switch (c.size()) {
-            case 0 -> singleIndent(txt);
-            case 1 -> {
-                singleIndent(txt);
-                forEach.accept(txt, iterator.next());
-                singleIndent(txt);
-            }
-            default -> {
-                txt.append(indentation);
-                forEach.accept(txt, iterator.next());
-
-                while (iterator.hasNext()) {
-                    listItem(txt);
-                    txt.append(indentation);
-                    forEach.accept(txt, iterator.next());
-                }
-                newLine(txt);
-            }
-        }
-        if (indent > 0) {
-            txt.append("  ".repeat(indent));
-        }
-        txt.append(LIST_CLOSE);
+    public Printer newLine() {
+        return append(CommonComponents.NEW_LINE);
     }
 
-    static <T> void appendMap(MutableComponent m, Map<String, T> map, int indent, boolean indentOpening) {
-        appendMap(m, map, (t, i) -> simpleAdd(m, t), indent, indentOpening);
+    public Printer listItem() {
+        return append(LIST_ITEM);
     }
 
-    static <T> void appendMap(MutableComponent m, Map<String, T> map, BiConsumer<T, Integer> forEach, int indent, boolean indentOpening) {
-        final Component indentation = indent == 0 ? SINGLE_INDENT : Component.literal("  ".repeat(indent + 1));
-        final Component bracketIndentation = indent == 0 ? SINGLE_INDENT : Component.literal("  ".repeat(indent));
-        if (indentOpening && indent > 1) {
-            m.append(bracketIndentation);
-        }
-        m.append(OBJECT_OPEN);
-
-        final Iterator<Map.Entry<String, T>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            m.append(indentation);
-            final Map.Entry<String, T> entry = iterator.next();
-            descriptor(m, entry.getKey());
-            forEach.accept(entry.getValue(), indent + 1);
-            if (iterator.hasNext()) {
-                listItem(m);
-            } else {
-                newLine(m);
-            }
-        }
-
-        if (indent > 0) {
-            m.append(bracketIndentation);
-        }
-        m.append(OBJECT_CLOSE);
+    public Printer openList() {
+        return incIndent()
+                .append(LIST_OPEN);
     }
 
-    static void appendIngredientValues(MutableComponent m, Ingredient i, int indent) {
-        if (i.isCustom()) {
-            appendCollection(
-                    m,
-                    Arrays.stream(i.getItems())
-                            .map(ItemStack::getItem)
-                            .distinct()
-                            .toList(),
-                    indent
-            );
-        } else {
-            appendCollection(
-                    m,
-                    Arrays.stream(i.getValues()).map(v -> {
-                        if (v instanceof Ingredient.TagValue(TagKey<Item> tag)) {
-                            return clickableTag(tag);
-                        } else if (v instanceof Ingredient.ItemValue(ItemStack item)) {
-                            return asComponent(item.getItem());
-                        } else {
-                            throw new UnsupportedOperationException("Custom Ingredient$Values are not supported. Custom ingredients should be implemented via ICustomIngredient");
-                        }
-                    }).toList(),
-                    indent
-            );
-        }
+    public Printer closeList() {
+        return newLine()
+                .decIndent()
+                .indentedAppend(LIST_CLOSE);
     }
 
-    static List<Fluid> getDistinctFluids(FluidIngredient ingredient) {
-        return Arrays.stream(ingredient.getStacks())
-                .map(FluidStack::getFluid)
-                .distinct()
-                .toList();
+    public Printer openObject() {
+        return incIndent()
+                .append(OBJECT_OPEN);
     }
 
-    static MutableComponent clickableTag(TagKey<?> tag) {
+    public Printer closeObject() {
+        return newLine()
+                .decIndent()
+                .indentedAppend(OBJECT_CLOSE);
+    }
+
+    public Printer descriptor(String descriptor) {
+        return indentedAppend(
+                Component.literal(descriptor).withStyle(ChatFormatting.RED)
+        ).append(PAIR_NOTATION);
+    }
+
+    public <T> Printer appendCollection(Collection<T> collection, BiConsumer<Printer, T> forEach) {
+        openList();
+        Assistant.iterate(
+                collection,
+                t -> forEach.accept(this, t),
+                $ -> listItem()
+        );
+        return closeList();
+    }
+
+    public <T> Printer appendCollection(Collection<T> collection, Function<T, Component> formatter) {
+        return appendCollection(collection, (p, t) -> p.indentedAppend(formatter.apply(t)));
+    }
+
+    public <T> Printer appendCollection(Collection<T> collection) {
+        return appendCollection(collection, this::asComponent);
+    }
+
+    public <T> Printer appendMap(Map<String, T> map, BiConsumer<Printer, T> forEach) {
+        openObject();
+        Assistant.iterate(
+                map.entrySet(),
+                entry -> {
+                    descriptor(entry.getKey());
+                    forEach.accept(this, entry.getValue());
+                },
+                $ -> listItem()
+        );
+        return closeObject();
+    }
+
+    public <T> Printer appendMap(Map<String, T> map, Function<T, Component> formatter) {
+        return appendMap(map, (p, t) -> p.append(formatter.apply(t)));
+    }
+
+    public <T> Printer appendMap(Map<String, T> map) {
+        return appendMap(map, this::asComponent);
+    }
+
+    public <R extends Record> Printer appendRecordAsMap(R record) {
+        return appendMap(convertRecordToMap(record));
+    }
+
+    public <T> Printer appendLikeMap(T t, BiConsumer<T, Printer> mapAction) {
+        openObject();
+        mapAction.accept(t, this);
+        return closeObject();
+    }
+
+    public static Component clickableTag(TagKey<?> tag) {
         return Component.literal("#" + tag.location())
                 .withStyle(s -> s
                         .withUnderlined(true)
@@ -383,83 +272,242 @@ public interface Printer {
                 );
     }
 
-    static MutableComponent asComponent(@Nullable Object o) {
-        if (o instanceof MutableComponent mut) {
-            return mut;
+    public Component asComponent(@Nullable Object o) {
+        if (o instanceof Component c) {
+            return c;
+        } else if (o instanceof Optional<?> opt) {
+            return Component.empty()
+                    .append(MARK_OPTIONAL)
+                    .append(asComponent(opt.orElse(null)));
+        } else if (o instanceof ResourceKey<?> r) {
+            return asComponent(r.location());
         }
-        return Component.literal(stringify(o)).withStyle(s -> s.withColor(getColor(o)));
+        return Component.literal(stringify(o)).withStyle(s -> {
+            s = s.withColor(color(o));
+            if (font != null) {
+                s = s.withFont(font);
+            }
+            return s;
+        });
     }
 
-    static TextColor getColor(Object value) {
-        return switch (value) {
-            case null -> COLORS[0];
-            case Number n -> COLORS[1];
-            case Boolean b -> COLORS[2];
-            case CharSequence c -> COLORS[3];
-            case ResourceLocation r -> COLORS[3];
-            case Enum<?> e -> COLORS[4];
-            case Component mut -> mut.getStyle().getColor();
-            case Holder<?> h -> getColor(h.value());
-            default -> COLORS[5];
+    public Printer append(String descriptor, @Nullable Object object) {
+        return append(descriptor, object, false);
+    }
+
+    public Printer append(String descriptor, @Nullable Object object, boolean noLineFeed) {
+        switch (object) {
+            case BlockIngredient b -> b.either()
+                    .ifLeft(blocks -> append(descriptor, blocks, true))
+                    .ifRight(tag -> append(descriptor, clickableTag(tag), true));
+            case FluidIngredient f -> descriptor(descriptor)
+                    .recursiveAppend(getDistinctFluids(f));
+            case SizedFluidIngredient f -> descriptor(descriptor)
+                    .openObject()
+                    .append("amount", f.amount(), true)
+                    .listItem()
+                    .append("fluids", f.ingredient(), true)
+                    .closeObject();
+            case Ingredient i -> descriptor(descriptor)
+                    .appendIngredient(i);
+            case SizedIngredient i -> descriptor(descriptor)
+                    .openObject()
+                    .append("count", i.count(), true)
+                    .listItem()
+                    .append("items", i.ingredient(), true)
+                    .closeObject();
+            case ItemStack s -> descriptor(descriptor).appendStack(
+                    s.getItem(), "item",
+                    s.getCount(), "count",
+                    s.getComponentsPatch(), true
+            );
+            case ItemStackProvider p -> {
+                if (p.modifiers().isEmpty()) {
+                    return append(descriptor, p.stack(), noLineFeed);
+                }
+                descriptor(descriptor).openObject();
+                if (!p.stack().isEmpty()) {
+                    append("stack", p.stack(), true).listItem();
+                }
+                descriptor("modifiers").appendCollection(p.modifiers(), (prt, m) -> {
+                    prt.appendIndent();
+                    final String type = stringify(m.type());
+                    // Good indications of 'singleton' types
+                    if (m instanceof Enum<?> || m instanceof ItemStackModifierBuilder || m.type().codec().encoder().toString().equals("EmptyEncoder")) {
+                        prt.appendRaw(type);
+                    } else if (m instanceof Record r) {
+                        final Map<String, Object> map = convertRecordToMap(r);
+                        map.put("type", type);
+                        prt.appendMap(map);
+                    } else {
+                        final Map<String, Object> map = Map.of(
+                                "modifier", m,
+                                "type", type
+                        );
+                        prt.appendMap(map);
+                    }
+                }).closeObject();
+            }
+            case FluidStack f -> descriptor(descriptor).appendStack(
+                    f.getFluid(), "fluid",
+                    f.getAmount(), "amount",
+                    f.getComponentsPatch(), false
+            );
+            case BlockState b -> {
+                final BlockState base = b.getBlock().defaultBlockState();
+                if (base == b) {
+                    return append(descriptor, b.getBlock(), noLineFeed);
+                } else {
+                    final Map<String, Object> properties = new LinkedHashMap<>();
+                    for (Property<?> p : b.getProperties()) {
+                        if (!Assistant.haveSamePropertyValue(b, base, p)) {
+                            properties.put(p.getName(), b.getValue(p));
+                        }
+                    }
+                    descriptor(descriptor)
+                            .openObject()
+                            .append("block", b.getBlock())
+                            .listItem()
+                            .descriptor("properties")
+                            .appendMap(properties)
+                            .closeObject();
+                }
+            }
+            case TagKey<?> t -> append(descriptor, clickableTag(t), true);
+            case null -> append(descriptor, asComponent(null), true);
+            default -> {
+                if (object.getClass().isArray()) {
+                    final Object[] arr = Cast.to(object);
+                    append(descriptor, List.of(arr), true);
+                } else {
+                    descriptor(descriptor)
+                            .recursiveAppend(object);
+                }
+            }
+        }
+        return noLineFeed ? this : newLine();
+    }
+
+    public Printer appendIngredient(Ingredient ingredient) {
+        return ingredient.isCustom() ?
+            recursiveAppend(Arrays.stream(ingredient.getItems())
+                    .map(ItemStack::getItem)
+                    .distinct()
+                    .toList()) :
+            recursiveAppend(Arrays.stream(ingredient.getValues())
+                    .map(v -> switch (v) {
+                        case Ingredient.TagValue(TagKey<Item> tag) -> clickableTag(tag);
+                        case Ingredient.ItemValue(ItemStack item) -> asComponent(item.getItem());
+                        default -> throw new UnsupportedOperationException("Custom Ingredient$Value types are not supported. Custom ingredients should be implemented via ICustomIngredient");
+                    })
+                    .toList());
+    }
+
+    public Printer appendMatrix(LerpFloatLayer layer) {
+        return openList()
+                .indentedAppend(
+                        Component.empty()
+                                .append(green(layer.value00()))
+                                .append(MATRIX_ITEM)
+                                .append(green(layer.value01()))
+                                .append(MATRIX_ITEM)
+                )
+                .newLine()
+                .indentedAppend(
+                        Component.empty()
+                                .append(green(layer.value10()))
+                                .append(MATRIX_ITEM)
+                                .append(green(layer.value11()))
+                )
+                .closeList();
+    }
+
+    // TODO: 2.1.0 | Justification so columns are same width
+    public Printer appendMatrix(int[] matrix, int xSize, int zSize) {
+        if (matrix.length != xSize * zSize) {
+            throw new IllegalArgumentException("Matrix size must equal given dimensions! Was %s, given %s * %s = %s".formatted(matrix.length, xSize, zSize, xSize * zSize));
+        }
+        openList();
+        for (int x = 0 ; x < xSize ; x++) {
+            final MutableComponent line = Component.empty();
+            for (int z = 0 ; z < zSize ; z++) {
+                final int index = x * xSize + z;
+                line.append(green(matrix[index]));
+                if (index != matrix.length - 1)
+                    line.append(MATRIX_ITEM);
+            }
+            indentedAppend(line);
+            if (x != xSize - 1)
+                newLine();
+        }
+        return closeList();
+    }
+
+    public Printer recursiveAppend(@Nullable Object object) {
+        return switch (object) {
+            case Record r -> appendMap(convertRecordToMap(r), (p, t) -> p.recursiveAppend(t));
+            case Collection<?> c -> appendCollection(c, (p, t) -> p.appendIndent().recursiveAppend(t));
+            case null -> appendRaw(null); // Linter complains otherwise
+            default -> appendRaw(object);
         };
     }
 
-    static String stringify(@Nullable Object value) {
-        return switch (value) {
-            case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
-            case Block b -> getId(BuiltInRegistries.BLOCK, b);
-            case Item i -> getId(BuiltInRegistries.ITEM, i);
-            case Fluid f -> getId(BuiltInRegistries.FLUID, f);
-            case EntityType<?> e -> getId(BuiltInRegistries.ENTITY_TYPE, e);
-            case ChiselMode m -> getId(ChiselMode.REGISTRY, m);
-            case GlassOperation g -> getId(GlassOperation.REGISTRY, g);
-            case Holder<?> h -> h.getRegisteredName();
-            case null -> "null"; // IDEA gets angry with me if I leave this to be handled by the default case
-            default -> String.valueOf(value);
-        };
-    }
-
-    static void firstLevelFoodData(MutableComponent m, FoodData f) {
-        descriptor(m, "food");
-        m.append(OBJECT_OPEN);
-        singleIndent(m);
-        descriptor(m, "hunger");
-        simpleAdd(m, f.hunger());
-        listItem(m);
-        singleIndent(m);
-        descriptor(m, "water");
-        simpleAdd(m, f.water());
-        listItem(m);
-        singleIndent(m);
-        descriptor(m, "saturation");
-        simpleAdd(m, f.saturation());
-        listItem(m);
-        singleIndent(m);
-        descriptor(m, "intoxication");
-        simpleAdd(m, f.intoxication());
-        listItem(m);
-        for (Nutrient n : Nutrient.VALUES) {
-            singleIndent(m);
-            descriptor(m, n.getSerializedName());
-            simpleAdd(m, f.nutrient(n));
-            listItem(m);
+    private <T> void appendStack(T value, String type, int quantity, String val, DataComponentPatch patch, boolean renderTooltips) {
+        openObject();
+        append(type, value, true)
+                .listItem()
+                .append(val, quantity, true);
+        if (!patch.isEmpty()) {
+            final Item.TooltipContext ctx = renderTooltips ? Item.TooltipContext.of(RegistryAccessContainer.current.access()) : null;
+            listItem()
+                    .descriptor("components")
+                    .appendMap(patch.entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(
+                                    e -> stringify(e.getKey()),
+                                    e -> e.getValue().map(v -> {
+                                        if (renderTooltips && v instanceof TooltipProvider p) {
+                                            final Component[] c = new Component[] { NONE };
+                                            p.addToTooltip(ctx, t -> c[0] = t, TooltipFlag.NORMAL);
+                                            return c[0];
+                                        }
+                                        return asComponent(v);
+                                    }).orElse(NONE)
+                            )));
         }
-        singleIndent(m);
-        descriptor(m, "decayModifier");
-        simpleAdd(m, f.decayModifier());
-        newLine(m);
-        m.append(OBJECT_CLOSE);
+        closeObject();
     }
 
-    private static <T> String getId(Registry<T> registry, T object) {
-        return registry.getResourceKey(object).orElseThrow().location().toString();
+    private static List<Fluid> getDistinctFluids(FluidIngredient ingredient) {
+        return Arrays.stream(ingredient.getStacks())
+                .map(FluidStack::getFluid)
+                .distinct()
+                .toList();
     }
 
-    static <R extends Record> Map<String, Object> convertRecordToMap(R r_) {
+    private static final TextColor[] COLORS = Stream.of(
+                    ChatFormatting.BLACK,
+                    ChatFormatting.GREEN,
+                    ChatFormatting.GOLD,
+                    ChatFormatting.DARK_PURPLE,
+                    ChatFormatting.AQUA,
+                    ChatFormatting.GRAY
+            ).map(TextColor::fromLegacyFormat)
+            .toArray(TextColor[]::new);
+
+    private Component green(int i) {
+        return Component.literal("%d".formatted(i)).withStyle(s -> s.withColor(COLORS[1]));
+    }
+
+    private Component green(float f) {
+        return Component.literal("%f".formatted(f)).withStyle(s -> s.withColor(COLORS[1]));
+    }
+
+    public static <R extends Record> Map<String, Object> convertRecordToMap(R r_) {
         return RECORD_CONVERTERS.computeIfAbsent(r_.getClass(), c -> {
             final RecordComponent[] components = c.getRecordComponents();
             return (R r) -> {
-                final Map<String, Object> map = new LinkedHashMap<>(components.length, 1F);
+                final Map<String, Object> map = new LinkedHashMap<>();
                 for (RecordComponent component : components) {
                     final String name = component.getName();
                     Object o;
@@ -476,25 +524,5 @@ public interface Printer {
         }).apply(Cast.to(r_));
     }
 
-    Component LIST_OPEN = Component.literal("[");
-    Component LIST_CLOSE = Component.literal("]");
-    Component OBJECT_OPEN = Component.literal("{\n"); // Single value objects will not be inlined
-    Component OBJECT_CLOSE = Component.literal("}");
-    Component PAIR_DENOTATION = Component.literal(": ");
-    Component SINGLE_INDENT = Component.literal("  ");
-    Component LIST_ITEM = Component.literal(",\n").withStyle(ChatFormatting.WHITE);
-    Component NONE = Component.literal("-");
-
-    class Hidden {
-        static final TextColor[] COLORS = {
-                TextColor.fromLegacyFormat(ChatFormatting.BLACK),
-                TextColor.fromLegacyFormat(ChatFormatting.GREEN),
-                TextColor.fromLegacyFormat(ChatFormatting.GOLD),
-                TextColor.fromLegacyFormat(ChatFormatting.DARK_PURPLE),
-                TextColor.fromLegacyFormat(ChatFormatting.AQUA),
-                TextColor.fromLegacyFormat(ChatFormatting.GRAY)
-        };
-
-        static final Map<Class<?>, Function<?, Map<String, Object>>> RECORD_CONVERTERS = new IdentityHashMap<>();
-    }
+    private static final Map<Class<?>, Function<?, Map<String, Object>>> RECORD_CONVERTERS = new IdentityHashMap<>();
 }

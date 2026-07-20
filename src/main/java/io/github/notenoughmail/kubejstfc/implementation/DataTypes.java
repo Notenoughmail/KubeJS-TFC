@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.implementation;
 
 import dev.latvian.mods.kubejs.util.Cast;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.Printer;
@@ -16,11 +17,9 @@ import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.collections.IndirectHashCollection;
 import net.dries007.tfc.util.data.*;
-import net.dries007.tfc.world.placement.ClimatePlacement;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -40,69 +39,77 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.notenoughmail.kubejstfc.util.Printer.*;
-
 public class DataTypes {
 
     public static String nameOf(DataType<?> dataType) {
         return KubeJSTFCRegistries.DATA_TYPES.getResourceKey(dataType).orElseThrow().location().toString();
     }
 
-    public static final Display<EntityDamageResistance> ENTITY_DAMAGE_RESISTANCE = (e, m) -> {
-        append(m, "entityTag", clickableTag(e.entity()));
-        append(m, "crushing", e.damages().crushing());
-        append(m, "piercing", e.damages().piercing());
-        append(m, "slashing", e.damages().slashing(), true);
+    @FunctionalInterface
+    public interface Display<T> extends BiConsumer<T, Printer> {
+
+        default <O extends T> Display<O> withBefore(Display<O> other) {
+            return (o, m) -> {
+                other.accept(o, m);
+                accept(o, m);
+            };
+        }
+
+        default <O extends T> Display<O> cast() {
+            return this::accept;
+        }
+    }
+
+    public static final Display<EntityDamageResistance> ENTITY_DAMAGE_RESISTANCE = (e, p) -> p
+            .append("entityTag", e.entity())
+            .append("crushing", e.damages().crushing())
+            .append("piercing", e.damages().piercing())
+            .append("slashing", e.damages().slashing(), true);
+
+    public static final Display<ItemDamageResistance> ITEM_DAMAGE_RESISTANCE = (i, p) -> p
+            .append("ingredient", i.ingredient())
+            .append("crushing", i.damages().crushing())
+            .append("piercing", i.damages().piercing())
+            .append("slashing", i.damages().slashing(), true);
+
+    public static final Display<Drinkable> DRINKABLE = (d, p) -> {
+        p.append("ingredient", d.ingredient())
+                .append("consumeChance", d.consumeChance())
+                .append("mayDrinkWhenFull", d.mayDrinkWhenFull())
+                .descriptor("food")
+                .appendMap(Assistant.foodDataAsMap(d.food()))
+                .newLine()
+                .descriptor("effects")
+                .appendCollection(d.effects(), (prt, e) -> prt.appendIndent().appendRecordAsMap(e));
     };
 
-    public static final Display<ItemDamageResistance> ITEM_DAMAGE_RESISTANCE = (i, m) -> {
-        append(m, "ingredient", i.ingredient());
-        append(m, "crushing", i.damages().crushing());
-        append(m, "piercing", i.damages().piercing());
-        append(m, "slashing", i.damages().slashing(), true);
-    };
+    public static final Display<Fertilizer> FERTILIZER = (f, p) -> p
+            .append("nitrogen", f.nitrogen())
+            .append("phosphorus", f.phosphorus())
+            .append("potassium", f.potassium())
+            .append("ingredient", f.ingredient(), true);
 
-    public static final Display<Drinkable> DRINKABLE = (d, m) -> {
-        append(m ,"ingredient", d.ingredient());
-        append(m, "consumeChance", d.consumeChance());
-        append(m, "mayDrinkWhenFull", d.mayDrinkWhenFull());
-        firstLevelFoodData(m, d.food());
-        newLine(m);
-        descriptor(m, "effects");
-        appendCollection(m, d.effects(), (t, e) -> appendMap(t, convertRecordToMap(e), 1, false), 0);
-    };
+    public static final Display<Fuel> FUEL = (f, p) -> p
+            .append("duration", f.duration())
+            .append("temperature", f.temperature())
+            .append("purity", f.purity())
+            .append("ingredient", f.ingredient(), true);
 
-    public static final Display<Fertilizer> FERTILIZER = (f, m) -> {
-        append(m, "nitrogen", f.nitrogen());
-        append(m, "phosphorus", f.phosphorus());
-        append(m, "potassium", f.potassium());
-        append(m, "ingredient", f.ingredient(), true);
-    };
+    public static final Display<FluidHeat> FLUID_HEAT = (f, p) -> p
+            .append("fluid", f.fluid())
+            .append("meltTemperature", f.meltTemperature())
+            .append("specificHeatCapacity", f.specificHeatCapacity(), true);
 
-    public static final Display<Fuel> FUEL = (f, m) -> {
-        append(m, "duration", f.duration());
-        append(m, "temperature", f.temperature());
-        append(m, "purity", f.purity());
-        append(m, "ingredient", f.ingredient(), true);
-    };
-
-    public static final Display<FluidHeat> FLUID_HEAT = (f, m) -> {
-        append(m, "fluid", f.fluid());
-        append(m, "meltTemperature", f.meltTemperature());
-        append(m, "specificHeatCapacity", f.specificHeatCapacity(), true);
-    };
-
-    public static final Display<KnappingType> KNAPPING_TYPE = (k, m) -> {
-        append(m, "inputItem", k.inputItem());
-        append(m, "amountToConsume", k.amountToConsume());
-        append(m, "clickSound", k.clickSound());
-        append(m, "consumeAfterComplete", k.consumeAfterComplete());
-        append(m, "hasOffTexture", k.hasOffTexture());
-        append(m, "spawnsParticles", k.spawnsParticles());
-        append(m, "icon", k.icon());
+    public static final Display<KnappingType> KNAPPING_TYPE = (k, p) -> {
+        p.append("inputItem", k.inputItem())
+                .append("amountToConsume", k.amountToConsume())
+                .append("clickSound", k.clickSound())
+                .append("consumeAfterComplete", k.consumeAfterComplete())
+                .append("hasOffTexture", k.hasOffTexture())
+                .append("spawnsParticles", k.spawnsParticles())
+                .append("icon", k.icon());
         if (k.hasOffTexture()) {
-            append(
-                    m,
+            p.append(
                     "offTexture(s)",
                     Arrays.stream(k.inputItem().ingredient().getItems())
                             .map(ItemStack::getItem)
@@ -111,8 +118,7 @@ public class DataTypes {
                             .toList()
             );
         }
-        append(
-                m,
+        p.append(
                 "onTexture(s)",
                 Arrays.stream(k.inputItem().ingredient().getItems())
                         .map(ItemStack::getItem)
@@ -128,96 +134,72 @@ public class DataTypes {
         return Helpers.identifier("textures/gui/knapping/" + BuiltInRegistries.ITEM.getKey(item).getPath() + (disabled ? "_disabled" : "") + ".png");
     }
 
-    public static final Display<Support> SUPPORT = (s, m) -> {
-        append(m, "ingredient", s.ingredient());
-        append(m, "supportUp", s.supportUp());
-        append(m, "supportDown", s.supportDown());
-        append(m, "supportHorizontal", s.supportHorizontal(), true);
-    };
+    public static final Display<Support> SUPPORT = (s, p) -> p
+            .append("ingredient", s.ingredient())
+            .append("supportUp", s.supportUp())
+            .append("supportDown", s.supportDown())
+            .append("supportHorizontal", s.supportHorizontal(), true);
 
-    public static final Display<ItemSizeDefinition> ITEM_SIZE = (i, m) -> {
-        append(m, "size", i.size());
-        append(m, "weight", i.weight());
-        append(m, "ingredient", i.ingredient(), true);
-    };
+    public static final Display<ItemSizeDefinition> ITEM_SIZE = (i, p) -> p
+            .append("size", i.size())
+            .append("weight", i.weight())
+            .append("ingredient", i.ingredient());
 
-    public static final Display<Fauna> FAUNA = (f, m) -> {
-        append(m, "chance", f.chance());
-        append(m, "distanceBelowSeaLevel", f.distanceBelowSeaLevel());
-        descriptor(m, "climate");
-        final ClimatePlacement c = f.climate();
-        m.append(OBJECT_OPEN);
-        singleIndent(m);
-        append(m, "minTemp", c.getMinTemp());
-        singleIndent(m);
-        append(m, "maxTemp", c.getMaxTemp());
-        singleIndent(m);
-        append(m, "minGroundwater", c.getMinGroundwater());
-        singleIndent(m);
-        append(m, "maxGroundwater", c.getMaxGroundwater());
-        singleIndent(m);
-        append(m, "minRainVariance", c.getMinRainVariance());
-        singleIndent(m);
-        append(m, "maxRainVariance", c.getMaxRainVariance());
-        singleIndent(m);
-        append(m, "rainVarianceAbsolute", c.isRainVarianceAbsolute());
-        singleIndent(m);
-        append(m, "ignoreRivers", c.ignoresRivers());
-        singleIndent(m);
-        append(m, "minForestDensity", c.getMinForest());
-        singleIndent(m);
-        append(m, "maxForestDensity", c.getMaxForest());
-        singleIndent(m);
-        append(m, "minElevation", c.getMinElevation());
-        singleIndent(m);
-        append(m, "maxElevation", c.getMaxElevation());
-        singleIndent(m);
-        descriptor(m, "forestTypes");
-        appendCollection(m, c.getTypes(), 1);
-        newLine(m);
-        singleIndent(m);
-        append(m, "fuzzy", c.fuzzy);
-        m.append(OBJECT_CLOSE);
-        newLine(m);
-        append(m, "solidGround", f.solidGround());
-        append(m, "maxBrightness", f.maxBrightness());
-        append(m, "months", f.months(), true);
-    };
+    public static final Display<Fauna> FAUNA = (f, p) -> p
+            .append("chance", f.chance())
+            .append("distanceBelowSeaLevel", f.distanceBelowSeaLevel())
+            .descriptor("climate")
+            .appendLikeMap(f.climate(), (c, m) -> m
+                    .append("minTemp", c.getMinTemp(), true).listItem()
+                    .append("maxTemp", c.getMaxTemp(), true).listItem()
+                    .append("minGroundWater", c.getMinGroundwater(), true).listItem()
+                    .append("maxGroundwater", c.getMaxGroundwater(), true).listItem()
+                    .append("minRainVariance", c.getMinRainVariance(), true).listItem()
+                    .append("maxRainVariance", c.getMaxRainVariance(), true).listItem()
+                    .append("rainVarianceAbsolute", c.isRainVarianceAbsolute(), true).listItem()
+                    .append("ignoreRivers", c.ignoresRivers(), true).listItem()
+                    .append("minForestDensity", c.getMinForest(), true).listItem()
+                    .append("maxForestDensity", c.getMaxForest(), true).listItem()
+                    .append("minElevation", c.getMinElevation(), true).listItem()
+                    .append("maxElevation", c.getMaxElevation(), true).listItem()
+                    .append("forestTypes", c.getTypes(), true).listItem()
+                    .append("fuzzy", c.fuzzy, true)
+            )
+            .newLine()
+            .append("solidGround", f.solidGround())
+            .append("maxBrightness", f.maxBrightness())
+            .append("months", f.months(), true);
 
-    public static final Display<ClimateRange> CLIMATE_RANGE = (c, m) -> {
-        append(m, "minHydration", c.minHydration());
-        append(m, "maxHydration", c.maxHydration());
-        append(m, "hydrationWiggleRange", c.hydrationWiggleRange());
-        append(m, "minTemperature", c.minTemperature());
-        append(m, "maxTemperature", c.maxTemperature());
-        append(m, "temperatureWiggleRange", c.hydrationWiggleRange(), true);
-    };
+    public static final Display<ClimateRange> CLIMATE_RANGE = (c, p) -> p
+            .append("minHydration", c.minHydration())
+            .append("maxHydration", c.maxHydration())
+            .append("hydrationWiggleRange", c.hydrationWiggleRange())
+            .append("minTemp", c.minTemperature())
+            .append("maxTemp", c.maxTemperature())
+            .append("tempWiggleRange", c.temperatureWiggleRange(), true);
 
-    public static final Display<LampFuel> LAMP_FUEL = (f, m) -> {
-        append(m, "fluid", f.fluid());
-        append(m, "lamps", f.lamps());
-        append(m, "burnRate", f.burnRate(), true);
-    };
+    public static final Display<LampFuel> LAMP_FUEL = (f, p) -> p
+            .append("fluid", f.fluid())
+            .append("lamps", f.lamps())
+            .append("burnRate", f.burnRate(), true);
 
-    public static final Display<Deposit> DEPOSIT = (d, m) -> {
-        append(m, "ingredient", d.ingredient());
-        append(m, "lootTable", d.lootTable().location());
-        append(m, "modelStages", d.modelStages(), true);
-    };
+    public static final Display<Deposit> DEPOSIT = (d, p) -> p
+            .append("ingredient", d.ingredient())
+            .append("lootTable", d.lootTable())
+            .append("modelStages", d.modelStages(), true);
 
-    public static final Display<HeatDefinition> HEAT = (h, m) -> {
-        append(m, "heatCapacity", h.heatCapacity());
-        append(m, "forgingTemperature", h.forgingTemperature());
-        append(m, "weldingTemperature", h.weldingTemperature());
-        append(m, "ingredient", h.ingredient(), true);
-    };
+    public static final Display<HeatDefinition> HEAT = (h, p) -> p
+            .append("heatCapacity", h.heatCapacity())
+            .append("forgingTemperature", h.forgingTemperature())
+            .append("weldingTemperature", h.weldingTemperature())
+            .append("ingredient", h.ingredient(), true);
 
-    public static final Display<FoodDefinition> FOOD = (f, m) -> {
-        append(m, "ingredient", f.ingredient());
-        firstLevelFoodData(m, f.food());
-        newLine(m);
-        append(m, "edible", f.edible(), true);
-    };
+    public static final Display<FoodDefinition> FOOD = (f, p) -> p
+            .append("ingredient", f.ingredient())
+            .descriptor("food")
+            .appendMap(Assistant.foodDataAsMap(f.food()))
+            .newLine()
+            .append("edible", f.edible(), true);
 
     public static <T extends IRecipePredicate<ItemStack>> DataType<T> cachedItemRegistry(
             DataManager<T> manager,
@@ -271,21 +253,6 @@ public class DataTypes {
         return new DataManagerType.UnsearchableImpl<>(manager, display);
     }
 
-    @FunctionalInterface
-    public interface Display<T> extends BiConsumer<T, MutableComponent> {
-
-        default <O extends T> Display<O> withBefore(Display<O> other) {
-            return (o, m) -> {
-                other.accept(o, m);
-                accept(o, m);
-            };
-        }
-
-        default <O extends T> Display<O> cast() {
-            return this::accept;
-        }
-    }
-
     public interface DataManagerType<T> extends DataType<T> {
 
         DataManager<T> manager();
@@ -308,7 +275,7 @@ public class DataTypes {
         record UnsearchableImpl<T>(DataManager<T> manager, Display<T> display) implements DataManagerType<T> {
 
             @Override
-            public void display(T value, MutableComponent text) {
+            public void display(T value, Printer text) {
                 display.accept(value, text);
             }
 
@@ -361,7 +328,7 @@ public class DataTypes {
             }
 
             @Override
-            public void display(T value, MutableComponent text) {
+            public void display(T value, Printer text) {
                 display.accept(value, text);
             }
 
@@ -372,56 +339,60 @@ public class DataTypes {
         }
     }
 
-    public static final Display<BlockRecipe> BLOCK_RECIPE = (b, m) -> {
-        append(m, "ingredient", b.getBlockIngredient());
-        append(m, "output", b.assembleBlock(null), true);
-    };
+    public static final Display<BlockRecipe> BLOCK_RECIPE = (b, p) -> p
+            .append("ingredient", b.getBlockIngredient())
+            .append("output", b.assembleBlock(null), true);
 
-    public static final Display<ChiselRecipe> CHISEL = (c, m) -> {
-        append(m, "ingredient", c.getIngredient());
-        append(m, "mode", c.getMode());
-        final ItemStackProvider out = Assistant.getPrivateField(c, "itemOutput", ItemStackProvider.class);
-        append(m, "item_output", out.kubejs_tfc$isEmpty() ? null : out);
-        append(m, "result", Assistant.getPrivateField(c, "output", BlockState.class), true);
-    };
+    public static final Display<ChiselRecipe> CHISEL = (c, p) -> p.append("ingredient", c.getIngredient())
+            .append("mode", c.getMode())
+            .append("itemOutput", Assistant.orElse(
+                    Assistant.getPrivateField(c, "itemOutput", ItemStackProvider.class),
+                    ItemStackProvider::kubejs_tfc$isEmpty,
+                    null
+            ))
+            .append("result", Assistant.getPrivateField(c, "output", BlockState.class), true);
 
-    public static final Display<ScrapingRecipe> SCRAPING = (s, m) -> {
-        append(m, "ingredient", s.getIngredient());
-        append(m, "result", s.getResult());
-        final ItemStackProvider extraDrop = s.getExtraDrop();
-        append(m, "extraDrop", extraDrop.kubejs_tfc$isEmpty() ? null : extraDrop);
-        append(m, "inputTexture", s.getInputTexture());
-        append(m, "outputTexture", s.getOutputTexture(), true);
-    };
+    public static final Display<ScrapingRecipe> SCRAPING = (s, p) -> p
+            .append("ingredient", s.getIngredient())
+            .append("result", s.getResult())
+            .append("extraDrop", Assistant.orElse(
+                    s.getExtraDrop(),
+                    ItemStackProvider::kubejs_tfc$isEmpty,
+                    null
+            ))
+            .append("inputTexture", s.getInputTexture())
+            .append("outputTexture", s.getOutputTexture(), true);
 
-    public static final Display<CastingRecipe> CASTING = (c, m) -> {
-        append(m, "mold", c.getIngredient());
-        append(m, "fluid", c.getFluidIngredient());
-        append(m, "result", Assistant.getPrivateField(c, "result", ItemStackProvider.class));
-        append(m, "breakChance", c.getBreakChance(), true);
-    };
+    public static final Display<CastingRecipe> CASTING = (c, p) -> p
+            .append("mold", c.getIngredient())
+            .append("fluid", c.getFluidIngredient())
+            .append("result", Assistant.getPrivateField(c, "result", ItemStackProvider.class))
+            .append("breakChance", c.getBreakChance(), true);
 
-    public static final Display<HeatingRecipe> HEATING = (h, m) -> {
-        append(m, "ingredient", h.getIngredient());
-        final ItemStackProvider resultItem = Assistant.getPrivateField(h, "outputItem", ItemStackProvider.class);
-        append(m, "resultItem", resultItem.kubejs_tfc$isEmpty() ? null : resultItem);
-        final FluidStack outputFluid = h.getDisplayOutputFluid();
-        append(m, "resultFluid", outputFluid.isEmpty() ? null : outputFluid);
-        append(m, "temperature", h.getTemperature());
-        append(m, "useDurability", Assistant.getPrivateField(h, "useDurability", boolean.class), true);
-    };
+    public static final Display<HeatingRecipe> HEATING = (h, p) -> p
+            .append("ingredient", h.getIngredient())
+            .append("resultItem", Assistant.orElse(
+                    Assistant.getPrivateField(h, "outputItem", ItemStackProvider.class),
+                    ItemStackProvider::kubejs_tfc$isEmpty,
+                    null
+            ))
+            .append("resultFluid", Assistant.orElse(
+                    h.getDisplayOutputFluid(),
+                    FluidStack::isEmpty,
+                    null
+            ))
+            .append("temperature", h.getTemperature())
+            .append("useDurability", Assistant.getPrivateField(h, "useDurability", boolean.class), true);
 
-    public static final Display<LoomRecipe> LOOM = (l, m) -> {
-        append(m, "ingredient", l.getItemStackIngredient());
-        append(m, "result", Assistant.getPrivateField(l, "result", ItemStackProvider.class));
-        append(m, "steps", l.getStepCount());
-        append(m, "inProgressTexture", l.getInProgressTexture(), true);
-    };
+    public static final Display<LoomRecipe> LOOM = (l, p) -> p
+            .append("ingredient", l.getItemStackIngredient())
+            .append("result", Assistant.getPrivateField(l, "result", ItemStackProvider.class))
+            .append("steps", l.getStepCount())
+            .append("inProgressTexture", l.getInProgressTexture(), true);
 
-    public static final Display<QuernRecipe> QUERN = (q, m) -> {
-        append(m, "ingredient", q.getIngredient());
-        append(m, "result", Assistant.getPrivateField(q, "result", ItemStackProvider.class), true);
-    };
+    public static final Display<QuernRecipe> QUERN = (q, p) -> p
+            .append("ingredient", q.getIngredient())
+            .append("result", Assistant.getPrivateField(q, "result", ItemStackProvider.class), true);
 
     public static <T extends Recipe<?>, R> DataType<T> forCachedRecipe(
             IndirectHashCollection<R, T> cache,
@@ -439,7 +410,7 @@ public class DataTypes {
         Supplier<RecipeType<T>> type();
 
         @Override
-        default void display(T value, MutableComponent text) {
+        default void display(T value, Printer text) {
             display().accept(value, text);
         }
 
@@ -511,23 +482,21 @@ public class DataTypes {
         }
     }
 
-    public static final Display<WeldingRecipe> WELDING = (w, m) -> {
-        append(m, "firstInput", w.getFirstInput());
-        append(m, "secondInput", w.getSecondInput());
-        append(m, "tier", w.getTier());
-        append(m, "result", Assistant.getPrivateField(w, "output", ItemStackProvider.class));
-        append(m, "bonus", Assistant.getPrivateField(w, "bonus", WeldingRecipe.Behavior.class), true);
-    };
+    public static final Display<WeldingRecipe> WELDING = (w, p) -> p
+            .append("firstInput", w.getFirstInput())
+            .append("secondInput", w.getSecondInput())
+            .append("tier", w.getTier())
+            .append("result", Assistant.getPrivateField(w, "output", ItemStackProvider.class))
+            .append("bonus", Assistant.getPrivateField(w, "bonus", WeldingRecipe.Behavior.class), true);
 
-    public static final Display<AnvilRecipe> ANVIL = (a, m) -> {
-        append(m, "ingredient", a.getInput());
-        append(m, "tier", a.getMinTier());
-        append(m, "rules", a.getRules());
-        append(m, "applyBonus", a.shouldApplyForgingBonus());
-        append(m, "result", Assistant.getPrivateField(a, "output", ItemStackProvider.class), true);
-    };
+    public static final Display<AnvilRecipe> ANVIL = (a, p) -> p
+            .append("ingredient", a.getInput())
+            .append("tier", a.getMinTier())
+            .append("rules", a.getRules())
+            .append("applyBonus", a.shouldApplyForgingBonus())
+            .append("result", Assistant.getPrivateField(a, "output", ItemStackProvider.class), true);
 
-    public static final Display<SewingRecipe> SEWING = (s, m) -> {
+    public static final Display<SewingRecipe> SEWING = (s, p) -> {
         final String[] stitches = new String[]{ "'", "'", "'", "'", "'" };
         for (int i = 0; i < 5; i++) {
             for (int j = 0 ; j < 9 ; j++) {
@@ -535,43 +504,36 @@ public class DataTypes {
             }
             stitches[i] = stitches[i] + "'";
         }
-        append(m, "stitches", Arrays.stream(stitches)
-                .map(Printer::asComponent)
-                .map(c -> c.withStyle(e -> e.withFont(UNIFORM_FONT)))
-                .toList());
         final String[] squares = new String[4];
         final String str = Assistant.getPrivateField(s, "squares", String.class);
         for (int i = 0 ; i < 4 ; i++) {
             squares[i] = "'" + str.substring(i * 8, i * 8 + 8) + "'";
         }
-        append(m, "squares", Arrays.stream(squares)
-                .map(Printer::asComponent)
-                .map(c -> c.withStyle(e -> e.withFont(UNIFORM_FONT)))
-                .toList());
-        append(m, "result", s.getResultItem(null), true);
+        p.uniformFont()
+                .append("stitches", stitches)
+                .append("squares", squares)
+                .clearFont()
+                .append("result", s.getResultItem(null), true);
     };
 
-    public static final Display<AlloyRecipe> ALLOY = (a, m) -> {
-        append(m, "contents", a.contents());
-        append(m, "result", a.result(), true);
-    };
+    public static final Display<AlloyRecipe> ALLOY = (a, p) -> p
+            .append("contents", a.contents())
+            .append("result", a.result(), true);
 
-    public static final Display<InstantFluidBarrelRecipe> INSTANT_FLUID_BARREL = (i, m) -> {
-        append(m, "primaryFluid", i.getInputFluid());
-        append(m, "addedFluid", i.getAddedFluid());
-        append(m, "outputFluid", i.getOutputFluid());
-        append(
-                m,
-                "sound",
-                Assistant.<Holder<SoundEvent>>getPrivateField(i, "sound", Cast.to(Holder.class))
-                        .unwrap()
-                        .map(
-                                ResourceKey::location,
-                                BuiltInRegistries.SOUND_EVENT::getKey
-                        ),
-                true
-        );
-    };
+    public static final Display<InstantFluidBarrelRecipe> INSTANT_FLUID_BARREL = (i, p) -> p
+            .append("primaryFluid", i.getInputFluid())
+            .append("addedFluid", i.getAddedFluid())
+            .append("outputFluid", i.getOutputFluid())
+            .append(
+                    "sound",
+                    Assistant.<Holder<SoundEvent>>getPrivateField(i, "sound", Cast.to(Holder.class))
+                            .unwrap()
+                            .map(
+                                    ResourceKey::location,
+                                    BuiltInRegistries.SOUND_EVENT::getKey
+                            ),
+                    true
+            );
 
     public static <T extends Recipe<?>> DataType<T> forUncachedRecipe(Display<T> display, Supplier<RecipeType<T>> type) {
         return new ForRawRecipe<>(display, type);
@@ -655,74 +617,64 @@ public class DataTypes {
         }
     }
 
-    public static final Display<BarrelRecipe> BASE_BARREL = (b, m) -> {
-        if (b.getInputItem() != TFCIngredients.EMPTY_ITEM) {
-            append(m, "inputItem", b.getInputItem());
-        }
-        append(m, "inputFluid", b.getInputFluid());
-        append(m, "outputItem", b.getOutputItem());
-        append(m, "outputFluid", b.getOutputFluid());
-        append(
-                m,
-                "sound",
-                Assistant.<Holder<SoundEvent>>getPrivateField(b, "sound", Cast.to(Holder.class))
-                        .unwrap()
-                        .map(
-                                ResourceKey::location,
-                                BuiltInRegistries.SOUND_EVENT::getKey
-                        ),
-                true
-        );
-    };
+    public static final Display<BarrelRecipe> BASE_BARREL = (b, p) -> p
+            .append("inputItem", Assistant.orElse(
+                    b.getInputItem(),
+                    i -> i == TFCIngredients.EMPTY_ITEM,
+                    null
+            ))
+            .append("inputFluid", b.getInputFluid())
+            .append("outputItem", b.getOutputItem())
+            .append("outputFluid", b.getOutputFluid())
+            .append(
+                    "sound",
+                    Assistant.<Holder<SoundEvent>>getPrivateField(b, "sound", Cast.to(Holder.class))
+                            .unwrap()
+                            .map(
+                                    ResourceKey::location,
+                                    BuiltInRegistries.SOUND_EVENT::getKey
+                            ),
+                    true
+            );
 
-    public static final Display<SealedBarrelRecipe> SEALED_BARREL = BASE_BARREL.withBefore((s, m) -> {
-        final ItemStackProvider seal = s.onSeal(), unseal = s.onUnseal();
-        if (seal != null) {
-            append(m, "onSeal", seal);
-        }
-        if (unseal != null) {
-            append(m, "onUnseal", unseal);
-        }
-        append(m, "duration", s.getDuration(), true);
-    });
+    public static final Display<SealedBarrelRecipe> SEALED_BARREL = BASE_BARREL.withBefore((s, p) -> p
+            .append("onSeal", s.onSeal())
+            .append("onUnseal", s.onUnseal())
+            .append("duration", s.getDuration()));
 
-    public static final Display<BloomeryRecipe> BLOOMERY = (b, m) -> {
-        append(m, "fluid", b.getInputFluid());
-        append(m, "catalyst", b.getCatalyst());
-        append(m, "result", Assistant.getPrivateField(b, "result", ItemStackProvider.class));
-        append(m, "duration", b.getDuration(), true);
-    };
+    public static final Display<BloomeryRecipe> BLOOMERY = (b, p) -> p
+            .append("fluid", b.getInputFluid())
+            .append("catalyst", b.getCatalyst())
+            .append("result", Assistant.getPrivateField(b, "result", ItemStackProvider.class))
+            .append("duration", b.getDuration(), true);
 
-    public static final Display<BlastFurnaceRecipe> BLAST_FURNACE = (b, m) -> {
-        append(m, "fluid", b.inputFluid());
-        append(m, "catalyst", b.catalyst());
-        append(m, "result", b.outputFluid(), true);
-    };
+    public static final Display<BlastFurnaceRecipe> BLAST_FURNACE = (b, p) -> p
+            .append("fluid", b.inputFluid())
+            .append("catalyst", b.catalyst())
+            .append("result", b.outputFluid(), true);
 
-    public static final Display<GlassworkingRecipe> GLASSWORKING = (g, m) -> {
-        append(m, "operations", g.operations());
-        append(m, "batch", g.batchItem());
-        append(m, "result", g.resultItem(), true);
-    };
+    public static final Display<GlassworkingRecipe> GLASSWORKING = (g, p) -> p
+            .append("operations", g.operations())
+            .append("batch", g.batchItem())
+            .append("result", g.resultItem(), true);
 
-    public static final Display<PotRecipe> POT = (p, m) -> {
-        append(m, "ingredients", p.getItemIngredients()); // This likely isn't pretty
-        append(m, "fluidIngredient", p.getFluidIngredient());
-        append(m, "duration", p.getDuration());
-        append(m, "temperature", Assistant.getPrivateField(p, "temperature", float.class), true);
-    };
+    public static final Display<PotRecipe> POT = (r, p) -> p
+            .descriptor("ingredients")
+            .appendCollection(r.getItemIngredients(), (prt, i) -> prt.appendIndent().appendIngredient(i))
+            .newLine()
+            .append("fluidIngredient", r.getFluidIngredient())
+            .append("duration", r.getDuration())
+            .append("temperature", Assistant.getPrivateField(r, "temperature", float.class), true);
 
-    public static final Display<JamPotRecipe> JAM_POT = POT.withBefore((j, m) -> {
-        append(m, "unsealedResult", Assistant.getPrivateField(j, "jarredStack", ItemStack.class));
-        append(m, "sealedResult", Assistant.getPrivateField(j, "jarredStackWithLid", ItemStack.class));
-        append(m, "texture", j.getTexture());
-    });
+    public static final Display<JamPotRecipe> JAM_POT = POT.withBefore((j, p) -> p
+            .append("unsealedResult", Assistant.getPrivateField(j, "jarredStack", ItemStack.class))
+            .append("sealedResult", Assistant.getPrivateField(j, "jarredStackWithLid", ItemStack.class))
+            .append("texture", j.getTexture()));
 
-    public static final Display<SimplePotRecipe> SIMPLE_POT = POT.withBefore((s, m) -> {
-        append(m, "fluidOutput", s.getDisplayFluid());
-        append(m, "itemOutput", s.getOutputItems());
-        append(m, "usesAllFluid", Assistant.getPrivateField(s, "usesAllFluid", boolean.class));
-    });
+    public static final Display<SimplePotRecipe> SIMPLE_POT = POT.withBefore((s, p) -> p
+            .append("fluidOutput", s.getDisplayFluid())
+            .append("itemOutput", s.getOutputItems())
+            .append("usesAllFluid", Assistant.getPrivateField(s, "usesAllFluid", boolean.class)));
 
     @SafeVarargs
     public static <T extends Recipe<?>> DataType<T> forUncachedMultiLookupRecipe(
@@ -743,7 +695,7 @@ public class DataTypes {
             Supplier<RecipeType<T>> type,
             Search<?, R>... searches
     ) {
-        return forUncachedMultiLookupRecipe(Cast.to(display), type, (RecipeHolder<T> h) -> h.value().getSerializer() == recipeSerializer, searches);
+        return forUncachedMultiLookupRecipe(Cast.to(display), type, (RecipeHolder<T> h) -> h.value().getSerializer() == recipeSerializer.get(), searches);
     }
 
     @SafeVarargs

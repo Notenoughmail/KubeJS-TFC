@@ -10,10 +10,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import io.github.notenoughmail.kubejstfc.util.Printer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +45,7 @@ public interface DataType<T> {
     /**
      * Adds a {@link io.github.notenoughmail.kubejstfc.util.commands.impl.Describe description} of the given object to the text
      */
-    void display(T value, MutableComponent text);
+    void display(T value, Printer text);
 
     /**
      * If this {@code DataType} can be {@link #search(String) searched}
@@ -63,14 +63,14 @@ public interface DataType<T> {
     Stream<String> searchSuggestions();
 
     /**
-     * Strings which can be {@link #find(String) found} and {@link #display(Object, MutableComponent) displayed}
+     * Strings which can be {@link #find(String) found} and {@link #display(Object, Printer) displayed}
      */
     default Stream<String> describeSuggestions() {
         return names().stream();
     }
 
     /**
-     * Strings which can be {@link #find(String) found} and {@link #display(Object, MutableComponent) displayed}
+     * Strings which can be {@link #find(String) found} and {@link #display(Object, Printer) displayed}
      */
     Set<String> names();
 

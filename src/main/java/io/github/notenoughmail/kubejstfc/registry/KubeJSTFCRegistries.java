@@ -358,7 +358,7 @@ public class KubeJSTFCRegistries {
         DATA_TYPE.register(
                 "instant_barrel_recipe",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
-                        DataTypes.BASE_BARREL.withBefore((o, t) -> {}),
+                        DataTypes.BASE_BARREL.cast(),
                         TFCRecipeTypes.BARREL_INSTANT,
                         DataTypes.Search.sizedItem(BarrelRecipe::getInputItem),
                         DataTypes.Search.sizedFluid(BarrelRecipe::getInputFluid)

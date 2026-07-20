@@ -14,6 +14,8 @@ import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import net.dries007.tfc.common.LevelTier;
+import net.dries007.tfc.common.component.food.FoodData;
+import net.dries007.tfc.common.component.food.Nutrient;
 import net.dries007.tfc.common.items.ToolItem;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
@@ -28,15 +30,19 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -168,6 +174,34 @@ public interface Assistant {
             apply.accept(t);
         }
         return t;
+    }
+
+    @Nullable
+    static <T> T orElse(@NotNull T t, Predicate<@NotNull T> filter, @Nullable T fallback) {
+        return filter.test(t) ? fallback : t;
+    }
+
+    static <T> void iterate(Iterable<T> i, Consumer<T> action, Consumer<T> onAllButLast) {
+        final Iterator<T> iter = i.iterator();
+        while (iter.hasNext()) {
+            final T t = iter.next();
+            action.accept(t);
+            if (iter.hasNext()) {
+                onAllButLast.accept(t);
+            }
+        }
+    }
+
+    static Map<String, Object> foodDataAsMap(FoodData food) {
+        final Map<String, Object> map = new LinkedHashMap<>();
+        map.put("hunger", food.hunger());
+        map.put("water", food.water());
+        map.put("saturation", food.saturation());
+        map.put("intoxication", food.intoxication());
+        for (Nutrient n : Nutrient.VALUES)
+            map.put(n.getSerializedName(), food.nutrient(n));
+        map.put("decayModifier", food.decayModifier());
+        return map;
     }
 
     static <T> T getPrivateField(Object object, String fieldName, Class<T> fieldType) {

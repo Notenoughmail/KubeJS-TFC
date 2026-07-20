@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
+import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.KubeJSTFCCommands;
 import net.minecraft.commands.CommandSourceStack;
@@ -23,7 +24,7 @@ public interface Describe {
 
         final MutableComponent text = Component.empty();
         text.append("\nInfo for %s in %s:\n".formatted(id, DataTypes.nameOf(dataType)));
-        dataType.display(value, text);
+        dataType.display(value, Printer.create(text));
         KubeJSTFCCommands.sysMsg(text, ctx);
         return 1;
     }
