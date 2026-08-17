@@ -1,0 +1,45 @@
+{
+  "hidden": false,
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": "id",
+      "alternative_names": [
+        "input_texture"
+      ],
+      "name": "input_texture"
+    },
+    {
+      "type": "id",
+      "alternative_names": [
+        "output_texture"
+      ],
+      "name": "output_texture"
+    },
+    {
+      "type": {
+        "type": "registry_element",
+        "registry": "minecraft:sound_event"
+      },
+      "alternative_names": [
+        "sound"
+      ],
+      "name": "sound"
+    }
+  ]
+}

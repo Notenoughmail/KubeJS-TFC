@@ -1,0 +1,8 @@
+{
+  "parent": "kubejs_tfc:basic_pot",
+  "hidden": false,
+  "merge": {
+    "constructors": true,
+    "keys": true
+  }
+}

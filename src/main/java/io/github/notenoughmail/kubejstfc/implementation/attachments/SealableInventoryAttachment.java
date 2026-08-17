@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-// TODO: 2.0.x | Reimplement canSeal & requiresSeal, the GUI seems to completely ignore adding the trait on insert. Oh! and it causes a dupe issue...
+// TODO: 2.1.x | Reimplement canSeal & requiresSeal, the GUI seems to completely ignore adding the trait on insert. Oh! and it causes a dupe issue...
 public class SealableInventoryAttachment extends TFCInventoryAttachment {
 
     public static final BlockEntityAttachmentType TYPE = new BlockEntityAttachmentType(KubeJSTFC.tfc("sealable_inventory"), Factory.class);

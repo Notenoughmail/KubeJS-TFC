@@ -224,79 +224,71 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "collapse_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/collapse",
+                () -> DataTypes.forCachedBlockRecipe(
                         CollapseRecipe.CACHE,
-                        BuiltInRegistries.BLOCK,
                         DataTypes.BLOCK_RECIPE.cast(),
                         TFCRecipeTypes.COLLAPSE
                 )
         );
         DATA_TYPE.register(
-                "landslide_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/landslide",
+                () -> DataTypes.forCachedBlockRecipe(
                         LandslideRecipe.CACHE,
-                        BuiltInRegistries.BLOCK,
                         DataTypes.BLOCK_RECIPE.cast(),
                         TFCRecipeTypes.LANDSLIDE
                 )
         );
         DATA_TYPE.register(
-                "chisel_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/chisel",
+                () -> DataTypes.forCachedBlockRecipe(
                         ChiselRecipe.CACHE,
-                        BuiltInRegistries.BLOCK,
                         DataTypes.CHISEL,
                         TFCRecipeTypes.CHISEL
                 )
         );
         DATA_TYPE.register(
-                "scraping_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/scraping",
+                () -> DataTypes.forCachedItemRecipe(
                         ScrapingRecipe.CACHE,
-                        BuiltInRegistries.ITEM,
                         DataTypes.SCRAPING,
                         TFCRecipeTypes.SCRAPING
                 )
         );
         DATA_TYPE.register(
-                "casting_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/casting",
+                () -> DataTypes.forCachedItemRecipe(
                         CastingRecipe.CACHE,
-                        BuiltInRegistries.ITEM,
                         DataTypes.CASTING,
                         TFCRecipeTypes.CASTING
                 )
         );
         DATA_TYPE.register(
-                "heating_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/heating",
+                () -> DataTypes.forCachedItemRecipe(
                         HeatingRecipe.CACHE,
-                        BuiltInRegistries.ITEM,
                         DataTypes.HEATING,
                         TFCRecipeTypes.HEATING
                 )
         );
         DATA_TYPE.register(
-                "loom_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/loom",
+                () -> DataTypes.forCachedItemRecipe(
                         LoomRecipe.CACHE,
-                        BuiltInRegistries.ITEM,
                         DataTypes.LOOM,
                         TFCRecipeTypes.LOOM
                 )
         );
         DATA_TYPE.register(
-                "quern_recipe",
-                () -> DataTypes.forCachedRecipe(
+                "recipe/quern",
+                () -> DataTypes.forCachedItemRecipe(
                         QuernRecipe.CACHE,
-                        BuiltInRegistries.ITEM,
-                        DataTypes.QUERN,
+                        DataTypes.BASIC_ITEM.cast(),
                         TFCRecipeTypes.QUERN
                 )
         );
         DATA_TYPE.register(
-                "welding_recipe",
+                "recipe/welding",
                 () -> DataTypes.forUncachedRecipe(
                         DataTypes.WELDING,
                         TFCRecipeTypes.WELDING,
@@ -313,7 +305,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "anvil_recipe",
+                "recipe/anvil",
                 () -> DataTypes.forUncachedRecipe(
                         DataTypes.ANVIL,
                         TFCRecipeTypes.ANVIL,
@@ -324,14 +316,14 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "sewing_recipe",
+                "recipe/sewing",
                 () -> DataTypes.forUncachedRecipe(
                         DataTypes.SEWING,
                         TFCRecipeTypes.SEWING
                 )
         );
         DATA_TYPE.register(
-                "alloy_recipe",
+                "recipe/alloy",
                 () -> DataTypes.forUncachedRecipe(
                         DataTypes.ALLOY,
                         TFCRecipeTypes.ALLOY,
@@ -342,7 +334,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "instant_fluid_barrel_recipe",
+                "recipe/instant_fluid_barrel",
                 () -> DataTypes.forUncachedRecipe(
                         DataTypes.INSTANT_FLUID_BARREL,
                         TFCRecipeTypes.BARREL_INSTANT_FLUID,
@@ -359,7 +351,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "instant_barrel_recipe",
+                "recipe/instant_barrel",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.BASE_BARREL.cast(),
                         TFCRecipeTypes.BARREL_INSTANT,
@@ -368,7 +360,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "sealed_barrel_recipe",
+                "recipe/sealed_barrel",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.SEALED_BARREL,
                         TFCRecipeTypes.BARREL_SEALED,
@@ -377,7 +369,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "bloomery_recipe",
+                "recipe/bloomery",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.BLOOMERY,
                         TFCRecipeTypes.BLOOMERY,
@@ -386,7 +378,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "blast_furnace_recipe",
+                "recipe/blast_furnace",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.BLAST_FURNACE,
                         TFCRecipeTypes.BLAST_FURNACE,
@@ -395,7 +387,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "glassworking_recipe",
+                "recipe/glassworking",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.GLASSWORKING,
                         TFCRecipeTypes.GLASSWORKING,
@@ -408,7 +400,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "jam_pot_recipe",
+                "recipe/jam_pot",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.JAM_POT,
                         TFCRecipeSerializers.POT_JAM,
@@ -418,7 +410,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "pot_recipe",
+                "recipe/pot",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.SIMPLE_POT,
                         TFCRecipeSerializers.POT_SIMPLE,
@@ -428,7 +420,7 @@ public class KubeJSTFCRegistries {
                 )
         );
         DATA_TYPE.register(
-                "soup_pot_recipe",
+                "recipe/soup_pot",
                 () -> DataTypes.forUncachedMultiLookupRecipe(
                         DataTypes.POT.cast(),
                         TFCRecipeSerializers.POT_SOUP,

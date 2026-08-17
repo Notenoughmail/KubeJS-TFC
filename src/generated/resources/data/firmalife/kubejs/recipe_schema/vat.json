@@ -1,0 +1,103 @@
+{
+  "constructors": [
+    {
+      "keys": [
+        "input_item",
+        "input_fluid",
+        "length",
+        "temperature"
+      ]
+    }
+  ],
+  "functions": {
+    "outputs": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "output_item",
+        "output_fluid"
+      ]
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": "flat_sized_ingredient",
+      "alternative_names": [
+        "input_item"
+      ],
+      "name": "input_item",
+      "role": "input"
+    },
+    {
+      "type": "flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "input_fluid"
+      ],
+      "name": "input_fluid",
+      "role": "input"
+    },
+    {
+      "type": "positive_int",
+      "alternative_names": [
+        "length"
+      ],
+      "name": "length"
+    },
+    {
+      "type": {
+        "type": "float"
+      },
+      "alternative_names": [
+        "temperature"
+      ],
+      "name": "temperature"
+    },
+    {
+      "type": "kubejs_tfc:optional_isp",
+      "alternative_names": [
+        "output_item"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "outputItem"
+      ],
+      "name": "output_item",
+      "role": "output"
+    },
+    {
+      "type": "optional_item_stack",
+      "alternative_names": [
+        "jar_output"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "jarOutput"
+      ],
+      "name": "jar_output",
+      "role": "output"
+    },
+    {
+      "type": "optional_fluid_stack",
+      "alternative_names": [
+        "output_fluid"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "outputFluid"
+      ],
+      "name": "output_fluid",
+      "role": "output"
+    },
+    {
+      "type": "id",
+      "alternative_names": [
+        "output_texture"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "outputTexture"
+      ],
+      "name": "output_texture"
+    }
+  ]
+}

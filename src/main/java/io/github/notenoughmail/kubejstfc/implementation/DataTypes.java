@@ -1,7 +1,6 @@
 package io.github.notenoughmail.kubejstfc.implementation;
 
 import dev.latvian.mods.kubejs.util.Cast;
-import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.Printer;
@@ -26,6 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -390,9 +390,9 @@ public class DataTypes {
             .append("steps", l.getStepCount())
             .append("inProgressTexture", l.getInProgressTexture(), true);
 
-    public static final Display<QuernRecipe> QUERN = (q, p) -> p
+    public static final Display<ItemRecipe> BASIC_ITEM = (q, p) -> p
             .append("ingredient", q.getIngredient())
-            .append("result", Assistant.getPrivateField(q, "result", ItemStackProvider.class), true);
+            .append("result", q.getResult(), true);
 
     public static <T extends Recipe<?>, R> DataType<T> forCachedRecipe(
             IndirectHashCollection<R, T> cache,
@@ -401,6 +401,22 @@ public class DataTypes {
             Supplier<RecipeType<T>> type
     ) {
         return new ForCachedRecipe<>(cache, registry, display, type);
+    }
+
+    public static <T extends Recipe<?>> DataType<T> forCachedItemRecipe(
+            IndirectHashCollection<Item, T> cache,
+            Display<T> display,
+            Supplier<RecipeType<T>> type
+    ) {
+        return forCachedRecipe(cache, BuiltInRegistries.ITEM, display, type);
+    }
+
+    public static <T extends Recipe<?>> DataType<T> forCachedBlockRecipe(
+            IndirectHashCollection<Block, T> cache,
+            Display<T> display,
+            Supplier<RecipeType<T>> type
+    ) {
+        return forCachedRecipe(cache, BuiltInRegistries.BLOCK, display, type);
     }
 
     private interface UsingRecipeHolders<T extends Recipe<?>> extends DataType<T> {

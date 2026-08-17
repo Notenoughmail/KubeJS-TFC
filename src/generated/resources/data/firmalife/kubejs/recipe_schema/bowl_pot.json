@@ -1,0 +1,36 @@
+{
+  "parent": "kubejs_tfc:basic_pot",
+  "constructors": [
+    {
+      "keys": [
+        "item_output",
+        "ingredients",
+        "fluid_ingredient",
+        "duration",
+        "temperature",
+        "food"
+      ]
+    }
+  ],
+  "hidden": false,
+  "keys": [
+    {
+      "type": "item_stack",
+      "alternative_names": [
+        "item_output"
+      ],
+      "name": "item_output",
+      "role": "output"
+    },
+    {
+      "type": "tfc:food_data",
+      "alternative_names": [
+        "food"
+      ],
+      "name": "food"
+    }
+  ],
+  "merge": {
+    "keys": true
+  }
+}

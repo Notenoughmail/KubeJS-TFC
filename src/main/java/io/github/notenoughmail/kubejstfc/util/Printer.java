@@ -20,6 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -67,6 +68,7 @@ public final class Printer {
             case DataComponentType<?> d -> getId(BuiltInRegistries.DATA_COMPONENT_TYPE, d);
             case ItemStackModifierType<?> i -> getId(ItemStackModifiers.REGISTRY, i);
             case Holder<?> h -> h.getRegisteredName();
+            case SoundEvent s -> getId(BuiltInRegistries.SOUND_EVENT, s);
             case null -> "null";
             default -> String.valueOf(o);
         };
@@ -100,8 +102,10 @@ public final class Printer {
     public static final Component
             LIST_OPEN = Component.literal("[\n"),
             LIST_CLOSE = Component.literal("]"),
+            LIST_EMPTY = Component.literal("[ ]"),
             OBJECT_OPEN = Component.literal("{\n"),
             OBJECT_CLOSE = Component.literal("}"),
+            OBJECT_EMPTY = Component.literal("{ }"),
             PAIR_NOTATION = Component.literal(": "),
             LIST_ITEM = Component.literal(",\n").withStyle(ChatFormatting.WHITE),
             MATRIX_ITEM = Component.literal(", ").withStyle(ChatFormatting.WHITE),
@@ -215,12 +219,16 @@ public final class Printer {
     }
 
     public <T> Printer appendCollection(Collection<T> collection, BiConsumer<Printer, T> forEach) {
-        openList();
-        Assistant.iterate(
-                collection,
-                t -> forEach.accept(this, t),
-                $ -> listItem()
-        );
+        if (collection.isEmpty()) {
+            return append(LIST_EMPTY);
+        } else {
+            openList();
+            Assistant.iterate(
+                    collection,
+                    t -> forEach.accept(this, t),
+                    $ -> listItem()
+            );
+        }
         return closeList();
     }
 
@@ -233,16 +241,20 @@ public final class Printer {
     }
 
     public <T> Printer appendMap(Map<String, T> map, BiConsumer<Printer, T> forEach) {
-        openObject();
-        Assistant.iterate(
-                map.entrySet(),
-                entry -> {
-                    descriptor(entry.getKey());
-                    forEach.accept(this, entry.getValue());
-                },
-                $ -> listItem()
-        );
-        return closeObject();
+        if (map.isEmpty()) {
+            return append(OBJECT_EMPTY);
+        } else {
+            openObject();
+            Assistant.iterate(
+                    map.entrySet(),
+                    entry -> {
+                        descriptor(entry.getKey());
+                        forEach.accept(this, entry.getValue());
+                    },
+                    $ -> listItem()
+            );
+            return closeObject();
+        }
     }
 
     public <T> Printer appendMap(Map<String, T> map, Function<T, Component> formatter) {
@@ -296,6 +308,7 @@ public final class Printer {
     }
 
     public Printer append(String descriptor, @Nullable Object object, boolean noLineFeed) {
+        // TODO: 2.1.x | Formatting should be moved into a separate method to allow recursion, specifically for Optionals which have handled types
         switch (object) {
             case BlockIngredient b -> b.either()
                     .ifLeft(blocks -> append(descriptor, blocks, true))
@@ -422,7 +435,7 @@ public final class Printer {
                 .closeList();
     }
 
-    // TODO: 2.1.0 | Justification so columns are same width
+    // TODO: 2.1.x | Justification so columns are same width
     public Printer appendMatrix(int[] matrix, int xSize, int zSize) {
         if (matrix.length != xSize * zSize) {
             throw new IllegalArgumentException("Matrix size must equal given dimensions! Was %s, given %s * %s = %s".formatted(matrix.length, xSize, zSize, xSize * zSize));

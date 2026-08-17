@@ -12,6 +12,7 @@ import dev.latvian.mods.kubejs.plugin.builtin.wrapper.ItemWrapper;
 import dev.latvian.mods.kubejs.recipe.component.EnumComponent;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry;
+import dev.latvian.mods.kubejs.recipe.component.SimpleRecipeComponent;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
@@ -87,8 +88,8 @@ import java.util.function.Function;
 
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
-// TODO: 2.0.x | Blowpipe item type
-// TODO: 2.0.x | TFC recipe filters & component replacements
+// TODO: 2.1.x | Blowpipe item type
+// TODO: 2.1.x | TFC recipe filters & component replacements
 // Mild Javadoc abuse
 
 /**
@@ -261,6 +262,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
 
     public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
     public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("welding_bonus_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
+    public static final RecipeComponentType<FoodData> FOOD_DATA_RECIPE_COMPONENT_TYPE = RecipeComponentType.unit(tfc("food_data"), t -> new SimpleRecipeComponent<>(t, FoodData.CODEC, TypeInfo.of(FoodData.class)));
 
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {
@@ -272,6 +274,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE);
         registry.register(FixedSizePatternComponent.TYPE);
         registry.register(TFCBlockStateComponent.TYPE);
+        registry.register(FOOD_DATA_RECIPE_COMPONENT_TYPE);
     }
 
     @Override

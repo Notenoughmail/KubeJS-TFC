@@ -1,0 +1,37 @@
+{
+  "hidden": false,
+  "keys": [
+    {
+      "type": "kubejs_tfc:isp",
+      "alternative_names": [
+        "result"
+      ],
+      "name": "result",
+      "role": "output"
+    },
+    {
+      "type": "ingredient",
+      "alternative_names": [
+        "ingredient"
+      ],
+      "name": "ingredient",
+      "role": "input"
+    },
+    {
+      "type": {
+        "type": "float"
+      },
+      "alternative_names": [
+        "temperature"
+      ],
+      "name": "temperature"
+    },
+    {
+      "type": "positive_int",
+      "alternative_names": [
+        "duration"
+      ],
+      "name": "duration"
+    }
+  ]
+}

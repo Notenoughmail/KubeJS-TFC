@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// TODO: 2.1.0 | RegistryWood builder that can be applied to ICanUseRegistryWood builders
+// TODO: 2.1.x | RegistryWood builder that can be applied to ICanUseRegistryWood builders
 @ReturnsSelf
 public class TFCLeavesBlockBuilder extends LeavesBuilder {
 

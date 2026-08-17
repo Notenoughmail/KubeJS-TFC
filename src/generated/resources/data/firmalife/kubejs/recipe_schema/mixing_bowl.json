@@ -1,0 +1,68 @@
+{
+  "constructors": [
+    {
+      "keys": [
+        "item_ingredients"
+      ]
+    }
+  ],
+  "functions": {
+    "results": {
+      "type": "kubejs_tfc:multi_set",
+      "keys": [
+        "result_item",
+        "result_fluid"
+      ]
+    }
+  },
+  "hidden": false,
+  "keys": [
+    {
+      "type": {
+        "type": "list",
+        "component": "ingredient"
+      },
+      "alternative_names": [
+        "item_ingredients"
+      ],
+      "name": "item_ingredients",
+      "role": "input"
+    },
+    {
+      "type": "optional_flat_sized_fluid_ingredient",
+      "alternative_names": [
+        "fluid_ingredients"
+      ],
+      "default_optional": true,
+      "function_names": [
+        "fluidIngredient"
+      ],
+      "name": "fluid_ingredients",
+      "role": "input"
+    },
+    {
+      "type": "optional_item_stack",
+      "alternative_names": [
+        "result_item"
+      ],
+      "function_names": [
+        "resultItem"
+      ],
+      "name": "result_item",
+      "optional": {},
+      "role": "output"
+    },
+    {
+      "type": "optional_fluid_stack",
+      "alternative_names": [
+        "result_fluid"
+      ],
+      "function_names": [
+        "resultFluid"
+      ],
+      "name": "result_fluid",
+      "optional": {},
+      "role": "output"
+    }
+  ]
+}
