@@ -1,5 +1,5 @@
 {
-  "parent": "tfc:block/rock/loose_metamorphic_1",
+  "parent": "tfc:block/rock/loose_metamorphic_3",
   "textures": {
     "texture": "#all"
   }
