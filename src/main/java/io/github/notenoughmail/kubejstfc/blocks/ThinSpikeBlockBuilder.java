@@ -95,9 +95,7 @@ public class ThinSpikeBlockBuilder extends BlockBuilder {
                             Climate.getInstantTemperature(level, pos) > dripTemp &&
                             random.nextFloat() < dripChance
                     ) {
-                        if (random.nextFloat() < dripChance) {
-                            spawnParticle(level, pos, state, particle.get());
-                        }
+                        spawnParticle(level, pos, state, particle.get());
                     }
                 }
             }
