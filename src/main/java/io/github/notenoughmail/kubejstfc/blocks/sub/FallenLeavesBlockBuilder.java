@@ -104,7 +104,7 @@ public class FallenLeavesBlockBuilder extends LeavesBuilder {
         FallenLeavesModelType() {
             layers = ordinal() + 1;
             str = Integer.toString(layers * 2);
-            parentModel = layers == 8 ? KubeJSTFC.tfc("block/groundcover/fallen_leaves_height" + str) : LeavesBuilder.LEAVES;
+            parentModel = layers == 8 ? LeavesBuilder.LEAVES : KubeJSTFC.tfc("block/groundcover/fallen_leaves_height" + str);
         }
 
         @Override
