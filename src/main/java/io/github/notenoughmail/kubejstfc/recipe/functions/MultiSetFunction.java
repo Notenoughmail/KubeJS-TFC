@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import dev.latvian.mods.kubejs.recipe.KubeRecipe;
+import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.RecipeScriptContext;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
@@ -13,6 +13,7 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunction;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionType;
 import dev.latvian.mods.kubejs.recipe.schema.function.ResolvedRecipeSchemaFunction;
+import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.util.Cast;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 
@@ -59,11 +60,14 @@ public record MultiSetFunction(List<String> keys) implements RecipeSchemaFunctio
 
         @Override
         public void execute(RecipeScriptContext cx, List<Object> args) {
-            final KubeRecipe recipe = cx.recipe();
+            if (args.size() != keys.size()) {
+                throw new KubeRuntimeException("Function only accepts %s arguments, %s given".formatted(keys.size(), args.size()))
+                        .source(SourceLine.of(cx.cx()));
+            }
             for (int i = 0 ; i < keys.size() ; i++) {
                 final RecipeKey<?> key = keys.get(i);
                 final Object obj = key.component.wrap(cx, args.get(i));
-                recipe.setValue(key, Cast.to(obj));
+                cx.recipe().setValue(key, Cast.to(obj));
             }
         }
     }

@@ -421,7 +421,7 @@ public class TreeSolver {
     }
 
     public static final class ArgType extends BlockStateArgument {
-        public final boolean log;
+        private final boolean log;
         public ArgType(CommandBuildContext pBuildContext, boolean log) {
             super(filter(pBuildContext, log));
             this.log = log;
@@ -439,14 +439,7 @@ public class TreeSolver {
                     FeatureFlagSet.of()
             );
         }
-    }
 
-    public static final TypeInfo TYPE_INFO = new TypeInfo();
-
-    public static final class TypeInfo extends BooleanTypeInfo<BlockInput, ArgType, TypeInfo> {
-
-        private TypeInfo() {
-            super(ArgType::new, a -> a.log);
-        }
+        public boolean log() { return log; }
     }
 }

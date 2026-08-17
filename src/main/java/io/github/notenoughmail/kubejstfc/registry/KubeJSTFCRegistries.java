@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.registry;
 import com.mojang.serialization.MapCodec;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
+import io.github.notenoughmail.kubejstfc.util.commands.BooleanTypeInfo;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import io.github.notenoughmail.kubejstfc.util.commands.Range;
 import io.github.notenoughmail.kubejstfc.util.commands.TreeSolver;
@@ -30,6 +31,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.neoforged.bus.api.IEventBus;
@@ -66,11 +68,11 @@ public class KubeJSTFCRegistries {
         ));
         COMMAND_ARGS.register("tree_solver", () -> ArgumentTypeInfos.registerByClass(
                 TreeSolver.ArgType.class,
-                TreeSolver.TYPE_INFO
+                BooleanTypeInfo.of(TreeSolver.ArgType::log, TreeSolver.ArgType::new)
         ));
         COMMAND_ARGS.register("data_type", () -> ArgumentTypeInfos.registerByClass(
                 DataType.Argument.class,
-                DataType.TYPE_INFO
+                BooleanTypeInfo.of(DataType.Argument::all, DataType.Argument::new)
         ));
 
         CHUNK_GENERATOR.register("wrapped", () -> WrappedChunkGenerator.CODEC);
@@ -168,11 +170,12 @@ public class KubeJSTFCRegistries {
                         KnappingType.MANAGER,
                         BuiltInRegistries.ITEM,
                         DataTypes.KNAPPING_TYPE,
-                        (knappingType, item) -> knappingType.matches(item.getDefaultInstance()),
+                        (knappingType, item) -> knappingType.matches(item.getDefaultInstance().kjs$withCount(99)),
                         () -> KnappingType.MANAGER.getValues().stream()
                                 .map(KnappingType::inputItem)
                                 .map(SizedIngredient::ingredient)
-                                .flatMap(i -> Arrays.stream(i.getItems()))
+                                .map(Ingredient::getItems)
+                                .flatMap(Arrays::stream)
                                 .map(ItemStack::getItem)
                                 .distinct()
                 )

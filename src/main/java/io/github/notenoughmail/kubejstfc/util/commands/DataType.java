@@ -121,13 +121,4 @@ public interface DataType<T> {
             );
         }
     }
-
-    TypeInfo TYPE_INFO = new TypeInfo();
-
-    final class TypeInfo extends BooleanTypeInfo<ResourceLocation, Argument, TypeInfo> {
-
-        private TypeInfo() {
-            super((ctx, b) -> new Argument(b), Argument::all);
-        }
-    }
 }

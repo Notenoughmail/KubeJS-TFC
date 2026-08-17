@@ -6,6 +6,7 @@ import com.therighthon.afc.AFC;
 import com.therighthon.afc.common.blocks.AFCWood;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import io.github.notenoughmail.kubejstfc.util.Actionable;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import net.dries007.tfc.common.blocks.rock.Rock;
 import net.dries007.tfc.common.blocks.wood.Wood;
@@ -47,7 +48,14 @@ public class KubeJSTFC {
         }
     }
 
+    public static void modBus(Consumer<IEventBus> action) {
+        MOD_EVENT_BUS.queue(action);
+    }
+
+    private static final Actionable<IEventBus> MOD_EVENT_BUS = new Actionable<>();
+
     public KubeJSTFC(IEventBus modBus) {
+        MOD_EVENT_BUS.init(modBus);
         KubeJSTFCRegistries.init(modBus);
         KubeJSTFCEventHandlers.init(modBus);
         registerWoods(b -> {
@@ -72,6 +80,7 @@ public class KubeJSTFC {
         });
     }
 
+    // TODO: 2.0.3 | These should be Actionables and in Assistant
     @ApiStatus.Internal
     public static Map<ResourceLocation, RegistryWood> getWoods() {
         final ImmutableMap.Builder<ResourceLocation, RegistryWood> m = new ImmutableMap.Builder<>();
@@ -111,6 +120,7 @@ public class KubeJSTFC {
         ROCK.add(builder);
     }
 
+    // TODO: 2.0.3 | This should be in Assistant
     public static <T> T tryOrElse(Supplier<T> maker, T fallback, Consumer<Exception> onFail) {
         try {
             return maker.get();

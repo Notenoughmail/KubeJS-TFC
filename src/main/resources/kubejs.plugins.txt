@@ -1,3 +1,5 @@
 io.github.notenoughmail.kubejstfc.KubeJSTFCPlugin
 io.github.notenoughmail.kubejstfc.compat.precpros.PrecProsPlugin precisionprospecting
 io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin worldjs
+io.github.notenoughmail.kubejstfc.compat.firmalife.FirmaLifePlugin firmalife
+io.github.notenoughmail.kubejstfc.compat.beneath.BeneathPlugin beneath

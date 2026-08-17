@@ -117,7 +117,8 @@ public class KubeJSTFCEventHandlers {
 
     private static void loadFinish(FMLLoadCompleteEvent event) {
         event.enqueueWork(BuilderRefs::clear);
-        if (!FMLLoader.isProduction()) {
+        if ("true".equals(System.getProperty("kubejs_tfc/assert_all_data_managers_have_data_types", "false"))) {
+            KubeJSTFC.LOGGER.info("Validating all DataManagers have a corresponding DataType registered");
             final Set<DataManager<?>> managers = KubeJSTFCRegistries.DATA_TYPES.stream()
                     .filter(DataTypes.DataManagerType.class::isInstance)
                     .map(DataTypes.DataManagerType.class::cast)

@@ -445,7 +445,7 @@ public final class Printer {
 
     public Printer recursiveAppend(@Nullable Object object) {
         return switch (object) {
-            case Record r -> appendMap(convertRecordToMap(r), (p, t) -> p.recursiveAppend(t));
+            case Record r -> appendMap(convertRecordToMap(r), Printer::recursiveAppend);
             case Collection<?> c -> appendCollection(c, (p, t) -> p.appendIndent().recursiveAppend(t));
             case null -> appendRaw(null); // Linter complains otherwise
             default -> appendRaw(object);
