@@ -16,7 +16,6 @@ import java.util.HexFormat;
 import java.util.Locale;
 import java.util.function.Function;
 
-// TODO: 2.1.0 | FL/Beneath data events
 public abstract class KubeDataEvent implements KubeEvent {
 
     protected final KubeResourceGenerator gen;

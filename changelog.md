@@ -1,3 +1,11 @@
+### 2.1.0 (W.I.P.)
+- Add support for FirmaLife recipes
+- Add events fro creating FirmaLife and Beneath data types
+- FirmaLife and ArborFirmaCraft recipes types and Beneath and FirmaLife data types can now be used in the data type commands (`/kubejs_tfc <search|describe|list_ids>`)
+- Internal validation for `DataManager`/`DataType` synchronicity is now opt-in
+  - Use `systemProperty('kubejs_tfc/assert_all_data_managers_have_data_types', 'true')` in your run configs if you wish to enable this in dev environments
+- 
+
 ### 2.0.2
 - The data type commands (`/kubejs_tfc <search|describe|list_ids>`) can now handle *all* TFC recipe types
 - Configured feature types have been given a full, proper look over to address assorted issues

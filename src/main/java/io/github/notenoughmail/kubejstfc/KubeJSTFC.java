@@ -55,11 +55,6 @@ public class KubeJSTFC {
             for (Wood w : Wood.VALUES) {
                 b.put(tfc(w.getSerializedName()), w);
             }
-            if (ModList.get().isLoaded(AFC.MOD_ID)) {
-                for (AFCWood w : AFCWood.VALUES) {
-                    b.put(Helpers.resourceLocation(AFC.MOD_ID, w.getSerializedName()), w);
-                }
-            }
         });
         Assistant.registerMetals(b -> {
             for (Metal m : Metal.values()) {

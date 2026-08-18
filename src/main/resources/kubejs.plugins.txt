@@ -3,3 +3,4 @@ io.github.notenoughmail.kubejstfc.compat.precpros.PrecProsPlugin precisionprospe
 io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin worldjs
 io.github.notenoughmail.kubejstfc.compat.firmalife.FirmaLifePlugin firmalife
 io.github.notenoughmail.kubejstfc.compat.beneath.BeneathPlugin beneath
+io.github.notenoughmail.kubejstfc.compat.afc.AFCPlugin afc

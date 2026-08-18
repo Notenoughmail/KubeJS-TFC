@@ -30,7 +30,7 @@ public class KubeBeneathDataEvent extends KubeDataEvent {
         add(fertilizer, NetherFertilizer.MANAGER, id);
     }
 
-    public void netherFetilizer(Context ctx, NetherFertilizer fertilizer) {
+    public void netherFertilizer(Context ctx, NetherFertilizer fertilizer) {
         netherFertilizer(ctx, fertilizer, null);
     }
 }
