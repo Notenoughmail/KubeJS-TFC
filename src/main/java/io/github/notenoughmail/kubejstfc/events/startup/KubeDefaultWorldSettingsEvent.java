@@ -8,9 +8,11 @@ import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryOps;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +72,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     private float grassDensity;
     private boolean finiteContinents;
 
-    private final Map<String, RockSettings> rocks;
+    private final Map<String, Holder<RockSettings>> rocks;
     private final List<String> bottom, oceanFloor, land, volcanic, uplift;
     private final List<RockLayerSettings.LayerData> layers;
     private final RockLayerSettings oldRockLayerSettings;
@@ -229,10 +231,10 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
 
     @Info(value = "Adds the given rock to the generator's pool of available rocks", params = {
             @Param(name = "name", value = "The name which the rock can be referenced by"),
-            @Param(name = "rock", value = "the `RockSettings` to add"),
+            @Param(name = "rock", value = "The id of the `RockSettings` to add"),
             @Param(name = "bottom", value = "If the rock should be added as a 'bottom' layer rock")
     })
-    public void addRock(String name, RockSettings rock, boolean bottom) {
+    public void addRock(String name, Holder.Reference<RockSettings> rock, boolean bottom) {
         rocks.put(name, rock);
         if (bottom) {
             this.bottom.add(name);
@@ -240,8 +242,8 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     }
 
     @Nullable
-    @Info("Gets the `RockSettings` with the given name")
-    public RockSettings getRock(String name) {
+    @Info("Gets the `RockSettings` holder with the given name")
+    public Holder<RockSettings> getRock(String name) {
         return rocks.get(name);
     }
 
@@ -392,7 +394,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
                 rainScale,
                 rainConstant,
                 validRocks ?
-                        KubeJSTFC.tryOrElse(
+                        Assistant.tryOrElse(
                                 () -> RockLayerSettings.decode(new RockLayerSettings.Data(rocks, bottom, layers, oceanFloor, land, volcanic, uplift)).getOrThrow(),
                                 oldRockLayerSettings,
                                 e -> {

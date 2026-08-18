@@ -40,7 +40,7 @@ public class FirmaLifePlugin implements KubeJSPlugin {
                 (g, p) -> p
                         .append("ingredient", g.ingredient())
                         .append("tier", g.tier())
-                        .append("translationKey", g.translationKey(), true), // TODO 2.1.x | This should probably be escaped somehow
+                        .append("translationKey", g.getTitle(), true), // TODO 2.1.x | This should probably be escaped somehow
                 (g, b) -> g.ingredient().test(b),
                 GreenhouseType.CACHE
         ));

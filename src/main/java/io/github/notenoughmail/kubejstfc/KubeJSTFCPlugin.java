@@ -16,6 +16,7 @@ import dev.latvian.mods.kubejs.recipe.component.SimpleRecipeComponent;
 import dev.latvian.mods.kubejs.recipe.schema.function.RecipeSchemaFunctionRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
+import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
 import dev.latvian.mods.kubejs.script.*;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import io.github.notenoughmail.kubejstfc.blocks.*;
@@ -76,6 +77,7 @@ import net.dries007.tfc.util.climate.ClimateModels;
 import net.dries007.tfc.util.climate.ClimateRange;
 import net.dries007.tfc.util.data.Drinkable;
 import net.dries007.tfc.util.data.Fuel;
+import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -115,6 +117,7 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.addDefault(ChiselMode.KEY, ChiselModeBuilder.class, ChiselModeBuilder::new);
         registry.addDefault(FoodTraits.KEY, FoodTraitBuilder.class, FoodTraitBuilder::new);
         registry.addDefault(ClimateModels.KEY, ClimateModelTypeBuilder.class, ClimateModelTypeBuilder::new);
+        registry.addDefault(RockSettings.KEY, RockSettingsBuilder.class, RockSettingsBuilder::new);
 
         registry.of(Registries.BLOCK, c -> {
             add(c, tfc("anvil"), AnvilBlockBuilder.class, AnvilBlockBuilder::new);
@@ -179,6 +182,11 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     
     private static <T, B extends BuilderBase<? extends T>> void add(BuilderTypeRegistry.Callback<T> c, ResourceLocation type, Class<B> builder, Function<ResourceLocation, B> factory) {
         c.add(type, builder, factory::apply);
+    }
+
+    @Override
+    public void registerServerRegistries(ServerRegistryRegistry registry) {
+        registry.register(RockSettings.KEY, RockSettings.CODEC, RockSettings.class);
     }
 
     @Override

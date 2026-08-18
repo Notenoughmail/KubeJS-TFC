@@ -62,7 +62,7 @@ public interface WorldPrinter {
                                     $ -> p.listItem()
                             ))
                             .descriptor("rocks")
-                            .appendMap(rockData.rocks(), Printer::appendRecordAsMap)
+                            .appendMap(rockData.rocks(), (p, h) -> p.appendRecordAsMap(h.value()))
                             .getFormattedText(),
                     ctx
             );
