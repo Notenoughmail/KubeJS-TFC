@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import dev.latvian.mods.kubejs.typings.Info;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.component.heat.Heat;
 import net.dries007.tfc.common.component.heat.HeatCapability;
@@ -52,21 +53,18 @@ public enum DataBindings {
 
     @Info("A map connecting a wood to its pseudo official id")
     public Map<ResourceLocation, RegistryWood> getWoods() {
-        return WOOD.get();
+        return Assistant.WOODS.get();
     }
-    private static final Supplier<Map<ResourceLocation, RegistryWood>> WOOD = Suppliers.memoize(KubeJSTFC::getWoods);
 
     @Info("A map connecting a metal to its pseudo official id")
     public Map<ResourceLocation, RegistryMetal> getMetals() {
-        return METALS.get();
+        return Assistant.METALS.get();
     }
-    private static final Supplier<Map<ResourceLocation, RegistryMetal>> METALS = Suppliers.memoize(KubeJSTFC::getMetals);
 
     @Info("A map connecting a rock to its pseudo official id")
     public Map<ResourceLocation, RegistryRock> getRocks() {
-        return ROCKS.get();
+        return Assistant.ROCKS.get();
     }
-    private static final Supplier<Map<ResourceLocation, RegistryRock>> ROCKS = Suppliers.memoize(KubeJSTFC::getRocks);
 
     @Info("Gets TFC's nutrition and other attached data associated with the player")
     public IPlayerInfo getPlayerInfo(Player player) {

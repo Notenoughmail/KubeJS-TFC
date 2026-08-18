@@ -2,9 +2,14 @@ package io.github.notenoughmail.kubejstfc.events.server;
 
 import dev.latvian.mods.kubejs.generator.KubeResourceGenerator;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
+import dev.latvian.mods.rhino.Context;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
+import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.component.food.FoodDefinition;
+import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.heat.HeatDefinition;
 import net.dries007.tfc.common.component.size.ItemSizeDefinition;
+import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.entities.Fauna;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.util.PhysicalDamage;
@@ -29,7 +34,7 @@ public class KubeTFCDataEvent extends KubeDataEvent {
     }
 
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
-        add(new EntityDamageResistance(entity ,resistance), EntityDamageResistance.CODEC, id, r -> r.entity().location().toString().replace(':', '/'), "tfc/entity_damage_resistance");
+        add(new EntityDamageResistance(entity, resistance), EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
     }
 
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance) {
@@ -37,102 +42,114 @@ public class KubeTFCDataEvent extends KubeDataEvent {
     }
 
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
-        add(new ItemDamageResistance(ingredient, resistance), ItemDamageResistance.CODEC, id, "tfc/item_damage_resistance");
+        add(new ItemDamageResistance(ingredient, resistance), ItemDamageResistance.MANAGER, id);
     }
 
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance) {
         itemDamageResistance(ingredient, resistance, null);
     }
 
-    public void drinkable(Drinkable drinkable, @Nullable KubeResourceLocation id) {
-        add(drinkable, Drinkable.CODEC, id, "tfc/drinkable");
+    public void drinkable(Context ctx, Drinkable drinkable, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(drinkable.ingredient(), "drinkable.ingredient", ctx);
+        add(drinkable, Drinkable.MANAGER, id);
     }
 
-    public void drinkable(Drinkable drinkable) {
-        drinkable(drinkable, null);
+    public void drinkable(Context ctx, Drinkable drinkable) {
+        drinkable(ctx, drinkable, null);
     }
 
-    public void fertilizer(Fertilizer fertilizer, @Nullable KubeResourceLocation id) {
-        add(fertilizer, Fertilizer.CODEC, id, "tfc/fertilizer");
+    public void fertilizer(Context ctx, Fertilizer fertilizer, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(fertilizer.ingredient(), "fertilizer.ingredient", ctx);
+        add(fertilizer, Fertilizer.MANAGER, id);
     }
 
-    public void fertilizer(Fertilizer fertilizer) {
-        fertilizer(fertilizer, null);
+    public void fertilizer(Context ctx, Fertilizer fertilizer) {
+        fertilizer(ctx, fertilizer, null);
     }
 
-    public void fuel(Fuel fuel, @Nullable KubeResourceLocation id) {
-        add(fuel, Fuel.CODEC, id, "tfc/fuel");
+    public void fuel(Context ctx, Fuel fuel, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(fuel.ingredient(), "fuel.ingredient", ctx);
+        add(fuel, Fuel.MANAGER, id);
     }
 
-    public void fuel(Fuel fuel) {
-        fuel(fuel, null);
+    public void fuel(Context ctx, Fuel fuel) {
+        fuel(ctx, fuel, null);
     }
 
-    public void fluidHeat(FluidHeat fluidHeat, @Nullable KubeResourceLocation id) {
-        add(fluidHeat, FluidHeat.CODEC, id, f -> f.fluid().toString().replace(":", "/"), "tfc/fluid_heat");
+    public void fluidHeat(Context ctx, FluidHeat fluidHeat, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(fluidHeat.fluid(), "fluidHeat.fluid", ctx);
+        add(fluidHeat, FluidHeat.MANAGER, id, f -> f.fluid().toString().replace(":", "/"));
     }
 
-    public void fluidHeat(FluidHeat fluidHeat) {
-        fluidHeat(fluidHeat, null);
+    public void fluidHeat(Context ctx, FluidHeat fluidHeat) {
+        fluidHeat(ctx, fluidHeat, null);
     }
 
-    public void knappingType(KnappingType knappingType, KubeResourceLocation id) {
-        add(knappingType, KnappingType.CODEC, id, "tfc/knapping_type");
+    public void knappingType(Context ctx, KnappingType knappingType, KubeResourceLocation id) {
+        Assistant.notNull(knappingType.inputItem(), "knappingType.inputItem", ctx);
+        Assistant.notNull(knappingType.clickSound(), "knappingType.clickSound", ctx);
+        Assistant.notNull(knappingType.icon(), "knappingType.icon", ctx);
+        add(knappingType, KnappingType.MANAGER, id);
     }
 
     public void support(BlockIngredient ingredient, Support.SupportRange range, @Nullable KubeResourceLocation id) {
-        add(new Support(ingredient, range.up(), range.down(), range.horizontal()), Support.CODEC, id, "tfc/support");
+        add(new Support(ingredient, range.up(), range.down(), range.horizontal()), Support.MANAGER, id);
     }
 
     public void support(BlockIngredient ingredient, Support.SupportRange range) {
         support(ingredient, range, null);
     }
 
-    public void itemSize(ItemSizeDefinition itemSize, @Nullable KubeResourceLocation id) {
-        add(itemSize, ItemSizeDefinition.CODEC, id, "tfc/item_size");
+    public void itemSize(Context ctx, ItemSizeDefinition itemSize, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(itemSize.ingredient(), "itemSize.ingredient", ctx);
+        add(itemSize, ItemSizeManager.MANAGER, id);
     }
 
-    public void itemSize(ItemSizeDefinition itemSize) {
-        itemSize(itemSize, null);
+    public void itemSize(Context ctx, ItemSizeDefinition itemSize) {
+        itemSize(ctx, itemSize, null);
     }
 
     public void fauna(Consumer<Fauna.Builder> builder, KubeResourceLocation id) {
-        add(Util.make(new Fauna.Builder(), builder).build(), Fauna.CODEC, id, "tfc/fauna");
+        add(Util.make(new Fauna.Builder(), builder).build(), Fauna.MANAGER, id);
     }
 
     public void climateRange(ClimateRange range, KubeResourceLocation id) {
-        add(range, ClimateRange.CODEC, id, "tfc/climate_range");
+        add(range, ClimateRange.MANAGER, id);
     }
 
-    public void lampFuel(LampFuel lampFuel, @Nullable KubeResourceLocation id) {
-        add(lampFuel, LampFuel.CODEC, id, "tfc/lamp_fuel");
+    public void lampFuel(Context ctx, LampFuel lampFuel, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(lampFuel.fluid(), "lampFuel.fluid", ctx);
+        Assistant.notNull(lampFuel.lamps(), "lampFuel.lamps", ctx);
+        add(lampFuel, LampFuel.MANAGER, id);
     }
 
-    public void lampFuel(LampFuel lampFuel) {
-        lampFuel(lampFuel, null);
+    public void lampFuel(Context ctx, LampFuel lampFuel) {
+        lampFuel(ctx, lampFuel, null);
     }
 
     public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages, @Nullable KubeResourceLocation id) {
-        add(new Deposit(ingredient, lootTable, modelStages), Deposit.CODEC, id, "tfc/deposit");
+        add(new Deposit(ingredient, lootTable, modelStages), Deposit.MANAGER, id);
     }
 
     public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages) {
         deposit(ingredient, lootTable, modelStages, null);
     }
 
-    public void heat(HeatDefinition heat, @Nullable KubeResourceLocation id) {
-        add(heat, HeatDefinition.CODEC, id, "tfc/item_heat");
+    public void heat(Context ctx, HeatDefinition heat, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(heat.ingredient(), "heat.ingredient", ctx);
+        add(heat, HeatCapability.MANAGER, id);
     }
 
-    public void heat(HeatDefinition heat) {
-        heat(heat, null);
+    public void heat(Context ctx, HeatDefinition heat) {
+        heat(ctx, heat, null);
     }
 
-    public void food(FoodDefinition food, @Nullable KubeResourceLocation id) {
-        add(food, FoodDefinition.CODEC, id, "tfc/food");
+    public void food(Context ctx, FoodDefinition food, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(food.ingredient(), "food.ingredient", ctx);
+        add(food, FoodCapability.MANAGER, id);
     }
 
-    public void food(FoodDefinition food) {
-        food(food, null);
+    public void food(Context ctx, FoodDefinition food) {
+        food(ctx, food, null);
     }
 }

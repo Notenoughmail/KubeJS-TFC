@@ -4,7 +4,12 @@ import com.eerussianguy.firmalife.FirmaLife;
 import com.eerussianguy.firmalife.common.recipes.*;
 import com.eerussianguy.firmalife.common.util.GreenhouseType;
 import com.eerussianguy.firmalife.common.util.Plantable;
+import dev.latvian.mods.kubejs.event.EventGroup;
+import dev.latvian.mods.kubejs.event.EventGroupRegistry;
+import dev.latvian.mods.kubejs.event.EventHandler;
+import dev.latvian.mods.kubejs.generator.KubeDataGenerator;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
+import dev.latvian.mods.kubejs.script.RecordDefaultsRegistry;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
@@ -18,7 +23,12 @@ import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
+
 public class FirmaLifePlugin implements KubeJSPlugin {
+
+    public static final EventGroup EVENTS = EventGroup.of("FirmaLifeEvents");
+    public static final EventHandler data = EVENTS.server("data", () -> KubeFirmaLifeDataEvent.class);
 
     @Override
     public void init() {
@@ -131,6 +141,34 @@ public class FirmaLifePlugin implements KubeJSPlugin {
                 CentrifugeRecipe.CACHE,
                 DataTypes.BASIC_ITEM.cast(),
                 FLRecipeTypes.CENTRIFUGE
+        ));
+    }
+
+    @Override
+    public void registerEvents(EventGroupRegistry registry) {
+        registry.register(EVENTS);
+    }
+
+    @Override
+    public void generateData(KubeDataGenerator generator) {
+        if (data.hasListeners()) {
+            data.post(new KubeFirmaLifeDataEvent(generator));
+        }
+    }
+
+    @Override
+    public void registerRecordDefaults(RecordDefaultsRegistry registry) {
+        registry.register(new Plantable(
+                null,
+                null,
+                0,
+                0,
+                0.5F,
+                null,
+                null,
+                new Plantable.NutrientList(0F, 0F, 0F),
+                List.of(),
+                List.of()
         ));
     }
 }

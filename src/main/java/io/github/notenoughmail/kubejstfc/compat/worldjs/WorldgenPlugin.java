@@ -98,7 +98,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
             cf(c, tfc("random_tree"), RandomTreeBuilder.class, RandomTreeBuilder::new);
             cf(c, tfc("stacked_tree"), StackedTreeBuilder.class, StackedTreeBuilder::new);
             cf(c, tfc("krummholz"), KrummholzBuilder.class, KrummholzBuilder::new);
-            // TODO: 2.1.0 | The rest of TFC's types
+            // TODO: 2.1.x | The rest of TFC's types
         });
     }
 

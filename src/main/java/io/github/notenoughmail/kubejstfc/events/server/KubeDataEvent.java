@@ -5,6 +5,7 @@ import dev.latvian.mods.kubejs.KubeJS;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.generator.KubeResourceGenerator;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
+import net.dries007.tfc.util.data.DataManager;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +58,15 @@ public abstract class KubeDataEvent implements KubeEvent {
         add(id(id, t, func, prefix), t, codec);
     }
 
+    protected <T> void add(T t, DataManager<T> manager, @Nullable KubeResourceLocation id, Function<T, String> func) {
+        add(t, manager.codec(), id, func, manager.directory);
+    }
+
     protected <T> void add(T t, Codec<T> codec, @Nullable KubeResourceLocation id, String prefix) {
         add(t, codec, id, this::makePath, prefix);
+    }
+
+    protected <T> void add(T t, DataManager<T> manager, @Nullable KubeResourceLocation id) {
+        add(t, manager.codec(), id, manager.directory);
     }
 }

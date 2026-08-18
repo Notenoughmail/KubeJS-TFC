@@ -18,7 +18,7 @@ ServerEvents.generateData('last', e => {
                             spawn_center_z: 0,
                             grass_density: 0.5,
                             rock_layer_settings: {
-                                rocks: { // TODO: 2.0.x | To test this the entirety of the rock needs to be defined, there are no longer pre-defined settings
+                                rocks: { // TODO: 2.1.x | To test this the entirety of the rock needs to be defined, there are no longer pre-defined settings
                                     granite: 'tfc:granite',
                                     diorite: 'tfc:diorite',
                                     gabbro: 'tfc:gabbro',

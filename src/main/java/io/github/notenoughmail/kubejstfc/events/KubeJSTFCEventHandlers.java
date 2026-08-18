@@ -37,7 +37,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
@@ -127,7 +126,7 @@ public class KubeJSTFCEventHandlers {
 
             if (!DataManagers.REGISTRY.stream()
                     .filter(Predicate.not(managers::contains))
-                    .peek(m -> KubeJSTFC.LOGGER.error("Unhandled DataManager: {}", m))
+                    .peek(m -> KubeJSTFC.LOGGER.error("Unhandled DataManager: {}", m.directory))
                     .collect(Collectors.toSet())
                     .isEmpty()) {
                 throw new AssertionError("All DataManagers should be handled! See above errors");
