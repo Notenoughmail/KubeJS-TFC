@@ -155,12 +155,11 @@ public final class Printer {
     }
 
     public Printer appendIndent() {
-        switch (indent) {
-            case 0 -> {}
-            case 1, 2, 3, 4 -> text.append(INDENTATION_CACHE[indent - 1]);
-            default -> text.append("  ".repeat(indent));
-        }
-        return this;
+        return switch (indent) {
+            case 0 -> this;
+            case 1, 2, 3, 4 -> append(INDENTATION_CACHE[indent - 1]);
+            default -> appendPlain("  ".repeat(indent));
+        };
     }
 
     public Printer appendPlain(String txt) {

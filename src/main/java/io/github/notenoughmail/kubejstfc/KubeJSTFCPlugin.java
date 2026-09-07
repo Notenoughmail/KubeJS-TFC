@@ -39,6 +39,7 @@ import io.github.notenoughmail.kubejstfc.recipe.functions.MultiSetFunction;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.CropUtil;
+import io.github.notenoughmail.kubejstfc.util.ExFoodData;
 import io.github.notenoughmail.kubejstfc.util.MixinLoadingUtil;
 import net.dries007.tfc.ForgeEventHandler;
 import net.dries007.tfc.TerraFirmaCraft;
@@ -75,19 +76,17 @@ import net.dries007.tfc.common.recipes.outputs.MealModifier;
 import net.dries007.tfc.util.PhysicalDamage;
 import net.dries007.tfc.util.climate.ClimateModels;
 import net.dries007.tfc.util.climate.ClimateRange;
-import net.dries007.tfc.util.data.Drinkable;
-import net.dries007.tfc.util.data.Fuel;
+import net.dries007.tfc.util.data.*;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static io.github.notenoughmail.kubejstfc.KubeJSTFC.id;
 import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 
 // TODO: 2.1.x | Blowpipe item type
@@ -232,18 +231,26 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
     public void registerTypeWrappers(TypeWrapperRegistry registry) {
         registry.register(ItemStackProvider.class, ItemStackProviderBindings::wrap);
         registry.register(BlockIngredient.class, IngredientBindings::wrapBlock);
+        registry.registerAlias(FoodData.class, ExFoodData.class, ExFoodData::ex);
     }
 
     @Override
     public void registerRecordDefaults(RecordDefaultsRegistry registry) {
-        registry.register(new PhysicalDamage(0F, 0F, 0F));
-        registry.register(FoodData.of(1F));
-        registry.register(new FoodDefinition(null, FoodData.EMPTY, true));
-        registry.register(new Drinkable(null, 1F, false, FoodData.of(1F), List.of()));
+        final ExFoodData exFoodData = new ExFoodData(
+                0, 0F, 0F, 0,
+                Float.NaN, Float.NaN, Float.NaN, Float.NaN, Float.NaN,
+                1F, new float[] { 0F, 0F, 0F, 0F, 0F }
+        );
+        registry.register(exFoodData);
+        registry.register(new FoodDefinition(null, exFoodData.ex(), true));
+        registry.register(new Drinkable(null, 1F, false, exFoodData.ex(), List.of()));
         registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
         registry.register(new ClimateRange(0, 100, 0, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 0));
         registry.register(new Fuel(null, 0, 0, 1F));
         registry.register(new ItemSizeDefinition(null, Size.SMALL, Weight.LIGHT));
+        registry.register(new EntityDamageResistance(null, new PhysicalDamage(0F, 0F, 0F)));
+        registry.register(new ItemDamageResistance(null, new PhysicalDamage(0F, 0F, 0F)));
+        registry.register(new Deposit(null, null, List.of()));
     }
 
     @Override
@@ -261,6 +268,10 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
                 ItemStackProvider.class,
                 ItemStackProviderComponent.TYPE_INFO.createCombinedType(ItemWrapper.TYPE_INFO)
         );
+        registry.register(
+                FoodData.class,
+                TypeInfo.of(ExFoodData.class)
+        );
     }
 
     @Override
@@ -268,9 +279,9 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(MultiSetFunction.TYPE);
     }
 
-    public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
-    public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(KubeJSTFC.id("welding_bonus_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
-    public static final RecipeComponentType<FoodData> FOOD_DATA_RECIPE_COMPONENT_TYPE = RecipeComponentType.unit(tfc("food_data"), t -> new SimpleRecipeComponent<>(t, FoodData.CODEC, TypeInfo.of(FoodData.class)));
+    public static final RecipeComponentType<ForgeRule> FORGE_RULE_RECIPE_COMPONENT_TYPE = EnumComponent.of(id("forge_rule"), ForgeRule.class, ForgeRule.CODEC);
+    public static final RecipeComponentType<WeldingRecipe.Behavior> WELDING_BEHAVIOR_RECIPE_COMPONENT_TYPE = EnumComponent.of(id("welding_bonus_behavior"), WeldingRecipe.Behavior.class, WeldingRecipe.Behavior.CODEC);
+    public static final RecipeComponentType<FoodData> FOOD_DATA_RECIPE_COMPONENT_TYPE = RecipeComponentType.unit(id("food_data"), t -> new SimpleRecipeComponent<>(t, FoodData.CODEC, TypeInfo.of(FoodData.class)));
 
     @Override
     public void registerRecipeComponents(RecipeComponentTypeRegistry registry) {

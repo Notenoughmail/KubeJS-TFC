@@ -62,10 +62,8 @@ ServerEvents.recipes(e => {
         100,
         {
             hunger: 50,
-            nutrients: [
-                0, 0, 5, 0, 0
-            ],
-            decay_modifier: 0.9
+            dairy: 5,
+            decayModifier: 0.9
         }
     ).id('kubejs:bowl_pot_0');
 })

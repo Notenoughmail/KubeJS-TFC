@@ -18,6 +18,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -67,6 +68,11 @@ public class KubeJSTFCCommands {
                         )
                         .then(literal("print_rock_settings")
                                 .executes(WorldPrinter::rockSettings)
+                        )
+                        .then(literal("print_rock_setting")
+                                .then(argument("rock", new ResourceKeyArgument<>(RockSettings.KEY))
+                                        .executes(WorldPrinter::rockSetting)
+                                )
                         )
                         .then(literal("print_chunk_data")
                                 .executes(WorldPrinter::chunkData)

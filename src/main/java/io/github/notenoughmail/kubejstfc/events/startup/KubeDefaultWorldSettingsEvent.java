@@ -1,10 +1,13 @@
 package io.github.notenoughmail.kubejstfc.events.startup;
 
 import com.mojang.serialization.*;
+import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
+import dev.latvian.mods.kubejs.util.Cast;
+import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
@@ -12,11 +15,13 @@ import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
-import net.minecraft.core.Holder;
+import net.minecraft.core.*;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Info("""
         Allows for editing of TFC's worldgen values after the `overworld.json` file is read
@@ -76,6 +81,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     private final List<String> bottom, oceanFloor, land, volcanic, uplift;
     private final List<RockLayerSettings.LayerData> layers;
     private final RockLayerSettings oldRockLayerSettings;
+    private final RegistryAccessContainer current;
 
     public KubeDefaultWorldSettingsEvent(Settings settings) {
         flatBedrock = settings.flatBedrock();
@@ -101,6 +107,35 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
         uplift = new ArrayList<>(data.uplift());
         layers = new ArrayList<>();
         data.layers().forEach(layerData -> layers.add(new RockLayerSettings.LayerData(layerData.id(), new HashMap<>(layerData.layers()))));
+        current = RegistryAccessContainer.current;
+        RegistryAccessContainer.current = new RegistryAccessContainer(new RegistryAccess.Frozen() {
+
+            final HolderOwner<RockSettings> rockOwner = new HolderOwner<>() {
+                @Override
+                public boolean canSerializeIn(HolderOwner<RockSettings> owner) {
+                    return true;
+                }
+            };
+            final Registry<RockSettings> rockReg = new MappedRegistry<>(RockSettings.KEY, Lifecycle.experimental()) {
+                @Override
+                public HolderOwner<RockSettings> holderOwner() {
+                    return rockOwner;
+                }
+            };
+
+            @Override
+            public <E> Optional<Registry<E>> registry(ResourceKey<? extends Registry<? extends E>> registryKey) {
+                if (registryKey == rockReg.key()) {
+                    return Cast.to(Optional.of(rockReg));
+                }
+                return current.access().registry(registryKey);
+            }
+
+            @Override
+            public Stream<RegistryEntry<?>> registries() {
+                return current.access().registries();
+            }
+        });
     }
 
     @Info("Sets if the world should have flat bedrock, defaults to false")
@@ -417,5 +452,10 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
                 grassDensity,
                 finiteContinents
         );
+    }
+
+    @Override
+    public void afterPosted(EventResult result) {
+        RegistryAccessContainer.current = current;
     }
 }

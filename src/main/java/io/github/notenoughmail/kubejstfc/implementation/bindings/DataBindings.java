@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.implementation.bindings;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import dev.latvian.mods.kubejs.typings.Info;
-import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.component.heat.Heat;

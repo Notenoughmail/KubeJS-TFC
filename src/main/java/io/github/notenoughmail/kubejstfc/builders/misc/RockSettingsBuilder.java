@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.builders.misc;
 
 import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-// TODO: 2.1.0 | Docs
 @ReturnsSelf
 public class RockSettingsBuilder extends BuilderBase<RockSettings> {
 
@@ -26,59 +26,70 @@ public class RockSettingsBuilder extends BuilderBase<RockSettings> {
         super(id);
     }
 
+    @Info("The raw block of the rock")
     public RockSettingsBuilder raw(Block b) {
         raw = b;
         return this;
     }
 
+    @Info("The hardened block of the rock")
     public RockSettingsBuilder hardened(Block b) {
         hardened = b;
         return this;
     }
 
+    @Info("The gravel block of the rock")
     public RockSettingsBuilder gravel(Block b) {
         gravel = b;
         return this;
     }
 
+    @Info("The cobble block of the rock")
     public RockSettingsBuilder cobble(Block b) {
         cobble = b;
         return this;
     }
 
+    @Info("The sand block of the rock")
     public RockSettingsBuilder sand(Block b) {
         sand = b;
         return this;
     }
 
+    @Info("The sandstone block of the rock")
     public RockSettingsBuilder sandstone(Block b) {
         sandstone = b;
         return this;
     }
 
+    @Info("The spike block of the rock")
     public RockSettingsBuilder spike(Block b) {
         requiredProperty(b, "spike", RockSpikeBlock.PART);
         spike = b;
         return this;
     }
 
+    @Info("The loose block of the rock")
     public RockSettingsBuilder loose(Block b) {
         requiredProperty(b, "loose", LooseRockBlock.COUNT);
         loose = b;
         return this;
     }
 
+    @Info("The mossy loose block of the rock")
     public RockSettingsBuilder mossyLoose(Block b) {
         requiredProperty(b, "mossyLoose", LooseRockBlock.COUNT);
         mossyLoose = b;
         return this;
     }
 
+    @Info("Mark the rock as being karst")
     public RockSettingsBuilder karst() {
         karst = true;
         return this;
     }
 
+    @Info("Mark the rock as being mafic")
     public RockSettingsBuilder mafic() {
         mafic = true;
         return this;

@@ -15,6 +15,7 @@
     "ICalendarMixin",
     "ISPMixin",
     "KubeJSMenuMixin",
+    "MutableToolTierMixin",
     "Noise2DMixin",
     "Noise3DMixin",
     "PlacementContextMixin",

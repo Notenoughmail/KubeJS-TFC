@@ -1,10 +1,15 @@
 ### 2.1.0 (W.I.P.)
 - Add support for FirmaLife recipes
-- Add events fro creating FirmaLife and Beneath data types
+- Add events for creating FirmaLife and Beneath data types
 - FirmaLife and ArborFirmaCraft recipes types and Beneath and FirmaLife data types can now be used in the data type commands (`/kubejs_tfc <search|describe|list_ids>`)
 - Internal validation for `DataManager`/`DataType` synchronicity is now opt-in
   - Use `systemProperty('kubejs_tfc/assert_all_data_managers_have_data_types', 'true')` in your run configs if you wish to enable this in dev environments
 - Update to TFC 4.2.8, which is now the minimum version
+- The nutrient amount in `FoodData`s are now specified by specifying each nutrient name instead of a `nutrient: number[5]`
+- `#deposit`, `#support`, `#itemDamageResistance`, and `#entityDamageResistance` in the `TFCEvents.data` event now have 1(+1) params to match the majority of the other methods in the event
+  - Also like the majority of the other events, the first param is a map of parameters to values and the second parameter is an optional id
+  - The old forms of the methods still exist but will log a warning and will be removed in a future version
+  - As always, see the docs for the new form of the methods
 
 ### 2.0.2
 - The data type commands (`/kubejs_tfc <search|describe|list_ids>`) can now handle *all* TFC recipe types

@@ -1,8 +1,6 @@
 package io.github.notenoughmail.kubejstfc;
 
 import com.mojang.logging.LogUtils;
-import com.therighthon.afc.AFC;
-import com.therighthon.afc.common.blocks.AFCWood;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
 import io.github.notenoughmail.kubejstfc.util.Actionable;
@@ -14,7 +12,6 @@ import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 

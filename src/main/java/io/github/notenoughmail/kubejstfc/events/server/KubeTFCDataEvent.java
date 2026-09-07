@@ -1,6 +1,8 @@
 package io.github.notenoughmail.kubejstfc.events.server;
 
 import dev.latvian.mods.kubejs.generator.KubeResourceGenerator;
+import dev.latvian.mods.kubejs.script.ConsoleJS;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.Context;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -29,22 +31,54 @@ import java.util.function.Consumer;
 
 public class KubeTFCDataEvent extends KubeDataEvent {
 
+    private static void deprecated(String methodName, int paramCount) {
+        ConsoleJS.SERVER.warn(".%s() with %s(+1) parameters is deprecated and will be removed in a future version! Please use the form with 1(+1) parameters".formatted(methodName, paramCount));
+    }
+
     public KubeTFCDataEvent(KubeResourceGenerator gen) {
         super(gen);
     }
 
+    public void entityDamageResistance(Context ctx, EntityDamageResistance resistance, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(resistance.entity(), "resistance.entity", ctx);
+        add(resistance, EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
+    }
+
+    public void entityDamageResistance(Context ctx, EntityDamageResistance resistance) {
+        entityDamageResistance(ctx, resistance, null);
+    }
+
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
+        deprecated("entityDamageResistance", 2);
         add(new EntityDamageResistance(entity, resistance), EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
     }
 
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance) {
         entityDamageResistance(entity, resistance, null);
     }
 
+    public void itemDamageResistance(Context ctx, ItemDamageResistance resistance, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(resistance.ingredient(), "resistance.ingredient", ctx);
+        add(resistance, ItemDamageResistance.MANAGER, id);
+    }
+
+    public void itemDamageResistance(Context ctx, ItemDamageResistance resistance) {
+        itemDamageResistance(ctx, resistance, null);
+    }
+
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
+        deprecated("itemDamageResistance", 2);
         add(new ItemDamageResistance(ingredient, resistance), ItemDamageResistance.MANAGER, id);
     }
 
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance) {
         itemDamageResistance(ingredient, resistance, null);
     }
@@ -89,13 +123,39 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         Assistant.notNull(knappingType.inputItem(), "knappingType.inputItem", ctx);
         Assistant.notNull(knappingType.clickSound(), "knappingType.clickSound", ctx);
         Assistant.notNull(knappingType.icon(), "knappingType.icon", ctx);
+        // I would LOVE with-ers here
+        if (knappingType.amountToConsume() == 0) {
+            knappingType = new KnappingType(
+                    knappingType.inputItem(),
+                    knappingType.inputItem().count(),
+                    knappingType.clickSound(),
+                    knappingType.consumeAfterComplete(),
+                    knappingType.hasOffTexture(),
+                    knappingType.spawnsParticles(),
+                    knappingType.icon()
+            );
+        }
         add(knappingType, KnappingType.MANAGER, id);
     }
 
+    public void support(Context ctx, Support support, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(support.ingredient(), "support.ingredient", ctx);
+        add(support, Support.MANAGER, id);
+    }
+
+    public void support(Context ctx, Support support) {
+        support(ctx, support, null);
+    }
+
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void support(BlockIngredient ingredient, Support.SupportRange range, @Nullable KubeResourceLocation id) {
+        deprecated("support", 2);
         add(new Support(ingredient, range.up(), range.down(), range.horizontal()), Support.MANAGER, id);
     }
 
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void support(BlockIngredient ingredient, Support.SupportRange range) {
         support(ingredient, range, null);
     }
@@ -127,10 +187,25 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         lampFuel(ctx, lampFuel, null);
     }
 
+    public void deposit(Context ctx, Deposit deposit, @Nullable KubeResourceLocation id) {
+        Assistant.notNull(deposit.ingredient(), "deposit.ingredeint", ctx);
+        Assistant.notNull(deposit.lootTable(), "deposit.lootTable", ctx);
+        add(deposit, Deposit.MANAGER, id);
+    }
+
+    public void deposit(Context ctx, Deposit deposit) {
+        deposit(ctx, deposit, null);
+    }
+
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages, @Nullable KubeResourceLocation id) {
+        deprecated("deposit", 3);
         add(new Deposit(ingredient, lootTable, modelStages), Deposit.MANAGER, id);
     }
 
+    @Info("Deprecated")
+    @Deprecated(since = "2.1.0", forRemoval = true)
     public void deposit(Ingredient ingredient, ResourceKey<LootTable> lootTable, List<ResourceLocation> modelStages) {
         deposit(ingredient, lootTable, modelStages, null);
     }

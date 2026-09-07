@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.compat.precpros;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.kubejstfc.implementation.extensions.MutableLevelTier;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.precisionprospecting.items.ProspectorItem;
 import io.github.notenoughmail.precisionprospecting.items.ProspectorType;
@@ -42,7 +43,7 @@ public class ProspectorItemBuilder extends HandheldItemBuilder {
 
     @Info("set the tool level of the prospector, determines the false negative chance")
     public ProspectorItemBuilder level(int i) {
-        level = i;
+        Assistant.levelTier(toolTier).kubejs_tfc$SetTFCLevel(i);
         return this;
     }
 
@@ -88,9 +89,10 @@ public class ProspectorItemBuilder extends HandheldItemBuilder {
     @Override
     public Item createObject() {
         Assistant.toolItemAttributes(this);
+        final MutableLevelTier tier = Assistant.levelTier(toolTier);
         if (defaultType != null) {
-            return defaultType.create(Assistant.levelTier(toolTier, level), createItemProperties());
+            return defaultType.create(tier, createItemProperties());
         }
-        return new ProspectorItem(toolTier, level, createItemProperties(), primaryRadius, secondaryRadius, displacement, prospectTag, coolDown);
+        return new ProspectorItem(tier, createItemProperties(), primaryRadius, secondaryRadius, displacement, prospectTag, coolDown);
     }
 }

@@ -8,6 +8,7 @@ import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.item.MutableToolTier;
 import dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder;
 import dev.latvian.mods.kubejs.registry.AdditionalObjectRegistry;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
@@ -16,6 +17,7 @@ import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.Context;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.implementation.extensions.MutableLevelTier;
 import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.Nutrient;
@@ -53,43 +55,8 @@ public interface Assistant {
 
     Direction[] COMPASS_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
-    static LevelTier levelTier(Tier tier, int level) {
-        return new LevelTier() {
-            @Override
-            public int level() {
-                return level;
-            }
-
-            @Override
-            public int getUses() {
-                return tier.getUses();
-            }
-
-            @Override
-            public float getSpeed() {
-                return tier.getSpeed();
-            }
-
-            @Override
-            public float getAttackDamageBonus() {
-                return tier.getAttackDamageBonus();
-            }
-
-            @Override
-            public TagKey<Block> getIncorrectBlocksForDrops() {
-                return tier.getIncorrectBlocksForDrops();
-            }
-
-            @Override
-            public int getEnchantmentValue() {
-                return tier.getEnchantmentValue();
-            }
-
-            @Override
-            public Ingredient getRepairIngredient() {
-                return tier.getRepairIngredient();
-            }
-        };
+    static MutableLevelTier levelTier(MutableToolTier tier) {
+        return Cast.to(tier);
     }
 
     static void singleTag(BuilderBase<?> builder, TagKey<?> tag) {

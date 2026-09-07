@@ -12,8 +12,6 @@ import net.minecraft.world.item.Item;
 @ReturnsSelf
 public class PropickItemBuilder extends HandheldItemBuilder {
 
-    public transient int level;
-
     public PropickItemBuilder(ResourceLocation i) {
         super(i, 3f, -2.4f);
         Assistant.singleTag(this, TFCTags.Items.TOOLS_PROPICK);
@@ -21,13 +19,13 @@ public class PropickItemBuilder extends HandheldItemBuilder {
 
     @Info("Set the tool level of this propick, determines the false negative chance")
     public PropickItemBuilder level(int level) {
-        this.level = level;
+        Assistant.levelTier(toolTier).kubejs_tfc$SetTFCLevel(level);
         return this;
     }
 
     @Override
     public Item createObject() {
         Assistant.toolItemAttributes(this);
-        return new PropickItem(Assistant.levelTier(toolTier, level), createItemProperties());
+        return new PropickItem(Assistant.levelTier(toolTier), createItemProperties());
     }
 }

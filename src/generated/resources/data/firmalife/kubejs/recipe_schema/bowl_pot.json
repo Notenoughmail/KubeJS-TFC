@@ -23,7 +23,7 @@
       "role": "output"
     },
     {
-      "type": "tfc:food_data",
+      "type": "kubejs_tfc:food_data",
       "alternative_names": [
         "food"
       ],
