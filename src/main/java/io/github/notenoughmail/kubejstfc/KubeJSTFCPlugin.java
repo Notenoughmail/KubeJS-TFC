@@ -244,13 +244,11 @@ public class KubeJSTFCPlugin implements KubeJSPlugin {
         registry.register(exFoodData);
         registry.register(new FoodDefinition(null, exFoodData.ex(), true));
         registry.register(new Drinkable(null, 1F, false, exFoodData.ex(), List.of()));
-        registry.register(new MealModifier.MealPortion(Optional.empty(), 0F, 0F, 0F));
+        registry.register(new MealModifier.MealPortion(Optional.empty(), 1F, 1F, 1F));
         registry.register(new ClimateRange(0, 100, 0, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 0));
         registry.register(new Fuel(null, 0, 0, 1F));
         registry.register(new ItemSizeDefinition(null, Size.SMALL, Weight.LIGHT));
-        registry.register(new EntityDamageResistance(null, new PhysicalDamage(0F, 0F, 0F)));
-        registry.register(new ItemDamageResistance(null, new PhysicalDamage(0F, 0F, 0F)));
-        registry.register(new Deposit(null, null, List.of()));
+        registry.register(new KnappingType(null, -1, null, false, false, false, null));
     }
 
     @Override

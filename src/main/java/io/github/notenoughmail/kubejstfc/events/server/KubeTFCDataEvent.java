@@ -5,7 +5,9 @@ import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.Context;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.kubejstfc.util.RecordIndexHint;
 import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.component.food.FoodDefinition;
 import net.dries007.tfc.common.component.heat.HeatCapability;
@@ -39,15 +41,25 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         super(gen);
     }
 
-    public void entityDamageResistance(Context ctx, EntityDamageResistance resistance, @Nullable KubeResourceLocation id) {
-        Assistant.notNull(resistance.entity(), "resistance.entity", ctx);
-        add(resistance, EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
+    @RecordIndexHint(0)
+    public void entityDamageResistance(Context ctx, EntityResistance resistance, @Nullable KubeResourceLocation id) {
+        add(resistance.convert(ctx), EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
     }
 
-    public void entityDamageResistance(Context ctx, EntityDamageResistance resistance) {
+    @RecordIndexHint(0)
+    public void entityDamageResistance(Context ctx, EntityResistance resistance) {
         entityDamageResistance(ctx, resistance, null);
     }
 
+    public record EntityResistance(TagKey<EntityType<?>> entity, float piercing, float slashing, float crushing) {
+        @HideFromJS
+        EntityDamageResistance convert(Context ctx) {
+            Assistant.notNull(entity, "resistance.entity", ctx);
+            return new EntityDamageResistance(entity, new PhysicalDamage(piercing, slashing, crushing));
+        }
+    }
+
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
@@ -55,21 +67,32 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(new EntityDamageResistance(entity, resistance), EntityDamageResistance.MANAGER, id, r -> r.entity().location().toString().replace(':', '/'));
     }
 
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void entityDamageResistance(TagKey<EntityType<?>> entity, PhysicalDamage resistance) {
         entityDamageResistance(entity, resistance, null);
     }
 
-    public void itemDamageResistance(Context ctx, ItemDamageResistance resistance, @Nullable KubeResourceLocation id) {
-        Assistant.notNull(resistance.ingredient(), "resistance.ingredient", ctx);
-        add(resistance, ItemDamageResistance.MANAGER, id);
+    @RecordIndexHint(0)
+    public void itemDamageResistance(Context ctx, ItemResistance resistance, @Nullable KubeResourceLocation id) {
+        add(resistance.convert(ctx), ItemDamageResistance.MANAGER, id);
     }
 
-    public void itemDamageResistance(Context ctx, ItemDamageResistance resistance) {
+    @RecordIndexHint(0)
+    public void itemDamageResistance(Context ctx, ItemResistance resistance) {
         itemDamageResistance(ctx, resistance, null);
     }
 
+    public record ItemResistance(Ingredient ingredient, float piercing, float slashing, float crushing) {
+        @HideFromJS
+        ItemDamageResistance convert(Context ctx) {
+            Assistant.notNull(ingredient, "resistance.ingredient", ctx);
+            return new ItemDamageResistance(ingredient, new PhysicalDamage(piercing, slashing, crushing));
+        }
+    }
+
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance, @Nullable KubeResourceLocation id) {
@@ -77,6 +100,7 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(new ItemDamageResistance(ingredient, resistance), ItemDamageResistance.MANAGER, id);
     }
 
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void itemDamageResistance(Ingredient ingredient, PhysicalDamage resistance) {
@@ -124,7 +148,7 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         Assistant.notNull(knappingType.clickSound(), "knappingType.clickSound", ctx);
         Assistant.notNull(knappingType.icon(), "knappingType.icon", ctx);
         // I would LOVE with-ers here
-        if (knappingType.amountToConsume() == 0) {
+        if (knappingType.amountToConsume() < 0) {
             knappingType = new KnappingType(
                     knappingType.inputItem(),
                     knappingType.inputItem().count(),
@@ -138,15 +162,26 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(knappingType, KnappingType.MANAGER, id);
     }
 
-    public void support(Context ctx, Support support, @Nullable KubeResourceLocation id) {
-        Assistant.notNull(support.ingredient(), "support.ingredient", ctx);
-        add(support, Support.MANAGER, id);
+    @RecordIndexHint(0)
+    public void support(Context ctx, BlockSupport support, @Nullable KubeResourceLocation id) {
+        add(support.convert(ctx), Support.MANAGER, id);
     }
 
-    public void support(Context ctx, Support support) {
+    @RecordIndexHint(0)
+    public void support(Context ctx, BlockSupport support) {
         support(ctx, support, null);
     }
 
+    // Exists purely to make the names nicer
+    public record BlockSupport(BlockIngredient ingredient, int up, int down, int horizontal) {
+        @HideFromJS
+        Support convert(Context ctx) {
+            Assistant.notNull(ingredient, "support.ingredient", ctx);
+            return new Support(ingredient, up, down, horizontal);
+        }
+    }
+
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void support(BlockIngredient ingredient, Support.SupportRange range, @Nullable KubeResourceLocation id) {
@@ -154,6 +189,7 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         add(new Support(ingredient, range.up(), range.down(), range.horizontal()), Support.MANAGER, id);
     }
 
+    @RecordIndexHint(1)
     @Info("Deprecated")
     @Deprecated(since = "2.1.0", forRemoval = true)
     public void support(BlockIngredient ingredient, Support.SupportRange range) {
@@ -187,14 +223,21 @@ public class KubeTFCDataEvent extends KubeDataEvent {
         lampFuel(ctx, lampFuel, null);
     }
 
-    public void deposit(Context ctx, Deposit deposit, @Nullable KubeResourceLocation id) {
-        Assistant.notNull(deposit.ingredient(), "deposit.ingredeint", ctx);
-        Assistant.notNull(deposit.lootTable(), "deposit.lootTable", ctx);
-        add(deposit, Deposit.MANAGER, id);
+    public void deposit(Context ctx, DepositData deposit, @Nullable KubeResourceLocation id) {
+        add(deposit.convert(ctx), Deposit.MANAGER, id);
     }
 
-    public void deposit(Context ctx, Deposit deposit) {
+    public void deposit(Context ctx, DepositData deposit) {
         deposit(ctx, deposit, null);
+    }
+
+    public record DepositData(Ingredient ingredient, ResourceKey<LootTable> loot, List<ResourceLocation> models) {
+        @HideFromJS
+        Deposit convert(Context ctx) {
+            Assistant.notNull(ingredient, "deposit.ingredient", ctx);
+            Assistant.notNull(loot, "despoit.loot", ctx);
+            return new Deposit(ingredient, loot, models);
+        }
     }
 
     @Info("Deprecated")

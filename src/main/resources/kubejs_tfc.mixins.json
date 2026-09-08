@@ -16,6 +16,7 @@
     "ISPMixin",
     "KubeJSMenuMixin",
     "MutableToolTierMixin",
+    "NativeJavaMethodMixin",
     "Noise2DMixin",
     "Noise3DMixin",
     "PlacementContextMixin",

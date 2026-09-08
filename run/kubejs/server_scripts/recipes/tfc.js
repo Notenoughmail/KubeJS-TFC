@@ -50,7 +50,7 @@ ServerEvents.recipes(e => {
         Fluid.water(40),
         200
     ).seal('minecraft:dirt', 'minecraft:cobblestone')
-        .outputItem(TFC.isp.of('minecraft:cobblestone').addHeat(500))
+        .outputItem(TFC.isp.of('minecraft:cobblestone').addHeat(500).meal({}, { ingredient: 'minecraft:dirt' }))
         .id('kubejs:barrel_sealed');
     tfc.sealed_barrel(
         Fluid.lava(80),

@@ -15,10 +15,9 @@ import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.util.Cast;
-import dev.latvian.mods.rhino.Context;
+import dev.latvian.mods.rhino.*;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.extensions.MutableLevelTier;
-import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.Nutrient;
 import net.dries007.tfc.common.items.ToolItem;
@@ -33,9 +32,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
@@ -270,6 +266,17 @@ public interface Assistant {
             throw new KubeRuntimeException("'%s' must be defined!".formatted(name)).source(source);
         }
         return t;
+    }
+
+    static boolean canBeHandledByDefaultRecordWrapper(Object o) {
+        return switch (o) {
+            case Map<?, ?> $ -> true;
+            case NativeJavaObject $ -> true;
+            case NativeMap $ -> true;
+            case NativeArray $ -> true; // NativeJavaList inherits from NativeJavaObject, thus not here
+            case Callable $ -> true; // I guess I'll allow it...
+            default -> false;
+        };
     }
 
     class Hidden {

@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.builders.misc.ItemStackModifierBuilder;
+import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.glass.GlassOperation;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
@@ -58,6 +59,7 @@ public final class Printer {
 
     public static String stringify(@Nullable Object o) {
         return switch (o) {
+            case String s -> s;
             case MobEffect m -> getId(BuiltInRegistries.MOB_EFFECT, m);
             case Block b -> getId(BuiltInRegistries.BLOCK, b);
             case Item i -> getId(BuiltInRegistries.ITEM, i);
@@ -239,6 +241,13 @@ public final class Printer {
         return appendCollection(collection, this::asComponent);
     }
 
+    public <T> Printer appendMapRaw(Map<?, T> map, BiConsumer<Printer, T> forEach) {
+        return appendMap(map.entrySet().stream().collect(Collectors.toMap(
+                e -> stringify(e.getKey()),
+                Map.Entry::getValue
+        )), forEach);
+    }
+
     public <T> Printer appendMap(Map<String, T> map, BiConsumer<Printer, T> forEach) {
         if (map.isEmpty()) {
             return append(OBJECT_EMPTY);
@@ -350,7 +359,7 @@ public final class Printer {
                     } else if (m instanceof Record r) {
                         final Map<String, Object> map = convertRecordToMap(r);
                         map.put("type", type);
-                        prt.appendMap(map);
+                        prt.recursiveAppend(map);
                     } else {
                         final Map<String, Object> map = Map.of(
                                 "modifier", m,
@@ -457,6 +466,8 @@ public final class Printer {
 
     public Printer recursiveAppend(@Nullable Object object) {
         return switch (object) {
+            case FoodData f -> appendMap(Assistant.foodDataAsMap(f));
+            case Map<?,?> m -> appendMapRaw(m, Printer::recursiveAppend);
             case Record r -> appendMap(convertRecordToMap(r), Printer::recursiveAppend);
             case Collection<?> c -> appendCollection(c, (p, t) -> p.appendIndent().recursiveAppend(t));
             case null -> appendRaw(null); // Linter complains otherwise
