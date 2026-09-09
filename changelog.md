@@ -1,4 +1,4 @@
-### 2.1.0 (W.I.P.)
+### 2.1.0
 - Add support for FirmaLife recipes
 - Add events for creating FirmaLife and Beneath data types
 - FirmaLife and ArborFirmaCraft recipes types and Beneath and FirmaLife data types can now be used in the data type commands (`/kubejs_tfc <search|describe|list_ids>`)
