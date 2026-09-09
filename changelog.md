@@ -10,6 +10,8 @@
   - Also like the majority of the other events, the first param is a map of parameters to values and the second parameter is an optional id
   - The old forms of the methods still exist but will log a warning and will be removed in a future version
   - As always, see the docs for the new form of the methods
+- The models used for `#groundcoverModelShape` in the groundcover block builder have been tweaked to respond semi-automatically to TFC makes to its own groundcover models
+  - The driftwood and stick shapes have been split into several different models
 
 ### 2.0.2
 - The data type commands (`/kubejs_tfc <search|describe|list_ids>`) can now handle *all* TFC recipe types

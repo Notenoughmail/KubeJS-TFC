@@ -19,6 +19,7 @@ StartupEvents.registry('block', e => {
         .texture('minecraft:block/gold_block')
         .collision()
         .ore()
+        .groundcoverModelShape('sea_urchin')
         .withPreexistingItem('minecraft:gold_nugget')
         .hardness(0.1);
     e.create('gc_model_test', 'tfc:groundcover')

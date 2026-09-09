@@ -348,11 +348,10 @@ public class TreeSolver {
     private static boolean containsCorner(BlockPos nextPos, Collection<BlockPos> nextPositions) {
         for (Direction dir0 : Helpers.DIRECTIONS) {
             for (Direction dir1 : Helpers.DIRECTIONS) {
-                if (dir1.getAxis() != dir0.getAxis() && nextPositions.contains(nextPos.offset(
-                        dir0.getStepX() + dir1.getStepX(),
-                        dir0.getStepY() + dir1.getStepZ(),
-                        dir0.getStepZ() + dir1.getStepZ()
-                ))) {
+                if (
+                        dir1.getAxis() != dir0.getAxis() &&
+                        nextPositions.contains(nextPos.offset(dir0.getNormal()).offset(dir1.getNormal()))
+                ) {
                     return true;
                 }
             }

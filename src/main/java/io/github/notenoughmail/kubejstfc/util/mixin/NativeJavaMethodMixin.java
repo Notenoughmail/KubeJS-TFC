@@ -29,7 +29,12 @@ public abstract class NativeJavaMethodMixin {
             at = @At(value = "NEW", target = "()Ljava/lang/StringBuilder;"),
             cancellable = true
     )
-    private static void kubejs_tfc$UseHintsToDisambiguateMethods(Context cx, MemberBox[] methodsOrCtors, Object[] args, CallbackInfoReturnable<Integer> cir) {
+    private static void kubejs_tfc$UseHintsToDisambiguateMethods(
+            Context cx,
+            MemberBox[] methodsOrCtors,
+            Object[] args,
+            CallbackInfoReturnable<Integer> cir
+    ) {
         final Boolean[] potentialRecords = Arrays.stream(args)
                 .map(Assistant::canBeHandledByDefaultRecordWrapper)
                 .toArray(Boolean[]::new);
@@ -47,7 +52,11 @@ public abstract class NativeJavaMethodMixin {
 
     // Only supports methods with one record arg, but that's fine for my use case
     @Unique
-    private static boolean kubejs_tfc$CheckRecordHint(MemberBox box, int argsLength, Boolean[] potentialRecords) {
+    private static boolean kubejs_tfc$CheckRecordHint(
+            MemberBox box,
+            int argsLength,
+            Boolean[] potentialRecords
+    ) {
         if (box.parameters().count() == argsLength && box.getInfo() instanceof CachedMethodInfo info) {
             final RecordIndexHint hint = info.getCached().getAnnotation(RecordIndexHint.class);
             if (hint != null) {

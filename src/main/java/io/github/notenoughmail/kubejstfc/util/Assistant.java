@@ -204,6 +204,25 @@ public interface Assistant {
         return field;
     }
 
+    static <R, P> R invokePrivateMethod(Object object, String methodName, P param) {
+        try {
+            return Cast.to(Hidden.PRIVATE_METHODS
+                    .computeIfAbsent(object.getClass(), $ -> new HashMap<>())
+                    .computeIfAbsent(methodName, n -> {
+                        try {
+                            final Class<?> clazz = object.getClass();
+                            final Method method = clazz.getDeclaredMethod(n, param.getClass());
+                            method.setAccessible(true);
+                            return method;
+                        } catch (Exception exception) {
+                            throw new IllegalArgumentException("Method (%s) with param type (%s) could not be found in %s".formatted(n, param.getClass().getSimpleName(), object.getClass()), exception);
+                        }
+                    }).invoke(object, param));
+        } catch (Exception exception) {
+            throw new RuntimeException("Exception occurred while trying to invoke private method", exception);
+        }
+    }
+
     static <P, R> Stream<R> forAllMethods(Class<?> clazz, P parameter, Class<R> returnType) {
         final Class<P> parameterType = Cast.to(parameter.getClass());
         final Stream.Builder<R> builder = Stream.builder();
@@ -281,6 +300,7 @@ public interface Assistant {
 
     class Hidden {
         static final Map<Class<?>, Map<String, Field>> PRIVATE_FIELDS = new IdentityHashMap<>();
+        static final Map<Class<?>, Map<String, Method>> PRIVATE_METHODS = new IdentityHashMap<>();
         static final Actionable<Map<ResourceLocation, RegistryWood>> WOODS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryMetal>> METALS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryRock>> ROCKS = new Actionable<>();

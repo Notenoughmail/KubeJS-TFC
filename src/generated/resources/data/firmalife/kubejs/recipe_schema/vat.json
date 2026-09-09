@@ -44,9 +44,7 @@
       "name": "length"
     },
     {
-      "type": {
-        "type": "float"
-      },
+      "type": "non_negative_float",
       "alternative_names": [
         "temperature"
       ],

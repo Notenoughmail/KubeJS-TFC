@@ -1,0 +1,8 @@
+{
+  "parent": "tfc:block/groundcover/sphalerite",
+  "textures": {
+    "0": "#all",
+    "1": "#all",
+    "particle": "#all"
+  }
+}
