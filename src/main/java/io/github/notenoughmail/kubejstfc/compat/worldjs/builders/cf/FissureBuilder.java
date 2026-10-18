@@ -1,9 +1,12 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
+import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.FissureDecorationBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.FissureConfig;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +26,7 @@ public class FissureBuilder extends ConfiguredFeatureBuilder.WithFeature<Fissure
     public transient int count, radius, minPieces, maxPieces, maxPieceLength;
     public transient VerticalAnchor anchor;
     @Nullable
-    public transient FissureDecorationBuilder decoration;
+    public transient FissureConfig.Decoration decoration;
 
     public FissureBuilder(ResourceLocation id) {
         super(id, TFCFeatures.FISSURE);
@@ -50,35 +53,38 @@ public class FissureBuilder extends ConfiguredFeatureBuilder.WithFeature<Fissure
 
     @Info("How many fissures to place")
     public FissureBuilder count(int c) {
-        count = assertPositive(c, "count");
+        count = Validations.assertPositive(c, "count");
         return this;
     }
 
     @Info("The size of the area fissures will be placed in")
     public FissureBuilder radius(int r) {
-        radius = assertPositive(r, "radius");
+        radius = Validations.assertPositive(r, "radius");
         return this;
     }
 
     @Info("The number of pieces which make up each fissure")
-    public FissureBuilder pieces(int minCount, int maxCount) {
-        minPieces = assertPositive(minCount, "pieces.minCount");
-        maxPieces = assertPositive(maxCount, "pieces.maxCount");
-        if (minPieces > maxPieces) {
-            throw exception("'pieces.maxCount' must be greater than or equal to 'pieces.minCount'");
-        }
+    public FissureBuilder pieces(Context ctx, int minCount, int maxCount) {
+        maxPieces = Validations.assertPositive(maxCount, "pieces.maxCount");
+        minPieces = Validations.assertNotGreaterThan(
+                Validations.assertPositive(minCount, "pieces.minCount"),
+                maxCount,
+                "pieces.minCount",
+                "pieces.maxCount",
+                ctx
+        );
         return this;
     }
 
     @Info("The max length of a fissure piece")
     public FissureBuilder maxPieceLength(int m) {
-        maxPieceLength = assertPositive(m, "maxPieceLength");
+        maxPieceLength = Validations.assertPositive(m, "maxPieceLength");
         return this;
     }
 
     @Info("Additional decoration properties")
-    public FissureBuilder decoration(FissureDecorationBuilder decoration) {
-        this.decoration = decoration;
+    public FissureBuilder decoration(Context ctx, FissureDecorationBuilder decoration) {
+        this.decoration = decoration.build(ctx);
         return this;
     }
 
@@ -100,7 +106,6 @@ public class FissureBuilder extends ConfiguredFeatureBuilder.WithFeature<Fissure
                 maxPieces,
                 maxPieceLength,
                 Optional.ofNullable(decoration)
-                        .map(FissureDecorationBuilder::build)
         );
     }
 }

@@ -1,14 +1,18 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein;
 
+import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.IndicatorBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
 import net.dries007.tfc.util.collections.IWeighted;
 import net.dries007.tfc.world.feature.vein.IVeinConfig;
+import net.dries007.tfc.world.feature.vein.Indicator;
 import net.dries007.tfc.world.feature.vein.VeinConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -29,7 +33,7 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
 
     public transient Map<Block, IWeighted<BlockState>> states;
     @Nullable
-    public transient IndicatorBuilder indicator;
+    public transient Indicator indicator;
     public transient int rarity, minY, maxY;
     public transient float density;
     public transient boolean projectToSurface, projectOffset, nearLava;
@@ -53,13 +57,13 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
 
     @Info("How often the vein will place, will be approximately 1/r chunks")
     public VeinBuilder<V> rarity(int r) {
-        rarity = assertPositive(r, "rarity");
+        rarity = Validations.assertPositive(r, "rarity");
         return this;
     }
 
     @Info("Within a vein, how much of the base rock should be replaced with ore, in the range [0, 1]")
     public VeinBuilder<V> density(float d) {
-        density = assertUnit(d, "density");
+        density = Validations.assertUnit(d, "density");
         return this;
     }
 
@@ -94,16 +98,8 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
     }
 
     @Info("The properties for this vein's indicators")
-    public VeinBuilder<V> indicator(IndicatorBuilder indicator) {
-        this.indicator = validate(indicator, i -> {
-            if (i.depth() < 1)
-                return "'indicator.depth' must be > 0";
-            if (i.undergroundRarity() < 1)
-                return "'indicator.undergroundRarity' must be > 0";
-            if (i.states().isEmpty())
-                return "'indicator.states' cannot be empty";
-            return null;
-        });
+    public VeinBuilder<V> indicator(Context ctx, IndicatorBuilder indicator) {
+        this.indicator = indicator.build("indicator", SourceLine.of(ctx));
         return this;
     }
 
@@ -117,8 +113,7 @@ public abstract class VeinBuilder<V extends IVeinConfig> extends ConfiguredFeatu
     protected VeinConfig baseConfig() {
         return new VeinConfig(
                 states,
-                Optional.ofNullable(indicator)
-                        .map(IndicatorBuilder::build),
+                Optional.ofNullable(indicator),
                 rarity,
                 density,
                 minY,

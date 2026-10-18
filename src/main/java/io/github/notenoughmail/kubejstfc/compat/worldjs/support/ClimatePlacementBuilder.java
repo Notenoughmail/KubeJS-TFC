@@ -3,12 +3,12 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.support;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.chunkdata.ForestType;
 import net.dries007.tfc.world.placement.ClimatePlacement;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Function;
 
 @ReturnsSelf
 public record ClimatePlacementBuilder(
@@ -52,29 +52,21 @@ public record ClimatePlacementBuilder(
             List.of()
     );
 
-    @HideFromJS
-    public <T extends Throwable> void verify(@Nullable String methodName, Function<String, T> throwable) throws T {
-        if (minForestDensity < 0)
-            throw throwable.apply(err(methodName, "minForestDensity"));
-        if (maxForestDensity < 0)
-            throw throwable.apply(err(methodName, "maxForestDensity"));
-    }
-
-    private static String err(@Nullable String method, String arg) {
-        final String name = method == null ?
-                arg :
-                method + "." + arg;
-        return "'" + name + "' must be >= 0";
+    private static String name(@Nullable String method, String param) {
+        return method == null ?
+                param :
+                method + "." + param;
     }
 
     @HideFromJS
-    public ClimatePlacement build() {
+    public ClimatePlacement build(@Nullable String methodName) {
         return new ClimatePlacement(
                 minTemp, maxTemp,
                 minGroundwater, maxGroundwater,
                 minRainVariance, maxRainVariance,
                 absoluteRainVariance,
-                minForestDensity, maxForestDensity,
+                Validations.assertNonNegative(minForestDensity, name(methodName, "minForestDensity")),
+                Validations.assertNonNegative(maxForestDensity, name(methodName, "maxForestDensity")),
                 forestTypes,
                 minElevation, maxElevation,
                 fuzzy,

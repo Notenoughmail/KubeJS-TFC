@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;

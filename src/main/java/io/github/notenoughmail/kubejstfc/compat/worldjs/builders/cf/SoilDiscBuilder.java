@@ -1,8 +1,9 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.SoilDiscConfig;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.minecraft.resources.ResourceLocation;
@@ -36,20 +37,20 @@ public class SoilDiscBuilder extends ConfiguredFeatureBuilder.WithFeature<SoilDi
 
     @Info("The radius of the disc")
     public SoilDiscBuilder radius(int min, int max) {
-        minRadius = assertPositive(min, "radius.min");
-        maxRadius = assertPositive(max, "radius.max");
+        minRadius = Validations.assertPositive(min, "radius.min");
+        maxRadius = Validations.assertPositive(max, "radius.max");
         return this;
     }
 
     @Info("The height of the disc")
     public SoilDiscBuilder height(int h) {
-        height = assertRange(h, 0, 256, "height");
+        height = Validations.assertRange(h, 0, 256, "height");
         return this;
     }
 
     @Info("The integrity, in the range [0, 1], of the disc")
     public SoilDiscBuilder integrity(float i) {
-        integrity = assertUnit(i, "integrity");
+        integrity = Validations.assertUnit(i, "integrity");
         return this;
     }
 

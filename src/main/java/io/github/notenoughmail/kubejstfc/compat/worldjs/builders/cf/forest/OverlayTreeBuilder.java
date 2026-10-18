@@ -1,9 +1,10 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.OverlayTreeConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,7 @@ public class OverlayTreeBuilder extends TreeBuilder<OverlayTreeConfig> {
 
     @Info("The integrity, in the range [0, 1], of the overlay structure")
     public OverlayTreeBuilder overlayIntegrity(float o) {
-        integrity = assertUnit(o, "overlayIntegrity");
+        integrity = Validations.assertUnit(o, "overlayIntegrity");
         return this;
     }
 
@@ -45,7 +46,6 @@ public class OverlayTreeBuilder extends TreeBuilder<OverlayTreeConfig> {
                 integrity,
                 treePlacement,
                 Optional.ofNullable(roots)
-                        .map(TreeRootBuilder::build)
         );
     }
 }

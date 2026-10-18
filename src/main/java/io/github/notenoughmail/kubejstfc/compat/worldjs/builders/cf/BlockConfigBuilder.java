@@ -1,8 +1,9 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.BlockConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -27,12 +28,12 @@ public class BlockConfigBuilder<B extends Block> extends ConfiguredFeatureBuilde
 
     @Info("The block to place")
     public BlockConfigBuilder<B> block(Block block) {
-        if (blockClass.isInstance(block)) {
-            this.block = blockClass.cast(block);
-        } else {
-            throw exception("Block must be an instance of %s".formatted(blockClass))
-                    .customData("block", block);
-        }
+        this.block = blockClass.cast(Validations.validate(
+                block,
+                blockClass::isInstance,
+                b -> exception("'block' must be an instance of %s".formatted(blockClass))
+                        .customData("given block", block)
+        ));
         return this;
     }
 

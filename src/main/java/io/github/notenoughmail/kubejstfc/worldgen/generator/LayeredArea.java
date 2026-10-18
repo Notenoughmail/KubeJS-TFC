@@ -3,11 +3,13 @@ package io.github.notenoughmail.kubejstfc.worldgen.generator;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.dries007.tfc.world.layer.SmoothLayer;
 import net.dries007.tfc.world.layer.ZoomLayer;
 import net.dries007.tfc.world.layer.framework.*;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+@ReturnsSelf
 public class LayeredArea extends ConcurrentArea<Integer> {
 
     private final MutableObject<AreaFactory> mutableFactory;
@@ -31,19 +33,17 @@ public class LayeredArea extends ConcurrentArea<Integer> {
             @Param(name = "seed", value = "The seed to use")
     })
     public LayeredArea zoom(boolean fuzzy, long seed) {
-        mutableFactory.setValue((fuzzy ? ZoomLayer.FUZZY : ZoomLayer.NORMAL).apply(seed, mutableFactory.getValue()));
-        return this;
+        return transform(fuzzy ? ZoomLayer.FUZZY : ZoomLayer.NORMAL, seed);
     }
 
     @Info("Applies a smoothing layer to this area")
     public LayeredArea smooth(long seed) {
-        mutableFactory.setValue(SmoothLayer.INSTANCE.apply(seed, mutableFactory.getValue()));
-        return this;
+        return transform(SmoothLayer.INSTANCE, seed);
     }
 
     @Info(value = "Applies an arbitrary transform layer to this area", params = {
             @Param(name = "transformer", value = "The transformer function"),
-            @Param(name = "The seed to use")
+            @Param(name = "seed", value = "The seed to use")
     })
     public LayeredArea transform(TransformLayer transformer, long seed) {
         mutableFactory.setValue(transformer.apply(seed, mutableFactory.getValue()));
@@ -55,8 +55,7 @@ public class LayeredArea extends ConcurrentArea<Integer> {
             @Param(name = "seed", value = "The seed to use")
     })
     public LayeredArea adjacentTransform(AdjacentTransformLayer transformer, long seed) {
-        mutableFactory.setValue(transformer.apply(seed, mutableFactory.getValue()));
-        return this;
+        return transform(transformer, seed);
     }
 
     @Info(value = "Merges this LayeredArea with the other LayeredArea using the provided merge function", params = {

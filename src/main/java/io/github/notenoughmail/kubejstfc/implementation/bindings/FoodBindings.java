@@ -3,13 +3,13 @@ package io.github.notenoughmail.kubejstfc.implementation.bindings;
 import dev.latvian.mods.kubejs.typings.Info;
 import net.dries007.tfc.common.component.Bowl;
 import net.dries007.tfc.common.component.TFCComponents;
-import net.dries007.tfc.common.component.food.FoodCapability;
-import net.dries007.tfc.common.component.food.FoodDefinition;
-import net.dries007.tfc.common.component.food.FoodTrait;
-import net.dries007.tfc.common.component.food.IFood;
+import net.dries007.tfc.common.component.food.*;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public enum FoodBindings {
     INSTANCE;
@@ -93,5 +93,13 @@ public enum FoodBindings {
     @Info("Sets the `tfc:bowl` component of the stack as the bowl stack")
     public void setBowl(ItemStack stack, ItemStack bowlStack) {
         stack.set(TFCComponents.BOWL.get(), Bowl.of(bowlStack));
+    }
+
+    public ItemStack applyFakeFoodData(ItemStack stack) {
+        if (stack.has(TFCComponents.FOOD)) {
+            return stack;
+        }
+        stack.set(TFCComponents.FOOD, new FoodComponent(null, List.of(), Optional.empty(), IFood.TRANSIENT_NEVER_DECAY_FLAG));
+        return stack;
     }
 }

@@ -1,7 +1,8 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.vein.DiscVeinConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -20,13 +21,13 @@ public class DiscVeinBuilder extends VeinBuilder<DiscVeinConfig> {
 
     @Info("The radius of the vein")
     public DiscVeinBuilder size(int s) {
-        size = assertPositive(s, "size");
+        size = Validations.assertPositive(s, "size");
         return this;
     }
 
     @Info("The height of the vein")
     public DiscVeinBuilder height(int h) {
-        height = assertPositive(h, "height");
+        height = Validations.assertPositive(h, "height");
         return this;
     }
 

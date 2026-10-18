@@ -66,4 +66,16 @@ ServerEvents.recipes(e => {
             decayModifier: 0.9
         }
     ).id('kubejs:bowl_pot_0');
+
+    e.smoking(
+		TFC.data.food.applyTrait(
+            TFC.data.food.applyFakeFoodData('firmalife:food/pineapple'),
+            'firmalife:dried'
+        ),
+        TFC.ingredient.and(
+            'firmalife:food/pineapple',
+            TFC.ingredient.notRotten(),
+            TFC.ingredient.lacksTrait('firmalife:dried')
+        )
+    )
 })

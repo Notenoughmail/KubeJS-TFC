@@ -27,9 +27,11 @@ import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,6 +67,16 @@ public interface Assistant {
 
     static void toolItemAttributes(HandheldItemBuilder builder) {
         builder.itemAttributeModifiers = ToolItem.productAttributes(builder.toolTier, builder.attackDamageBaseline, builder.speedBaseline);
+    }
+
+    static void captureBuilders(@Nullable List<BuilderBase<?>> builders) {
+        Hidden.CAPTURED_BUILDERS = builders;
+    }
+
+    static <R> void registerBuilder(SourceLine source, ResourceKey<Registry<R>> reg, BuilderBase<R> builder) {
+        builder.sourceLine = source;
+        builder.registryKey = reg;
+        Hidden.CAPTURED_BUILDERS.add(builder);
     }
 
     @Nullable
@@ -304,6 +316,7 @@ public interface Assistant {
         static final Actionable<Map<ResourceLocation, RegistryWood>> WOODS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryMetal>> METALS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryRock>> ROCKS = new Actionable<>();
+        static List<BuilderBase<?>> CAPTURED_BUILDERS = null;
     }
 
     @FunctionalInterface

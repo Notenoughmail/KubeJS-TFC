@@ -1,6 +1,8 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
+import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.util.ServerRegistryHolderSet;
@@ -21,10 +23,8 @@ public class ForestBuilder extends ConfiguredFeatureBuilder.WithFeature<ForestCo
     }
 
     @Info("The forest entries to place")
-    public ForestBuilder entries(ServerRegistryHolderSet<ConfiguredFeature<?, ?>> entries) {
-        this.entries = entries.verify(() -> {
-            throw exception("'entries' should not be empty");
-        });
+    public ForestBuilder entries(Context ctx, ServerRegistryHolderSet<ConfiguredFeature<?, ?>> entries) {
+        this.entries = entries.convertWithValidation("entries", SourceLine.of(ctx));
         return this;
     }
 

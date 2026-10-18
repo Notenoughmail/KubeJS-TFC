@@ -40,7 +40,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
             if (ops instanceof RegistryOps<T> regOps && regOps.delegate instanceof JsonOps) {
                 return a.map(settings -> {
                     if (KubeJSTFCEventHandlers.defaultWorldSettings.hasListeners()) {
-                        final KubeDefaultWorldSettingsEvent event = new KubeDefaultWorldSettingsEvent(settings);
+                        final KubeDefaultWorldSettingsEvent event = new KubeDefaultWorldSettingsEvent(settings, regOps.getter(RockSettings.KEY).orElseThrow(() -> new IllegalStateException("Missing '%s' registry".formatted(RockSettings.KEY.location()))));
                         KubeJSTFCEventHandlers.defaultWorldSettings.post(event);
                         final Settings modified = event.build();
                         KubeJSTFC.debugWarning("Modified worldgen settings: {}", () -> Settings.CODEC.encoder().encodeStart(ops, modified).getOrThrow());
@@ -61,7 +61,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
 
         @Override
         public String toString() {
-            return "KubeJS TFC: TFC Settings Transformer";
+            return "KubeJS TFC | Settings Transformer";
         }
     };
 
@@ -81,9 +81,9 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
     private final List<String> bottom, oceanFloor, land, volcanic, uplift;
     private final List<RockLayerSettings.LayerData> layers;
     private final RockLayerSettings oldRockLayerSettings;
-    private final RegistryAccessContainer current;
+    private final HolderGetter<RockSettings> rockGetter;
 
-    public KubeDefaultWorldSettingsEvent(Settings settings) {
+    public KubeDefaultWorldSettingsEvent(Settings settings, HolderGetter<RockSettings> rockGetter) {
         flatBedrock = settings.flatBedrock();
         spawnDistance = settings.spawnDistance();
         spawnCenterX = settings.spawnCenterX();
@@ -107,35 +107,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
         uplift = new ArrayList<>(data.uplift());
         layers = new ArrayList<>();
         data.layers().forEach(layerData -> layers.add(new RockLayerSettings.LayerData(layerData.id(), new HashMap<>(layerData.layers()))));
-        current = RegistryAccessContainer.current;
-        RegistryAccessContainer.current = new RegistryAccessContainer(new RegistryAccess.Frozen() {
-
-            final HolderOwner<RockSettings> rockOwner = new HolderOwner<>() {
-                @Override
-                public boolean canSerializeIn(HolderOwner<RockSettings> owner) {
-                    return true;
-                }
-            };
-            final Registry<RockSettings> rockReg = new MappedRegistry<>(RockSettings.KEY, Lifecycle.experimental()) {
-                @Override
-                public HolderOwner<RockSettings> holderOwner() {
-                    return rockOwner;
-                }
-            };
-
-            @Override
-            public <E> Optional<Registry<E>> registry(ResourceKey<? extends Registry<? extends E>> registryKey) {
-                if (registryKey == rockReg.key()) {
-                    return Cast.to(Optional.of(rockReg));
-                }
-                return current.access().registry(registryKey);
-            }
-
-            @Override
-            public Stream<RegistryEntry<?>> registries() {
-                return current.access().registries();
-            }
-        });
+        this.rockGetter = rockGetter;
     }
 
     @Info("Sets if the world should have flat bedrock, defaults to false")
@@ -269,8 +241,8 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
             @Param(name = "rock", value = "The id of the `RockSettings` to add"),
             @Param(name = "bottom", value = "If the rock should be added as a 'bottom' layer rock")
     })
-    public void addRock(String name, Holder.Reference<RockSettings> rock, boolean bottom) {
-        rocks.put(name, rock);
+    public void addRock(String name, ResourceKey<RockSettings> rock, boolean bottom) {
+        rocks.put(name, rockGetter.getOrThrow(rock));
         if (bottom) {
             this.bottom.add(name);
         }
@@ -452,10 +424,5 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
                 grassDensity,
                 finiteContinents
         );
-    }
-
-    @Override
-    public void afterPosted(EventResult result) {
-        RegistryAccessContainer.current = current;
     }
 }

@@ -1,8 +1,10 @@
 package io.github.notenoughmail.kubejstfc.compat.worldjs.support;
 
+import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
 import net.dries007.tfc.world.feature.tree.RootConfig;
 import net.dries007.tfc.world.stateprovider.SpecialRootPlacer;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 public record TreeRootBuilder(
         @Info("The root blocks to place, mapped from the block they replace")
@@ -30,12 +33,16 @@ public record TreeRootBuilder(
 ) {
 
     @HideFromJS
-    public RootConfig build() {
+    public RootConfig build(String name, Function<String, KubeRuntimeException> exception) {
+        if (blocks.isEmpty())
+            throw exception.apply("'%s.blocks' must not be empty!".formatted(name));
+        if (skewChance != null)
+            Validations.assertUnit(skewChance, "%s.skewChance".formatted(name));
         return new RootConfig(
                 WorldgenPlugin.weightedTFC(blocks),
-                width,
-                height,
-                tries,
+                Validations.assertPositive(width, "%s.width".formatted(name)),
+                Validations.assertPositive(height, "%s.height".formatted(name)),
+                Validations.assertPositive(tries, "%s.tries".formatted(name)),
                 Optional.ofNullable(skewChance)
                         .map(SpecialRootPlacer::new),
                 required

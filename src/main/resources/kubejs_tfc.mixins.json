@@ -21,6 +21,7 @@
     "Noise3DMixin",
     "PlacementContextMixin",
     "SelfTestsMixin",
+    "ServerScriptManagerMixin",
     "StructureMixin",
     "StructureMixin$StructureStartMixin",
     "TFCChunkGeneratorMixin",

@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.Context;
@@ -9,11 +9,13 @@ import io.github.notenoughmail.kubejstfc.compat.worldjs.support.ClimatePlacement
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
 import io.github.notenoughmail.worldjs.builders.base.PlacedFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.ForestConfig;
+import net.dries007.tfc.world.placement.ClimatePlacement;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +32,8 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     private static final ResourceLocation TFC_FOREST_TREES = KubeJSTFC.tfc("forest_trees");
 
-    public transient ClimatePlacementBuilder climate;
+    @Nullable
+    public transient ClimatePlacement climate;
     @Nullable
     public transient BlockState bushLog, bushLeaves, fallenLog, fallenLeaves;
     @Nullable
@@ -43,7 +46,6 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     public ForestEntryBuilder(ResourceLocation id) {
         super(id, TFCFeatures.FOREST_ENTRY);
-        climate = ClimatePlacementBuilder.DEFAULT;
         oldGrowthChance = 6;
         spoilerOldGrowthChance = 200;
         fallenChance = 14;
@@ -52,8 +54,7 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     @Info("The climate conditions this forest entry can spawn in")
     public ForestEntryBuilder climate(ClimatePlacementBuilder placement) {
-        placement.verify("climate", this::exception);
-        climate = placement;
+        climate = placement.build("climate");
         return  this;
     }
 
@@ -66,17 +67,21 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     @Info("The fallen tree blocks")
     public ForestEntryBuilder fallen(BlockState log, BlockState leaves) {
-        if (!(log.hasProperty(TFCBlockStateProperties.NATURAL) || log.hasProperty(BlockStateProperties.AXIS))) {
-            throw exception("Fallen log block must have axis and natural properties")
-                    .customData("axis property", BlockStateProperties.AXIS)
-                    .customData("natural property", TFCBlockStateProperties.NATURAL);
-        }
-        if (!leaves.hasProperty(FallenLeavesBlock.LAYERS)) {
-            throw exception("Fallen leaves block must have layers property")
-                    .customData("layer property", FallenLeavesBlock.LAYERS);
-        }
-        fallenLog = log;
-        fallenLeaves = leaves;
+        fallenLog = Validations.validate(
+                log,
+                s -> s.hasProperty(TFCBlockStateProperties.NATURAL) && s.hasProperty(BlockStateProperties.AXIS),
+                (BlockState s) -> exception("'fallen.log' state must have axis and natural properties")
+                        .customData("axis property", BlockStateProperties.AXIS)
+                        .customData("natural property", TFCBlockStateProperties.NATURAL)
+                        .customData("given state", s)
+        );
+        fallenLeaves = Validations.validate(
+                leaves,
+                s -> s.hasProperty(FallenLeavesBlock.LAYERS),
+                (BlockState s) -> exception("'fallen.leaves' must have layers property")
+                        .customData("layers property", FallenLeavesBlock.LAYERS)
+                        .customData("given state", s)
+        );
         return this;
     }
 
@@ -113,13 +118,13 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
 
     @Info("The chance, 1/C, that any given tree will instead be an old growth tree")
     public ForestEntryBuilder oldGrowthChance(int chance) {
-        oldGrowthChance = assertPositive(chance, "oldGrowthChance");
+        oldGrowthChance = Validations.assertPositive(chance, "oldGrowthChance");
         return this;
     }
 
     @Info("The extra chance, 1/C, that any given tree will instead be an old growth tree")
     public ForestEntryBuilder spoilerOldGrowthChance(int chance) {
-        spoilerOldGrowthChance = assertPositive(chance, "chance");
+        spoilerOldGrowthChance = Validations.assertPositive(chance, "chance");
         return this;
     }
 
@@ -155,7 +160,9 @@ public class ForestEntryBuilder extends ConfiguredFeatureBuilder.WithFeature<For
     @Override
     public ForestConfig.Entry createFeatureConfiguration() {
         return new ForestConfig.Entry(
-                climate.build(),
+                climate == null ?
+                        ClimatePlacementBuilder.DEFAULT.build(null) :
+                        climate,
                 Optional.ofNullable(bushLog),
                 Optional.ofNullable(bushLeaves),
                 Optional.ofNullable(fallenLog),

@@ -1,3 +1,10 @@
+## 2.1.1 (W.I.P.)
+- Add `TFC.data.food.applyFakeFoodData(ItemStack)` to apply an uninitialized food data object to the stack so various food properties (such as traits) can be modified before components are first applied (i.e. in the recipe event)
+- Expand WorldJS compatability, bumping the minimum required version of WorldJS (if present) to 1.1.1
+  - Add `tfc:overworld` and `kubejs_tfc:wrapped` chunk generator sub builders
+  - Add `tfc:region` biome source sub builder
+- Fix `#addRock` being unable to retrieve rock settings from the registry in the world modification event
+
 ### 2.1.0
 - Add support for FirmaLife recipes
 - Add events for creating FirmaLife and Beneath data types

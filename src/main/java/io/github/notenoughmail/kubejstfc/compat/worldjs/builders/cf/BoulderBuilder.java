@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;

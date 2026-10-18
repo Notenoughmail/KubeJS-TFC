@@ -1,7 +1,8 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.vein.PipeVeinConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,7 @@ public class PipeVeinBuilder extends VeinBuilder<PipeVeinConfig> {
 
     @Info("The radius of the pipe")
     public PipeVeinBuilder radius(int r) {
-        radius = assertPositive(r, "radius");
+        radius = Validations.assertPositive(r, "radius");
         return this;
     }
 
@@ -52,7 +53,7 @@ public class PipeVeinBuilder extends VeinBuilder<PipeVeinConfig> {
 
     @Info("The sign of the slant")
     public PipeVeinBuilder sign(float s) {
-        sign = assertUnit(s, "sign");
+        sign = Validations.assertUnit(s, "sign");
         return this;
     }
 

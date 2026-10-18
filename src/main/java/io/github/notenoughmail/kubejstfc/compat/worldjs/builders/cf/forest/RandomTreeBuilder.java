@@ -1,4 +1,4 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
@@ -34,7 +34,6 @@ public class RandomTreeBuilder extends TreeBuilder<RandomTreeConfig> {
                 Optional.ofNullable(trunk),
                 treePlacement,
                 Optional.ofNullable(roots)
-                        .map(TreeRootBuilder::build)
         );
     }
 }

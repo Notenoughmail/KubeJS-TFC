@@ -1,11 +1,14 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.FissureDecorationBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
+import net.dries007.tfc.world.feature.FissureConfig;
 import net.dries007.tfc.world.feature.HotSpringConfig;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +29,7 @@ public class HotSpringBuilder extends ConfiguredFeatureBuilder.WithFeature<HotSp
     public transient BlockState fluidState;
     public transient int radius;
     @Nullable
-    public transient FissureDecorationBuilder decoration;
+    public transient FissureConfig.Decoration decoration;
     public transient boolean allowUnderwater;
     @Nullable
     public transient Map<Block, List<WeightedValue<BlockState>>> replaceOnFluidContact;
@@ -51,13 +54,13 @@ public class HotSpringBuilder extends ConfiguredFeatureBuilder.WithFeature<HotSp
 
     @Info("The radius, in the range [1, 16], of the hot spring")
     public HotSpringBuilder radius(int r) {
-        radius = assertRange(r, 1, 16, "range");
+        radius = Validations.assertRange(r, 1, 16, "range");
         return this;
     }
 
     @Info("Additional decoration properties")
-    public HotSpringBuilder decoration(FissureDecorationBuilder decoration) {
-        this.decoration = decoration;
+    public HotSpringBuilder decoration(Context ctx, FissureDecorationBuilder decoration) {
+        this.decoration = decoration.build(ctx);
         return this;
     }
 
@@ -79,8 +82,7 @@ public class HotSpringBuilder extends ConfiguredFeatureBuilder.WithFeature<HotSp
                 Optional.ofNullable(wallState),
                 fluidState,
                 radius,
-                Optional.ofNullable(decoration)
-                        .map(FissureDecorationBuilder::build),
+                Optional.ofNullable(decoration),
                 allowUnderwater,
                 Optional.ofNullable(replaceOnFluidContact)
                         .map(WorldgenPlugin::weightedTFC)

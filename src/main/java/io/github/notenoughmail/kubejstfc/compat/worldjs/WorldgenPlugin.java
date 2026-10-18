@@ -9,14 +9,26 @@ import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.RecordDefaultsRegistry;
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.type.TypeInfo;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.*;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest.*;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.ClusterVeinBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.DiscVeinBuilder;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein.PipeVeinBuilder;
+import io.github.notenoughmail.kubejstfc.KubeJSTFC;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.bs.ExtensionBuilderMarker;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.bs.RegionBiomeSourceBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.*;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest.*;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein.ClusterVeinBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein.DiscVeinBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein.PipeVeinBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cg.TFCChunkGeneratorBuilder;
+import io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cg.WrappedChunkGeneratorBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.*;
+import io.github.notenoughmail.worldjs.WorldJS;
+import io.github.notenoughmail.worldjs.builders.base.BiomeSourceBuilder;
+import io.github.notenoughmail.worldjs.builders.base.ChunkGeneratorBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.builders.base.SubBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
+import io.github.notenoughmail.worldjs.util.event.BiomeSourceTypeRegisterEvent;
+import io.github.notenoughmail.worldjs.util.event.ChunkGeneratorTypeRegisterEvent;
 import io.github.notenoughmail.worldjs.util.event.PlacedFeatureModifierEvent;
 import io.github.notenoughmail.worldjs.util.synmethod.Args;
 import io.github.notenoughmail.worldjs.util.synmethod.Method;
@@ -30,8 +42,12 @@ import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.dries007.tfc.world.placement.*;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -49,6 +65,29 @@ import static io.github.notenoughmail.kubejstfc.KubeJSTFC.tfc;
 import static io.github.notenoughmail.worldjs.util.Types.*;
 
 public class WorldgenPlugin implements KubeJSPlugin {
+
+    public static final SubBuilder.SubBuilderMap<
+            ResourceLocation,
+            BiomeSourceBuilder<?>,
+            BiomeSource
+            > BIOME_SOURCE_EXTENSION_TYPES = WorldJS.BIOME_SOURCE_TYPES.forDifferentMethod(
+                    TFCChunkGeneratorBuilder.class,
+                    "biomeSource",
+                    null,
+                    type -> ExtensionBuilderMarker.class.isAssignableFrom(type.type().asClass())
+            );
+    public static final SubBuilder.SubBuilderMap<
+            ResourceKey<LevelStem>,
+            ChunkGeneratorBuilder<?>,
+            ChunkGenerator
+            > WRAPPED_CHUNK_GENERATOR_TYPES = WorldJS.CHUNK_GENERATOR_TYPES.forDifferentMethod(
+            WrappedChunkGeneratorBuilder.class,
+            "wrappedGenerator",
+            b -> {
+                b.idParam("generatorType");
+                b.consumerParam("generatorBuilder");
+            }
+    );
 
     public static <T> IWeighted<T> weightedTFC(List<WeightedValue<T>> values) {
         return switch (values.size()) {
@@ -71,6 +110,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
     @Override
     public void init() {
         NeoForge.EVENT_BUS.addListener(this::addPlacementModifiers);
+        NeoForge.EVENT_BUS.addListener(this::registerChunkGenerators);
+        NeoForge.EVENT_BUS.addListener(this::registerBiomeSources);
     }
 
     @Override
@@ -187,34 +228,29 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         "shallowWater",
                         event.arg("minDepth", INT, "The minimum depth of water required")
                                 .arg("maxDepth", INT, "The maximum depth of water permitted"),
-                        a -> {
-                            final int min = i(a[0]), max = i(a[1]);
-                            if (min < 1 || max < 1)
-                                throw new IllegalArgumentException("'minDepth' and 'maxDepth' must be positive");
-                            return new ShallowWaterPlacement(min, max);
-                        },
+                        a -> new ShallowWaterPlacement(
+                                Validations.assertPositive(i(a[0]), "minDepth"),
+                                Validations.assertPositive(i(a[1]), "maxDepth")
+                        ),
                         "Add a 'tfc:shallow_water' modifier"
                 )
                 .register(
                         "nearFluid",
                         event.arg(nfr = event.singleArg("radius", INT, "The radius to check for fluid"))
                                 .arg("fluids", TypeInfo.RAW_LIST.withParams(TypeInfo.of(Fluid.class)), "The fluids to consider"),
-                        a -> {
-                            final int r = i(a[0]);
-                            if (r < 0)
-                                throw new IllegalArgumentException("'radius' must be non-negative");
-                            return new NearFluidPlacement(r, c(a[1]));
-                        },
+                        a -> new NearFluidPlacement(
+                                Validations.assertNonNegative(i(a[0]), "radius"),
+                                c(a[1])
+                        ),
                         "Add a 'tfc:near_fluid' modifier"
                 )
                 .<Integer>registerSingleArg(
                         "nearFluid",
                         nfr,
-                        i -> {
-                            if (i < 0)
-                                throw new IllegalArgumentException("'radius' must be non-negative");
-                            return new NearFluidPlacement(i, null);
-                        },
+                        i -> new NearFluidPlacement(
+                                Validations.assertNonNegative(i, "radius"),
+                                null
+                        ),
                         "Add a 'tfc:near_fluid' modifier that considers all fluids"
                 )
                 .register(
@@ -241,15 +277,11 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         event.arg("flatness", float.class, "The minimum flatness of the checked area")
                                 .arg("radius", INT, "The horizontal distance to check")
                                 .arg("maxDepth", INT, "The depth below the initial position to check"),
-                        a -> {
-                            final float f = f(a[0]);
-                            final int r = i(a[1]), d = i(a[2]);
-                            if (f < 0 || f > 1)
-                                throw new IllegalArgumentException("'flatness' must be in the range [0, 1]");
-                            if ( r < 1 || d < 1)
-                                throw new IllegalArgumentException("'radius' and 'maxDepth' must be positive");
-                            return new FlatEnoughPlacement(f, r, d);
-                        },
+                        a -> new FlatEnoughPlacement(
+                                Validations.assertUnit(f(a[0]), "flatness"),
+                                Validations.assertPositive(i(a[1]), "radius"),
+                                Validations.assertPositive(i(a[2]), "maxDepth")
+                        ),
                         "Add a 'tfc:flat_enough' modifier"
                 )
                 .registerSingleArg(
@@ -257,10 +289,7 @@ public class WorldgenPlugin implements KubeJSPlugin {
                         "climate",
                         ClimatePlacementBuilder.class,
                         "The climate restrictions",
-                        builder -> {
-                            builder.verify(null, IllegalArgumentException::new);
-                            return builder.build();
-                        },
+                        builder -> builder.build(null),
                         "Add a 'tfc:climate' modifier"
                 )
                 .register(
@@ -305,6 +334,27 @@ public class WorldgenPlugin implements KubeJSPlugin {
         // }
     }
 
+    private void registerChunkGenerators(ChunkGeneratorTypeRegisterEvent event) {
+        event.register(
+                KubeJSTFC.tfc("overworld"),
+                TFCChunkGeneratorBuilder.class,
+                TFCChunkGeneratorBuilder::new
+        );
+        event.register(
+                KubeJSTFC.id("wrapped"),
+                WrappedChunkGeneratorBuilder.class,
+                WrappedChunkGeneratorBuilder::new
+        );
+    }
+
+    private void registerBiomeSources(BiomeSourceTypeRegisterEvent event) {
+        event.register(
+                KubeJSTFC.tfc("region"),
+                RegionBiomeSourceBuilder.class,
+                RegionBiomeSourceBuilder::new
+        );
+    }
+
     private static int i(Object o) {
         return (int) o;
     }
@@ -319,9 +369,8 @@ public class WorldgenPlugin implements KubeJSPlugin {
 
     private static <M extends CenterOrDistanceToPlacement<?>> Method<Object[], PlacementModifier> centerOrDistMinMax(Function3<Boolean, Float, Float, M> constructor) {
         return o -> {
-            final float min = f(o[0]), max = f(o[1]);
-            if (min < 0 || max < 0 || min > 1 || max > 1)
-                throw new IllegalArgumentException("'minEasing' and 'maxEasing' must be in the range [0, 1]");
+            final float min = Validations.assertUnit(f(o[0]), "minEasing");
+            final float max = Validations.assertUnit(f(o[1]), "maxEasing");
             if (min > max)
                 throw new IllegalArgumentException("'maxEasing' must be greater than 'minEasing'");
             return constructor.apply(false, min, max);

@@ -248,6 +248,14 @@ ServerEvents.recipes(e => {
         TFC.ingredient.fluidContents(Fluid.lava(50)),
         TFC.isp.copyInputStack().addHeat(500)
     ).id('kubejs:advanced_shapeless_crafting')
+    tfc.advanced_shapeless_crafting(
+        TFC.isp.of('tfc:ceramic/jug').addSimpleModifier('kubejs:copy_fluid'),
+        [
+            TFC.ingredient.fluidContents('minecraft:milk', 50),
+            '#tfc:foods/sweeteners'
+        ],
+        TFC.ingredient.fluidContents('minecraft:milk', 50)
+    ).id('kubejs:ism_test')
     tfc.shapeless(
         'minecraft:dirt',
         [

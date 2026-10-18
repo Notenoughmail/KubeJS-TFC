@@ -1,8 +1,9 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.plant.KrummholzBlock;
 import net.dries007.tfc.world.feature.TFCFeatures;
@@ -30,14 +31,13 @@ public class KrummholzBuilder extends ConfiguredFeatureBuilder.WithFeature<Krumm
 
     @Info("The krummholz block to place")
     public KrummholzBuilder krummholz(Block k) {
-        final Collection<Property<?>> props = k.getStateDefinition().getProperties();
-        if (!props.contains(KrummholzBlock.TIP) || !props.contains(KrummholzBlock.BOTTOM)) {
-            throw exception("Krummholz block must have tip and bottom block properties!")
-                    .customData("tip property", KrummholzBlock.TIP)
-                    .customData("bottom property", KrummholzBlock.BOTTOM)
-                    .customData("lacking block", k);
-        }
-        block = k;
+        block = Validations.validate(k, b -> {
+            final Collection<Property<?>> props = b.getStateDefinition().getProperties();
+            return props.contains(KrummholzBlock.TIP) && props.contains(KrummholzBlock.BOTTOM);
+        }, (Block b) -> exception("Krummholz block must have tip and bottom block properties!")
+                .customData("tip property", KrummholzBlock.TIP)
+                .customData("bottom property", KrummholzBlock.BOTTOM)
+                .customData("given block", b));
         return this;
     }
 

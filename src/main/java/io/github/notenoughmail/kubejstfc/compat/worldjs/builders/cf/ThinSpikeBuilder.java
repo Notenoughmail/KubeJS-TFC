@@ -1,14 +1,18 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.ThinSpikeBlock;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.cave.ThinSpikeConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.Predicate;
 
 @ReturnsSelf
 public class ThinSpikeBuilder extends ConfiguredFeatureBuilder.WithFeature<ThinSpikeConfig> {
@@ -26,32 +30,38 @@ public class ThinSpikeBuilder extends ConfiguredFeatureBuilder.WithFeature<ThinS
 
     @Info("Set the state to place")
     public ThinSpikeBuilder state(BlockState state) {
-        if (!state.hasProperty(ThinSpikeBlock.TIP)) {
-            throw exception("Block must have tip property")
-                    .customData("required property", ThinSpikeBlock.TIP)
-                    .customData("given block(state)", state);
-        }
-        this.state = state;
+        this.state = Validations.validate(
+                state,
+                (Predicate<BlockState>) s -> s.hasProperty(ThinSpikeBlock.TIP),
+                s -> exception("Block must have tip property")
+                        .customData("required property", ThinSpikeBlock.TIP)
+                        .customData("given block(state)", s)
+        );
         return this;
     }
 
     @Info("Set the radius of spike placement")
     public ThinSpikeBuilder radius(int r) {
-        radius = assertRange(r, 1, 16, "radius");
+        radius = Validations.assertRange(r, 1, 16, "radius");
         return this;
     }
 
     @Info("How many times to attempt to place spikes")
     public ThinSpikeBuilder tries(int t) {
-        tries = assertPositive(t, "tries");
+        tries = Validations.assertPositive(t, "tries");
         return this;
     }
 
     @Info("The minimum and maximum heights of individual spikes")
-    public ThinSpikeBuilder height(int min, int max) {
-        minHeight = assertPositive(min, "height.min");
-        maxHeight = assertPositive(max, "height.max");
-        validate(maxHeight >= minHeight, b -> b ? null : "'height.max' must be greater than or equal to 'height.min'");
+    public ThinSpikeBuilder height(Context ctx, int min, int max) {
+        maxHeight = Validations.assertPositive(max, "height.max");
+        minHeight = Validations.assertNotGreaterThan(
+                Validations.assertPositive(min, "height.min"),
+                max,
+                "height.min",
+                "height.max",
+                ctx
+        );
         return this;
     }
 

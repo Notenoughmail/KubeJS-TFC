@@ -18,9 +18,22 @@ StartupEvents.registry('tfc:chisel_mode', e => {
         .priority(0);
 })
 
+const FluidHelpers = Java.loadClass('net.dries007.tfc.common.fluids.FluidHelpers')
+
 StartupEvents.registry('tfc:item_stack_modifiers', e => {
     e.create('modifier')
-        .applicator((s, i, c) => 'minecraft:air');
+        .applicator((s, c) => 'minecraft:air');
+    e.create('copy_fluid')
+        .applicatorWithInput((s, i, c) => {
+            console.warn(s);
+            console.warn(i);
+            if (i.item.hasTag('tfc:fluid_item_ingredient_empty_containers')) {
+                let fluid = FluidHelpers.getContainedFluid(i);
+                console.warn(fluid)
+                s.set('tfc:fluid', { content: Fluid.of('minecraft:water', 60) });
+            }
+            return s;
+        })
 })
 
 StartupEvents.registry('tfc:glass_operation', e => {

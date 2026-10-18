@@ -1,7 +1,8 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.vein;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.vein;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.vein.ClusterVeinConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,7 @@ public class ClusterVeinBuilder extends VeinBuilder<ClusterVeinConfig> {
 
     @Info("The size of the vein")
     public ClusterVeinBuilder size(int s) {
-        size = assertPositive(s, "size");
+        size = Validations.assertPositive(s, "size");
         return this;
     }
 

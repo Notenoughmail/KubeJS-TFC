@@ -1,9 +1,12 @@
-package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.forest;
+package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
 import io.github.notenoughmail.worldjs.builders.base.ConfiguredFeatureBuilder;
+import io.github.notenoughmail.worldjs.util.Validations;
+import net.dries007.tfc.world.feature.tree.RootConfig;
 import net.dries007.tfc.world.feature.tree.TreePlacementConfig;
 import net.dries007.tfc.world.feature.tree.TrunkConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +24,7 @@ public abstract class TreeBuilder<FC extends FeatureConfiguration> extends Confi
     @Nullable
     public transient TrunkConfig trunk;
     @Nullable
-    public transient TreeRootBuilder roots;
+    public transient RootConfig roots;
     public transient TreePlacementConfig treePlacement;
 
     public TreeBuilder(ResourceLocation id, Supplier<? extends Feature<FC>> feature) {
@@ -30,20 +33,25 @@ public abstract class TreeBuilder<FC extends FeatureConfiguration> extends Confi
     }
 
     @Info("The trunk properties")
-    public TreeBuilder<FC> trunk(TrunkConfig trunk) {
-        this.trunk = trunk;
+    public TreeBuilder<FC> trunk(Context ctx, TrunkConfig trunk) {
+        this.trunk = validateTrunk(ctx, trunk);
         return this;
+    }
+
+    protected TrunkConfig validateTrunk(Context ctx, TrunkConfig trunk) {
+        Validations.assertNotGreaterThan(
+                trunk.minHeight(),
+                trunk.maxHeight(),
+                "trunk.minHeight",
+                "trunk.maxHeight",
+                ctx
+        );
+        return trunk;
     }
 
     @Info("The root system properties")
     public TreeBuilder<FC> roots(TreeRootBuilder roots) {
-        validate(roots.blocks(), b -> b.isEmpty() ? "'roots.blocks' must not be empty!" : null);
-        assertPositive(roots.width(), "roots.width");
-        assertPositive(roots.height(), "roots.height");
-        assertPositive(roots.tries(), "roots.tries");
-        if (roots.skewChance() != null)
-            assertUnit(roots.skewChance(), "roots.skewChance");
-        this.roots = roots;
+        this.roots = roots.build("roots", this::exception);
         return this;
     }
 

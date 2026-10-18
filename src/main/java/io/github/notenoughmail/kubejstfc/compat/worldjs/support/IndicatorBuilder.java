@@ -1,8 +1,10 @@
 package io.github.notenoughmail.kubejstfc.compat.worldjs.support;
 
+import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
+import io.github.notenoughmail.worldjs.util.Validations;
 import io.github.notenoughmail.worldjs.util.WeightedValue;
 import net.dries007.tfc.world.feature.vein.Indicator;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,13 +25,15 @@ public record IndicatorBuilder(
 ) {
 
     @HideFromJS
-    public Indicator build() {
+    public Indicator build(String name, SourceLine source) {
         return new Indicator(
-                depth <= 0 ? 1 : depth,
-                rarity,
-                undergroundRarity <= 0 ? 1 : undergroundRarity,
+                Validations.assertPositive(depth, "%s.depth".formatted(name)),
+                Validations.assertPositive(rarity, "%s.rarity".formatted(name)),
+                Validations.assertPositive(undergroundRarity, "%s.undergroundRarity".formatted(name)),
                 undergroundCount,
-                WorldgenPlugin.weightedTFC(states)
+                WorldgenPlugin.weightedTFC(
+                        Validations.notEmpty(states, "%s.states".formatted(name), source)
+                )
         );
     }
 }

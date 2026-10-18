@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.support;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
+import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.Seed;
 import net.dries007.tfc.world.placement.StratovolcanoPlacement;
 import net.dries007.tfc.world.volcano.VolcanoVariant;
@@ -50,22 +51,18 @@ public record StratovolcanoBuilder(
     public StratovolcanoPlacement build() throws IllegalArgumentException {
         if (!VOLCANO_VARIANTS.contains(variant))
             throw new IllegalArgumentException("Unknown 'variant' %s. Known variants: %s".formatted(variant, VOLCANO_VARIANTS));
-        if (minEasing < 0 || maxEasing < 0 || minEasing > 1 || maxEasing > 1)
-            throw new IllegalArgumentException("'minEasing' and 'maxEasing' must be in the range [0, 1]");
         if (minEasing > maxEasing)
             throw new IllegalArgumentException("'maxEasing' must be greater than 'minEasing'");
-        if (hashMin < 0 || hashMax < 0 || hashMin > 1 || hashMax > 1)
-            throw new IllegalArgumentException("'hashMin' and 'hashMax' must be in the range [0, 1]");
         if (hashMin > hashMax)
             throw new IllegalArgumentException("'hashMax' must be greater than 'hashMin'");
         return new StratovolcanoPlacement(
                 center,
                 useOffsetCenter,
                 variant,
-                minEasing,
-                maxEasing,
-                hashMin,
-                hashMax
+                Validations.assertUnit(minEasing, "stratovolcano.minEasing"),
+                Validations.assertUnit(maxEasing, "stratovolcano.maxEasing"),
+                Validations.assertUnit(hashMin, "stratovolcano.hashMin"),
+                Validations.assertUnit(hashMax, "stratovolcano.hashMax")
         );
     }
 }
