@@ -34,7 +34,11 @@ import java.util.function.Predicate;
 @Mixin(Structure.class)
 public abstract class StructureMixin {
 
-    @ModifyVariable(method = "generate", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(
+            method = "generate",
+            at = @At("HEAD"),
+            argsOnly = true
+    )
     private ChunkGenerator kubejs_tfc$UseWrapperGen(ChunkGenerator value) {
         return WrappedChunkGenerator.getWrapper(value);
     }
@@ -42,7 +46,11 @@ public abstract class StructureMixin {
     @Mixin(StructureStart.class)
     public static abstract class StructureStartMixin {
 
-        @ModifyVariable(method = "placeInChunk", at = @At("HEAD"), argsOnly = true)
+        @ModifyVariable(
+                method = "placeInChunk",
+                at = @At("HEAD"),
+                argsOnly = true
+        )
         private ChunkGenerator kubejs_tfc$UseWrapperGen(ChunkGenerator value) {
             return WrappedChunkGenerator.getWrapper(value);
         }

@@ -28,7 +28,7 @@ public abstract class SelfTestsMixin {
                 message.append("\n    ");
                 message.append(RegistryUtils.stringify(t));
             });
-            ConsoleJS.SERVER.error(message.toString());
+            KubeJSTFC.serverOrStartupConsole().error(message.toString());
             if (KubeJSTFC.deduplicateConsoleErrors) {
                 cir.setReturnValue(!errors.isEmpty());
             }
@@ -44,7 +44,7 @@ public abstract class SelfTestsMixin {
                 message.append("\n    ");
                 message.append(RegistryUtils.stringify(t));
             });
-            ConsoleJS.SERVER.warn(message.toString());
+            KubeJSTFC.serverOrStartupConsole().warn(message.toString());
             if (KubeJSTFC.deduplicateConsoleErrors) {
                 cir.setReturnValue(!error.isEmpty());
             }

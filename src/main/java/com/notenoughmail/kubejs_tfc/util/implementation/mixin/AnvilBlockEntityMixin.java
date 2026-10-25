@@ -24,7 +24,11 @@ public abstract class AnvilBlockEntityMixin extends InventoryBlockEntity<AnvilBl
         super(type, pos, state, inventoryFactory, defaultName);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/dries007/tfc/common/blockentities/InventoryBlockEntity$InventoryFactory;Lnet/minecraft/network/chat/Component;)V", remap = false, at = @At("TAIL"))
+    @Inject(
+            method = "<init>(Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/dries007/tfc/common/blockentities/InventoryBlockEntity$InventoryFactory;Lnet/minecraft/network/chat/Component;)V",
+            at = @At("TAIL"),
+            remap = false
+    )
     private void kubejs_tfc$CustomTitle(BlockEntityType<?> type, BlockPos pos, BlockState state, InventoryFactory<AnvilBlockEntity.AnvilInventory> inventoryFactory, Component defaultName, CallbackInfo ci) {
         if (state.getBlock() instanceof AnvilBlockBuilder.AnvilBlockJS js && js.getDefaultName() != null) {
             this.defaultName = js.getDefaultName();

@@ -70,7 +70,12 @@ public abstract class GlassOperationMixin {
         CustomGlassOperations.lock();
     }
 
-    @Inject(method = "lambda$static$0", remap = false, at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;", ordinal = 17, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(
+            method = "lambda$static$0",
+            at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;", ordinal = 17, shift = At.Shift.AFTER),
+            locals = LocalCapture.CAPTURE_FAILSOFT,
+            remap = false
+    )
     private static void kubejs_tfc$AddPowders(CallbackInfoReturnable<Map<?,?>> cir, ImmutableMap.Builder<Item, GlassOperation> builder) {
         if (kubejs_tfc$CreateEvent != null && !kubejs_tfc$CreateEvent.powders.isEmpty()) {
             final List<Item> validation = new ArrayList<>();
@@ -107,7 +112,11 @@ public abstract class GlassOperationMixin {
         }
     }
 
-    @ModifyReturnValue(method = "getSound", remap = false, at = @At("RETURN"))
+    @ModifyReturnValue(
+            method = "getSound",
+            remap = false,
+            at = @At("RETURN")
+    )
     private SoundEvent kubejs_tfc$CustomSound(SoundEvent prev) {
         if (prev == SoundEvents.ANVIL_USE) {
             final SoundEvent custom = CustomGlassOperations.getSound((GlassOperation) (Object) this);
@@ -116,7 +125,11 @@ public abstract class GlassOperationMixin {
         return prev;
     }
 
-    @ModifyExpressionValue(method = "hasRequiredTemperature", remap = false, at = @At(value = "INVOKE", target = "Lnet/dries007/tfc/common/capabilities/heat/Heat;getMin()F", remap = false))
+    @ModifyExpressionValue(
+            method = "hasRequiredTemperature",
+            at = @At(value = "INVOKE", target = "Lnet/dries007/tfc/common/capabilities/heat/Heat;getMin()F", remap = false),
+            remap = false
+    )
     private float kubejs_tfc$CustomHeat(float original) {
         final float custom = CustomGlassOperations.getMinHeat((GlassOperation) (Object) this);
         return custom == Float.NEGATIVE_INFINITY ? original : custom;

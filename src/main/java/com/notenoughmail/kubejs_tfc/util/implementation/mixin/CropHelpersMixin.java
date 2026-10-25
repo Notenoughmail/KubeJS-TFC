@@ -16,7 +16,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = CropHelpers.class, remap = false)
 public abstract class CropHelpersMixin {
 
-    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 0), remap = false)
+    @WrapOperation(
+            method = "growthTickStep",
+            at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 0),
+            remap = false
+    )
     private static float kubejs_tfc$ModifyGrowthRate(Double instance, Operation<Float> original, @Local(argsOnly = true) BlockState state) {
         float val = original.call(instance);
         if (state.getBlock() instanceof ICustomCropBlock custom) {
@@ -25,7 +29,11 @@ public abstract class CropHelpersMixin {
         return val;
     }
 
-    @WrapOperation(method = "growthTickStep", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 1), remap = false)
+    @WrapOperation(
+            method = "growthTickStep",
+            at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 1),
+            remap = false
+    )
     private static float kubejs_tfc$ModifyExpiryRate(Double instance, Operation<Float> original, @Local(argsOnly = true) BlockState state) {
         float val = original.call(instance);
         if (state.getBlock() instanceof ICustomCropBlock custom) {

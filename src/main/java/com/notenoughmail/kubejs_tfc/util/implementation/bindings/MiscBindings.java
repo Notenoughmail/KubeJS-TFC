@@ -335,6 +335,16 @@ public enum MiscBindings {
         return func;
     }
 
+    @Info("Creates a new `Noise2D` object that returns a constant value")
+    public Noise2D constantNoise2D(double value) {
+        return (x, z) -> value;
+    }
+
+    @Info("Creates a new `Noise3D` object that returns a constant value")
+    public Noise3D constantNoise3D(double value) {
+        return (x, y, z) -> value;
+    }
+
     @Info("Creates a new layered area from a Noise2D object")
     public LayeredArea layeredAreaFromNoise(Noise2D noise, DoubleToIntFunction rounder, long seed) {
         return layeredArea((ctx, x, z) -> rounder.applyAsInt(noise.noise(x, z)), seed);

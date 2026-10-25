@@ -22,7 +22,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(PlacementContext.class)
 public abstract class PlacementContextMixin {
 
-    @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(
+            method = "<init>",
+            at = @At("HEAD"),
+            argsOnly = true
+    )
     private static ChunkGenerator kubejs_tfc$UseWrapperGen(ChunkGenerator value) {
         return WrappedChunkGenerator.getWrapper(value);
     }

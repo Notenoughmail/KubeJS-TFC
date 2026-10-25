@@ -1,3 +1,7 @@
+### 1.3.6 (W.I.P.)
+- Fix a rare crash when a `RegisteredDataManager` reported missing values outside a server context
+- Add `#asSimpleRocksGetter` to `LayeredArea` as a way to make (simple) `RocksGetter`s that can avoid Rhino's performance costs
+
 ### 1.3.5
 - Allow drinkables to allow drinking while a player is at full thirst
 - Fix crash (introduced in 1.3.4) that occurred when turning custom axles into windmills

@@ -16,7 +16,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = GlassworkingRecipeCategory.class, remap = false)
 public abstract class GlassworkingRecipeCategoryMixin {
 
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap;"), remap = false)
+    @ModifyExpressionValue(
+            method = "<init>",
+            at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap;"),
+            remap = false
+    )
     private ImmutableMap<GlassOperation, ItemStack> kubejs_tfc$test(ImmutableMap<GlassOperation, ItemStack> original) {
         if (CustomGlassOperations.isEmpty()) {
             return original;

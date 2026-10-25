@@ -29,6 +29,8 @@ import dev.architectury.platform.Platform;
 import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.recipe.filter.RecipeFilter;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import dev.latvian.mods.kubejs.server.ServerScriptManager;
+import dev.latvian.mods.kubejs.util.ConsoleJS;
 import dev.latvian.mods.kubejs.util.UtilsJS;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.blocks.rock.Rock;
@@ -234,6 +236,12 @@ public class KubeJSTFC {
             onError.accept(e);
             return orElse;
         }
+    }
+
+    public static ConsoleJS serverOrStartupConsole() {
+        return ServerScriptManager.getScriptManager() == null ?
+                ConsoleJS.STARTUP :
+                ConsoleJS.SERVER;
     }
 
     // Poor man's event bus because scripts are read before the main event bus is started

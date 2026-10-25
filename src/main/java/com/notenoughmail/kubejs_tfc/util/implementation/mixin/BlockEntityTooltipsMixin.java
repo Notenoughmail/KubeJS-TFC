@@ -18,7 +18,11 @@ import java.util.function.Supplier;
 @Mixin(value = BlockEntityTooltips.class, remap = false)
 public abstract class BlockEntityTooltipsMixin {
 
-    @WrapOperation(method = "lambda$tickCounter$31", at = @At(value = "INVOKE", target = "Ljava/util/function/Supplier;get()Ljava/lang/Object;"), remap = false)
+    @WrapOperation(
+            method = "lambda$tickCounter$31",
+            at = @At(value = "INVOKE", target = "Ljava/util/function/Supplier;get()Ljava/lang/Object;"),
+            remap = false
+    )
     private static <T> T kubejs_tfc$CustomTorchDuration(Supplier<T> instance, Operation<T> original, @Local(argsOnly = true) BlockState state) {
         if (state.getBlock() instanceof ICustomTorchBlock c) {
             return (T) (Object) c.getTotalTicks();

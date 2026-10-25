@@ -18,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = TorchItem.class, remap = false)
 public abstract class TorchItemMixin {
 
-    @WrapOperation(method = "onEntityItemUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/registries/RegistryObject;get()Ljava/lang/Object;"), remap = false)
+    @WrapOperation(
+            method = "onEntityItemUpdate",
+            at = @At(value = "INVOKE", target = "Lnet/minecraftforge/registries/RegistryObject;get()Ljava/lang/Object;"),
+            remap = false
+    )
     private <T> T kubejs_tfc$UseFloorBlock(RegistryObject<Block> instance, Operation<Block> original) {
         return (T) ((TorchItem) (Object) this).getBlock();
     }

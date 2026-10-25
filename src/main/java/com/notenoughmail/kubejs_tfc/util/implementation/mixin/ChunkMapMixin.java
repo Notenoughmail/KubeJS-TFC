@@ -21,7 +21,10 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ChunkMap.class)
 public abstract class ChunkMapMixin {
 
-    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;dummy()Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;"))
+    @WrapOperation(
+            method = "<init>",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;dummy()Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;")
+    )
     private NoiseGeneratorSettings kubejs_tfc$UseWrappedNoiseSettings(Operation<NoiseGeneratorSettings> original, @Local(argsOnly = true) ChunkGenerator generator) {
         if (generator instanceof WrappedChunkGenerator w && w.getWrapped() instanceof NoiseBasedChunkGenerator noise) {
             return noise.generatorSettings().get();

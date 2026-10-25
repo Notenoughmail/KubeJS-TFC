@@ -18,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = ChunkDataProvider.class, remap = false)
 public class ChunkDataProviderMixin {
 
-    @WrapOperation(method = "get(Lnet/minecraft/world/level/chunk/ChunkAccess;)Lnet/dries007/tfc/world/chunkdata/ChunkData;", at = @At(value = "INVOKE", target = "Lnet/dries007/tfc/world/chunkdata/ChunkDataGenerator;generate(Lnet/dries007/tfc/world/chunkdata/ChunkData;)V"), remap = false)
+    @WrapOperation(
+            method = "get(Lnet/minecraft/world/level/chunk/ChunkAccess;)Lnet/dries007/tfc/world/chunkdata/ChunkData;",
+            at = @At(value = "INVOKE", target = "Lnet/dries007/tfc/world/chunkdata/ChunkDataGenerator;generate(Lnet/dries007/tfc/world/chunkdata/ChunkData;)V"),
+            remap = false
+    )
     private void kubejs_tfc$GenerateDataWithContext(ChunkDataGenerator instance, ChunkData chunkData, Operation<Void> original, @Local(argsOnly = true)ChunkAccess chunkAccess) {
         if (instance instanceof KubeChunkDataGenerator kube) {
             kube.generatePartialIfNot(chunkData, chunkAccess);

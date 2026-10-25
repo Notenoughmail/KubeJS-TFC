@@ -43,7 +43,11 @@ public abstract class TFCCCMoldItemBuilderExtensions extends ItemBuilder impleme
         return kubejs_tfc$TFCCCAllowedInMoldTable();
     }
 
-    @Inject(method = "generateAssetJsons", at = @At("TAIL"), remap = false)
+    @Inject(
+            method = "generateAssetJsons",
+            at = @At("TAIL"),
+            remap = false
+    )
     private void kubejs_tfc$GenerateMoldTableModel(AssetJsonGenerator generator, CallbackInfo ci) {
         if (kubejs_tfc$model != null) {
             generator.json(kubejs_tfc$MoldTableModelId(), ResourceUtils.buildJson(model -> {

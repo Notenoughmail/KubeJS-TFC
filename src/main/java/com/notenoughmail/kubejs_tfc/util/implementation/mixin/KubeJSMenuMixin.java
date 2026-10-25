@@ -22,7 +22,11 @@ public abstract class KubeJSMenuMixin {
     @Final
     public KubeJSGUI guiData;
 
-    @Inject(method = { "m_7648_", "quickMoveStack" }, at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = { "m_7648_", "quickMoveStack" },
+            at = @At("HEAD"),
+            cancellable = true
+    )
     private void kubejs_tfc$RespectInventoryMutability(Player player, int i, CallbackInfoReturnable<ItemStack> cir) {
         if (!guiData.inventory.kjs$isMutable()) cir.setReturnValue(ItemStack.EMPTY);
     }
