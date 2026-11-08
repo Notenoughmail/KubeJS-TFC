@@ -94,9 +94,9 @@ public class TFCTorchBlockBuilder extends ExtendedPropertiesBlockBuilder {
         lightLevel(14F / 15F); // WTF Kube
         renderType(BlockRenderType.CUTOUT);
         noCollision();
-        dead.onConstruct(BlockBuilder::noCollision);
-        wall.onConstruct(BlockBuilder::noCollision);
-        deadWall.onConstruct(BlockBuilder::noCollision);
+        dead.queue(BlockBuilder::noCollision);
+        wall.queue(BlockBuilder::noCollision);
+        deadWall.queue(BlockBuilder::noCollision);
     }
 
     @Override

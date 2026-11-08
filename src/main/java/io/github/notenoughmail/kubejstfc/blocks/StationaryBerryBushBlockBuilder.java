@@ -71,7 +71,9 @@ public class StationaryBerryBushBlockBuilder extends ExtendedPropertiesBlockBuil
 
     @HideFromJS
     public Supplier<Item> productGetter() {
-        return productItem.isNull() ? product : productItem.get();
+        return productItem.isNull() ?
+                Assistant.notNull(product, "product", sourceLine) :
+                productItem.get();
     }
 
     @Info(value = "Sets the bush's lifecycle for the given month", params = {

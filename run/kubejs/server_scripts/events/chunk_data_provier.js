@@ -89,4 +89,6 @@ TFCEvents.createChunkDataProvider('nether', event => {
 
         return rockLayers.sampleAtLayer(rockLayer.getAt(x, z), layer);
     });
+
+    event.rocks(rockLayer.asSimpleRocksGetter(TFC.noise.constantNoise3D(0), 40))
 })

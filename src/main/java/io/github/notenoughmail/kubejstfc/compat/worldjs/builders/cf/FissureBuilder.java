@@ -1,6 +1,5 @@
 package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf;
 
-import dev.latvian.mods.kubejs.script.SourceLine;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.ReturnsSelf;

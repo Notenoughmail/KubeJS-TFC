@@ -7,17 +7,20 @@ import dev.latvian.mods.kubejs.registry.ModelledBuilderBase;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
+import io.github.notenoughmail.kubejstfc.util.IAcceptRegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.EncasedAxleBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 
 @ReturnsSelf
-public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
+public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder implements IAcceptRegistryWoodBuilder {
 
     private static final String[] TEXTURE_KEYS = { "side", "end", "particle" };
     private static final Map<String, String> OVERLAY_TEXTURES = Map.of(
@@ -30,6 +33,12 @@ public class EncasedAxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
         textures(OVERLAY_TEXTURES);
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.ENCASED_AXLE, this);
+    }
+
+    @Override
+    public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+        builder.accept(this, Wood.BlockType.ENCASED_AXLE);
+        return this;
     }
 
     @Override

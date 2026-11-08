@@ -80,7 +80,7 @@ ServerEvents.registry('worldgen/world_preset', event => {
         )
         .withDimension('minecraft:the_nether', 'minecraft:the_nether', 'kubejs_tfc:wrapped', generator => generator
             .wrappedGenerator('minecraft:noise', wrapped => wrapped
-                .noiseSettings('minecraft:nether')
+                .noiseSettings('kubejs:nether')
                 .biomeSource(
                     'minecraft:fixed',
                     source => source.biome('minecraft:nether_wastes')
@@ -89,16 +89,33 @@ ServerEvents.registry('worldgen/world_preset', event => {
             .key('nether')
             .settings(settings => settings
                 // .withRocks(GEN_ROCKS)
-                .withRock('nether', 'kubejs:netherrack', rock => rock
-                    .raw('minecraft:netherrack')
-                    .hardened('minecraft:blackstone')
-                    .gravel('minecraft:gravel')
-                    .cobble('minecraft:basalt')
-                    .sand('minecraft:soul_sand')
-                    .sandstone('minecraft:soul_soil')
-                )
-                .bottomRocks('nether')
-                .layer('nether', { nether: 'bottom' })
+                .withRock('nether', {
+                    raw: 'minecraft:netherrack',
+                    hardened: 'minecraft:netherrack',
+                    gravel: 'minecraft:netherrack',
+                    cobble: 'minecraft:netherrack',
+                    sand: 'minecraft:netherrack',
+                    sandstone: 'minecraft:netherrack'
+                })
+                .withRock('nether2', {
+                    raw: 'minecraft:basalt',
+                    hardened: 'minecraft:basalt',
+                    gravel: 'minecraft:basalt',
+                    cobble: 'minecraft:basalt',
+                    sand: 'minecraft:basalt',
+                    sandstone: 'minecraft:basalt'
+                })
+                .withRock('nether3', {
+                    raw: 'minecraft:blackstone',
+                    hardened: 'minecraft:blackstone',
+                    gravel: 'minecraft:blackstone',
+                    cobble: 'minecraft:blackstone',
+                    sand: 'minecraft:blackstone',
+                    sandstone: 'minecraft:blackstone'
+                })
+                .bottomRocks('nether3')
+                .layer('nether2', { nether2: 'bottom' })
+                .layer('nether', { nether: 'nether2' })
                 .oceanFloorLayers('nether')
                 .landLayers('nether')
                 .volcanicLayers('nether')
@@ -107,4 +124,60 @@ ServerEvents.registry('worldgen/world_preset', event => {
         )
         .addToNormalPresetList()
         .asDefaultPreset()
+})
+
+ServerEvents.registry('worldgen/noise_settings', e => {
+    e.create('kubejs:nether')
+        .defaults('minecraft:stone', 'minecraft:lava')
+        .surfaceRule({
+            type: 'kubejs_tfc:rock',
+            rock_block: 'hardened',
+            fallback_state: 'minecraft:stone'
+        })
+        .noiseRouter({
+            barrierNoise: 0,
+            fluidLevelFloodednessNoise: 0,
+            fluidLevelSpreadNoise: 0,
+            lavaNoise: 0,
+            temperature: {
+                shifted_noise: {
+                    shift_x: 'minecraft:shift_x',
+                    shift_y: 0,
+                    shift_z: 'minecraft:shift_z',
+                    xz_scale: 0.25,
+                    y_scale: 0,
+                    noise: 'minecraft:temperature'
+                }
+            },
+            vegetation: {
+                shifted_noise: {
+                    shift_x: 'minecraft:shift_x',
+                    shift_y: 0,
+                    shift_z: 'minecraft:shift_z',
+                    xz_scale: 0.25,
+                    y_scale: 0,
+                    noise: 'minecraft:vegetation'
+                }
+            },
+            continents: 0,
+            erosion: 0,
+            depth: 0,
+            ridges: 0,
+            initialDensityWithoutJaggedness: 0,
+            finalDensity: {
+                squeeze: {
+                    mul: {
+                        first: {
+                            interpolated: {
+                                shift: 'minecraft:jagged' // I am NOT figuring out what is happening in the nether here
+                            }
+                        },
+                        second: 0.64
+                    }
+                }
+            },
+            veinToggle: 0,
+            veinRidged: 0,
+            veinGap: 0
+        })
 })

@@ -2,7 +2,6 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.RandomTreeConfig;
 import net.minecraft.resources.ResourceLocation;

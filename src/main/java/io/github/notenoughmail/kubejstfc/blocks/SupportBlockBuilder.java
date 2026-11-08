@@ -11,11 +11,14 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.HorizontalSupportBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.item.StandingAndWallBlockItemBuilder;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
+import io.github.notenoughmail.kubejstfc.util.IAcceptRegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.VerticalSupportBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +27,7 @@ import java.util.function.Consumer;
 
 @ReturnsSelf
 @SuppressWarnings("unused")
-public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
+public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder implements IAcceptRegistryWoodBuilder {
 
     private static final ResourceLocation CONNECTION = KubeJSTFC.tfc("block/wood/support/connection");
     private static final ResourceLocation VERTICAL = KubeJSTFC.tfc("block/wood/support/vertical");
@@ -58,6 +61,13 @@ public class SupportBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info("Sets the properties of the horizontal support block")
     public SupportBlockBuilder horizontal(@Nullable KubeResourceLocation id, Consumer<HorizontalSupportBlockBuilder> horizontalSupport) {
         horizontal.accept(id, horizontalSupport);
+        return this;
+    }
+
+    @Override
+    public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+        builder.accept(this, Wood.BlockType.VERTICAL_SUPPORT);
+        horizontal.queue(b -> builder.accept(b, Wood.BlockType.HORIZONTAL_SUPPORT));
         return this;
     }
 

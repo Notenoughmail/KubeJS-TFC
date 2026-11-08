@@ -9,11 +9,14 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.util.KubeResourceLocation;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
+import io.github.notenoughmail.kubejstfc.util.IAcceptRegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.LogBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.component.TFCComponents;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
@@ -26,10 +29,7 @@ import java.util.function.Consumer;
 @ReturnsSelf
 public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
-    protected static final DelayedBuilder.NullCapable<LogBlockBuilder> NULL_INSTANCE = Util.make(new DelayedBuilder.NullCapable<>(
-            r -> null,
-            TFCComponents.EGG::getId
-    ), DelayedBuilder.NullCapable::markNull);
+    protected static final DelayedBuilder.NullCapable<LogBlockBuilder> NULL_INSTANCE = DelayedBuilder.startingNull(r -> null, TFCComponents.EGG::getId);
 
     private static final ResourceLocation[] LOGS = {
             BlockTags.LOGS.location(),
@@ -97,7 +97,10 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @ReturnsSelf
-    public static class UnStripped extends LogBlockBuilder {
+    public static class UnStripped extends LogBlockBuilder implements IAcceptRegistryWoodBuilder {
+
+        @Nullable
+        public transient RegistryWoodBuilder wood;
 
         public UnStripped(ResourceLocation i) {
             super(i, new DelayedBuilder.NullCapable<>(
@@ -114,6 +117,20 @@ public class LogBlockBuilder extends ExtendedPropertiesBlockBuilder {
         public UnStripped stripped(@Nullable KubeResourceLocation id, @Nullable Consumer<LogBlockBuilder> builder) {
             stripped.accept(id, builder);
             return this;
+        }
+
+        @Override
+        public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+            builder.accept(this, Wood.BlockType.LOG);
+            wood = builder;
+            return this;
+        }
+
+        @Override
+        public Block createObject() {
+            if (wood != null)
+                stripped.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.STRIPPED_LOG));
+            return super.createObject();
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 public class Actionable<T> implements Consumer<T> {
 
     private List<Consumer<T>> actions = new ArrayList<>();
-    private T actor;
+    protected T actor;
 
     public void queue(Consumer<T> action) {
         if (actions == null) {

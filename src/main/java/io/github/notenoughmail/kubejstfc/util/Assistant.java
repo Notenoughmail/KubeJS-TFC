@@ -27,15 +27,14 @@ import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,16 +68,6 @@ public interface Assistant {
         builder.itemAttributeModifiers = ToolItem.productAttributes(builder.toolTier, builder.attackDamageBaseline, builder.speedBaseline);
     }
 
-    static void captureBuilders(@Nullable List<BuilderBase<?>> builders) {
-        Hidden.CAPTURED_BUILDERS = builders;
-    }
-
-    static <R> void registerBuilder(SourceLine source, ResourceKey<Registry<R>> reg, BuilderBase<R> builder) {
-        builder.sourceLine = source;
-        builder.registryKey = reg;
-        Hidden.CAPTURED_BUILDERS.add(builder);
-    }
-
     @Nullable
     static <T> Supplier<T> holderAsSupplier(@Nullable Holder<T> holder) {
         return mapNull(holder, h -> h::value);
@@ -95,7 +84,7 @@ public interface Assistant {
             if (type instanceof ParticleOptions options) {
                 return options;
             }
-            ConsoleJS.SERVER.error("'%s' is not a ParticleOptions".formatted(holder));
+            serverOrStartupConsole().error("'%s' is not a ParticleOptions".formatted(holder));
             return null;
         });
     }
@@ -105,7 +94,7 @@ public interface Assistant {
             try {
                 return particle.get();
             } catch (Exception e) {
-                ConsoleJS.SERVER.error("Could not parse particle options", e);
+                serverOrStartupConsole().error("Could not parse particle options", e);
                 return null;
             }
         });
@@ -265,13 +254,13 @@ public interface Assistant {
         void handle(T t) throws EventExit;
     }
 
-    static <K, V> Supplier<Map<K, V>> unmodifiable(Supplier<Map<K, V>> constructor, Consumer<Map<K, V>> builder) {
+    static <K, V> Supplier<Map<K, V>> unmodifiableView(Supplier<Map<K, V>> constructor, Consumer<Map<K, V>> builder) {
         return Suppliers.memoize(() -> Collections.unmodifiableMap(Util.make(constructor.get(), builder)));
     }
 
-    Supplier<Map<ResourceLocation, RegistryWood>> WOODS = unmodifiable(HashMap::new, Hidden.WOODS);
-    Supplier<Map<ResourceLocation, RegistryMetal>> METALS = unmodifiable(HashMap::new, Hidden.METALS);
-    Supplier<Map<ResourceLocation, RegistryRock>> ROCKS = unmodifiable(HashMap::new, Hidden.ROCKS);
+    Supplier<Map<ResourceLocation, RegistryWood>> WOODS = unmodifiableView(HashMap::new, Hidden.WOODS);
+    Supplier<Map<ResourceLocation, RegistryMetal>> METALS = unmodifiableView(HashMap::new, Hidden.METALS);
+    Supplier<Map<ResourceLocation, RegistryRock>> ROCKS = unmodifiableView(HashMap::new, Hidden.ROCKS);
 
     static void registerWoods(MapBuilder<RegistryWood> reg) {
         Hidden.WOODS.queue(reg);
@@ -310,13 +299,18 @@ public interface Assistant {
         };
     }
 
+    static ConsoleJS serverOrStartupConsole() {
+        return ServerLifecycleHooks.getCurrentServer() == null ?
+                ConsoleJS.STARTUP :
+                ConsoleJS.SERVER;
+    }
+
     class Hidden {
         static final Map<Class<?>, Map<String, Field>> PRIVATE_FIELDS = new IdentityHashMap<>();
         static final Map<Class<?>, Map<String, Method>> PRIVATE_METHODS = new IdentityHashMap<>();
         static final Actionable<Map<ResourceLocation, RegistryWood>> WOODS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryMetal>> METALS = new Actionable<>();
         static final Actionable<Map<ResourceLocation, RegistryRock>> ROCKS = new Actionable<>();
-        static List<BuilderBase<?>> CAPTURED_BUILDERS = null;
     }
 
     @FunctionalInterface

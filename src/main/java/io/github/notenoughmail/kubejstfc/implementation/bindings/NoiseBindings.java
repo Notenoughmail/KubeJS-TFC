@@ -37,7 +37,7 @@ public enum NoiseBindings {
         return new Cellular2D(seed);
     }
 
-    @Info("Creates a new Cellular3D moise")
+    @Info("Creates a new Cellular3D noise")
     public Cellular3D cellular3D(long seed) {
         return new Cellular3D(seed);
     }
@@ -65,6 +65,16 @@ public enum NoiseBindings {
     @Info("Casts a JS callback to a full Noise3D object")
     public Noise3D customNoise3D(Noise3D noise) {
         return noise;
+    }
+
+    @Info("Creates a new Noise2D object with a constant value")
+    public Noise2D constantNoise2D(double value) {
+        return (x, z) -> value;
+    }
+
+    @Info("Creates a new Noise3D object with a constant value")
+    public Noise3D constantNoise3D(double value) {
+        return (x, y, z) -> value;
     }
 
     @HideFromJS

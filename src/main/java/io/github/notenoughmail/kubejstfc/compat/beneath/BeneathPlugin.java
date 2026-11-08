@@ -1,6 +1,7 @@
 package io.github.notenoughmail.kubejstfc.compat.beneath;
 
 import com.eerussianguy.beneath.Beneath;
+import com.eerussianguy.beneath.common.blocks.Stem;
 import com.eerussianguy.beneath.common.component.LostPage;
 import com.eerussianguy.beneath.misc.NetherFertilizer;
 import dev.latvian.mods.kubejs.event.EventGroup;
@@ -12,6 +13,7 @@ import dev.latvian.mods.kubejs.script.RecordDefaultsRegistry;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.implementation.DataTypes;
 import io.github.notenoughmail.kubejstfc.registry.KubeJSTFCRegistries;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.commands.DataType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +31,11 @@ public class BeneathPlugin implements KubeJSPlugin {
 
     @Override
     public void init() {
+        Assistant.registerWoods(m -> {
+            for (Stem s: Stem.VALUES) {
+                m.put(Beneath.identifier(s.getSerializedName()), s);
+            }
+        });
         final DeferredRegister<DataType<?>> dataTypes = DeferredRegister.create(KubeJSTFCRegistries.DATA_TYPE_KEY, Beneath.MOD_ID);
         KubeJSTFC.modBus(dataTypes::register);
         dataTypes.register("nether_fertilizer", () -> DataTypes.cachedItemRegistry(

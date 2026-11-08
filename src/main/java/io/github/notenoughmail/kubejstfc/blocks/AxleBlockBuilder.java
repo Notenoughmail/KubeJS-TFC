@@ -12,12 +12,15 @@ import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.blocks.sub.*;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
+import io.github.notenoughmail.kubejstfc.util.IAcceptRegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.rotation.AxleBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @ReturnsSelf
-public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
+public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder implements IAcceptRegistryWoodBuilder {
 
     public static final String[] TEXTURE_KEYS = { "particle", "wood" };
 
@@ -35,19 +38,16 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     public transient final DelayedBuilder.NullCapable<GearBoxBlockBuilder> gearbox;
     public transient final DelayedBuilder.NullCapable<ClutchBlockBuilder> clutch;
     public transient final DelayedBuilder.NullCapable<BladedAxleBlockBuilder> bladedAxle;
+    public transient RegistryWoodBuilder wood;
 
     public AxleBlockBuilder(ResourceLocation i) {
         super(i);
         parentModel(KubeJSTFC.tfc("block/axle"));
         windmill = new DelayedBuilder<>(r ->  new WindmillBlockBuilder(r, this), () -> id.withSuffix("_windmill"));
-        waterwheel = new DelayedBuilder.NullCapable<>(r -> new WaterWheelBlockBuilder(r, this), () -> id.withSuffix("_waterwheel"));
-        waterwheel.markNull();
-        gearbox = new DelayedBuilder.NullCapable<>(r -> new GearBoxBlockBuilder(r, this), () -> id.withSuffix("_gearbox"));
-        gearbox.markNull();
-        clutch = new DelayedBuilder.NullCapable<>(r -> new ClutchBlockBuilder(r, this), () -> id.withSuffix("_clutch"));
-        clutch.markNull();
-        bladedAxle = new DelayedBuilder.NullCapable<>(r -> new BladedAxleBlockBuilder(r, this), () -> id.withSuffix("_bladed"));
-        bladedAxle.markNull();
+        waterwheel = DelayedBuilder.startingNull(r -> new WaterWheelBlockBuilder(r, this), () -> id.withSuffix("_waterwheel"));
+        gearbox = DelayedBuilder.startingNull(r -> new GearBoxBlockBuilder(r, this), () -> id.withSuffix("_gearbox"));
+        clutch = DelayedBuilder.startingNull(r -> new ClutchBlockBuilder(r, this), () -> id.withSuffix("_clutch"));
+        bladedAxle = DelayedBuilder.startingNull(r -> new BladedAxleBlockBuilder(r, this), () -> id.withSuffix("_bladed"));
         texture = id.withPrefix("block/");
         BuilderRefs.hackBlockEntity(TFCBlockEntities.AXLE, this);
     }
@@ -124,7 +124,21 @@ public class AxleBlockBuilder extends ExtendedPropertiesBlockBuilder {
     }
 
     @Override
+    public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+        this.wood = builder;
+        builder.accept(this, Wood.BlockType.AXLE);
+        windmill.queue(b -> builder.accept(b, Wood.BlockType.WINDMILL));
+        return this;
+    }
+
+    @Override
     public Block createObject() {
+        if (wood != null) {
+            waterwheel.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.WATER_WHEEL));
+            gearbox.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.GEAR_BOX));
+            clutch.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.CLUTCH));
+            bladedAxle.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.BLADED_AXLE));
+        }
         return new AxleBlock(createExtendedProperties(), Cast.to(windmill.get()), texture);
     }
 

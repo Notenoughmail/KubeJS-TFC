@@ -64,7 +64,7 @@ public abstract class AbstractCropBlockBuilder extends ExtendedPropertiesBlockBu
                 r -> new BlockItemWithAssetsBuilder(r, b -> PlantableItem.crop(get(), b.createItemProperties(), new PlantableInfo.PlantNutrients(n, p, k), climateRange)),
                 () -> id.withSuffix("_seeds")
         );
-        seeds.onConstruct(s -> s.blockBuilder = this);
+        seeds.queue(s -> s.blockBuilder = this);
         renderType(BlockRenderType.CUTOUT);
         BuilderRefs.hackBlockEntity(TFCBlockEntities.CROP, this);
         itemBuilder = null;

@@ -10,22 +10,23 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 // We want the builder to be final, but the id needs to be user-definable
-public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
+public class DelayedBuilder<T extends BuilderBase<?>> extends Actionable<T> implements Supplier<T> {
 
-    @Nullable
-    protected T builder;
+    public static <T extends BuilderBase<?>> DelayedBuilder.NullCapable<T> startingNull(
+            Function<ResourceLocation, @Nullable T> constructor,
+            Supplier<ResourceLocation> fallbackId
+    ) {
+        final NullCapable<T> nullable = new NullCapable<>(constructor, fallbackId);
+        nullable.markNull();
+        return nullable;
+    }
+
     private final Function<ResourceLocation, T> constructor;
     private final Supplier<ResourceLocation> fallbackId;
-    @Nullable
-    private Consumer<T> onConstruct;
 
     public DelayedBuilder(Function<ResourceLocation, T> constructor, Supplier<ResourceLocation> fallbackId) {
         this.constructor = constructor;
         this.fallbackId = fallbackId;
-    }
-
-    public void onConstruct(Consumer<T> onConstruct) {
-        this.onConstruct = onConstruct;
     }
 
     public ResourceLocation fallbackId() {
@@ -33,14 +34,10 @@ public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
     }
 
     public T get(ResourceLocation id) {
-        if (builder == null) {
-            builder = constructor.apply(id);
+        if (actor == null) {
+            accept(constructor.apply(id));
         }
-        if (onConstruct != null) {
-            onConstruct.accept(builder);
-            onConstruct = null;
-        }
-        return builder;
+        return actor;
     }
 
     public void accept(@Nullable KubeResourceLocation id, Consumer<T> action) {
@@ -63,13 +60,17 @@ public class DelayedBuilder<T extends BuilderBase<?>> implements Supplier<T> {
         }
 
         public void onMarkedNull(Consumer<T> action) {
-            onMarkedNull = action;
+            if (onMarkedNull == null) {
+                onMarkedNull = action;
+            } else {
+                onMarkedNull = onMarkedNull.andThen(action);
+            }
         }
 
         public void markNull() {
             markedNull = true;
-            if (builder != null && onMarkedNull != null) {
-                onMarkedNull.accept(builder);
+            if (actor != null && onMarkedNull != null) {
+                onMarkedNull.accept(actor);
             }
         }
 

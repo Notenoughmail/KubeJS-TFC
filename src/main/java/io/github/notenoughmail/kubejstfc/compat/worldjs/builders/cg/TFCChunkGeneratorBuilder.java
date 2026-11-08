@@ -2,7 +2,6 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cg;
 
 import dev.latvian.mods.kubejs.util.Cast;
 import dev.latvian.mods.rhino.Context;
-import dev.latvian.mods.rhino.type.TypeInfo;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.misc.RockSettingsBuilder;
 import io.github.notenoughmail.kubejstfc.compat.worldjs.WorldgenPlugin;
@@ -11,7 +10,6 @@ import io.github.notenoughmail.worldjs.builders.base.ChunkGeneratorBuilder;
 import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.TFCChunkGenerator;
 import net.dries007.tfc.world.biome.BiomeSourceExtension;
-import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;

@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.util.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
+import io.github.notenoughmail.kubejstfc.util.Assistant;
 import io.github.notenoughmail.kubejstfc.util.Printer;
 import io.github.notenoughmail.kubejstfc.util.TFCProperties;
 import net.dries007.tfc.util.SelfTests;
@@ -27,7 +28,7 @@ public abstract class SelfTestsMixin {
                 message.append("\n    ");
                 message.append(Printer.stringify(t));
             });
-            ConsoleJS.SERVER.error(message.toString());
+            Assistant.serverOrStartupConsole().error(message.toString());
             if (TFCProperties.get().deduplicateSelfTestWarnings) return true;
         }
         return original.call(error, errors, logger);
@@ -42,7 +43,7 @@ public abstract class SelfTestsMixin {
                 message.append("\n    ");
                 message.append(Printer.stringify(t));
             });
-            ConsoleJS.SERVER.error(message.toString());
+            Assistant.serverOrStartupConsole().error(message.toString());
             if (TFCProperties.get().deduplicateSelfTestWarnings) return true;
         }
         return original.call(error, errors, logger);

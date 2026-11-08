@@ -5,6 +5,7 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.RemapPrefixForJS;
 import net.dries007.tfc.world.chunkdata.LerpFloatLayer;
 import net.dries007.tfc.world.noise.Noise2D;
+import net.dries007.tfc.world.noise.Noise3D;
 import net.minecraft.world.level.ChunkPos;
 
 @RemapPrefixForJS("kubejs_tfc$")
@@ -48,5 +49,10 @@ public interface Noise2DExtension {
                 (float) self.noise(x + 1, z),
                 (float) self.noise(x + 1, z + 1)
         );
+    }
+
+    @Info("Promotes this to a 3D noise, ignoring the y coordinate")
+    default Noise3D promoteTo3D() {
+        return (x, y, z) -> kubejs_tfc$self().noise(x, z);
     }
 }

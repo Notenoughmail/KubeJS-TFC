@@ -3,7 +3,6 @@ package io.github.notenoughmail.kubejstfc.compat.worldjs.builders.cf.forest;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
-import io.github.notenoughmail.kubejstfc.compat.worldjs.support.TreeRootBuilder;
 import io.github.notenoughmail.worldjs.util.Validations;
 import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.feature.tree.OverlayTreeConfig;

@@ -37,10 +37,8 @@ public class TFCDirtBlockBuilder extends BlockBuilder {
         super(i);
         Assistant.singleTag(this, TFCTags.Blocks.DIRT);
         grass = new DelayedBuilder<>(r -> new ConnectedGrassBlockBuilder(r, this), () -> id.withSuffix("_grass"));
-        path = new DelayedBuilder.NullCapable<>(r -> new TFCPathBlockBuilder(r, this), () -> id.withSuffix("_path"));
-        path.markNull();
-        farmland = new DelayedBuilder.NullCapable<>(r -> new TFCFarmlandBlockBuilder(r, this), () -> id.withSuffix("_farmland"));
-        farmland.markNull();
+        path = DelayedBuilder.startingNull(r -> new TFCPathBlockBuilder(r, this), () -> id.withSuffix("_path"));
+        farmland = DelayedBuilder.startingNull(r -> new TFCFarmlandBlockBuilder(r, this), () -> id.withSuffix("_farmland"));
         rooted = new DelayedBuilder<>(r -> new TFCRootedDirtBlockBuilder(r, this), () -> id.withSuffix("_rooted"));
         mud = new DelayedBuilder<>(BasicKubeBlock.Builder::new, () -> id.withSuffix("_mud"));
     }

@@ -2,6 +2,7 @@ package io.github.notenoughmail.kubejstfc.compat.afc;
 
 import com.therighthon.afc.AFC;
 import com.therighthon.afc.common.blocks.AFCWood;
+import com.therighthon.afc.common.blocks.TreeSpecies;
 import com.therighthon.afc.common.recipe.AFCRecipeTypes;
 import com.therighthon.afc.common.recipe.TreeTapRecipe;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
@@ -20,6 +21,9 @@ public class AFCPlugin implements KubeJSPlugin {
         Assistant.registerWoods(b -> {
             for (AFCWood w : AFCWood.VALUES) {
                 b.put(Helpers.resourceLocation(AFC.MOD_ID, w.getSerializedName()), w);
+            }
+            for (TreeSpecies s : TreeSpecies.VALUES) {
+                b.put(Helpers.resourceLocation(AFC.MOD_ID, s.getSerializedName()), s);
             }
         });
         final DeferredRegister<DataType<?>> dataTypes = DeferredRegister.create(KubeJSTFCRegistries.DATA_TYPE_KEY, AFC.MOD_ID);

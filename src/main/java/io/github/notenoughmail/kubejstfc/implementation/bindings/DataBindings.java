@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.implementation.bindings;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import dev.latvian.mods.kubejs.typings.Info;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.component.heat.Heat;
@@ -151,5 +152,17 @@ public enum DataBindings {
     @Nullable
     public Deposit getDeposit(ItemStack stack) {
         return Deposit.get(stack);
+    }
+
+    @Info("Gets and, if necessary, creates a new, RegistryWoodBuilder")
+    public RegistryWoodBuilder createOrGetCustomRegistryWood(ResourceLocation id) {
+        final RegistryWood wood = getWoods().get(id);
+        if (wood == null) {
+            return new RegistryWoodBuilder(id); // Registers itself
+        } else if (wood instanceof RegistryWoodBuilder b) {
+            return b;
+        } else {
+            throw new IllegalArgumentException("Cannot create RegistryWoodBuilder with id '%s' as a RegistryWood with that id already exists!".formatted(id));
+        }
     }
 }

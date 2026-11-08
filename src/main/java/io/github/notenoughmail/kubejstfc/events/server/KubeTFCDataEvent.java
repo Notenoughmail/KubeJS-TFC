@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 public class KubeTFCDataEvent extends KubeDataEvent {
 
     private static void deprecated(String methodName, int paramCount) {
-        ConsoleJS.SERVER.warn(".%s() with %s(+1) parameters is deprecated and will be removed in a future version! Please use the form with 1(+1) parameters".formatted(methodName, paramCount));
+        Assistant.serverOrStartupConsole().warn(".%s() with %s(+1) parameters is deprecated and will be removed in a future version! Please use the form with 1(+1) parameters".formatted(methodName, paramCount));
     }
 
     public KubeTFCDataEvent(KubeResourceGenerator gen) {

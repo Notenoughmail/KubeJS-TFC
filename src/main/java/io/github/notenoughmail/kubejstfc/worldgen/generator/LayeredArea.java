@@ -4,9 +4,12 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
+import io.github.notenoughmail.kubejstfc.events.server.KubeChunkDataProviderEvent;
 import net.dries007.tfc.world.layer.SmoothLayer;
 import net.dries007.tfc.world.layer.ZoomLayer;
 import net.dries007.tfc.world.layer.framework.*;
+import net.dries007.tfc.world.noise.FastNoiseLite;
+import net.dries007.tfc.world.noise.Noise3D;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 @ReturnsSelf
@@ -66,6 +69,40 @@ public class LayeredArea extends ConcurrentArea<Integer> {
     public LayeredArea merge(MergeLayer merger, LayeredArea otherLayeredArea, long seed) {
         mutableFactory.setValue(merger.apply(seed, mutableFactory.getValue(), otherLayeredArea.mutableFactory.getValue()));
         return this;
+    }
+
+    @Info(value = "Creates a RocksGetter using this as a randomization source for use with wrapped chunk sources", params = {
+            @Param(name = "skew", value = "The skew function to apply to the x and z coordinates"),
+            @Param(name = "depthAdjustment", value = "A noise function to adjust the depth below surface"),
+            @Param(name = "depthPerLayer", value = "The idealized height of a rock layer in blocks")
+    })
+    public KubeChunkDataProviderEvent.RocksGetter asSimpleRocksGetter(
+          FastNoiseLite skew,
+          Noise3D depthAdjustment,
+          int depthPerLayer
+    ) {
+        return (x, y, z, sY, $, r) -> {
+            final FastNoiseLite.Vector2 pos = new FastNoiseLite.Vector2(x, z);
+            skew.DomainWarp(pos);
+            return r.sampleAtLayer(
+                    getAt((int) pos.x, (int) pos.y),
+                    (int) ((sY - y + depthAdjustment.noise(x, y, z)) / depthPerLayer)
+            );
+        };
+    }
+
+    @Info(value = "Creates a RocksGetter using this as a randomization source for use with wrapped chunk sources", params = {
+            @Param(name = "depthAdjustment", value = "A noise function to adjust the depth below surface"),
+            @Param(name = "depthPerLayer", value = "The idealized height of a rock layer in blocks")
+    })
+    public KubeChunkDataProviderEvent.RocksGetter asSimpleRocksGetter(
+            Noise3D depthAdjustment,
+            int depthPerLayer
+    ) {
+        return (x, y, z, sY, $, r) -> r.sampleAtLayer(
+                getAt(x, z),
+                (int) ((sY -y + depthAdjustment.noise(x, y, z)) / depthPerLayer)
+        );
     }
 
     @HideFromJS

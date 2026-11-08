@@ -1,13 +1,10 @@
 package io.github.notenoughmail.kubejstfc.events.startup;
 
 import com.mojang.serialization.*;
-import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
-import dev.latvian.mods.kubejs.util.Cast;
-import dev.latvian.mods.kubejs.util.RegistryAccessContainer;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import io.github.notenoughmail.kubejstfc.KubeJSTFC;
 import io.github.notenoughmail.kubejstfc.events.KubeJSTFCEventHandlers;
@@ -15,13 +12,13 @@ import io.github.notenoughmail.kubejstfc.util.Assistant;
 import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.dries007.tfc.world.settings.RockSettings;
 import net.dries007.tfc.world.settings.Settings;
-import net.minecraft.core.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Info("""
         Allows for editing of TFC's worldgen values after the `overworld.json` file is read
@@ -406,7 +403,7 @@ public class KubeDefaultWorldSettingsEvent implements KubeEvent {
                                 oldRockLayerSettings,
                                 e -> {
                                     KubeJSTFC.LOGGER.error("Error encountered while parsing rock settings", e);
-                                    ConsoleJS.SERVER.error("""
+                                    Assistant.serverOrStartupConsole().error("""
                                         Error encountered while parsing rock settings:
                                         %s:
                                         %s

@@ -10,11 +10,11 @@ import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.blocks.sub.FallenLeavesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.builders.block.LeavesBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
-import io.github.notenoughmail.kubejstfc.util.Assistant;
-import io.github.notenoughmail.kubejstfc.util.DelayedBuilder;
-import io.github.notenoughmail.kubejstfc.util.ISupplyModels;
-import io.github.notenoughmail.kubejstfc.util.ModelUtil;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
+import io.github.notenoughmail.kubejstfc.util.*;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
+import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 // TODO: 2.1.x | RegistryWood builder that can be applied to ICanUseRegistryWood builders
 @ReturnsSelf
-public class TFCLeavesBlockBuilder extends LeavesBuilder {
+public class TFCLeavesBlockBuilder extends LeavesBuilder implements IAcceptRegistryWoodBuilder {
 
     public transient int autumnIndex;
     @Nullable
@@ -35,6 +35,8 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     public transient boolean seasonalColors;
     public transient float flowerOffset;
     public transient boolean conifer;
+    @Nullable
+    public transient RegistryWoodBuilder wood;
     @Nullable
     public transient BiConsumer<DynamicLeafType, ModelGenerator> dynamicModel;
 
@@ -86,24 +88,48 @@ public class TFCLeavesBlockBuilder extends LeavesBuilder {
     }
 
     @Override
+    public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+        builder.accept(this, Wood.BlockType.LEAVES);
+        wood = builder;
+        return this;
+    }
+
+    @Override
+    public IAcceptRegistryWoodBuilder useTheseValuesForWood() {
+        if (wood != null) {
+            wood.autumnIndex(autumnIndex);
+            wood.flowerOffset(flowerOffset);
+            wood.conifer(conifer);
+        }
+        return this;
+    }
+
+    @Override
     public Block createObject() {
-        // Reg wood is never used outside overridden methods
-        return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), null, fallenLeaves.get(), twig) {
-            @Override
-            public int getAutumnIndex() {
-                return autumnIndex;
-            }
+        if (wood == null) {
+            // Reg wood is never used outside overridden methods
+            return new TFCLeavesBlock(createExtendedProperties().randomTicks().noOcclusion(), null, fallenLeaves.get(), twig) {
+                @Override
+                public int getAutumnIndex() {
+                    return autumnIndex;
+                }
 
-            @Override
-            public float getFlowerOffset() {
-                return flowerOffset;
-            }
+                @Override
+                public float getFlowerOffset() {
+                    return flowerOffset;
+                }
 
-            @Override
-            public boolean isConifer() {
-                return conifer;
-            }
-        };
+                @Override
+                public boolean isConifer() {
+                    return conifer;
+                }
+            };
+        } else {
+            fallenLeaves.ifNotMarkedNull(b -> wood.accept(b, Wood.BlockType.FALLEN_LEAVES));
+            if (twig != null)
+                wood.accept(twig, Wood.BlockType.TWIG);
+            return new TFCLeavesBlock(createExtendedProperties(), wood, fallenLeaves.get(), twig);
+        }
     }
 
     @Override

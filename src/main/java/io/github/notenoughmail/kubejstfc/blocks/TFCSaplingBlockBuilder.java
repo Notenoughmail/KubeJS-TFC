@@ -9,11 +9,14 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.builders.block.ExtendedPropertiesBlockBuilder;
 import io.github.notenoughmail.kubejstfc.registry.BuilderRefs;
+import io.github.notenoughmail.kubejstfc.registry.RegistryWoodBuilder;
+import io.github.notenoughmail.kubejstfc.util.IAcceptRegistryWoodBuilder;
 import io.github.notenoughmail.kubejstfc.util.ModelUtil;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.wood.TFCSaplingBlock;
 import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.util.registry.RegistryWood;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -25,14 +28,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+// TODO: 2.1.x | Potted variant
 @ReturnsSelf
-public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
+public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder implements IAcceptRegistryWoodBuilder {
 
     private static final String[] TEXTURE_KEYS = { "particle", "cross" };
 
     public transient Supplier<Integer> growth;
     public transient TreeGrower treeGrower;
     public transient boolean sand;
+
+    @Nullable
+    public transient RegistryWoodBuilder wood;
 
     public TFCSaplingBlockBuilder(ResourceLocation i) {
         super(i);
@@ -62,6 +69,21 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
     @Info("Sets the number of days, via a supplier, it takes for the sapling to grow")
     public TFCSaplingBlockBuilder growthDaysSupplier(Supplier<Integer> days) {
         growth = days;
+        return this;
+    }
+
+    @Override
+    public IAcceptRegistryWoodBuilder useRegistryWood(RegistryWoodBuilder builder) {
+        builder.accept(this, Wood.BlockType.SAPLING);
+        wood = builder;
+        return this;
+    }
+
+    public IAcceptRegistryWoodBuilder useTheseValuesForWood() {
+        if (wood != null) {
+            wood.treeGrower(treeGrower);
+            wood.ticksToGrowSupplier(growth);
+        }
         return this;
     }
 
@@ -95,7 +117,16 @@ public class TFCSaplingBlockBuilder extends ExtendedPropertiesBlockBuilder {
 
     @Override
     public Block createObject() {
-        return new TFCSaplingBlock(treeGrower, createExtendedProperties(), growth, sand);
+        return new TFCSaplingBlock(
+                wood == null ?
+                        treeGrower :
+                        wood.tree(),
+                createExtendedProperties(),
+                wood == null ?
+                        growth :
+                        wood.ticksToGrow(),
+                sand
+        );
     }
 
     @Override
