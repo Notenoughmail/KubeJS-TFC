@@ -2,7 +2,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
 import com.notenoughmail.kubejs_tfc.util.RegistryUtils;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.util.SelfTests;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;

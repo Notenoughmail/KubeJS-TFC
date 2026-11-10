@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.RemapPrefixForJS;
 import net.dries007.tfc.world.noise.Noise2D;
+import net.dries007.tfc.world.noise.Noise3D;
 
 @RemapPrefixForJS("kubejs_tfc$")
 public interface Noise2DExtension {
@@ -24,5 +25,10 @@ public interface Noise2DExtension {
         if (angle == 0D) return kubejs_tfc$self();
         final double sin = Math.sin(angle), cos = Math.cos(angle);
         return (x, z) -> kubejs_tfc$self().noise(x * cos - z * sin, x * sin + z * cos);
+    }
+
+    @Info("Promotes this to a 3D noise, ignoring the y axis")
+    default Noise3D promoteTo3D() {
+        return (x, y, z) -> kubejs_tfc$self().noise(x, z);
     }
 }

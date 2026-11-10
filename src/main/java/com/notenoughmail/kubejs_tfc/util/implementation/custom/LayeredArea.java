@@ -4,15 +4,11 @@ import com.notenoughmail.kubejs_tfc.event.CreateChunkDataProviderEventJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.kubejs.typings.Param;
 import dev.latvian.mods.rhino.util.HideFromJS;
-import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.dries007.tfc.world.layer.SmoothLayer;
 import net.dries007.tfc.world.layer.ZoomLayer;
 import net.dries007.tfc.world.layer.framework.*;
 import net.dries007.tfc.world.noise.FastNoiseLite;
-import net.dries007.tfc.world.noise.Noise2D;
 import net.dries007.tfc.world.noise.Noise3D;
-import net.dries007.tfc.world.noise.OpenSimplex3D;
-import net.dries007.tfc.world.settings.RockLayerSettings;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 public class LayeredArea extends ConcurrentArea<Integer> {
@@ -91,9 +87,23 @@ public class LayeredArea extends ConcurrentArea<Integer> {
             skew.DomainWarp(pos);
             return s.sampleAtLayer(
                     getAt((int) pos.x, (int) pos.y),
-                    (int) ((sY - y + depthAdjustment.noise(x, y, z)) / depthPerLayer) // Negative numbers should be fine?
+                    (int) ((sY - y + depthAdjustment.noise(x, y, z)) / depthPerLayer)
             );
         };
+    }
+
+    @Info(value = "Creates a `RocksGetter` using this `LayeredArea` as a randomization source for use with wrapped chunk generators", params = {
+            @Param(name = "depthAdjustment", value = "A noise function to adjust the depth below surface"),
+            @Param(name = "depthPerLayer", value = "The idealized height of a rock layer in blocks")
+    })
+    public CreateChunkDataProviderEventJS.RocksGetter asSimpleRocksGetter(
+            Noise3D depthAdjustment,
+            int depthPerLayer
+    ) {
+        return (x, y, z, sY, $, s) -> s.sampleAtLayer(
+                getAt(x, z),
+                (int) ((sY - y + depthAdjustment.noise(x, y, z)) / depthPerLayer)
+        );
     }
 
     @HideFromJS

@@ -3,7 +3,6 @@ package com.notenoughmail.kubejs_tfc.util.implementation.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.notenoughmail.kubejs_tfc.KubeJSTFC;
-import dev.latvian.mods.kubejs.util.ConsoleJS;
 import net.dries007.tfc.util.RegisteredDataManager;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
