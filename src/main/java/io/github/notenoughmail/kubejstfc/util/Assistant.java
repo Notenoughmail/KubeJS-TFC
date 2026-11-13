@@ -249,11 +249,6 @@ public interface Assistant {
         }
     }
 
-    @FunctionalInterface
-    interface KubeHandler<T extends KubeEvent> {
-        void handle(T t) throws EventExit;
-    }
-
     static <K, V> Supplier<Map<K, V>> unmodifiableView(Supplier<Map<K, V>> constructor, Consumer<Map<K, V>> builder) {
         return Suppliers.memoize(() -> Collections.unmodifiableMap(Util.make(constructor.get(), builder)));
     }
@@ -315,4 +310,9 @@ public interface Assistant {
 
     @FunctionalInterface
     interface MapBuilder<T> extends Consumer<Map<ResourceLocation, T>> {}
+
+    @FunctionalInterface
+    interface KubeHandler<T extends KubeEvent> {
+        void handle(T t) throws EventExit;
+    }
 }

@@ -13,19 +13,22 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-@HideFromJS
 @Mixin(ExtendedProperties.class)
 public interface ExtendedPropertiesAccessor {
 
+    @HideFromJS
     @Accessor("blockEntityFactory")
     void kubejs_tfc$SetBlockEntityFactory(BiFunction<BlockPos, BlockState, ? extends BlockEntity> factory);
 
+    @HideFromJS
     @Accessor("blockEntityType")
     void kubejs_tfc$SetBlockEntityType(Supplier<BlockEntityType<?>> type);
 
+    @HideFromJS
     @Accessor("serverTicker")
     void kubejs_tfc$SetServerTick(BlockEntityTicker<?> ticker);
 
+    @HideFromJS
     @Accessor("clientTicker")
     void kubejs_tfc$SetClientTicker(BlockEntityTicker<?> ticker);
 }

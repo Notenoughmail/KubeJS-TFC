@@ -4,6 +4,8 @@
   - Add `tfc:overworld` and `kubejs_tfc:wrapped` chunk generator sub builders
   - Add `tfc:region` biome source sub builder
 - Fix `#addRock` being unable to retrieve rock settings from the registry in the world modification event
+- Add `RegistryWoodBuilder` and related methods to relevant builder types
+- Fix `ExtendedProperties` methods being unusable
 
 ### 2.1.0
 - Add support for FirmaLife recipes

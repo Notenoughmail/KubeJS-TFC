@@ -10,7 +10,8 @@ StartupEvents.registry('block', e => {
     e.create('log_no_stripped', 'tfc:log')
         .texture('side', 'minecraft:block/dirt')
         .texture('end', 'minecraft:block/diorite')
-        .stripped(null);
+        .stripped(null)
+        .extendedProperties(props => props.flammableLikeLogs());
 
     e.create('leaves', 'tfc:leaves')
         .twig('kubejs:ore')

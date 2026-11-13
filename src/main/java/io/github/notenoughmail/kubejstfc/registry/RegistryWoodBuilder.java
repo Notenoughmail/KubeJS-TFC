@@ -3,6 +3,7 @@ package io.github.notenoughmail.kubejstfc.registry;
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
+import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import io.github.notenoughmail.kubejstfc.util.Assistant;
@@ -21,7 +22,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-// TODO: 2.1.1 | Document
 @ReturnsSelf
 public class RegistryWoodBuilder implements RegistryWood {
 
@@ -51,20 +51,24 @@ public class RegistryWoodBuilder implements RegistryWood {
         Assistant.registerWoods(b -> b.put(this.id, this));
     }
 
+    @Info("Set the color that describes the wood")
     public RegistryWoodBuilder woodColor(MapColor color) {
         woodColor = color;
         return this;
     }
 
+    @Info("Set the color that describes the bark")
     public RegistryWoodBuilder barkColor(MapColor color) {
         barkColor = color;
         return this;
     }
 
+    @Info("Set the tree grower used by the wood from an id")
     public RegistryWoodBuilder treeGrowerId(String name) {
         return treeGrower(Suppliers.memoize(() -> TreeGrower.CODEC.decode(JsonOps.INSTANCE, new JsonPrimitive(name)).getOrThrow().getFirst()));
     }
 
+    @Info("Set the tree grower used by the wood")
     public RegistryWoodBuilder treeGrower(TreeGrower grower) {
         return treeGrower(() -> grower);
     }
@@ -75,35 +79,42 @@ public class RegistryWoodBuilder implements RegistryWood {
         return this;
     }
 
+    @Info("Set the number of ticks a tree needs to grow as a supplier")
     public RegistryWoodBuilder ticksToGrowSupplier(Supplier<Integer> ticks) {
         ticksToGrow = ticks;
         return this;
     }
 
+    @Info("Set the number of ticks a tree needs to grow")
     public RegistryWoodBuilder ticksToGrow(int ticks) {
         return ticksToGrowSupplier(() -> ticks);
     }
 
+    @Info("The autumn index of the wood")
     public RegistryWoodBuilder autumnIndex(int index) {
         autumnIndex = index;
         return this;
     }
 
+    @Info("Set the flower offset of the wood")
     public RegistryWoodBuilder flowerOffset(float offset) {
         flowerOffset = offset;
         return this;
     }
 
+    @Info("Set if this wood is coniferous")
     public RegistryWoodBuilder conifer(boolean conifer) {
         isConifer = conifer;
         return this;
     }
 
+    @Info("Set the underlying vanilla wood type describing the wood")
     public RegistryWoodBuilder vanillaWoodType(WoodType type) {
         woodType = type;
         return this;
     }
 
+    @Info("Set the underlying vanilla block set type describing the wood")
     public RegistryWoodBuilder blockSetType(BlockSetType type) {
         blockSetType = type;
         return this;
@@ -119,62 +130,74 @@ public class RegistryWoodBuilder implements RegistryWood {
         blocks.remove(type, builder);
     }
 
+    @Info("Associate a block with its type for the wood")
     public RegistryWoodBuilder set(Wood.BlockType type, Holder<Block> block) {
         blocks.put(type, Assistant.holderAsSupplier(block));
         return this;
     }
 
+    @Info("Get the color describing the wood")
     @Override
     public MapColor woodColor() {
         return woodColor;
     }
 
+    @Info("Get the color describing the bark color")
     @Override
     public MapColor barkColor() {
         return barkColor;
     }
 
+    @Info("Get the tree grower of the wood")
     @Override
     public TreeGrower tree() {
         return treeGrower.get();
     }
 
+    @Info("Get the ticks it takes for a tree of this wood to grow")
     @Override
     public Supplier<Integer> ticksToGrow() {
         return ticksToGrow;
     }
 
+    @Info("Get the autumn index of the wood")
     @Override
     public int autumnIndex() {
         return autumnIndex;
     }
 
+    @Info("Get the block corresponding to a block type, may be null")
     @Nullable
     @Override
     public Supplier<Block> getBlock(Wood.BlockType type) {
         return blocks.get(type);
     }
 
+    @Info("Get the vanilla block set describing the wood")
     @Override
     public BlockSetType getBlockSet() {
         return blockSetType;
     }
 
+    @Info("Get the vanilla wood type describing the wood")
     @Override
     public WoodType getVanillaWoodType() {
         return woodType;
     }
 
+    @Info("If the wood is coniferous")
     @Override
     public boolean isConifer() {
         return isConifer;
     }
 
+    @Info("Get the flower offset of the wood")
     @Override
     public float getFlowerOffset() {
         return flowerOffset;
     }
 
+    @Info("Get the path of the wood's id")
     @Override
     public String getSerializedName() {
         return id.getPath();
